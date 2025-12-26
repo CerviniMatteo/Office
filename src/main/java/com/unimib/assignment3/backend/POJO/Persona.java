@@ -7,7 +7,7 @@ public abstract class Persona {
     private String nome;
 
     private String cognome;
-x
+
     public String getCognome() {
         return cognome;
     }
