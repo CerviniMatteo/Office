@@ -9,6 +9,7 @@ public abstract class Persona {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JoinColumn(name = "id_persona")
     private Long id;
 
     private String nome;
@@ -40,7 +41,7 @@ public abstract class Persona {
     }
 
     public String getEmailIstituzionale() {
-        return new String(emailIstituzionale);
+        return emailIstituzionale;
     }
 
     public void setEmailIstituzionale(String emailIstituzionale) {
