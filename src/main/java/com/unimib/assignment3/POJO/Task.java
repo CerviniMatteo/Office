@@ -31,15 +31,19 @@ public class Task implements Serializable {
         this.taskState = TaskState.DAINIZIARE;
     }
 
+    public Task(TaskState taskState) {
+        this.taskState = taskState != null ? taskState : TaskState.DAINIZIARE;
+    }
+
     public Task(Long idTask, TaskState taskState) {
         this.idTask = idTask;
-        this.taskState = taskState;
+        this.taskState = taskState != null ? taskState : TaskState.DAINIZIARE;
     }
 
     public Task(Map<Dipendente, String> dipendentiAssegnati, Long idTask, TaskState taskState) {
         this.dipendentiAssegnati = dipendentiAssegnati;
         this.idTask = idTask;
-        this.taskState = taskState;
+        this.taskState = taskState != null ? taskState : TaskState.DAINIZIARE;
     }
 
 
