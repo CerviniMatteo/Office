@@ -2,6 +2,8 @@ package com.unimib.assignment3.POJO;
 
 import jakarta.persistence.*;
 
+import java.util.Locale;
+
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -15,13 +17,14 @@ public abstract class Persona {
     private String nome;
     private String cognome;
     @Column(unique = true)
-    private String emailIstituzionale;
+    private String email;
 
     public Persona() {}
 
     public Persona(String nome, String cognome) {
         this.nome = nome;
         this.cognome = cognome;
+        this.email = generateEmail(nome,cognome);
     }
 
     public Long getId() {
@@ -40,12 +43,12 @@ public abstract class Persona {
         this.cognome = cognome;
     }
 
-    public String getEmailIstituzionale() {
-        return emailIstituzionale;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailIstituzionale(String emailIstituzionale) {
-        this.emailIstituzionale = emailIstituzionale;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getNome() {
@@ -56,5 +59,17 @@ public abstract class Persona {
         this.nome = nome;
     }
 
-    abstract String generateEmail(String nome, String cognome);
+
+    private static String generateEmail(String nome, String cognome) {
+        return nome.toLowerCase(Locale.ROOT)+"."+cognome.toLowerCase(Locale.ROOT)+"@example.com";
+    }
+
+    @Override
+    public String toString() {
+        return  "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

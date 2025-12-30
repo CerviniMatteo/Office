@@ -1,9 +1,9 @@
 package com.unimib.assignment3.facade;
 
-import com.unimib.assignment3.POJO.Professore;
-import com.unimib.assignment3.POJO.Studente;
-import com.unimib.assignment3.repository.ProfessoreRepository;
-import com.unimib.assignment3.service.StudenteService;
+import com.unimib.assignment3.POJO.Dipendente;
+import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.repository.DipendenteRepository;
+import com.unimib.assignment3.repository.SupervisoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,24 +11,15 @@ import org.springframework.stereotype.Service;
 public class Facade {
 
     @Autowired
-    StudenteService studenteService;
+    DipendenteRepository dipendenteRepository;
     @Autowired
-    ProfessoreRepository professoreRepository;
+    SupervisoreRepository supervisoreRepository;
 
-    public  Studente saveStudente(Studente studente){
-        return  studenteService.saveWithUniqueEmail(studente);
+    public  Dipendente saveDipendente(Dipendente dipendente){
+        return  dipendenteRepository.saveAndFlush(dipendente);
     }
 
-    public Professore saveProfessore(Professore professore){
-        return professoreRepository.saveAndFlush(professore);
-    }
-
-    public Professore findByIdProfessore(Long idProfessore){
-        return professoreRepository.findById(idProfessore).orElseThrow();
-    }
-
-    public Professore aggiungiAllievo(Professore mentore, Professore allieve){
-        mentore.aggiungiAllievo(allieve);
-        return professoreRepository.saveAndFlush(mentore);
+    public Supervisore saveSupervisore(Supervisore supervisore){
+        return  supervisoreRepository.saveAndFlush(supervisore);
     }
 }
