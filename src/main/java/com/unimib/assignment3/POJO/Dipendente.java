@@ -27,7 +27,6 @@ public class Dipendente extends Persona {
         super(nome, cognome);
         this.stipendio = 1800.0;
         this.grado = Grado.JUNIOR;
-
     }
 
     public Dipendente(String nome, String cognome, Double stipendio) {

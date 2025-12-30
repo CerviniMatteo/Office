@@ -6,5 +6,5 @@ public enum Grado {
     SENIOR_SW_ENGINEER,
     SW_ARCHITECT,
     SENIOR_SW_ARCHITECT,
-    MANAGER,
+    MANAGER
 }
