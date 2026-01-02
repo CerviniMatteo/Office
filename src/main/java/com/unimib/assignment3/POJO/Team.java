@@ -1,10 +1,7 @@
 package com.unimib.assignment3.POJO;
 
-import com.unimib.assignment3.enums.TeamTaskState;
 import jakarta.persistence.*;
-
 import java.util.List;
-import java.util.HashMap;
 
 @Entity(name="team")
 public class Team {
@@ -30,7 +27,7 @@ public class Team {
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
-    private HashMap<Task, TeamTaskState> tasks = new HashMap<>();
+    private List<Task> tasks;
 
     protected Team() {
     }
@@ -42,10 +39,10 @@ public class Team {
         this.dipendenti = dipendenti;
         this.supervisore = supervisore;
     }
-    public Team(List<Dipendente> dipendenti, Supervisore supervisore, HashMap<Task, TeamTaskState> tasksTeam) {
+    public Team(List<Dipendente> dipendenti, Supervisore supervisore, List<Task> tasks) {
         this.dipendenti = dipendenti;
         this.supervisore = supervisore;
-        this.tasks = tasksTeam;
+        this.tasks = tasks;
     }
 
     public Long getIdTeam() {
@@ -73,14 +70,14 @@ public class Team {
         this.supervisore = supervisore;
     }
 
-    public HashMap<Task, TeamTaskState> getTasksTeam() {
+    public List<Task> getTasksTeam() {
         return tasks;
     }
-    public void setTasksTeam(HashMap<Task, TeamTaskState> tasksTeam) {
-        this.tasks = tasksTeam;
+    public void setTasksTeam(List<Task> tasks) {
+        this.tasks = tasks;
     }
-    public void addTaskTeam(Task task, TeamTaskState stato) {
-        this.tasks.put(task, stato);
+    public void addTaskTeam(Task task, String stato) {
+        this.tasks.add(task);
     }
     public void removeTaskTeam(Task task) {
         this.tasks.remove(task);
