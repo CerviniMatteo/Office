@@ -22,10 +22,6 @@ class TeamIntegrationTest {
     @Test
     void testCreazioneTeam() {
         // Creazione di un supervisore
-        Supervisore supervisore = new Supervisore("Matteo", "Cervini");
-        supervisore = facade.saveSupervisore(supervisore);
-        assertNotNull(supervisore.getId());
-        System.out.println(supervisore);
 
         // Creazione di dipendenti
         Dipendente dipendente1 = new Dipendente("Andrea", "Aivaliotis");
@@ -42,19 +38,33 @@ class TeamIntegrationTest {
 
         // Creazione del team
         Team team = new Team(
-                dipendenti,
-                supervisore
+                dipendenti
         );
         team = facade.saveTeam(team);
         assertNotNull(team.getIdTeam());
         System.out.println(team);
 
         // Creazione di un altro team per verificare il salvataggio multiplo
+        Dipendente dipendente3 = new Dipendente("Luca", "Rossi");
+        dipendente3 = facade.saveDipendente(dipendente3);
+        assertNotNull(dipendente3.getId());
+        System.out.println(dipendente3);
         Team anotherTeam = new Team(
-                supervisore
+                List.of(dipendente3)
         );
+
         anotherTeam = facade.saveTeam(anotherTeam);
         assertNotNull(anotherTeam.getIdTeam());
         System.out.println(anotherTeam);
+
+        Supervisore supervisore = new Supervisore("Matteo", "Cervini");
+        supervisore = facade.saveSupervisore(supervisore);
+        assertNotNull(supervisore.getId());
+
+        supervisore.setTeamSupervisionato(List.of(team, anotherTeam));
+        facade.saveSupervisore(supervisore);
+        System.out.println(supervisore);
+        System.out.println(team+ "\n" + anotherTeam);
+
     }
 }

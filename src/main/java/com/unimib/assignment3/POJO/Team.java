@@ -1,24 +1,24 @@
 package com.unimib.assignment3.POJO;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="team")
 public class Team {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTeam;
 
-    @OneToMany
-    @JoinTable(
-            name = "team_dipendenti",
+    @ManyToMany
+    @JoinTable(name = "team_dipendente",
             joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "dipendente_id")
-    )
-    private List<Dipendente> dipendenti;
+            inverseJoinColumns = @JoinColumn(name = "dipendente_id"))
+    private List<Dipendente> dipendenti = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "supervisore_id")
+    @JoinColumn(name = "team_supervisionato")
     private Supervisore supervisore;
 
     @OneToMany
@@ -35,9 +35,8 @@ public class Team {
     public Team(Supervisore supervisore) {
         this.supervisore = supervisore;
     }
-    public Team(List<Dipendente> dipendenti, Supervisore supervisore) {
+    public Team(List<Dipendente> dipendenti) {
         this.dipendenti = dipendenti;
-        this.supervisore = supervisore;
     }
     public Team(List<Dipendente> dipendenti, Supervisore supervisore, List<Task> tasks) {
         this.dipendenti = dipendenti;

@@ -1,17 +1,18 @@
+// java
 package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.enums.Grado;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Entity(name="supervisore")
+@Entity(name = "supervisore")
 public class Supervisore extends Dipendente {
 
     @ManyToOne
     @JoinColumn(name = "supervisore")
     private Supervisore supervisore;
-
 
     @OneToMany(
             mappedBy = "supervisore",
@@ -20,8 +21,11 @@ public class Supervisore extends Dipendente {
     )
     private List<Supervisore> supervisoriSupervisionati = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "team_supervisionato")
+    @OneToMany(
+            mappedBy = "supervisore",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Team> teamSupervisionato = new ArrayList<>();
 
     protected Supervisore() {
@@ -60,15 +64,36 @@ public class Supervisore extends Dipendente {
         return teamSupervisionato;
     }
 
-    public void setTeamSupervisionato(List<Team> teamSupervisionato) {
-        this.teamSupervisionato = teamSupervisionato;
+    public void setTeamSupervisionato(List<Team> teamSupervisionati) {
+        for (Team team : teamSupervisionati) {
+            addTeam(team);
+        }
+    }
+
+    public void setTeamSupervisionato(Team teamSupervisionato) {
+        addTeam(teamSupervisionato);
+    }
+
+    private void addTeam(Team team) {
+        if (team == null) return;
+        if (!this.teamSupervisionato.contains(team)) {
+            this.teamSupervisionato.add(team);
+            team.setSupervisore(this);
+        }
+    }
+
+    private void removeTeam(Team team) {
+        if (team == null) return;
+        if (this.teamSupervisionato.remove(team)) {
+            team.setSupervisore(null);
+        }
     }
 
     @Override
     public String toString() {
         return "Supervisore{" + super.toString() +
                 ", supervisoriSupervisionati=" + supervisoriSupervisionati +
-                ", teamSupervisionato=" + teamSupervisionato +
+                ", teamSupervisionato=" + teamSupervisionato.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
                 '}';
     }
 }
