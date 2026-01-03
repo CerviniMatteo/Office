@@ -3,7 +3,6 @@ package com.unimib.assignment3.service;
 import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
-import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.repository.DipendenteRepository;
 import com.unimib.assignment3.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,11 @@ public class TaskService {
     @Autowired
     private DipendenteRepository dipendenteRepository;
 
-    @Autowired
-    private Facade facade;
-
-    // Creazione e salvataggio task tramite Facade
+    // Creazione e salvataggio task tramite Repository
     @Transactional
     public Task createTask(TaskState initialState) {
         Task task = new Task(initialState != null ? initialState : TaskState.DAINIZIARE);
-        return facade.saveTask(task);
+        return taskRepository.saveAndFlush(task);
     }
 
     // Assegnazione dipendente a task con validazione
@@ -61,8 +57,8 @@ public class TaskService {
         task.assegnaDipendente(dipendente);
         dipendente.getTasks().add(task);
 
-        facade.saveDipendente(dipendente);
-        return facade.saveTask(task);
+        dipendenteRepository.saveAndFlush(dipendente);
+        return taskRepository.saveAndFlush(task);
     }
 
     // Rimozione dipendente da task
@@ -81,8 +77,8 @@ public class TaskService {
         task.rimuoviDipendente(dipendente);
         dipendente.getTasks().remove(task);
 
-        facade.saveDipendente(dipendente);
-        return facade.saveTask(task);
+        dipendenteRepository.saveAndFlush(dipendente);
+        return taskRepository.saveAndFlush(task);
     }
 
     // Cambio stato task con validazione
@@ -107,7 +103,7 @@ public class TaskService {
         }
 
         task.setTaskState(nuovoStato);
-        return facade.saveTask(task);
+        return taskRepository.saveAndFlush(task);
     }
 
     // Metodi di ricerca
