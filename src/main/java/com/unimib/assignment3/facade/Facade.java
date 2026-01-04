@@ -4,6 +4,7 @@ import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Supervisore;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
+import com.unimib.assignment3.enums.Grado;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.DipendenteRepository;
 import com.unimib.assignment3.repository.SupervisoreRepository;
@@ -30,12 +31,23 @@ public class Facade {
     TaskService taskService;
 
     public  Dipendente saveDipendente(Dipendente dipendente){
-        return  dipendenteRepository.saveAndFlush(dipendente);
+        return  dipendenteRepository.save(dipendente);
     }
-
+    public List<Dipendente> findDipendentiByStipendio(Double stipendio){
+        return  dipendenteRepository.findDipendenteByStipendio(stipendio);
+    }
+    public  List<Dipendente> findDipendentiByGrado(Grado grado){
+        return  dipendenteRepository.findDipendenteByGrado(grado);
+    }
     public Supervisore saveSupervisore(Supervisore supervisore){
         return  supervisoreRepository.saveAndFlush(supervisore);
     }
+
+    public List<Task> findTasksByDipendenteAndState(Long dipendenteId,TaskState stato) {
+        return dipendenteRepository.findTasksByDipendenteAndState(dipendenteId, stato);
+    }
+
+    public void deleteAllDipendenti() {dipendenteRepository.deleteAll();}
 
     public Task saveTask(Task task){
         return taskRepository.saveAndFlush(task);
@@ -92,6 +104,8 @@ public class Facade {
     public void deleteTask(Long id) {
         taskService.deleteTask(id);
     }
+    public void deleteAllTasks() {taskRepository.deleteAll();}
+
 
     public boolean isDipendenteAssegnato(Long taskId, Long dipendenteId) {
         return taskService.isDipendenteAssegnato(taskId, dipendenteId);

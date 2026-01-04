@@ -21,16 +21,14 @@ public class Dipendente extends Persona {
 
     public Dipendente(String nome, String cognome) {
         super(nome, cognome);
-        this.stipendio = 1800.0;
+        this.stipendio = 1800.00;
         this.grado = Grado.JUNIOR;
-        this.tasks = new ArrayList<>();
     }
 
     public Dipendente(String nome, String cognome, Double stipendio) {
         super(nome, cognome);
         this.stipendio = stipendio;
         this.grado = Grado.JUNIOR;
-        this.tasks = new ArrayList<>();
     }
 
     public Dipendente(String nome, String cognome, Double stipendio, Grado grado) {
@@ -68,7 +66,7 @@ public class Dipendente extends Persona {
     public List<Long> getAllTaskId() {
         List<Long> idTask = new ArrayList<>();
         for (Task task : tasks) {
-            idTask.add(task.getIdTask()); // Assumendo che Task abbia un metodo getId()
+            idTask.add(task.getIdTask());
         }
         return idTask;
     }
