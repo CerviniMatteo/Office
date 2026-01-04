@@ -55,7 +55,6 @@ public class TaskService {
         }
 
         task.assegnaDipendente(dipendente);
-        dipendente.getTasks().add(task);
 
         dipendenteRepository.saveAndFlush(dipendente);
         return taskRepository.saveAndFlush(task);
@@ -75,9 +74,6 @@ public class TaskService {
         Dipendente dipendente = dipOpt.get();
 
         task.rimuoviDipendente(dipendente);
-        dipendente.getTasks().remove(task);
-
-        dipendenteRepository.saveAndFlush(dipendente);
         return taskRepository.saveAndFlush(task);
     }
 
