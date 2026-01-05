@@ -13,7 +13,7 @@ public class SupervisoreService {
     @Autowired SupervisoreRepository supervisoreRepository;
 
     public Supervisore saveSupervisore(Supervisore supervisore) {
-        return supervisoreRepository.saveAndFlush(supervisore);
+        return supervisoreRepository.save(supervisore);
     }
 
     public Optional<Supervisore> trovaPerId(Long id) {

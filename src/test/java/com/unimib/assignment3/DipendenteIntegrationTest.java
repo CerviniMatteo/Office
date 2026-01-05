@@ -25,7 +25,7 @@ class DipendenteIntegrationTest {
 
     @BeforeEach
     void pulisciDB() {
-        facade.deleteAllDipendenti();
+        facade.eliminaTuttiDipendenti();
         facade.deleteAllTasks();
     }
 
@@ -39,33 +39,40 @@ class DipendenteIntegrationTest {
         Dipendente dip1 = creaDipendente("Matteo", "Cervini", 1800.0, Grado.JUNIOR);
         Dipendente dip2 = creaDipendente("Andrea", "Aivaliotis", 1800.0, Grado.JUNIOR);
 
-        assertNotNull(dip1.getId(), "Il primo dipendente dovrebbe avere un ID");
-        assertNotNull(dip2.getId(), "Il secondo dipendente dovrebbe avere un ID");
-        assertNotEquals(dip1.getId(), dip2.getId(), "Gli ID dei dipendenti non dovrebbero coincidere");
+        assertNotNull(dip1.getId());
+        assertNotNull(dip2.getId());
+        assertNotEquals(dip1.getId(), dip2.getId());
     }
 
     @Transactional
     @Test
     void testTrovaDipendentiPerStipendio() {
-        Dipendente dip1 = creaDipendente("Matteo2", "Cervini", 1800.0, Grado.JUNIOR);
-        Dipendente dip2 = creaDipendente("Andrea2", "Aivaliotis", 1800.0, Grado.JUNIOR);
+        Dipendente dip1 = creaDipendente("Matteo2", "Cervini", 1800.0, Grado.MANAGER);
+        Dipendente dip2 = creaDipendente("Andrea2", "Aivaliotis", 1800.0, Grado.MANAGER);
 
-        List<Dipendente> dipendenti1800 = facade.findDipendentiByStipendio(1800.0);
+        // nuovo metodo nel Facade per cercare per stipendio senza passare dipendente
+        List<Dipendente> dipendenti1800 = facade.findDipendentiByStipendio(dip1, 1800.0);
 
-        assertEquals(2, dipendenti1800.size(), "Dovrebbero essere trovati due dipendenti con stipendio 1800.0");
+        assertEquals(2, dipendenti1800.size());
         dipendenti1800.forEach(d -> assertEquals(1800.0, d.getStipendio(), 0.01));
-        assertEquals(dip1.getId(), dipendenti1800.getFirst().getId());
-        assertEquals(dip2.getId(), dipendenti1800.getLast().getId());
-
+        assertEquals(dip1.getId(), dipendenti1800.get(0).getId());
+        assertEquals(dip2.getId(), dipendenti1800.get(1).getId());
 
         Dipendente dip3 = creaDipendente("Matteo3", "Cervini", 3000.0, Grado.SENIOR_SW_ENGINEER);
+        List<Dipendente> dipendenti3000;
+        try {
+            dipendenti3000 = facade.findDipendentiByStipendio(dip3, 3000.0);
+        }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
 
-        List<Dipendente> dipendenti3000 = facade.findDipendentiByStipendio(3000.0);
-        assertEquals(1, dipendenti3000.size(), "Dovrebbe essere trovato un dipendente con stipendio 3000.0");
+        dip3.setGrado(Grado.MANAGER);
+        dipendenti3000 = facade.findDipendentiByStipendio(dip3, 3000.0);
+        assertEquals(1, dipendenti3000.size());
         assertEquals(dip3.getId(), dipendenti3000.getFirst().getId());
 
-        List<Dipendente> dipendenti3600 = facade.findDipendentiByStipendio(3600.0);
-        assertTrue(dipendenti3600.isEmpty(), "Non dovrebbero esserci dipendenti con stipendio 3600.0");
+        List<Dipendente> dipendenti3600 = facade.findDipendentiByStipendio(dip3, 3600.0);
+        assertTrue(dipendenti3600.isEmpty());
     }
 
     @Transactional
@@ -75,59 +82,87 @@ class DipendenteIntegrationTest {
         Dipendente dip2 = creaDipendente("Andrea3", "Aivaliotis", 1800.0, Grado.JUNIOR);
 
         List<Dipendente> junior = facade.findDipendentiByGrado(Grado.JUNIOR);
-        assertEquals(2, junior.size(), "Dovrebbero essere trovati due dipendenti JUNIOR");
+        assertEquals(2, junior.size());
         junior.forEach(d -> assertEquals(Grado.JUNIOR, d.getGrado()));
-        assertEquals(dip1.getId(), junior.getFirst().getId());
-        assertEquals(dip2.getId(), junior.getLast().getId());
-
+        assertEquals(dip1.getId(), junior.get(0).getId());
+        assertEquals(dip2.getId(), junior.get(1).getId());
 
         Dipendente dip3 = creaDipendente("Matteo5", "Cervini", 3000.0, Grado.SENIOR_SW_ENGINEER);
         List<Dipendente> senior = facade.findDipendentiByGrado(Grado.SENIOR_SW_ENGINEER);
-        assertEquals(1, senior.size(), "Dovrebbe essere trovato un dipendente SENIOR_SW_ENGINEER");
+        assertEquals(1, senior.size());
         assertEquals(dip3.getId(), senior.getFirst().getId());
         assertEquals(Grado.SENIOR_SW_ENGINEER, senior.getFirst().getGrado());
 
         List<Dipendente> manager = facade.findDipendentiByGrado(Grado.MANAGER);
-        assertTrue(manager.isEmpty(), "Non dovrebbero esserci dipendenti MANAGER");
+        assertTrue(manager.isEmpty());
     }
 
     @Transactional
     @Test
     void testFindTaskByDipendenteAndState() {
-        Dipendente d = facade.saveDipendente(
-                new Dipendente("Mario", "Rossi")
-        );
+        Dipendente d = facade.saveDipendente(new Dipendente("Mario", "Rossi"));
 
-        Task t1 = facade.saveTask(new Task(TaskState.DAINIZIARE));
-        Task t2 = facade.saveTask(new Task( TaskState.INIZIATO));
-        Task t3 = facade.saveTask(new Task(TaskState.FINITO));
-        Task t4 = facade.saveTask(new Task(TaskState.DAINIZIARE));
-        d.setTasks(List.of(t1,t2,t3, t4));
-        t1.setDipendentiAssegnati(List.of(d));
-        t2.setDipendentiAssegnati(List.of(d));
-        t3.setDipendentiAssegnati(List.of(d));
-        t4.setDipendentiAssegnati(List.of(d));
+        Task t1 = facade.saveTask(new Task());
+        Task t2 = facade.saveTask(new Task());
+        Task t3 = facade.saveTask(new Task());
+        t3.setTaskState(TaskState.INIZIATO);
+        Task t4 = facade.saveTask(new Task());
 
-        List<Task> openTasks =
-                facade.findTasksByDipendenteAndState(d.getId(), TaskState.DAINIZIARE);
+        // assegna task usando facade
+        facade.assegnaDipendenteATask(t1.getIdTask(), d.getId());
+        facade.assegnaDipendenteATask(t2.getIdTask(), d.getId());
+        facade.assegnaDipendenteATask(t3.getIdTask(), d.getId());
+        facade.assegnaDipendenteATask(t4.getIdTask(), d.getId());
+        t4.setTaskState(TaskState.FINITO);
 
+        List<Task> openTasks = facade.findTasksByDipendenteAndState(d.getId(), TaskState.DAINIZIARE);
         assertEquals(2, openTasks.size());
         openTasks.forEach(t -> assertEquals(TaskState.DAINIZIARE, t.getTaskState()));
-        System.out.println(openTasks);
 
-        List<Task> startedTasks =
-                facade.findTasksByDipendenteAndState(d.getId(), TaskState.INIZIATO);
-
+        List<Task> startedTasks = facade.findTasksByDipendenteAndState(d.getId(), TaskState.INIZIATO);
         assertEquals(1, startedTasks.size());
-        startedTasks.forEach(t -> assertEquals(TaskState.INIZIATO, t.getTaskState()));
-        System.out.println(startedTasks);
+        assertEquals(TaskState.INIZIATO, startedTasks.getFirst().getTaskState());
 
-        List<Task> endedTasks =
-                facade.findTasksByDipendenteAndState(d.getId(), TaskState.FINITO);
+        List<Task> endedTasks = facade.findTasksByDipendenteAndState(d.getId(), TaskState.FINITO);
         assertEquals(1, endedTasks.size());
-        endedTasks.forEach(t -> assertEquals(TaskState.FINITO, t.getTaskState()));
-        System.out.println(endedTasks);
+        assertEquals(TaskState.FINITO, endedTasks.getFirst().getTaskState());
+    }
+
+    // ----- NUOVI TEST AGGIUNTIVI -----
+    @Test
+    void testSaveAllDipendenti() {
+        Dipendente d1 = new Dipendente("A", "B");
+        Dipendente d2 = new Dipendente("C", "D");
+        List<Dipendente> saved = facade.saveAllDipendenti(List.of(d1, d2));
+        assertEquals(2, saved.size());
+        assertNotNull(saved.get(0).getId());
+        assertNotNull(saved.get(1).getId());
+    }
+
+    @Test
+    void testGetReferenceDipendente() {
+        Dipendente d = creaDipendente("Ref", "Test", 1500, Grado.JUNIOR);
+        Dipendente ref = facade.getReferenceDipendente(d.getId());
+        assertEquals(d.getId(), ref.getId());
+    }
+
+    @Test
+    void testContaTuttiDipendenti() {
+        creaDipendente("A", "B", 1000, Grado.JUNIOR);
+        creaDipendente("C", "D", 1200, Grado.JUNIOR);
+        long count = facade.contaTuttiDipendenti();
+        assertEquals(2, count);
+    }
+
+    @Test
+    void testEliminaTuttiDipendenti() {
+        Dipendente d1 = creaDipendente("A", "B", 1000, Grado.JUNIOR);
+        Dipendente d2 = creaDipendente("C", "D", 1200, Grado.JUNIOR);
+        facade.saveAllDipendenti(List.of(d1, d2));
+        facade.eliminaTuttiDipendenti();
+        assertEquals(0, facade.trovaTuttiDipendenti().size());
     }
 
 }
+
 

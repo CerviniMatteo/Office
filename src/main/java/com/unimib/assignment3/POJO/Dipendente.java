@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="dipendente")
-public class Dipendente extends Persona {
+public class Dipendente extends Persona{
 
     private Double stipendio;
     private Grado grado;

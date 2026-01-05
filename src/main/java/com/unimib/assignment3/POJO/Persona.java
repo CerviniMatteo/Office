@@ -11,7 +11,7 @@ public abstract class Persona {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JoinColumn(name = "id_persona")
+    @Column(name = "id_persona")
     private Long id;
 
     private String nome;

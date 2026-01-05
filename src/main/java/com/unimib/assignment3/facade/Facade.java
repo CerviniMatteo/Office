@@ -6,9 +6,9 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.enums.Grado;
 import com.unimib.assignment3.enums.TaskState;
-import com.unimib.assignment3.repository.DipendenteRepository;
 import com.unimib.assignment3.repository.TaskRepository;
 import com.unimib.assignment3.repository.TeamRepository;
+import com.unimib.assignment3.service.DipendenteService;
 import com.unimib.assignment3.service.SupervisoreService;
 import com.unimib.assignment3.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class Facade {
 
     @Autowired
-    DipendenteRepository dipendenteRepository;
+    DipendenteService dipendenteService;
     @Autowired
     SupervisoreService supervisoreService;
     @Autowired
@@ -32,22 +32,65 @@ public class Facade {
 
     // <---- Dipendente ---->
 
-    public  Dipendente saveDipendente(Dipendente dipendente){
-        return  dipendenteRepository.save(dipendente);
+    public Dipendente saveDipendente(Dipendente dipendente) {
+        return dipendenteService.saveDipendente(dipendente);
     }
 
-    public List<Dipendente> findDipendentiByStipendio(Double stipendio){
-        return  dipendenteRepository.findDipendenteByStipendio(stipendio);
-    }
-    public  List<Dipendente> findDipendentiByGrado(Grado grado){
-        return  dipendenteRepository.findDipendenteByGrado(grado);
+    public List<Dipendente> saveAllDipendenti(List<Dipendente> dipendenti) {
+        return dipendenteService.saveAllDipendenti(dipendenti);
     }
 
-    public List<Task> findTasksByDipendenteAndState(Long dipendenteId,TaskState stato) {
-        return dipendenteRepository.findTasksByDipendenteAndState(dipendenteId, stato);
+    public Optional<Dipendente> trovaPerIdDipendente(Long id) {
+        return dipendenteService.trovaPerId(id);
     }
 
-    public void deleteAllDipendenti() {dipendenteRepository.deleteAll();}
+    public Dipendente getReferenceDipendente(Long id) {
+        return dipendenteService.getReferenceById(id);
+    }
+
+    public List<Dipendente> trovaTuttiDipendenti() {
+        return dipendenteService.trovaTutti();
+    }
+
+    public boolean esisteDipendentePerId(Long id) {
+        return dipendenteService.esistePerId(id);
+    }
+
+    public long contaTuttiDipendenti() {
+        return dipendenteService.contaTutti();
+    }
+
+    public void eliminaPerIdDipendente(Long id) {
+        dipendenteService.eliminaPerId(id);
+    }
+
+    public void eliminaDipendente(Dipendente dipendente) {
+        dipendenteService.elimina(dipendente);
+    }
+
+    public void eliminaTuttiDipendenti(List<Dipendente> dipendenti) {
+        dipendenteService.eliminaTutti(dipendenti);
+    }
+
+    public void eliminaTuttiDipendenti() {
+        dipendenteService.eliminaTutti();
+    }
+
+    public void flushDipendenti() {
+        dipendenteService.flush();
+    }
+
+    public List<Dipendente> findDipendentiByStipendio(Dipendente dipendente, Double stipendio) {
+        return dipendenteService.findDipendenteByStipendio(dipendente, stipendio);
+    }
+
+    public List<Dipendente> findDipendentiByGrado(Grado grado) {
+        return dipendenteService.findDipendenteByGrado(grado);
+    }
+
+    public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState stato) {
+        return dipendenteService.findTasksByDipendenteAndState(dipendenteId, stato);
+    }
 
     // <---- Supervisore ---->
 

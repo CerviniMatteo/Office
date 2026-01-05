@@ -12,6 +12,11 @@ import java.util.List;
 public interface DipendenteRepository extends JpaRepository<Dipendente, Long> {
     // Query per trovare dipendenti con quello stipendio
     List<Dipendente> findDipendenteByStipendio(Double stipendio);
+    // Query per trovare dipendenti con quello stipendio
+    List<Dipendente> findByStipendioGreaterThan(Double stipendio);
+    List<Dipendente> findByStipendioLessThan(Double stipendio);
+    List<Dipendente> findByStipendioBetween(Double min, Double max);
+    List<Task> findTasksById(Long id);
 
     // Query per trovare dipendenti con quel grado
     List<Dipendente> findDipendenteByGrado(Grado grado);
