@@ -7,9 +7,9 @@ import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.enums.Grado;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.DipendenteRepository;
-import com.unimib.assignment3.repository.SupervisoreRepository;
 import com.unimib.assignment3.repository.TaskRepository;
 import com.unimib.assignment3.repository.TeamRepository;
+import com.unimib.assignment3.service.SupervisoreService;
 import com.unimib.assignment3.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class Facade {
     @Autowired
     DipendenteRepository dipendenteRepository;
     @Autowired
-    SupervisoreRepository supervisoreRepository;
+    SupervisoreService supervisoreService;
     @Autowired
     TaskRepository taskRepository;
     @Autowired
@@ -30,17 +30,17 @@ public class Facade {
     @Autowired
     TaskService taskService;
 
+    // <---- Dipendente ---->
+
     public  Dipendente saveDipendente(Dipendente dipendente){
         return  dipendenteRepository.save(dipendente);
     }
+
     public List<Dipendente> findDipendentiByStipendio(Double stipendio){
         return  dipendenteRepository.findDipendenteByStipendio(stipendio);
     }
     public  List<Dipendente> findDipendentiByGrado(Grado grado){
         return  dipendenteRepository.findDipendenteByGrado(grado);
-    }
-    public Supervisore saveSupervisore(Supervisore supervisore){
-        return  supervisoreRepository.saveAndFlush(supervisore);
     }
 
     public List<Task> findTasksByDipendenteAndState(Long dipendenteId,TaskState stato) {
@@ -49,6 +49,73 @@ public class Facade {
 
     public void deleteAllDipendenti() {dipendenteRepository.deleteAll();}
 
+    // <---- Supervisore ---->
+
+    public Supervisore saveSupervisore(Supervisore supervisore) {
+        return supervisoreService.saveSupervisore(supervisore);
+    }
+
+    public Optional<Supervisore> trovaPerId(Long id) {
+        return supervisoreService.trovaPerId(id);
+    }
+
+    public List<Supervisore> trovaTutti() {
+        return supervisoreService.trovaTutti();
+    }
+
+    public boolean esistePerId(Long id) {
+        return supervisoreService.esistePerId(id);
+    }
+
+    public void eliminaPerId(Long id) {
+        supervisoreService.eliminaPerId(id);
+    }
+
+    public void elimina(Supervisore supervisore) {
+        supervisoreService.elimina(supervisore);
+    }
+
+    public long conta() {
+        return supervisoreService.contaSupervisori();
+    }
+
+    public List<Supervisore> trovaSupervisionati(Long supervisoreId) {
+        return supervisoreService.trovaSupervisoriSupervisionatiPerId(supervisoreId);
+    }
+
+    public List<Supervisore> trovaRoot() {
+        return supervisoreService.trovaSupervisoriSenzaSupervisore();
+    }
+
+    public long contaSupervisionati(Long supervisoreId) {
+        return supervisoreService.contaSupervisoriSupervisionati(supervisoreId);
+    }
+
+    public boolean haSubordinati(Long supervisoreId) {
+        return supervisoreService.esisteSupervisoreConSubordinati(supervisoreId);
+    }
+
+    public List<Supervisore> trovaConTeam() {
+        return supervisoreService.trovaSupervisoriConTeam();
+    }
+
+    public List<Supervisore> trovaConSubordinati() {
+        return supervisoreService.trovaSupervisoriConSubordinati();
+    }
+
+    public Supervisore trovaPerTeam(Long teamId) {
+        return supervisoreService.trovaSupervisorePerTeam(teamId);
+    }
+
+    public void assegnaSubordinato(Long capoId, Long subordinatoId) {
+        supervisoreService.assegnaSubordinato(capoId, subordinatoId);
+    }
+
+    public void rimuoviSubordinato(Long capoId, Long subordinatoId) {
+        supervisoreService.rimuoviSubordinato(capoId, subordinatoId);
+    }
+
+    // <---- Task ---->
     public Task saveTask(Task task){
         return taskRepository.saveAndFlush(task);
     }
@@ -106,8 +173,9 @@ public class Facade {
     }
     public void deleteAllTasks() {taskRepository.deleteAll();}
 
-
     public boolean isDipendenteAssegnato(Long taskId, Long dipendenteId) {
         return taskService.isDipendenteAssegnato(taskId, dipendenteId);
     }
+
+    // <---- Team ---->
 }

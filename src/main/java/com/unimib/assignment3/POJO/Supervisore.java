@@ -92,7 +92,7 @@ public class Supervisore extends Dipendente {
     @Override
     public String toString() {
         return "Supervisore{" + super.toString() +
-                ", supervisoriSupervisionati=" + supervisoriSupervisionati +
+                ", supervisoriSupervisionati=" + supervisoriSupervisionati.stream().map(team -> team.getId().toString()).collect(Collectors.joining(", ")) +
                 ", teamSupervisionato=" + teamSupervisionato.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
                 '}';
     }
