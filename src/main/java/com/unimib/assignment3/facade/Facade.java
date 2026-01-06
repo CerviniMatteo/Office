@@ -33,15 +33,15 @@ public class Facade {
     // <---- Dipendente ---->
 
     public Dipendente saveDipendente(Dipendente dipendente) {
-        return dipendenteService.saveDipendente(dipendente);
+        return dipendenteService.saveEmployee(dipendente);
     }
 
     public List<Dipendente> saveAllDipendenti(List<Dipendente> dipendenti) {
-        return dipendenteService.saveAllDipendenti(dipendenti);
+        return dipendenteService.saveAllEmployees(dipendenti);
     }
 
     public Optional<Dipendente> trovaPerIdDipendente(Long id) {
-        return dipendenteService.trovaPerId(id);
+        return dipendenteService.findById(id);
     }
 
     public Dipendente getReferenceDipendente(Long id) {
@@ -49,43 +49,43 @@ public class Facade {
     }
 
     public List<Dipendente> trovaTuttiDipendenti() {
-        return dipendenteService.trovaTutti();
+        return dipendenteService.findAll();
     }
 
     public boolean esisteDipendentePerId(Long id) {
-        return dipendenteService.esistePerId(id);
+        return dipendenteService.existById(id);
     }
 
     public long contaTuttiDipendenti() {
-        return dipendenteService.contaTutti();
+        return dipendenteService.countAll();
     }
 
     public void eliminaPerIdDipendente(Long id) {
-        dipendenteService.eliminaPerId(id);
+        dipendenteService.deleteById(id);
     }
 
     public void eliminaDipendente(Dipendente dipendente) {
-        dipendenteService.elimina(dipendente);
+        dipendenteService.deleteEmployee(dipendente);
     }
 
     public void eliminaTuttiDipendenti(List<Dipendente> dipendenti) {
-        dipendenteService.eliminaTutti(dipendenti);
+        dipendenteService.deleteAllByList(dipendenti);
     }
 
     public void eliminaTuttiDipendenti() {
-        dipendenteService.eliminaTutti();
+        dipendenteService.deleteAll();
     }
 
     public void flushDipendenti() {
         dipendenteService.flush();
     }
 
-    public List<Dipendente> findDipendentiByStipendio(Dipendente dipendente, Double monthlySalary) {
-        return dipendenteService.findDipendenteByMonthlySalary(dipendente, monthlySalary);
+    public List<Dipendente> findDipendentiByStipendio(Long employeeId, Double monthlySalary) {
+        return dipendenteService.findEmployeesByMonthlySalary(employeeId, monthlySalary);
     }
 
     public List<Dipendente> findDipendentiByGrado(EmployeeRole employeeRole) {
-        return dipendenteService.findDipendenteByEmployeeRole(employeeRole);
+        return dipendenteService.findEmployeesByEmployeeRole(employeeRole);
     }
 
     public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState stato) {

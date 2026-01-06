@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import static com.unimib.assignment3.constants.EmployeeConstants.NOT_A_MANAGER;
-import static com.unimib.assignment3.constants.EmployeeConstants.NULL_MANAGER;
+import static com.unimib.assignment3.constants.EmployeeConstants.NULL_EMPLOYEE;
 
 @Service
 public class DipendenteService {
@@ -19,15 +19,15 @@ public class DipendenteService {
     @Autowired
     DipendenteRepository dipendenteRepository;
 
-    public Dipendente saveDipendente(Dipendente dipendente) {
+    public Dipendente saveEmployee(Dipendente dipendente) {
         return dipendenteRepository.save(dipendente);
     }
 
-    public List<Dipendente> saveAllDipendenti(List<Dipendente> dipendenti) {
+    public List<Dipendente> saveAllEmployees(List<Dipendente> dipendenti) {
         return dipendenteRepository.saveAll(dipendenti);
     }
 
-    public Optional<Dipendente> trovaPerId(Long id) {
+    public Optional<Dipendente> findById(Long id) {
         return dipendenteRepository.findById(id);
     }
 
@@ -35,31 +35,31 @@ public class DipendenteService {
         return dipendenteRepository.getReferenceById(id);
     }
 
-    public List<Dipendente> trovaTutti() {
+    public List<Dipendente> findAll() {
         return dipendenteRepository.findAll();
     }
 
-    public boolean esistePerId(Long id) {
+    public boolean existById(Long id) {
         return dipendenteRepository.existsById(id);
     }
 
-    public long contaTutti() {
+    public long countAll() {
         return dipendenteRepository.count();
     }
 
-    public void eliminaPerId(Long id) {
+    public void deleteById(Long id) {
         dipendenteRepository.deleteById(id);
     }
 
-    public void elimina(Dipendente dipendente) {
+    public void deleteEmployee(Dipendente dipendente) {
         dipendenteRepository.delete(dipendente);
     }
 
-    public void eliminaTutti(List<Dipendente> dipendenti) {
+    public void deleteAllByList(List<Dipendente> dipendenti) {
         dipendenteRepository.deleteAll(dipendenti);
     }
 
-    public void eliminaTutti() {
+    public void deleteAll() {
         dipendenteRepository.deleteAll();
     }
 
@@ -68,18 +68,25 @@ public class DipendenteService {
     }
 
 
-    public long contaSupervisori() {
+    public long countSupervisor() {
         return dipendenteRepository.count();
     }
 
-    public List<Dipendente> findDipendenteByMonthlySalary(Dipendente dipendente, Double monthlySalary) {
-        if (dipendente == null) throw new IllegalArgumentException(NULL_MANAGER);
-        if (dipendente.getEmployeeRole() != EmployeeRole.MANAGER) throw new IllegalArgumentException(NOT_A_MANAGER);
-        return dipendenteRepository.findDipendenteByMonthlySalary(monthlySalary);
+    public List<Dipendente> findEmployeesByMonthlySalary(Long employeeId,Double monthlySalary) {
+        Dipendente manager = dipendenteRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
+
+        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)){
+            throw new IllegalArgumentException(NOT_A_MANAGER);
+        }
+
+        return dipendenteRepository.findByMonthlySalaryOrderByMonthlySalaryAsc(monthlySalary);
     }
 
-    public List<Dipendente> findDipendenteByEmployeeRole(EmployeeRole employeeRole) {
-        return dipendenteRepository.findDipendenteByEmployeeRole(employeeRole);
+
+    public List<Dipendente> findEmployeesByEmployeeRole(EmployeeRole employeeRole) {
+        
+        return dipendenteRepository.findByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
     }
 
     public List<Task> findTasksByDipendenteId(Long dipendenteId) {
@@ -88,5 +95,21 @@ public class DipendenteService {
 
     public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState taskState) {
         return dipendenteRepository.findTasksByDipendenteAndState(dipendenteId, taskState);
+    }
+
+    public void fireEmployee(Long managerId, Long employeeId) {
+        Dipendente manager = dipendenteRepository.findById(managerId)
+                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
+        Dipendente employee = dipendenteRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
+        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)){
+            throw new IllegalArgumentException(NOT_A_MANAGER);
+        }
+
+        deleteById(employeeId);
+    }
+
+    private boolean checkRole(EmployeeRole managerRole, EmployeeRole employeeRole){
+       return managerRole != employeeRole;
     }
 }

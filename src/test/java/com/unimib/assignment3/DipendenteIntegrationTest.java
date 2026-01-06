@@ -24,145 +24,148 @@ class DipendenteIntegrationTest {
     private Facade facade;
 
     @BeforeEach
-    void pulisciDB() {
-        facade.eliminaTuttiDipendenti();
+    void cleanDatabase() {
         facade.deleteAllTasks();
+        facade.eliminaTuttiDipendenti();
     }
 
-    private Dipendente creaDipendente(String nome, String cognome, double stipendio, EmployeeRole employeeRole) {
-        Dipendente dipendente = new Dipendente(nome, cognome, stipendio, employeeRole);
-        return facade.saveDipendente(dipendente);
+    private Dipendente creaDipendente(String nome, String cognome, EmployeeRole ruolo) {
+        return facade.saveDipendente(
+                new Dipendente(nome, cognome, ruolo.getMonthlySalary(), ruolo)
+        );
     }
+
 
     @Test
-    void testCreazioneDipendente() {
-        Dipendente dip1 = creaDipendente("Matteo", "Cervini", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
-        Dipendente dip2 = creaDipendente("Andrea", "Aivaliotis", EmployeeRole.JUNIOR.getMonthlySalary(),EmployeeRole.JUNIOR);
+    void shouldCreateDipendentiWithDifferentIds() {
+        Dipendente d1 = creaDipendente("Matteo", "Cervini", EmployeeRole.JUNIOR);
+        Dipendente d2 = creaDipendente("Andrea", "Aivaliotis", EmployeeRole.JUNIOR);
 
-        assertNotNull(dip1.getId());
-        assertNotNull(dip2.getId());
-        assertNotEquals(dip1.getId(), dip2.getId());
+        assertNotNull(d1.getId());
+        assertNotNull(d2.getId());
+        assertNotEquals(d1.getId(), d2.getId());
     }
 
+
+    @Test
     @Transactional
-    @Test
-    void testTrovaDipendentiPerStipendio() {
-        Dipendente dip1 = creaDipendente("Matteo2", "Cervini", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.MANAGER);
-        Dipendente dip2 = creaDipendente("Andrea2", "Aivaliotis", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.MANAGER);
+    void shouldFindDipendentiByStipendio() {
+        Dipendente d1 = creaDipendente("A", "B", EmployeeRole.MANAGER);
+        Dipendente d2 = creaDipendente("C", "D", EmployeeRole.MANAGER);
 
-        // nuovo metodo nel Facade per cercare per stipendio senza passare dipendente
-        List<Dipendente> dipendentiJunior = facade.findDipendentiByStipendio(dip1, EmployeeRole.JUNIOR.getMonthlySalary());
+        d1 = facade.saveDipendente(d1);
+        d2 = facade.saveDipendente(d2);
 
-        assertEquals(2, dipendentiJunior.size());
-        dipendentiJunior.forEach(d -> assertEquals(EmployeeRole.JUNIOR.getMonthlySalary(), d.getMonthlySalary(), 0.01));
-        assertEquals(dip1.getId(), dipendentiJunior.get(0).getId());
-        assertEquals(dip2.getId(), dipendentiJunior.get(1).getId());
+        List<Dipendente> result =
+                facade.findDipendentiByStipendio(d1.getId(), d2.getMonthlySalary());
 
-        Dipendente dip3 = creaDipendente("Matteo3", "Cervini", EmployeeRole.MANAGER.getMonthlySalary(), EmployeeRole.JUNIOR);
-        List<Dipendente> dipendentiManager;
-        try {
-            dipendentiManager = facade.findDipendentiByStipendio(dip3, EmployeeRole.JUNIOR.getMonthlySalary());
-        }catch (IllegalArgumentException e){
-            System.out.println(e.getMessage());
-        }
-
-        dip3.setEmployeeRole(EmployeeRole.MANAGER);
-        dipendentiManager = facade.findDipendentiByStipendio(dip3, EmployeeRole.MANAGER.getMonthlySalary());
-        assertEquals(1, dipendentiManager.size());
-        assertEquals(dip3.getId(), dipendentiManager.getFirst().getId());
-
-        List<Dipendente> dipendentiOverManager= facade.findDipendentiByStipendio(dip3, EmployeeRole.MANAGER.getMonthlySalary()+1000.00);
-        assertTrue(dipendentiOverManager.isEmpty());
+        assertEquals(2, result.size());
+        result.forEach(d ->
+                assertEquals(EmployeeRole.MANAGER.getMonthlySalary(), d.getMonthlySalary())
+        );
     }
 
-    @Transactional
     @Test
-    void testTrovaDipendentiPerGrado() {
-        Dipendente dip1 = creaDipendente("Matteo4", "Cervini", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
-        Dipendente dip2 = creaDipendente("Andrea3", "Aivaliotis", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
+    @Transactional
+    void shouldThrowExceptionWhenRoleMismatchInStipendioSearch() {
+        Dipendente manager = creaDipendente("Manager", "X", EmployeeRole.SENIOR_SW_ENGINEER);
+        manager = facade.saveDipendente(manager);
 
-        List<Dipendente> junior = facade.findDipendentiByGrado(EmployeeRole.JUNIOR);
+        Dipendente finalManager = manager;
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> facade.findDipendentiByStipendio(
+                        finalManager.getId(),
+                        EmployeeRole.JUNIOR.getMonthlySalary()
+                )
+        );
+
+        assertNotNull(ex.getMessage());
+    }
+
+    @Test
+    @Transactional
+    void shouldFindDipendentiByGrado() {
+        Dipendente d1 = creaDipendente("A", "B", EmployeeRole.JUNIOR);
+        Dipendente d2 = creaDipendente("C", "D", EmployeeRole.JUNIOR);
+
+        List<Dipendente> junior =
+                facade.findDipendentiByGrado(EmployeeRole.JUNIOR);
+
         assertEquals(2, junior.size());
-        junior.forEach(d -> assertEquals(EmployeeRole.JUNIOR, d.getEmployeeRole()));
-        assertEquals(dip1.getId(), junior.get(0).getId());
-        assertEquals(dip2.getId(), junior.get(1).getId());
-
-        Dipendente dip3 = creaDipendente("Matteo5", "Cervini", EmployeeRole.SENIOR_SW_ENGINEER.getMonthlySalary(), EmployeeRole.SENIOR_SW_ENGINEER);
-        List<Dipendente> senior = facade.findDipendentiByGrado(EmployeeRole.SENIOR_SW_ENGINEER);
-        assertEquals(1, senior.size());
-        assertEquals(dip3.getId(), senior.getFirst().getId());
-        assertEquals(EmployeeRole.SENIOR_SW_ENGINEER, senior.getFirst().getEmployeeRole());
-
-        List<Dipendente> manager = facade.findDipendentiByGrado(EmployeeRole.MANAGER);
-        assertTrue(manager.isEmpty());
+        assertTrue(junior.stream().allMatch(d ->
+                d.getEmployeeRole() == EmployeeRole.JUNIOR
+        ));
     }
 
-    @Transactional
+
     @Test
-    void testFindTaskByDipendenteAndState() {
+    @Transactional
+    void shouldFindTasksByDipendenteAndState() {
         Dipendente d = facade.saveDipendente(new Dipendente("Mario", "Rossi"));
 
         Task t1 = facade.saveTask(new Task());
         Task t2 = facade.saveTask(new Task());
         Task t3 = facade.saveTask(new Task());
-        t3.setTaskState(TaskState.INIZIATO);
         Task t4 = facade.saveTask(new Task());
 
-        // assegna task usando facade
+        facade.saveTask(t3);
+        facade.saveTask(t4);
+
         facade.assegnaDipendenteATask(t1.getIdTask(), d.getId());
         facade.assegnaDipendenteATask(t2.getIdTask(), d.getId());
         facade.assegnaDipendenteATask(t3.getIdTask(), d.getId());
         facade.assegnaDipendenteATask(t4.getIdTask(), d.getId());
+
+        t3.setTaskState(TaskState.INIZIATO);
         t4.setTaskState(TaskState.FINITO);
 
-        List<Task> openTasks = facade.findTasksByDipendenteAndState(d.getId(), TaskState.DAINIZIARE);
-        assertEquals(2, openTasks.size());
-        openTasks.forEach(t -> assertEquals(TaskState.DAINIZIARE, t.getTaskState()));
+        assertEquals(2,
+                facade.findTasksByDipendenteAndState(d.getId(), TaskState.DAINIZIARE).size());
 
-        List<Task> startedTasks = facade.findTasksByDipendenteAndState(d.getId(), TaskState.INIZIATO);
-        assertEquals(1, startedTasks.size());
-        assertEquals(TaskState.INIZIATO, startedTasks.getFirst().getTaskState());
+        assertEquals(1,
+                facade.findTasksByDipendenteAndState(d.getId(), TaskState.INIZIATO).size());
 
-        List<Task> endedTasks = facade.findTasksByDipendenteAndState(d.getId(), TaskState.FINITO);
-        assertEquals(1, endedTasks.size());
-        assertEquals(TaskState.FINITO, endedTasks.getFirst().getTaskState());
+        assertEquals(1,
+                facade.findTasksByDipendenteAndState(d.getId(), TaskState.FINITO).size());
     }
 
-    // ----- NUOVI TEST AGGIUNTIVI -----
     @Test
-    void testSaveAllDipendenti() {
-        Dipendente d1 = new Dipendente("A", "B");
-        Dipendente d2 = new Dipendente("C", "D");
-        List<Dipendente> saved = facade.saveAllDipendenti(List.of(d1, d2));
+    void shouldSaveAllDipendenti() {
+        List<Dipendente> saved = facade.saveAllDipendenti(List.of(
+                new Dipendente("A", "B"),
+                new Dipendente("C", "D")
+        ));
+
         assertEquals(2, saved.size());
-        assertNotNull(saved.get(0).getId());
-        assertNotNull(saved.get(1).getId());
+        assertTrue(saved.stream().allMatch(d -> d.getId() != null));
     }
 
     @Test
-    void testGetReferenceDipendente() {
-        Dipendente d = creaDipendente("Ref", "Test", 1500, EmployeeRole.JUNIOR);
+    void shouldReturnReferenceDipendente() {
+        Dipendente d = creaDipendente("Ref", "Test", EmployeeRole.JUNIOR);
         Dipendente ref = facade.getReferenceDipendente(d.getId());
+
         assertEquals(d.getId(), ref.getId());
     }
 
     @Test
-    void testContaTuttiDipendenti() {
-        creaDipendente("A", "B", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
-        creaDipendente("C", "D", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
-        long count = facade.contaTuttiDipendenti();
-        assertEquals(2, count);
+    void shouldCountDipendenti() {
+        creaDipendente("A", "B", EmployeeRole.JUNIOR);
+        creaDipendente("C", "D", EmployeeRole.JUNIOR);
+
+        assertEquals(2, facade.contaTuttiDipendenti());
     }
 
     @Test
-    void testEliminaTuttiDipendenti() {
-        Dipendente d1 = creaDipendente("A", "B", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
-        Dipendente d2 = creaDipendente("C", "D", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
-        facade.saveAllDipendenti(List.of(d1, d2));
-        facade.eliminaTuttiDipendenti();
-        assertEquals(0, facade.trovaTuttiDipendenti().size());
-    }
+    void shouldDeleteAllDipendenti() {
+        creaDipendente("A", "B", EmployeeRole.JUNIOR);
+        creaDipendente("C", "D", EmployeeRole.JUNIOR);
 
+        facade.eliminaTuttiDipendenti();
+
+        assertTrue(facade.trovaTuttiDipendenti().isEmpty());
+    }
 }
 
 

@@ -7,21 +7,24 @@ import com.unimib.assignment3.enums.TaskState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 
 public interface DipendenteRepository extends JpaRepository<Dipendente, Long> {
-    // Query per trovare dipendenti con quello stipendio
-    List<Dipendente> findDipendenteByMonthlySalary(Double monthlySalary);
-    // Query per trovare dipendenti con quello stipendio
-    List<Dipendente> findByMonthlySalaryGreaterThan(Double monthlySalary);
-    List<Dipendente> findByMonthlySalaryLessThan(Double monthlySalary);
-    List<Dipendente> findByMonthlySalaryBetween(Double min, Double max);
-    List<Task> findTasksById(Long id);
 
-    // Query per trovare dipendenti con quel grado
-    List<Dipendente> findDipendenteByEmployeeRole(EmployeeRole employeeRole);
+    List<Dipendente> findByMonthlySalaryOrderByMonthlySalaryAsc(Double monthlySalary);
+    List<Dipendente> findByMonthlySalaryGreaterThanOrderByMonthlySalaryAsc(Double monthlySalary);
+    List<Dipendente> findByMonthlySalaryLessThanOrderByMonthlySalaryAsc(Double monthlySalary);
+    List<Dipendente> findByMonthlySalaryBetweenOrderByMonthlySalaryAsc(Double min, Double max);
 
-    // Query per trovare tutte le task in quello stato per quel dipdendente
+    List<Dipendente> findByEmployeeRoleOrderByMonthlySalaryAsc(EmployeeRole employeeRole);
+    List<Dipendente> findByEmployeeRoleGreaterThanOrderByMonthlySalaryAsc(Double monthlySalary);
+    List<Dipendente> findByEmployeeRoleLessThanOrderByMonthlySalaryAsc(Double monthlySalary);
+    List<Dipendente> findByEmployeeRoleBetweenOrderByMonthlySalaryAsc(Double min, Double max);
+
     @Query("SELECT t FROM dipendente d JOIN d.tasks t WHERE d.id = :dipendenteId AND t.taskState = :taskState")
-    List<Task> findTasksByDipendenteAndState(@Param("dipendenteId") Long dipendenteId, @Param("taskState") TaskState taskState);
+    List<Task> findTasksByDipendenteAndState(@Param("dipendenteId") Long dipendenteId,
+                                             @Param("taskState") TaskState taskState);
+
+    List<Task> findTasksById(Long id);
 }
