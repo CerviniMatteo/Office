@@ -64,33 +64,70 @@ public class DipendenteService {
     }
 
     public void flush() {
-        dipendenteRepository.flush(); // forza il commit delle modifiche
+        dipendenteRepository.flush();
     }
-
 
     public long countSupervisor() {
-        return dipendenteRepository.count();
+        return dipendenteRepository.count(); // Se vuoi contare solo i manager, serve query custom
     }
 
-    public List<Dipendente> findEmployeesByMonthlySalary(Long employeeId,Double monthlySalary) {
+    public List<Dipendente> findEmployeesByMonthlySalary(Long employeeId, Double monthlySalary) {
         Dipendente manager = dipendenteRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
 
-        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)){
+        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
             throw new IllegalArgumentException(NOT_A_MANAGER);
         }
 
         return dipendenteRepository.findByMonthlySalaryOrderByMonthlySalaryAsc(monthlySalary);
     }
 
+    public List<Dipendente> findEmployeesWithSalaryGreaterThan(Long employeeId, Double monthlySalary) {
+        Dipendente manager = dipendenteRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
 
-    public List<Dipendente> findEmployeesByEmployeeRole(EmployeeRole employeeRole) {
-        
+        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
+            throw new IllegalArgumentException(NOT_A_MANAGER);
+        }
+
+        return dipendenteRepository.findByMonthlySalaryGreaterThanOrderByMonthlySalaryAsc(monthlySalary);
+    }
+
+    public List<Dipendente> findEmployeesWithSalaryLessThan(Long employeeId, Double monthlySalary) {
+        Dipendente manager = dipendenteRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
+
+        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
+            throw new IllegalArgumentException(NOT_A_MANAGER);
+        }
+
+        return dipendenteRepository.findByMonthlySalaryLessThanOrderByMonthlySalaryAsc(monthlySalary);
+    }
+
+    public List<Dipendente> findEmployeesWithSalaryBetween(Long employeeId, Double min, Double max) {
+        Dipendente manager = dipendenteRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
+
+        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
+            throw new IllegalArgumentException(NOT_A_MANAGER);
+        }
+
+        return dipendenteRepository.findByMonthlySalaryBetweenOrderByMonthlySalaryAsc(min, max);
+    }
+
+    public List<Dipendente> findEmployeesByEmployeeRole(Long employeeId, EmployeeRole employeeRole) {
+        Dipendente manager = dipendenteRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
+
+        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
+            throw new IllegalArgumentException(NOT_A_MANAGER);
+        }
+
         return dipendenteRepository.findByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
     }
 
     public List<Task> findTasksByDipendenteId(Long dipendenteId) {
-        return dipendenteRepository.findTasksById( dipendenteId);
+        return dipendenteRepository.findTasksById(dipendenteId);
     }
 
     public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState taskState) {
@@ -102,14 +139,23 @@ public class DipendenteService {
                 .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
         Dipendente employee = dipendenteRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
-        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)){
+        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
             throw new IllegalArgumentException(NOT_A_MANAGER);
         }
 
         deleteById(employeeId);
     }
 
-    private boolean checkRole(EmployeeRole managerRole, EmployeeRole employeeRole){
-       return managerRole != employeeRole;
+    public int updateMonthlySalary(Long dipendenteId, Double monthlySalary) {
+        return dipendenteRepository.updateMonthlySalaryById(dipendenteId, monthlySalary);
+    }
+
+    public int updateEmployeeRoleAndMonthlySalary(Long dipendenteId, Double monthlySalary, EmployeeRole employeeRole) {
+        return dipendenteRepository.updateEmployeeRoleAndMonthlySalaryById(dipendenteId, monthlySalary, employeeRole);
+    }
+
+    private boolean checkRole(EmployeeRole managerRole, EmployeeRole employeeRole) {
+        return managerRole != employeeRole;
     }
 }
+

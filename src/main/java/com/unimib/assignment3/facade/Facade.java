@@ -80,12 +80,32 @@ public class Facade {
         dipendenteService.flush();
     }
 
-    public List<Dipendente> findDipendentiByStipendio(Long employeeId, Double monthlySalary) {
+    public List<Dipendente> findDipendentiByMonthlySalary(Long employeeId, Double monthlySalary) {
         return dipendenteService.findEmployeesByMonthlySalary(employeeId, monthlySalary);
     }
 
-    public List<Dipendente> findDipendentiByGrado(EmployeeRole employeeRole) {
-        return dipendenteService.findEmployeesByEmployeeRole(employeeRole);
+    public List<Dipendente> findDipendentiWithSalaryGreaterThan(Long employeeId, Double monthlySalary) {
+        return dipendenteService.findEmployeesWithSalaryGreaterThan(employeeId, monthlySalary);
+    }
+
+    public List<Dipendente> findDipendentiWithSalaryLessThan(Long employeeId, Double monthlySalary) {
+        return dipendenteService.findEmployeesWithSalaryLessThan(employeeId, monthlySalary);
+    }
+
+    public List<Dipendente> findDipendentiWithSalaryBetween(Long employeeId, Double min, Double max) {
+        return dipendenteService.findEmployeesWithSalaryBetween(employeeId, min, max);
+    }
+
+    public List<Dipendente> findDipendentiByGrado(Long employeeId, EmployeeRole employeeRole) {
+        return dipendenteService.findEmployeesByEmployeeRole(employeeId, employeeRole);
+    }
+
+    public void updateMonthlySalary(Long dipendenteId, Double monthlySalary) {
+        dipendenteService.updateMonthlySalary(dipendenteId, monthlySalary);
+    }
+
+    public int updateEmployeeRoleAndMonthlySalary(Long dipendenteId, Double monthlySalary, EmployeeRole employeeRole) {
+        return dipendenteService.updateEmployeeRoleAndMonthlySalary(dipendenteId, monthlySalary, employeeRole);
     }
 
     public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState stato) {
@@ -93,7 +113,6 @@ public class Facade {
     }
 
     // <---- Supervisore ---->
-
     public Supervisore saveSupervisore(Supervisore supervisore) {
         return supervisoreService.saveSupervisore(supervisore);
     }
@@ -214,7 +233,10 @@ public class Facade {
     public void deleteTask(Long id) {
         taskService.deleteTask(id);
     }
-    public void deleteAllTasks() {taskRepository.deleteAll();}
+
+    public void deleteAllTasks() {
+        taskRepository.deleteAll();
+    }
 
     public boolean isDipendenteAssegnato(Long taskId, Long dipendenteId) {
         return taskService.isDipendenteAssegnato(taskId, dipendenteId);
@@ -222,3 +244,4 @@ public class Facade {
 
     // <---- Team ---->
 }
+
