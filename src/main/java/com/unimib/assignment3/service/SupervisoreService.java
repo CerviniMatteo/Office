@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.unimib.assignment3.constants.SupervisoreConstants.*;
+import static com.unimib.assignment3.constants.SupervisorConstants.*;
 
 @Service
 public class SupervisoreService {
@@ -83,9 +83,28 @@ public class SupervisoreService {
         capo.getSupervisoriSupervisionati().add(sub);
         sub.setSupervisore(capo);
 
+        if(sub.getSupervisore() != null && capo.getSupervisore() != null){
+            if (creaLoop(capo, sub)) {
+                rimuoviSubordinato(capoId, subordinatoId);
+                throw new IllegalStateException(CANNOT_HAVE_LOOP_SUBORDINATION);
+            }
+
+        }
         supervisoreRepository.saveAndFlush(capo);
         supervisoreRepository.saveAndFlush(sub);
     }
+
+    private boolean creaLoop(Supervisore capo, Supervisore subordinato) {
+        Supervisore current = capo;
+        while (current != null) {
+            if (current.equals(subordinato)) {
+                return true;
+            }
+            current = current.getSupervisore();
+        }
+        return false;
+    }
+
 
     public void rimuoviSubordinato(Long capoId, Long subordinatoId) {
         Supervisore capo = supervisoreRepository.findById(capoId)

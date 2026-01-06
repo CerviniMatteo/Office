@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.unimib.assignment3.constants.DipendenteConstants.*;
+import static com.unimib.assignment3.constants.EmployeeConstants.NOT_A_MANAGER;
+import static com.unimib.assignment3.constants.EmployeeConstants.NULL_MANAGER;
 
 @Service
 public class DipendenteService {
