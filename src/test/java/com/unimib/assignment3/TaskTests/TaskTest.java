@@ -1,7 +1,7 @@
 package com.unimib.assignment3.TaskTests;
 
 import com.unimib.assignment3.POJO.*;
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.repository.*;
@@ -38,10 +38,10 @@ class TaskTest {
 
     @BeforeEach
     void setUp() {
-        dipendente1 = new Dipendente("Mario", "Rossi", 2000.0, Grado.JUNIOR);
+        dipendente1 = new Dipendente("Mario", "Rossi", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
         dipendente1 = facade.saveDipendente(dipendente1);
 
-        dipendente2 = new Dipendente("Luigi", "Verdi", 2500.0, Grado.SENIOR);
+        dipendente2 = new Dipendente("Luigi", "Verdi", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.SENIOR);
         dipendente2 = facade.saveDipendente(dipendente2);
 
         supervisore = new Supervisore("Anna", "Bianchi");
@@ -262,7 +262,7 @@ class TaskTest {
         Task task1 = facade.saveTask(new Task(TaskState.INIZIATO));
         Task task2 = facade.saveTask(new Task(TaskState.INIZIATO));
 
-        Dipendente dipendente3 = new Dipendente("Carlo", "Neri", 2200.0);
+        Dipendente dipendente3 = new Dipendente("Carlo", "Neri", EmployeeRole.JUNIOR);
         dipendente3 = facade.saveDipendente(dipendente3);
 
         task1.assegnaDipendente(dipendente1);

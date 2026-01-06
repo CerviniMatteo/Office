@@ -2,7 +2,7 @@ package com.unimib.assignment3.service;
 
 import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Task;
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.DipendenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.unimib.assignment3.constants.DipendenteConstants.notAManager;
-import static com.unimib.assignment3.constants.DipendenteConstants.nullManager;
+import static com.unimib.assignment3.constants.DipendenteConstants.*;
 
 @Service
 public class DipendenteService {
@@ -73,14 +72,14 @@ public class DipendenteService {
         return dipendenteRepository.count();
     }
 
-    public List<Dipendente> findDipendenteByStipendio(Dipendente dipendente, Double stipendio) {
-        if (dipendente == null) throw new IllegalArgumentException(nullManager);
-        if (dipendente.getGrado() != Grado.MANAGER) throw new IllegalArgumentException(notAManager);
-        return dipendenteRepository.findDipendenteByStipendio(stipendio);
+    public List<Dipendente> findDipendenteByMonthlySalary(Dipendente dipendente, Double monthlySalary) {
+        if (dipendente == null) throw new IllegalArgumentException(NULL_MANAGER);
+        if (dipendente.getEmployeeRole() != EmployeeRole.MANAGER) throw new IllegalArgumentException(NOT_A_MANAGER);
+        return dipendenteRepository.findDipendenteByMonthlySalary(monthlySalary);
     }
 
-    public List<Dipendente> findDipendenteByGrado(Grado grado) {
-        return dipendenteRepository.findDipendenteByGrado(grado);
+    public List<Dipendente> findDipendenteByEmployeeRole(EmployeeRole employeeRole) {
+        return dipendenteRepository.findDipendenteByEmployeeRole(employeeRole);
     }
 
     public List<Task> findTasksByDipendenteId(Long dipendenteId) {

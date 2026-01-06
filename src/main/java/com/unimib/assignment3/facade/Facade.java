@@ -4,7 +4,7 @@ import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Supervisore;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.TaskRepository;
 import com.unimib.assignment3.repository.TeamRepository;
@@ -80,12 +80,12 @@ public class Facade {
         dipendenteService.flush();
     }
 
-    public List<Dipendente> findDipendentiByStipendio(Dipendente dipendente, Double stipendio) {
-        return dipendenteService.findDipendenteByStipendio(dipendente, stipendio);
+    public List<Dipendente> findDipendentiByStipendio(Dipendente dipendente, Double monthlySalary) {
+        return dipendenteService.findDipendenteByMonthlySalary(dipendente, monthlySalary);
     }
 
-    public List<Dipendente> findDipendentiByGrado(Grado grado) {
-        return dipendenteService.findDipendenteByGrado(grado);
+    public List<Dipendente> findDipendentiByGrado(EmployeeRole employeeRole) {
+        return dipendenteService.findDipendenteByEmployeeRole(employeeRole);
     }
 
     public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState stato) {

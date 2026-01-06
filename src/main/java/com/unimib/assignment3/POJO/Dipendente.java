@@ -1,6 +1,6 @@
 package com.unimib.assignment3.POJO;
 
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ import java.util.List;
 @Entity(name="dipendente")
 public class Dipendente extends Persona{
 
-    private Double stipendio;
-    private Grado grado;
+    private Double monthlySalary;
+    private EmployeeRole employeeRole;
 
     @ManyToMany(mappedBy = "dipendentiAssegnati")
     private List<Task> tasks = new ArrayList<>();
@@ -21,37 +21,36 @@ public class Dipendente extends Persona{
 
     public Dipendente(String nome, String cognome) {
         super(nome, cognome);
-        this.stipendio = 1800.00;
-        this.grado = Grado.JUNIOR;
+        this.employeeRole = EmployeeRole.JUNIOR;
+        this.monthlySalary = EmployeeRole.JUNIOR.getMonthlySalary();
     }
 
-    public Dipendente(String nome, String cognome, Double stipendio) {
+    public Dipendente(String nome, String cognome, EmployeeRole employeeRole) {
         super(nome, cognome);
-        this.stipendio = stipendio;
-        this.grado = Grado.JUNIOR;
+        this.employeeRole = employeeRole;
+        this.monthlySalary = employeeRole.getMonthlySalary();
     }
 
-    public Dipendente(String nome, String cognome, Double stipendio, Grado grado) {
+    public Dipendente(String nome, String cognome, Double monthlySalary, EmployeeRole employeeRole) {
         super(nome, cognome);
-        this.stipendio = stipendio;
-        this.grado = grado;
-        this.tasks = new ArrayList<>();
+        this.employeeRole = employeeRole;
+        this.monthlySalary = monthlySalary;
     }
 
-    public Double getStipendio() {
-        return stipendio;
+    public Double getMonthlySalary() {
+        return monthlySalary;
     }
 
-    public void setStipendio(Double stipendio) {
-        this.stipendio = stipendio;
+    public void setMonthlySalary(Double stipendio) {
+        this.monthlySalary = stipendio;
     }
 
-    public Grado getGrado() {
-        return grado;
+    public EmployeeRole getEmployeeRole() {
+        return employeeRole;
     }
 
-    public void setGrado(Grado grado) {
-        this.grado = grado;
+    public void setEmployeeRole(EmployeeRole employeeRole) {
+        this.employeeRole = employeeRole;
     }
 
     public List<Task> getTasks() {
@@ -74,8 +73,8 @@ public class Dipendente extends Persona{
     @Override
     public String toString() {
         return "Dipendente{" + super.toString() +
-                "stipendio=" + stipendio +
-                ", grado=" + grado +
+                "stipendio=" + monthlySalary +
+                ", grado=" + employeeRole +
                 ", tasks=" + getAllTaskId() +
                 '}';
     }

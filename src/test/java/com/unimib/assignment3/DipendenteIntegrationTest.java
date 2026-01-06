@@ -2,7 +2,7 @@ package com.unimib.assignment3;
 
 import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Task;
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,15 +29,15 @@ class DipendenteIntegrationTest {
         facade.deleteAllTasks();
     }
 
-    private Dipendente creaDipendente(String nome, String cognome, double stipendio, Grado grado) {
-        Dipendente dipendente = new Dipendente(nome, cognome, stipendio, grado);
+    private Dipendente creaDipendente(String nome, String cognome, double stipendio, EmployeeRole employeeRole) {
+        Dipendente dipendente = new Dipendente(nome, cognome, stipendio, employeeRole);
         return facade.saveDipendente(dipendente);
     }
 
     @Test
     void testCreazioneDipendente() {
-        Dipendente dip1 = creaDipendente("Matteo", "Cervini", 1800.0, Grado.JUNIOR);
-        Dipendente dip2 = creaDipendente("Andrea", "Aivaliotis", 1800.0, Grado.JUNIOR);
+        Dipendente dip1 = creaDipendente("Matteo", "Cervini", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
+        Dipendente dip2 = creaDipendente("Andrea", "Aivaliotis", EmployeeRole.JUNIOR.getMonthlySalary(),EmployeeRole.JUNIOR);
 
         assertNotNull(dip1.getId());
         assertNotNull(dip2.getId());
@@ -47,53 +47,53 @@ class DipendenteIntegrationTest {
     @Transactional
     @Test
     void testTrovaDipendentiPerStipendio() {
-        Dipendente dip1 = creaDipendente("Matteo2", "Cervini", 1800.0, Grado.MANAGER);
-        Dipendente dip2 = creaDipendente("Andrea2", "Aivaliotis", 1800.0, Grado.MANAGER);
+        Dipendente dip1 = creaDipendente("Matteo2", "Cervini", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.MANAGER);
+        Dipendente dip2 = creaDipendente("Andrea2", "Aivaliotis", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.MANAGER);
 
         // nuovo metodo nel Facade per cercare per stipendio senza passare dipendente
-        List<Dipendente> dipendenti1800 = facade.findDipendentiByStipendio(dip1, 1800.0);
+        List<Dipendente> dipendentiJunior = facade.findDipendentiByStipendio(dip1, EmployeeRole.JUNIOR.getMonthlySalary());
 
-        assertEquals(2, dipendenti1800.size());
-        dipendenti1800.forEach(d -> assertEquals(1800.0, d.getStipendio(), 0.01));
-        assertEquals(dip1.getId(), dipendenti1800.get(0).getId());
-        assertEquals(dip2.getId(), dipendenti1800.get(1).getId());
+        assertEquals(2, dipendentiJunior.size());
+        dipendentiJunior.forEach(d -> assertEquals(EmployeeRole.JUNIOR.getMonthlySalary(), d.getMonthlySalary(), 0.01));
+        assertEquals(dip1.getId(), dipendentiJunior.get(0).getId());
+        assertEquals(dip2.getId(), dipendentiJunior.get(1).getId());
 
-        Dipendente dip3 = creaDipendente("Matteo3", "Cervini", 3000.0, Grado.SENIOR_SW_ENGINEER);
-        List<Dipendente> dipendenti3000;
+        Dipendente dip3 = creaDipendente("Matteo3", "Cervini", EmployeeRole.MANAGER.getMonthlySalary(), EmployeeRole.JUNIOR);
+        List<Dipendente> dipendentiManager;
         try {
-            dipendenti3000 = facade.findDipendentiByStipendio(dip3, 3000.0);
+            dipendentiManager = facade.findDipendentiByStipendio(dip3, EmployeeRole.JUNIOR.getMonthlySalary());
         }catch (IllegalArgumentException e){
             System.out.println(e.getMessage());
         }
 
-        dip3.setGrado(Grado.MANAGER);
-        dipendenti3000 = facade.findDipendentiByStipendio(dip3, 3000.0);
-        assertEquals(1, dipendenti3000.size());
-        assertEquals(dip3.getId(), dipendenti3000.getFirst().getId());
+        dip3.setEmployeeRole(EmployeeRole.MANAGER);
+        dipendentiManager = facade.findDipendentiByStipendio(dip3, EmployeeRole.MANAGER.getMonthlySalary());
+        assertEquals(1, dipendentiManager.size());
+        assertEquals(dip3.getId(), dipendentiManager.getFirst().getId());
 
-        List<Dipendente> dipendenti3600 = facade.findDipendentiByStipendio(dip3, 3600.0);
-        assertTrue(dipendenti3600.isEmpty());
+        List<Dipendente> dipendentiOverManager= facade.findDipendentiByStipendio(dip3, EmployeeRole.MANAGER.getMonthlySalary()+1000.00);
+        assertTrue(dipendentiOverManager.isEmpty());
     }
 
     @Transactional
     @Test
     void testTrovaDipendentiPerGrado() {
-        Dipendente dip1 = creaDipendente("Matteo4", "Cervini", 1800.0, Grado.JUNIOR);
-        Dipendente dip2 = creaDipendente("Andrea3", "Aivaliotis", 1800.0, Grado.JUNIOR);
+        Dipendente dip1 = creaDipendente("Matteo4", "Cervini", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
+        Dipendente dip2 = creaDipendente("Andrea3", "Aivaliotis", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
 
-        List<Dipendente> junior = facade.findDipendentiByGrado(Grado.JUNIOR);
+        List<Dipendente> junior = facade.findDipendentiByGrado(EmployeeRole.JUNIOR);
         assertEquals(2, junior.size());
-        junior.forEach(d -> assertEquals(Grado.JUNIOR, d.getGrado()));
+        junior.forEach(d -> assertEquals(EmployeeRole.JUNIOR, d.getEmployeeRole()));
         assertEquals(dip1.getId(), junior.get(0).getId());
         assertEquals(dip2.getId(), junior.get(1).getId());
 
-        Dipendente dip3 = creaDipendente("Matteo5", "Cervini", 3000.0, Grado.SENIOR_SW_ENGINEER);
-        List<Dipendente> senior = facade.findDipendentiByGrado(Grado.SENIOR_SW_ENGINEER);
+        Dipendente dip3 = creaDipendente("Matteo5", "Cervini", EmployeeRole.SENIOR_SW_ENGINEER.getMonthlySalary(), EmployeeRole.SENIOR_SW_ENGINEER);
+        List<Dipendente> senior = facade.findDipendentiByGrado(EmployeeRole.SENIOR_SW_ENGINEER);
         assertEquals(1, senior.size());
         assertEquals(dip3.getId(), senior.getFirst().getId());
-        assertEquals(Grado.SENIOR_SW_ENGINEER, senior.getFirst().getGrado());
+        assertEquals(EmployeeRole.SENIOR_SW_ENGINEER, senior.getFirst().getEmployeeRole());
 
-        List<Dipendente> manager = facade.findDipendentiByGrado(Grado.MANAGER);
+        List<Dipendente> manager = facade.findDipendentiByGrado(EmployeeRole.MANAGER);
         assertTrue(manager.isEmpty());
     }
 
@@ -141,23 +141,23 @@ class DipendenteIntegrationTest {
 
     @Test
     void testGetReferenceDipendente() {
-        Dipendente d = creaDipendente("Ref", "Test", 1500, Grado.JUNIOR);
+        Dipendente d = creaDipendente("Ref", "Test", 1500, EmployeeRole.JUNIOR);
         Dipendente ref = facade.getReferenceDipendente(d.getId());
         assertEquals(d.getId(), ref.getId());
     }
 
     @Test
     void testContaTuttiDipendenti() {
-        creaDipendente("A", "B", 1000, Grado.JUNIOR);
-        creaDipendente("C", "D", 1200, Grado.JUNIOR);
+        creaDipendente("A", "B", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
+        creaDipendente("C", "D", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
         long count = facade.contaTuttiDipendenti();
         assertEquals(2, count);
     }
 
     @Test
     void testEliminaTuttiDipendenti() {
-        Dipendente d1 = creaDipendente("A", "B", 1000, Grado.JUNIOR);
-        Dipendente d2 = creaDipendente("C", "D", 1200, Grado.JUNIOR);
+        Dipendente d1 = creaDipendente("A", "B", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
+        Dipendente d2 = creaDipendente("C", "D", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
         facade.saveAllDipendenti(List.of(d1, d2));
         facade.eliminaTuttiDipendenti();
         assertEquals(0, facade.trovaTuttiDipendenti().size());

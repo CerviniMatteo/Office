@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.unimib.assignment3.constants.SupervisoreConstants.*;
+
 @Service
 public class SupervisoreService {
 
@@ -72,10 +74,12 @@ public class SupervisoreService {
 
     public void assegnaSubordinato(Long capoId, Long subordinatoId) {
         Supervisore capo = supervisoreRepository.findById(capoId)
-                .orElseThrow(() -> new IllegalArgumentException("Capo non trovato"));
+                .orElseThrow(() -> new IllegalArgumentException(BOSS_NOT_FOUND));
         Supervisore sub = supervisoreRepository.findById(subordinatoId)
-                .orElseThrow(() -> new IllegalArgumentException("Subordinato non trovato"));
-
+                .orElseThrow(() -> new IllegalArgumentException(SUBORDINATE_NOT_FOUND));
+        if(capoId.equals(subordinatoId)){
+            throw new IllegalArgumentException(CANNOT_BE_SELF_SUBORDINATE);
+        }
         capo.getSupervisoriSupervisionati().add(sub);
         sub.setSupervisore(capo);
 
@@ -85,9 +89,9 @@ public class SupervisoreService {
 
     public void rimuoviSubordinato(Long capoId, Long subordinatoId) {
         Supervisore capo = supervisoreRepository.findById(capoId)
-                .orElseThrow(() -> new IllegalArgumentException("Capo non trovato"));
+                .orElseThrow(() -> new IllegalArgumentException(BOSS_NOT_FOUND));
         Supervisore sub = supervisoreRepository.findById(subordinatoId)
-                .orElseThrow(() -> new IllegalArgumentException("Subordinato non trovato"));
+                .orElseThrow(() -> new IllegalArgumentException(SUBORDINATE_NOT_FOUND));
 
         capo.getSupervisoriSupervisionati().remove(sub);
         sub.setSupervisore(null);

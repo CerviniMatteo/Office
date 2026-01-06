@@ -25,7 +25,7 @@ public class EreditarietaSupervisoreIntegrationTest {
 
         assertEquals("Le yang", supervisore.getNome());
         assertEquals("Shi", supervisore.getCognome());
-        assertNotNull(supervisore.getStipendio());
-        assertNotNull(supervisore.getGrado());
+        assertNotNull(supervisore.getMonthlySalary());
+        assertNotNull(supervisore.getEmployeeRole());
     }
 }

@@ -1,7 +1,7 @@
 // java
 package com.unimib.assignment3.POJO;
 
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,10 @@ public class Supervisore extends Dipendente {
     }
 
     public Supervisore(String nome, String cognome) {
-        super(nome, cognome, 2800.0, Grado.SW_ARCHITECT);
+        super(nome, cognome, 2800.0, EmployeeRole.SW_ARCHITECT);
     }
 
-    public Supervisore(String nome, String cognome, Double stipendio, Grado grado) {
+    public Supervisore(String nome, String cognome, Double stipendio, EmployeeRole grado) {
         super(nome, cognome, stipendio, grado);
     }
 

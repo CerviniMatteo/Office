@@ -92,6 +92,12 @@ class SupervisoreIntegrationTest {
         supervisionati = facade.trovaSupervisionati(capo.getId());
         assertEquals(0, supervisionati.size());
         assertFalse(facade.haSubordinati(capo.getId()));
+
+        try {
+            facade.assegnaSubordinato(capo.getId(), capo.getId());
+        }catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
