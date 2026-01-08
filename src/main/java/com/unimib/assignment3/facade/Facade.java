@@ -99,27 +99,35 @@ public class Facade {
     }
 
     public Optional<Supervisore> findSupervisorById(Long supervisorId) {
-        return supervisorService.findById(supervisorId);
+        return supervisorService.findSupervisorById(supervisorId);
     }
 
     public List<Supervisore> findAllSupervisors() {
-        return supervisorService.findAll();
+        return supervisorService.findAllSupervisors();
     }
 
     public void deleteSupervisorById(Long supervisorId) {
-        supervisorService.deleteById(supervisorId);
+        supervisorService.deleteSupervisorById(supervisorId);
     }
 
-    public List<Supervisore> trovaRoot() {
+    public void assignSubordinate(Long supervisorId, Long subordinateId) {
+        supervisorService.assignSubordinate(supervisorId, subordinateId);
+    }
+
+    public void removeSubordinate(Long supervisorId, Long subordinateId) {
+        supervisorService.removeSubordinate(supervisorId, subordinateId);
+    }
+
+    public List<Supervisore> findSupervisorsWithoutSupervisor() {
+        return supervisorService.findSupervisorsWithoutSupervisor();
+    }
+
+    public List<Supervisore> findSupervisorsWithoutSubordinates() {
         return supervisorService.findSupervisorsWithoutSubordinates();
     }
 
-    public void assegnaSubordinato(Long capoId, Long subordinatoId) {
-        supervisorService.assignSubordinates(capoId, subordinatoId);
-    }
-
-    public void rimuoviSubordinato(Long capoId, Long subordinatoId) {
-        supervisorService.removeSubordinate(capoId, subordinatoId);
+        public List<Supervisore> findSupervisorsWithoutSupervisionedTeam() {
+        return supervisorService.findSupervisorsWithoutSupervisionedTeam();
     }
 
     // <---- Task ---->

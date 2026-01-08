@@ -1,4 +1,3 @@
-// java
 package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.enums.EmployeeRole;
@@ -73,6 +72,26 @@ public class Supervisore extends Dipendente {
     public void setTeamSupervisionato(Team teamSupervisionato) {
         addTeam(teamSupervisionato);
     }
+
+    public void addSubordinate(Supervisore supervisoreSupervisionato) {
+        if (supervisoreSupervisionato == null) return;
+        if (!this.supervisoriSupervisionati.contains(supervisoreSupervisionato)) {
+            this.supervisoriSupervisionati.add(supervisoreSupervisionato);
+            supervisoreSupervisionato.setSupervisore(this); // maintain bidirectional link
+        }
+    }
+
+    public void setSubordinates(List<Supervisore> subordinates) {
+        subordinates.forEach(this::addSubordinate);
+    }
+
+    public void removeSubordinate(Supervisore supervisoreSupervisionato) {
+        if (supervisoreSupervisionato == null) return;
+        if (this.supervisoriSupervisionati.remove(supervisoreSupervisionato)) {
+            supervisoreSupervisionato.setSupervisore(null); // remove bidirectional link
+        }
+    }
+
 
     private void addTeam(Team team) {
         if (team == null) return;

@@ -28,11 +28,11 @@ public class DipendenteService {
     /**
      * Save a single employee to the database.
      *
-     * @param dipendente the employee to save
+     * @param employee the employee to save
      * @return the saved employee
      */
-    public Dipendente saveEmployee(Dipendente dipendente) {
-        return dipendenteRepository.save(dipendente);
+    public Dipendente saveEmployee(Dipendente employee) {
+        return dipendenteRepository.save(employee);
     }
 
     /**
