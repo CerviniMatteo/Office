@@ -62,7 +62,7 @@ public class Dipendente extends Persona{
     }
 
 
-    public List<Long> getAllTaskId() {
+    private List<Long> getAllTaskId() {
         List<Long> idTask = new ArrayList<>();
         for (Task task : tasks) {
             idTask.add(task.getIdTask());

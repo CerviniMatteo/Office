@@ -39,13 +39,13 @@ class TaskTest {
     @BeforeEach
     void setUp() {
         dipendente1 = new Dipendente("Mario", "Rossi", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.JUNIOR);
-        dipendente1 = facade.saveDipendente(dipendente1);
+        dipendente1 = facade.saveEmployee(dipendente1);
 
         dipendente2 = new Dipendente("Luigi", "Verdi", EmployeeRole.JUNIOR.getMonthlySalary(), EmployeeRole.SENIOR);
-        dipendente2 = facade.saveDipendente(dipendente2);
+        dipendente2 = facade.saveEmployee(dipendente2);
 
         supervisore = new Supervisore("Anna", "Bianchi");
-        supervisore = facade.saveSupervisore(supervisore);
+        supervisore = facade.saveSupervisor(supervisore);
     }
 
     // Test base - creazione task
@@ -172,7 +172,7 @@ class TaskTest {
         dipendente1.getTasks().add(task);
 
         task = facade.saveTask(task);
-        dipendente1 = facade.saveDipendente(dipendente1);
+        dipendente1 = facade.saveEmployee(dipendente1);
 
         assertEquals(1, task.getDipendentiAssegnati().size());
         assertTrue(task.hasDipendente(dipendente1));
@@ -226,8 +226,8 @@ class TaskTest {
         facade.saveTask(task1);
         facade.saveTask(task2);
         facade.saveTask(task3);
-        facade.saveDipendente(dipendente1);
-        facade.saveDipendente(dipendente2);
+        facade.saveEmployee(dipendente1);
+        facade.saveEmployee(dipendente2);
 
         List<Task> tasksDipendente1 = taskRepository.findTasksByDipendente(dipendente1);
         List<Task> tasksDipendente2 = taskRepository.findTasksByDipendente(dipendente2);
@@ -247,7 +247,7 @@ class TaskTest {
         task2.assegnaDipendente(dipendente1);
         dipendente1.getTasks().add(task2);
         facade.saveTask(task2);
-        facade.saveDipendente(dipendente1);
+        facade.saveEmployee(dipendente1);
 
         List<Task> tasksNonAssegnati = taskRepository.findTasksWithoutDipendenti();
 
@@ -263,7 +263,7 @@ class TaskTest {
         Task task2 = facade.saveTask(new Task(TaskState.INIZIATO));
 
         Dipendente dipendente3 = new Dipendente("Carlo", "Neri", EmployeeRole.JUNIOR);
-        dipendente3 = facade.saveDipendente(dipendente3);
+        dipendente3 = facade.saveEmployee(dipendente3);
 
         task1.assegnaDipendente(dipendente1);
         task1.assegnaDipendente(dipendente2);
@@ -278,9 +278,9 @@ class TaskTest {
 
         facade.saveTask(task1);
         facade.saveTask(task2);
-        facade.saveDipendente(dipendente1);
-        facade.saveDipendente(dipendente2);
-        facade.saveDipendente(dipendente3);
+        facade.saveEmployee(dipendente1);
+        facade.saveEmployee(dipendente2);
+        facade.saveEmployee(dipendente3);
 
         List<Task> tasksConMoltiDipendenti = taskRepository.findTasksWithMoreThanNDipendenti(1);
 
@@ -366,14 +366,14 @@ class TaskTest {
         task.assegnaDipendente(dipendente1);
         dipendente1.getTasks().add(task);
         task = facade.saveTask(task);
-        dipendente1 = facade.saveDipendente(dipendente1);
+        dipendente1 = facade.saveEmployee(dipendente1);
 
         assertEquals(1, task.getDipendentiAssegnati().size());
 
         task.rimuoviDipendente(dipendente1);
         dipendente1.getTasks().remove(task);
         task = facade.saveTask(task);
-        dipendente1 = facade.saveDipendente(dipendente1);
+        dipendente1 = facade.saveEmployee(dipendente1);
 
         assertEquals(0, task.getDipendentiAssegnati().size());
         System.out.println("Dipendente rimosso correttamente dal task");
@@ -402,8 +402,8 @@ class TaskTest {
         dipendente2.getTasks().add(task);
 
         task = facade.saveTask(task);
-        facade.saveDipendente(dipendente1);
-        facade.saveDipendente(dipendente2);
+        facade.saveEmployee(dipendente1);
+        facade.saveEmployee(dipendente2);
 
         Integer count = taskRepository.countDipendentiByTaskId(task.getIdTask());
 
@@ -426,8 +426,8 @@ class TaskTest {
         facade.saveTask(task1);
         facade.saveTask(task2);
         facade.saveTask(task3);
-        facade.saveDipendente(dipendente1);
-        facade.saveDipendente(dipendente2);
+        facade.saveEmployee(dipendente1);
+        facade.saveEmployee(dipendente2);
 
         List<Task> tasksIniziatoConDipendenti =
                 taskRepository.findTasksByStateWithDipendenti(TaskState.INIZIATO);
@@ -504,7 +504,7 @@ class TaskTest {
     @Test
     void testEliminazioneTaskSenzaCancellareDipendenti() {
         // 1. Setup tramite Facade
-        Dipendente d = facade.saveDipendente(new Dipendente("Test", "User"));
+        Dipendente d = facade.saveEmployee(new Dipendente("Test", "User"));
         Task t = facade.saveTask(new Task(TaskState.INIZIATO));
 
         t.assegnaDipendente(d);

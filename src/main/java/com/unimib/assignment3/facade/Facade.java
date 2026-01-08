@@ -22,7 +22,7 @@ public class Facade {
     @Autowired
     DipendenteService dipendenteService;
     @Autowired
-    SupervisoreService supervisoreService;
+    SupervisoreService supervisorService;
     @Autowired
     TaskRepository taskRepository;
     @Autowired
@@ -30,132 +30,80 @@ public class Facade {
     @Autowired
     TaskService taskService;
 
-    // <---- Dipendente ---->
+    // <---- Employee ---->
 
-    public Dipendente saveDipendente(Dipendente dipendente) {
-        return dipendenteService.saveEmployee(dipendente);
+    public Dipendente saveEmployee(Dipendente employee) {
+        return dipendenteService.saveEmployee(employee);
     }
 
-    public List<Dipendente> saveAllDipendenti(List<Dipendente> dipendenti) {
-        return dipendenteService.saveAllEmployees(dipendenti);
+    public List<Dipendente> saveAllEmployees(List<Dipendente> employees) {
+        return dipendenteService.saveAllEmployees(employees);
     }
 
-    public Optional<Dipendente> trovaPerIdDipendente(Long id) {
-        return dipendenteService.findById(id);
+    public Optional<Dipendente> findEmployeeById(Long id) {
+        return dipendenteService.findEmployeeById(id);
     }
 
-    public Dipendente getReferenceDipendente(Long id) {
-        return dipendenteService.getReferenceById(id);
+    public List<Dipendente> findAllEmployees(){
+        return dipendenteService.findAllEmployees();
     }
 
-    public List<Dipendente> trovaTuttiDipendenti() {
-        return dipendenteService.findAll();
+    public void fireEmployee(Long managerId, Long employeeId) {
+        dipendenteService.fireEmployee(managerId, employeeId);
     }
 
-    public boolean esisteDipendentePerId(Long id) {
-        return dipendenteService.existById(id);
+    public void fireEmployees(Long managerId, List<Dipendente> employees) {
+        dipendenteService.fireEmployees(managerId, employees);
     }
 
-    public long contaTuttiDipendenti() {
-        return dipendenteService.countAll();
-    }
-
-    public void eliminaPerIdDipendente(Long id) {
-        dipendenteService.deleteById(id);
-    }
-
-    public void eliminaDipendente(Dipendente dipendente) {
-        dipendenteService.deleteEmployee(dipendente);
-    }
-
-    public void eliminaTuttiDipendenti(List<Dipendente> dipendenti) {
-        dipendenteService.deleteAllByList(dipendenti);
-    }
-
-    public void eliminaTuttiDipendenti() {
-        dipendenteService.deleteAll();
-    }
-
-    public void flushDipendenti() {
-        dipendenteService.flush();
-    }
-
-    public List<Dipendente> findDipendentiByStipendio(Long employeeId, Double monthlySalary) {
+    public List<Dipendente> findEmployeesByMonthlySalary(Long employeeId, Double monthlySalary) {
         return dipendenteService.findEmployeesByMonthlySalary(employeeId, monthlySalary);
     }
 
-    public List<Dipendente> findDipendentiByGrado(EmployeeRole employeeRole) {
-        return dipendenteService.findEmployeesByEmployeeRole(employeeRole);
+    public List<Dipendente> findEmployeesByEmployeeRole(Long employeeId, EmployeeRole employeeRole) {
+        return dipendenteService.findEmployeesByEmployeeRole(employeeId, employeeRole);
     }
 
-    public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState stato) {
-        return dipendenteService.findTasksByDipendenteAndState(dipendenteId, stato);
+    public List<Task> findTasksByEmployeeAndTaskState(Long dipendenteId, TaskState stato) {
+        return dipendenteService.findTasksByEmployeeAndTaskState(dipendenteId, stato);
     }
 
-    // <---- Supervisore ---->
-
-    public Supervisore saveSupervisore(Supervisore supervisore) {
-        return supervisoreService.saveSupervisore(supervisore);
+    public void updateMonthlySalaryById(Long managerId, Long employeeId, Double monthlySalary){
+        dipendenteService.updateMonthlySalaryById(managerId, employeeId, monthlySalary);
     }
 
-    public Optional<Supervisore> trovaPerId(Long id) {
-        return supervisoreService.trovaPerId(id);
+    public void updateEmployeeRoleById(Long managerId, Long employeeId, EmployeeRole employeeRole){
+        dipendenteService.updateEmployeeRoleById(managerId, employeeId, employeeRole);
     }
 
-    public List<Supervisore> trovaTutti() {
-        return supervisoreService.trovaTutti();
+    // <---- Supervisor ---->
+
+    public Supervisore saveSupervisor(Supervisore supervisore) {
+        return supervisorService.saveSupervisor(supervisore);
     }
 
-    public boolean esistePerId(Long id) {
-        return supervisoreService.esistePerId(id);
+    public Optional<Supervisore> findSupervisorById(Long supervisorId) {
+        return supervisorService.findById(supervisorId);
     }
 
-    public void eliminaPerId(Long id) {
-        supervisoreService.eliminaPerId(id);
+    public List<Supervisore> findAllSupervisors() {
+        return supervisorService.findAll();
     }
 
-    public void elimina(Supervisore supervisore) {
-        supervisoreService.elimina(supervisore);
-    }
-
-    public long conta() {
-        return supervisoreService.contaSupervisori();
-    }
-
-    public List<Supervisore> trovaSupervisionati(Long supervisoreId) {
-        return supervisoreService.trovaSupervisoriSupervisionatiPerId(supervisoreId);
+    public void deleteSupervisorById(Long supervisorId) {
+        supervisorService.deleteById(supervisorId);
     }
 
     public List<Supervisore> trovaRoot() {
-        return supervisoreService.trovaSupervisoriSenzaSupervisore();
-    }
-
-    public long contaSupervisionati(Long supervisoreId) {
-        return supervisoreService.contaSupervisoriSupervisionati(supervisoreId);
-    }
-
-    public boolean haSubordinati(Long supervisoreId) {
-        return supervisoreService.esisteSupervisoreConSubordinati(supervisoreId);
-    }
-
-    public List<Supervisore> trovaConTeam() {
-        return supervisoreService.trovaSupervisoriConTeam();
-    }
-
-    public List<Supervisore> trovaConSubordinati() {
-        return supervisoreService.trovaSupervisoriConSubordinati();
-    }
-
-    public Supervisore trovaPerTeam(Long teamId) {
-        return supervisoreService.trovaSupervisorePerTeam(teamId);
+        return supervisorService.findSupervisorsWithoutSubordinates();
     }
 
     public void assegnaSubordinato(Long capoId, Long subordinatoId) {
-        supervisoreService.assegnaSubordinato(capoId, subordinatoId);
+        supervisorService.assignSubordinates(capoId, subordinatoId);
     }
 
     public void rimuoviSubordinato(Long capoId, Long subordinatoId) {
-        supervisoreService.rimuoviSubordinato(capoId, subordinatoId);
+        supervisorService.removeSubordinate(capoId, subordinatoId);
     }
 
     // <---- Task ---->
