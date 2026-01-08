@@ -14,8 +14,12 @@ import java.util.List;
 
 public interface DipendenteRepository extends JpaRepository<Dipendente, Long> {
 
+    List<Dipendente> findDipendenteByMonthlySalary(Double monthlySalary);
     List<Dipendente> findDipendenteByMonthlySalaryOrderByEmployeeRoleAsc(Double monthlySalary);
+    List<Dipendente> findDipendenteByMonthlySalaryOrderByEmployeeRoleDesc(Double monthlySalary);
+    List<Dipendente> findDipendenteByEmployeeRole(EmployeeRole employeeRole);
     List<Dipendente> findDipendenteByEmployeeRoleOrderByMonthlySalaryAsc(EmployeeRole employeeRole);
+    List<Dipendente> findDipendenteByEmployeeRoleOrderByMonthlySalaryDesc(EmployeeRole employeeRole);
     @Query("SELECT t FROM dipendente d JOIN d.tasks t WHERE d.id = :employeeId AND t.taskState = :taskState")
     List<Task> findTasksByEmployeeAndTaskState(@Param("employeeId") Long employeeId,
                                                @Param("taskState") TaskState taskState);

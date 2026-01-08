@@ -60,12 +60,24 @@ public class Facade {
         return dipendenteService.findEmployeesByMonthlySalary(employeeId, monthlySalary);
     }
 
+    public List<Dipendente> findEmployeesByMonthlySalaryAscByEmployeeRole(Long employeeId, Double monthlySalary) {
+        return dipendenteService.findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(employeeId, monthlySalary);
+    }
+
+    public List<Dipendente> findEmployeesByMonthlySalaryDescByEmployeeRole(Long employeeId, Double monthlySalary) {
+        return dipendenteService.findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(employeeId, monthlySalary);
+    }
+
     public List<Dipendente> findEmployeesByEmployeeRole(Long employeeId, EmployeeRole employeeRole) {
         return dipendenteService.findEmployeesByEmployeeRole(employeeId, employeeRole);
     }
 
-    public List<Task> findTasksByEmployeeAndTaskState(Long dipendenteId, TaskState stato) {
-        return dipendenteService.findTasksByEmployeeAndTaskState(dipendenteId, stato);
+    public List<Dipendente> findEmployeesByEmployeeRoleAscByMonthlySalary(Long employeeId, EmployeeRole employeeRole) {
+        return dipendenteService.findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(employeeId, employeeRole);
+    }
+
+    public List<Dipendente> findEmployeesByEmployeeRoleDescByMonthlySalary(Long employeeId, EmployeeRole employeeRole) {
+        return dipendenteService.findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(employeeId, employeeRole);
     }
 
     public void updateMonthlySalaryById(Long managerId, Long employeeId, Double monthlySalary){
@@ -74,6 +86,10 @@ public class Facade {
 
     public void updateEmployeeRoleById(Long managerId, Long employeeId, EmployeeRole employeeRole){
         dipendenteService.updateEmployeeRoleById(managerId, employeeId, employeeRole);
+    }
+
+    public List<Task> findTasksByEmployeeAndTaskState(Long dipendenteId, TaskState stato) {
+        return dipendenteService.findTasksByEmployeeAndTaskState(dipendenteId, stato);
     }
 
     // <---- Supervisor ---->

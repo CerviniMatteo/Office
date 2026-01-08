@@ -51,12 +51,32 @@ public class DipendenteService {
 
     public List<Dipendente> findEmployeesByMonthlySalary(Long employeeId, Double monthlySalary) {
         checkManager(employeeId);
+        return dipendenteRepository.findDipendenteByMonthlySalary(monthlySalary);
+    }
+
+    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(Long employeeId, Double monthlySalary) {
+        checkManager(employeeId);
         return dipendenteRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleAsc(monthlySalary);
+    }
+
+    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(Long employeeId, Double monthlySalary) {
+        checkManager(employeeId);
+        return dipendenteRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleDesc(monthlySalary);
     }
 
     public List<Dipendente> findEmployeesByEmployeeRole(Long employeeId, EmployeeRole employeeRole) {
         checkManager(employeeId);
+        return dipendenteRepository.findDipendenteByEmployeeRole(employeeRole);
+    }
+
+    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(Long employeeId, EmployeeRole employeeRole) {
+        checkManager(employeeId);
         return dipendenteRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
+    }
+
+    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(Long employeeId, EmployeeRole employeeRole) {
+        checkManager(employeeId);
+        return dipendenteRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryDesc(employeeRole);
     }
 
     public List<Task> findTasksByEmployeeAndTaskState(Long employeeId, TaskState taskState) {
