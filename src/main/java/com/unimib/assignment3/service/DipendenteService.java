@@ -4,15 +4,17 @@ import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
-import com.unimib.assignment3.repository.DipendenteRepository;
+import com.unimib.assignment3.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-import static com.unimib.assignment3.constants.EmployeeConstants.NOT_A_MANAGER;
-import static com.unimib.assignment3.constants.EmployeeConstants.NULL_EMPLOYEE;
+import static com.unimib.assignment3.constants.EmployeeConstants.*;
+import static com.unimib.assignment3.constants.TaskConstants.NULL_TASK_STATE;
 
 /**
  * Service class for managing Dipendente (employee) entities.
@@ -23,7 +25,7 @@ import static com.unimib.assignment3.constants.EmployeeConstants.NULL_EMPLOYEE;
 public class DipendenteService {
 
     @Autowired
-    private DipendenteRepository dipendenteRepository;
+    private EmployeeRepository employeeRepository;
 
     /**
      * Save a single employee to the database.
@@ -31,8 +33,9 @@ public class DipendenteService {
      * @param employee the employee to save
      * @return the saved employee
      */
-    public Dipendente saveEmployee(Dipendente employee) {
-        return dipendenteRepository.save(employee);
+    public Dipendente saveEmployee(@NonNull Dipendente employee) {
+        Objects.requireNonNull(employee, NULL_EMPLOYEE);
+        return employeeRepository.save(employee);
     }
 
     /**
@@ -41,8 +44,9 @@ public class DipendenteService {
      * @param employees list of employees
      * @return list of saved employees
      */
-    public List<Dipendente> saveAllEmployees(List<Dipendente> employees) {
-        return dipendenteRepository.saveAll(employees);
+    public List<Dipendente> saveAllEmployees(@NonNull List<Dipendente> employees) {
+        Objects.requireNonNull(employees, NULL_EMPLOYEES);
+        return employeeRepository.saveAll(employees);
     }
 
     /**
@@ -51,8 +55,9 @@ public class DipendenteService {
      * @param employeeId the ID of the employee
      * @return Optional containing the employee if found
      */
-    public Optional<Dipendente> findEmployeeById(Long employeeId) {
-        return dipendenteRepository.findById(employeeId);
+    public Optional<Dipendente> findEmployeeById(@NonNull Long employeeId) {
+        return Optional.of(getEmployeeOrThrow(employeeId));
+
     }
 
     /**
@@ -61,7 +66,7 @@ public class DipendenteService {
      * @return list of all employees
      */
     public List<Dipendente> findAllEmployees() {
-        return dipendenteRepository.findAll();
+        return employeeRepository.findAll();
     }
 
     /**
@@ -69,8 +74,9 @@ public class DipendenteService {
      *
      * @param employeeId the ID of the employee to delete
      */
-    public void deleteEmployeeById(Long employeeId) {
-        dipendenteRepository.deleteById(employeeId);
+    public void deleteEmployeeById(@NonNull Long employeeId) {
+        Objects.requireNonNull(employeeId, NULL_EMPLOYEE_ID);
+        employeeRepository.deleteById(employeeId);
     }
 
     /**
@@ -80,8 +86,8 @@ public class DipendenteService {
      * @param managerId  the manager's ID
      * @param employeeId the employee's ID to fire
      */
-    public void fireEmployee(Long managerId, Long employeeId) {
-        checkManager(managerId);  // ensure caller is a manager
+    public void fireEmployee(@NonNull Long managerId,@NonNull Long employeeId) {
+        checkManagerRole(managerId);
         deleteEmployeeById(employeeId);
     }
 
@@ -92,8 +98,8 @@ public class DipendenteService {
      * @param managerId the manager's ID
      * @param employees list of employees to fire
      */
-    public void fireEmployees(Long managerId, List<Dipendente> employees) {
-        checkManager(managerId);
+    public void fireEmployees(@NonNull Long managerId,@NonNull List<Dipendente> employees) {
+        checkManagerRole(managerId);
         employees.forEach(employee -> deleteEmployeeById(employee.getId()));
     }
 
@@ -101,54 +107,57 @@ public class DipendenteService {
      * Find employees with a specific monthly salary.
      * Only accessible by managers.
      *
-     * @param employeeId    the manager's ID
+     * @param managerId    the manager's ID
      * @param monthlySalary the target salary
      * @return list of employees with that salary
      */
-    public List<Dipendente> findEmployeesByMonthlySalary(Long employeeId, Double monthlySalary) {
-        checkManager(employeeId);
-        return dipendenteRepository.findDipendenteByMonthlySalary(monthlySalary);
+    public List<Dipendente> findEmployeesByMonthlySalary(@NonNull Long managerId, double monthlySalary) {
+        checkManagerRole(managerId);
+        return employeeRepository.findDipendenteByMonthlySalary(monthlySalary);
     }
 
     /**
      * Find employees by salary and sort by role ascending.
      */
-    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(Long employeeId, Double monthlySalary) {
-        checkManager(employeeId);
-        return dipendenteRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleAsc(monthlySalary);
+    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(@NonNull Long managerId, double monthlySalary) {
+        checkManagerRole(managerId);
+        return employeeRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleAsc(monthlySalary);
     }
 
     /**
      * Find employees by salary and sort by role descending.
      */
-    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(Long employeeId, Double monthlySalary) {
-        checkManager(employeeId);
-        return dipendenteRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleDesc(monthlySalary);
+    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(@NonNull Long managerId, double monthlySalary) {
+        checkManagerRole(managerId);
+        return employeeRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleDesc(monthlySalary);
     }
 
     /**
      * Find employees by role.
      * Only accessible by managers.
      */
-    public List<Dipendente> findEmployeesByEmployeeRole(Long employeeId, EmployeeRole employeeRole) {
-        checkManager(employeeId);
-        return dipendenteRepository.findDipendenteByEmployeeRole(employeeRole);
+    public List<Dipendente> findEmployeesByEmployeeRole(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        checkManagerRole(employeeId);
+        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        return employeeRepository.findDipendenteByEmployeeRole(employeeRole);
     }
 
     /**
      * Find employees by role, ordered by salary ascending.
      */
-    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(Long employeeId, EmployeeRole employeeRole) {
-        checkManager(employeeId);
-        return dipendenteRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
+    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        checkManagerRole(employeeId);
+        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        return employeeRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
     }
 
     /**
      * Find employees by role, ordered by salary descending.
      */
-    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(Long employeeId, EmployeeRole employeeRole) {
-        checkManager(employeeId);
-        return dipendenteRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryDesc(employeeRole);
+    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        checkManagerRole(employeeId);
+        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        return employeeRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryDesc(employeeRole);
     }
 
     /**
@@ -158,8 +167,10 @@ public class DipendenteService {
      * @param taskState  the state of tasks to filter
      * @return list of tasks
      */
-    public List<Task> findTasksByEmployeeAndTaskState(Long employeeId, TaskState taskState) {
-        return dipendenteRepository.findTasksByEmployeeAndTaskState(employeeId, taskState);
+    public List<Task> findTasksByEmployeeAndTaskState(@NonNull Long employeeId,@NonNull TaskState taskState) {
+        Objects.requireNonNull(employeeId, NULL_EMPLOYEE_ID);
+        Objects.requireNonNull(taskState, NULL_TASK_STATE);
+        return employeeRepository.findTasksByEmployeeAndTaskState(employeeId, taskState);
     }
 
     /**
@@ -170,9 +181,9 @@ public class DipendenteService {
      * @param employeeId   the employee's ID
      * @param monthlySalary new monthly salary
      */
-    public void updateMonthlySalaryById(Long managerId, Long employeeId, Double monthlySalary) {
-        checkManager(managerId);
-        Dipendente employee = checkEmployeeIsNull(employeeId);
+    public void updateMonthlySalaryById(@NonNull Long managerId,@NonNull Long employeeId, double monthlySalary) {
+        checkManagerRole(managerId);
+        Dipendente employee = getEmployeeOrThrow(employeeId);
         employee.setMonthlySalary(monthlySalary);
     }
 
@@ -184,9 +195,10 @@ public class DipendenteService {
      * @param employeeId   the employee's ID
      * @param employeeRole the new role
      */
-    public void updateEmployeeRoleById(Long managerId, Long employeeId, EmployeeRole employeeRole) {
-        checkManager(managerId);
-        Dipendente employee = checkEmployeeIsNull(employeeId);
+    public void updateEmployeeRoleById(@NonNull Long managerId,@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        checkManagerRole(managerId);
+        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        Dipendente employee = getEmployeeOrThrow(employeeId);
         employee.setEmployeeRole(employeeRole);
     }
 
@@ -196,8 +208,9 @@ public class DipendenteService {
      * @param managerId the employee ID to check
      * @throws IllegalArgumentException if the employee is not a manager
      */
-    private void checkManager(Long managerId) {
-        Dipendente manager = checkEmployeeIsNull(managerId);
+    private void checkManagerRole(Long managerId) {
+        Objects.requireNonNull(managerId, NULL_EMPLOYEE_ID);
+        Dipendente manager = getEmployeeOrThrow(managerId);
         if (!manager.getEmployeeRole().equals(EmployeeRole.MANAGER)) {
             throw new IllegalArgumentException(NOT_A_MANAGER);
         }
@@ -210,8 +223,9 @@ public class DipendenteService {
      * @return the employee if found
      * @throws IllegalArgumentException if the employee does not exist
      */
-    private Dipendente checkEmployeeIsNull(Long employeeId) {
-        return dipendenteRepository.findById(employeeId)
+    private Dipendente getEmployeeOrThrow(Long employeeId) {
+        Objects.requireNonNull(employeeId, NULL_EMPLOYEE_ID);
+        return employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
     }
 }

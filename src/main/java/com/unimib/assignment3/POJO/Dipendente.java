@@ -4,17 +4,13 @@ import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.unimib.assignment3.constants.SupervisorConstants.SUPERVISOR_AT_LEAST_SW_ARCHITECT;
 
 @Entity(name="dipendente")
 public class Dipendente extends Persona{
 
-    private static final Logger log = LoggerFactory.getLogger(Dipendente.class);
-    private Double monthlySalary;
+    private double monthlySalary;
     private EmployeeRole employeeRole;
 
     @ManyToMany(mappedBy = "dipendentiAssegnati")
@@ -36,7 +32,7 @@ public class Dipendente extends Persona{
         setMonthlySalary(employeeRole.getMonthlySalary());
     }
 
-    public Dipendente(String name, String surname, Double monthlySalary, EmployeeRole employeeRole) {
+    public Dipendente(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
         super(name, surname);
         setMonthlySalary(monthlySalary);
         setEmployeeRole(employeeRole);

@@ -1,11 +1,9 @@
 package com.unimib.assignment3;
 
 import com.unimib.assignment3.POJO.Supervisore;
-import com.unimib.assignment3.constants.SupervisorConstants;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.facade.Facade;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -82,22 +80,17 @@ class SupervisorIntegrationTest {
         assertTrue(found.isPresent());
         assertEquals(s1.getNome(), found.get().getNome());
 
-        Optional<Supervisore> notFound = facade.findSupervisorById(boss.getId() + 1000);
-        assertTrue(notFound.isEmpty());
+        assertThrows(IllegalArgumentException.class,
+                () -> facade.findSupervisorById(boss.getId() + 1000)
+        );
     }
 
     @Test
     @Transactional
     void shouldPreventWrongRolesForSupervisor() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            createSupervisor(EmployeeRole.JUNIOR);
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            createSupervisor(EmployeeRole.SENIOR);
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            createSupervisor(EmployeeRole.SENIOR_SW_ENGINEER);
-        });
+        assertThrows(IllegalArgumentException.class, () -> createSupervisor(EmployeeRole.JUNIOR));
+        assertThrows(IllegalArgumentException.class, () -> createSupervisor(EmployeeRole.SENIOR));
+        assertThrows(IllegalArgumentException.class, () -> createSupervisor(EmployeeRole.SENIOR_SW_ENGINEER));
         createSupervisor(EmployeeRole.SW_ARCHITECT);
         createSupervisor(EmployeeRole.SENIOR_SW_ARCHITECT);
         createSupervisor(EmployeeRole.MANAGER);
@@ -123,7 +116,10 @@ class SupervisorIntegrationTest {
         assertTrue(facade.findSupervisorById(supervisor.getId()).isPresent());
 
         facade.deleteSupervisorById(supervisor.getId());
-        assertTrue(facade.findSupervisorById(supervisor.getId()).isEmpty());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> facade.findSupervisorById(supervisor.getId())
+        );
     }
 
     @Test

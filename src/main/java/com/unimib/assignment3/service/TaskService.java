@@ -3,7 +3,7 @@ package com.unimib.assignment3.service;
 import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
-import com.unimib.assignment3.repository.DipendenteRepository;
+import com.unimib.assignment3.repository.EmployeeRepository;
 import com.unimib.assignment3.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     @Autowired
-    private DipendenteRepository dipendenteRepository;
+    private EmployeeRepository employeeRepository;
 
     // Creazione e salvataggio task tramite Repository
     @Transactional
@@ -32,7 +32,7 @@ public class TaskService {
     @Transactional
     public Task assegnaDipendenteATask(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
-        Optional<Dipendente> dipOpt = dipendenteRepository.findById(dipendenteId);
+        Optional<Dipendente> dipOpt = employeeRepository.findById(dipendenteId);
 
         if (taskOpt.isEmpty()) {
             throw new IllegalArgumentException("Task non trovato con id: " + taskId);
@@ -56,7 +56,7 @@ public class TaskService {
 
         task.assegnaDipendente(dipendente);
 
-        dipendenteRepository.saveAndFlush(dipendente);
+        employeeRepository.saveAndFlush(dipendente);
         return taskRepository.saveAndFlush(task);
     }
 
@@ -64,7 +64,7 @@ public class TaskService {
     @Transactional
     public Task rimuoviDipendenteDaTask(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
-        Optional<Dipendente> dipOpt = dipendenteRepository.findById(dipendenteId);
+        Optional<Dipendente> dipOpt = employeeRepository.findById(dipendenteId);
 
         if (taskOpt.isEmpty() || dipOpt.isEmpty()) {
             throw new IllegalArgumentException("Task o Dipendente non trovato");
@@ -139,7 +139,7 @@ public class TaskService {
     // Metodo per verificare se un dipendente è assegnato a un task
     public boolean isDipendenteAssegnato(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
-        Optional<Dipendente> dipOpt = dipendenteRepository.findById(dipendenteId);
+        Optional<Dipendente> dipOpt = employeeRepository.findById(dipendenteId);
 
         if (taskOpt.isEmpty() || dipOpt.isEmpty()) {
             return false;

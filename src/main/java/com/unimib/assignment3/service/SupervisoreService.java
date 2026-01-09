@@ -3,10 +3,11 @@ package com.unimib.assignment3.service;
 import com.unimib.assignment3.POJO.Supervisore;
 import com.unimib.assignment3.repository.SupervisorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import static com.unimib.assignment3.constants.EmployeeConstants.NULL_EMPLOYEE;
 import static com.unimib.assignment3.constants.SupervisorConstants.*;
 
 /**
@@ -27,7 +28,8 @@ public class SupervisoreService extends DipendenteService{
      * @param supervisor the supervisor to save
      * @return the saved supervisor
      */
-    public Supervisore saveSupervisor(Supervisore supervisor) {
+    public Supervisore saveSupervisor(@NonNull Supervisore supervisor) {
+        Objects.requireNonNull(supervisor, NULL_SUPERVISOR);
         return supervisorRepository.save(supervisor);
     }
 
@@ -37,8 +39,8 @@ public class SupervisoreService extends DipendenteService{
      * @param supervisorId the ID of the supervisor
      * @return Optional containing the supervisor if found
      */
-    public Optional<Supervisore> findSupervisorById(Long supervisorId) {
-        return supervisorRepository.findById(supervisorId);
+    public Optional<Supervisore> findSupervisorById(@NonNull Long supervisorId) {
+        return Optional.of(getSupervisorOrThrow(supervisorId));
     }
 
     /**
@@ -55,7 +57,8 @@ public class SupervisoreService extends DipendenteService{
      *
      * @param supervisorId the ID of the supervisor to delete
      */
-    public void deleteSupervisorById(Long supervisorId) {
+    public void deleteSupervisorById(@NonNull Long supervisorId) {
+        Objects.requireNonNull(supervisorId, NULL_SUPERVISOR_ID);
         supervisorRepository.deleteById(supervisorId);
     }
 
@@ -69,7 +72,7 @@ public class SupervisoreService extends DipendenteService{
      * @param subordinateId the subordinate's ID
      * @throws IllegalStateException if the assignment creates a cyclic hierarchy
      */
-    public void assignSubordinate(Long supervisorId, Long subordinateId) {
+    public void assignSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
         Supervisore supervisor = getSupervisorOrThrow(supervisorId);
         Supervisore subordinate = getSupervisorOrThrow(subordinateId);
 
@@ -92,7 +95,7 @@ public class SupervisoreService extends DipendenteService{
      * @param supervisorId  the supervisor's ID
      * @param subordinateId the subordinate's ID
      */
-    public void removeSubordinate(Long supervisorId, Long subordinateId) {
+    public void removeSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
         Supervisore supervisor = getSupervisorOrThrow(supervisorId);
         Supervisore subordinate = getSupervisorOrThrow(subordinateId);
 
@@ -138,8 +141,9 @@ public class SupervisoreService extends DipendenteService{
      * @throws IllegalArgumentException if the supervisor does not exist
      */
     private Supervisore getSupervisorOrThrow(Long supervisorId) {
+        Objects.requireNonNull(supervisorId, NULL_SUPERVISOR_ID);
         return supervisorRepository.findById(supervisorId)
-                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
+                .orElseThrow(() -> new IllegalArgumentException(NULL_SUPERVISOR));
     }
 
     /**

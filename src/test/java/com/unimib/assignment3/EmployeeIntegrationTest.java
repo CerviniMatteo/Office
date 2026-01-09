@@ -105,7 +105,9 @@ class EmployeeIntegrationTest {
 
         facade.fireEmployee(manager.getId(), employee.getId());
 
-        assertTrue(facade.findEmployeeById(employee.getId()).isEmpty());
+        assertThrows(IllegalArgumentException.class,
+                () -> facade.findEmployeeById(employee.getId())
+        );
     }
 
     /**
@@ -133,8 +135,12 @@ class EmployeeIntegrationTest {
 
         facade.fireEmployees(manager.getId(), List.of(e1, e2));
 
-        assertTrue(facade.findEmployeeById(e1.getId()).isEmpty());
-        assertTrue(facade.findEmployeeById(e2.getId()).isEmpty());
+        assertThrows(IllegalArgumentException.class,
+                () -> facade.findEmployeeById(e1.getId())
+        );
+        assertThrows(IllegalArgumentException.class,
+                () -> facade.findEmployeeById(e2.getId())
+        );
     }
 
     /**
