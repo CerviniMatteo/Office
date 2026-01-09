@@ -62,8 +62,8 @@ class EmployeeIntegrationTest {
         counter++;
         return facade.saveEmployee(
                 new Dipendente(
-                        "Nome" + counter,
-                        "Cognome" + counter,
+                        "Employee" + counter,
+                        "Employee" + counter,
                         salary,
                         role
                 )
