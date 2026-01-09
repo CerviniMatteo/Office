@@ -29,20 +29,27 @@ class SupervisorIntegrationTest {
 
     @Autowired
     private Facade facade;
+    private static long counter = 0;
 
     /**
      * Helper method to create and save a supervisor via the facade.
      */
-    private Supervisore createSupervisor(String nome, String cognome) {
-        return facade.saveSupervisor(new Supervisore(nome, cognome));
+    private Supervisore createSupervisor() {
+        counter++;
+        return facade.saveSupervisor(
+                new Supervisore(
+                        "Supervisor" + counter,
+                        "Supervisor" + counter
+                )
+        );
     }
 
     @Test
     @Transactional
     void shouldCreateSupervisorsAndFindById() {
-        Supervisore s1 = createSupervisor("Matteo", "Cervini");
-        Supervisore s2 = createSupervisor("Andrea", "Aivaliotis");
-        Supervisore boss = createSupervisor("Le Yang", "Shi");
+        Supervisore s1 = createSupervisor();
+        Supervisore s2 = createSupervisor();
+        Supervisore boss = createSupervisor();
 
         // Assign subordinates to boss
         boss.addSubordinate(s1);
@@ -56,7 +63,7 @@ class SupervisorIntegrationTest {
 
         Optional<Supervisore> found = facade.findSupervisorById(s1.getId());
         assertTrue(found.isPresent());
-        assertEquals("Matteo", found.get().getNome());
+        assertEquals(s1.getNome(), found.get().getNome());
 
         Optional<Supervisore> notFound = facade.findSupervisorById(boss.getId() + 1000);
         assertTrue(notFound.isEmpty());
@@ -65,8 +72,8 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldFindAllSupervisors() {
-        Supervisore s1 = createSupervisor("Alice", "Verdi");
-        Supervisore s2 = createSupervisor("Bob", "Neri");
+        Supervisore s1 = createSupervisor();
+        Supervisore s2 = createSupervisor();
 
         List<Supervisore> all = facade.findAllSupervisors();
 
@@ -77,7 +84,7 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldDeleteSupervisor() {
-        Supervisore supervisor = createSupervisor("Carlo", "Blu");
+        Supervisore supervisor = createSupervisor();
         assertTrue(facade.findSupervisorById(supervisor.getId()).isPresent());
 
         facade.deleteSupervisorById(supervisor.getId());
@@ -87,8 +94,8 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldAssignAndRemoveSubordinates() {
-        Supervisore boss = createSupervisor("Boss", "Tech");
-        Supervisore sub = createSupervisor("Dev", "Uno");
+        Supervisore boss = createSupervisor();
+        Supervisore sub = createSupervisor();
 
         facade.assignSubordinate(boss.getId(), sub.getId());
 
@@ -110,9 +117,9 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldPreventComplexLoop() {
-        Supervisore a = createSupervisor("A", "Tech");
-        Supervisore b = createSupervisor("B", "Dev");
-        Supervisore c = createSupervisor("C", "Ops");
+        Supervisore a = createSupervisor();
+        Supervisore b = createSupervisor();
+        Supervisore c = createSupervisor();
 
         facade.assignSubordinate(a.getId(), b.getId());
         facade.assignSubordinate(b.getId(), c.getId());
@@ -128,8 +135,8 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldFindRootSupervisors() {
-        Supervisore root = createSupervisor("Root", "Leader");
-        Supervisore child = createSupervisor("Child", "Member");
+        Supervisore root = createSupervisor();
+        Supervisore child = createSupervisor();
 
         facade.assignSubordinate(root.getId(), child.getId());
 
@@ -141,9 +148,9 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldFindSupervisorsWithoutSubordinates() {
-        Supervisore sub = createSupervisor("Sub", "Member");
-        Supervisore supervisor = createSupervisor("Supervisor1", "Leader");
-        Supervisore supervisor2 = createSupervisor("supervisor2", "Member");
+        Supervisore sub = createSupervisor();
+        Supervisore supervisor = createSupervisor();
+        Supervisore supervisor2 = createSupervisor();
 
         facade.assignSubordinate(supervisor.getId(), sub.getId());
         // sub2 is not assigned -> should appear in "without subordinates"
@@ -157,10 +164,10 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldPreventMultiLevelLoop() {
-        Supervisore s1 = createSupervisor("S1", "Tech");
-        Supervisore s2 = createSupervisor("S2", "Dev");
-        Supervisore s3 = createSupervisor("S3", "Ops");
-        Supervisore s4 = createSupervisor("S4", "QA");
+        Supervisore s1 = createSupervisor();
+        Supervisore s2 = createSupervisor();
+        Supervisore s3 = createSupervisor();
+        Supervisore s4 = createSupervisor();
 
         facade.assignSubordinate(s1.getId(), s2.getId());
         facade.assignSubordinate(s2.getId(), s3.getId());
