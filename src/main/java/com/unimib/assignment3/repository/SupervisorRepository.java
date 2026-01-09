@@ -16,7 +16,7 @@ public interface SupervisorRepository extends JpaRepository<Supervisore, Long> {
     List<Supervisore> findSupervisorWithoutSubordinates();
 
     // Supervisors without teams
-    @Query("SELECT s FROM supervisore s WHERE s.teamSupervisionato IS EMPTY")
+    @Query("SELECT s FROM supervisore s WHERE s.teamSupervisionati IS EMPTY")
     List<Supervisore> findSupervisorWithoutSupervisionedTeams();
 
 

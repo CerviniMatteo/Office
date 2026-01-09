@@ -16,7 +16,7 @@ import static com.unimib.assignment3.constants.SupervisorConstants.*;
  * cyclic supervisor-subordinate relationships.
  */
 @Service
-public class SupervisoreService {
+public class SupervisoreService extends DipendenteService{
 
     @Autowired
     private SupervisorRepository supervisorRepository;

@@ -1,8 +1,11 @@
 package com.unimib.assignment3;
 
 import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.constants.SupervisorConstants;
+import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.facade.Facade;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -40,9 +43,23 @@ class SupervisorIntegrationTest {
                 new Supervisore(
                         "Supervisor" + counter,
                         "Supervisor" + counter
+
                 )
         );
     }
+    private Supervisore createSupervisor(EmployeeRole employeeRole) {
+        counter++;
+        return facade.saveSupervisor(
+                new Supervisore(
+                        "Supervisor" + counter,
+                        "Supervisor" + counter,
+                        employeeRole.getMonthlySalary(),
+                        employeeRole
+
+                )
+        );
+    }
+
 
     @Test
     @Transactional
@@ -67,6 +84,24 @@ class SupervisorIntegrationTest {
 
         Optional<Supervisore> notFound = facade.findSupervisorById(boss.getId() + 1000);
         assertTrue(notFound.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    void shouldPreventWrongRolesForSupervisor() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            createSupervisor(EmployeeRole.JUNIOR);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            createSupervisor(EmployeeRole.SENIOR);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            createSupervisor(EmployeeRole.SENIOR_SW_ENGINEER);
+        });
+        createSupervisor(EmployeeRole.SW_ARCHITECT);
+        createSupervisor(EmployeeRole.SENIOR_SW_ARCHITECT);
+        createSupervisor(EmployeeRole.MANAGER);
+
     }
 
     @Test

@@ -21,10 +21,10 @@ public abstract class Persona {
 
     public Persona() {}
 
-    public Persona(String nome, String cognome) {
-        this.nome = nome;
-        this.cognome = cognome;
-        this.email = generateEmail(nome,cognome);
+    public Persona(String name, String surname) {
+        this.nome = name;
+        this.cognome = surname;
+        this.email = generateEmail(name,surname);
     }
 
     public Long getId() {
@@ -39,8 +39,8 @@ public abstract class Persona {
         return cognome;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
+    public void setCognome(String surname) {
+        this.cognome = surname;
     }
 
     public String getEmail() {
@@ -55,20 +55,20 @@ public abstract class Persona {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String name) {
+        this.nome = name;
     }
 
 
-    private static String generateEmail(String nome, String cognome) {
-        return nome.toLowerCase(Locale.ROOT)+"."+cognome.toLowerCase(Locale.ROOT)+"@example.com";
+    private static String generateEmail(String name, String surname) {
+        return name.toLowerCase(Locale.ROOT)+"."+surname.toLowerCase(Locale.ROOT)+"@example.com";
     }
 
     @Override
     public String toString() {
         return  "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", cognome='" + cognome + '\'' +
+                ", name='" + nome + '\'' +
+                ", surname='" + cognome + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
