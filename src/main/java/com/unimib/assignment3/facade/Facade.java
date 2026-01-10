@@ -31,7 +31,18 @@ public class Facade {
     @Autowired
     TaskService taskService;
 
-    // <---- Employee ---->
+    // <---- Employee ----
+    public Dipendente createEmployee(@NonNull String name, @NonNull String surname) {
+        return dipendenteService.createEmployee(name, surname);
+    }
+
+    public Dipendente createEmployee(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
+        return  dipendenteService.createEmployee(name, surname, employeeRole);
+    }
+
+    public Dipendente createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+        return  dipendenteService.createEmployee(name, surname, monthlySalary, employeeRole);
+    }
 
     public Dipendente saveEmployee(@NonNull Dipendente employee) {
         return dipendenteService.saveEmployee(employee);
@@ -94,6 +105,17 @@ public class Facade {
     }
 
     // <---- Supervisor ---->
+    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname) {
+        return supervisorService.createSupervisor(name, surname);
+    }
+
+    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
+        return  supervisorService.createSupervisor(name, surname, employeeRole);
+    }
+
+    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+        return  supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole);
+    }
 
     public Supervisore saveSupervisor(@NonNull Supervisore supervisor) {
         return supervisorService.saveSupervisor(supervisor);

@@ -116,6 +116,7 @@ inclusi ruoli, stipendi e task.
 Tutti i parametri in input devono essere validati per garantire che non siano null.
 
 ### CRUD di base
+- Creazione di un dipendente
 - Salvataggio di un dipendente
 - Salvataggio di una lista di dipendenti
 - Recupero di un dipendente per ID (normale o reference)
@@ -149,6 +150,7 @@ La classe `SupervisoreService` gestisce le operazioni di business relative allâ€
 Tutti i parametri in input devono essere validati per garantire che non siano null.
 
 ### CRUD di base
+- Creazione di un supervisore
 - Salvataggio di un supervisore
 - Ricerca di un supervisore per ID
 - Recupero di tutti i supervisori

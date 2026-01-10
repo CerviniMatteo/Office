@@ -57,12 +57,11 @@ class TeamIntegrationTest {
         assertNotNull(anotherTeam.getIdTeam());
         System.out.println(anotherTeam);
 
-        Supervisore supervisore = new Supervisore("Matteo", "Cervini");
+        Supervisore supervisore = facade.createSupervisor("Matteo", "Cervini");
         supervisore = facade.saveSupervisor(supervisore);
         assertNotNull(supervisore.getId());
 
         supervisore.setTeamSupervisionati(List.of(team, anotherTeam));
-        facade.saveSupervisor(supervisore);
         System.out.println(supervisore);
         System.out.println(team+ "\n" + anotherTeam);
 

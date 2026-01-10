@@ -2,6 +2,7 @@ package com.unimib.assignment3.service;
 
 import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Task;
+import com.unimib.assignment3.constants.CommonConstants;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.EmployeeRepository;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.unimib.assignment3.constants.CommonConstants.NULL_NAME;
+import static com.unimib.assignment3.constants.CommonConstants.NULL_SURNAME;
 import static com.unimib.assignment3.constants.EmployeeConstants.*;
 import static com.unimib.assignment3.constants.TaskConstants.NULL_TASK_STATE;
 
@@ -36,6 +39,52 @@ public class DipendenteService {
     public Dipendente saveEmployee(@NonNull Dipendente employee) {
         Objects.requireNonNull(employee, NULL_EMPLOYEE);
         return employeeRepository.save(employee);
+    }
+
+    /**
+     * Create a new employee with the given name and surname.
+     *
+     * @param name    the name of the employee (must not be null)
+     * @param surname the surname of the employee (must not be null)
+     * @return the created supervisor entity
+     * @throws NullPointerException if the name or surname is null
+     */
+    public Dipendente createEmployee(@NonNull String name, @NonNull String surname) {
+        Objects.requireNonNull(name, NULL_NAME);
+        Objects.requireNonNull(surname, NULL_SURNAME);
+        return new Dipendente(name, surname);
+    }
+
+    /**
+     * Create a new employee with the given name, surname, monthly salary, and employee role.
+     *
+     * @param name          the name of the supervisor (must not be null)
+     * @param surname       the surname of the supervisor (must not be null)
+     * @param employeeRole  the role of the supervisor (must not be null)
+     * @return the created supervisor entity
+     * @throws NullPointerException if the name, surname, or employee role is null
+     */
+    public Dipendente createEmployee(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
+        Objects.requireNonNull(name, NULL_NAME);
+        Objects.requireNonNull(surname, NULL_SURNAME);
+        return new Dipendente(name, surname, employeeRole);
+    }
+
+
+    /**
+     * Create a new employee with the given name, surname, monthly salary, and employee role.
+     *
+     * @param name          the name of the supervisor (must not be null)
+     * @param surname       the surname of the supervisor (must not be null)
+     * @param monthlySalary the monthly salary of the supervisor
+     * @param employeeRole  the role of the supervisor (must not be null)
+     * @return the created supervisor entity
+     * @throws NullPointerException if the name, surname, or employee role is null
+     */
+    public Dipendente createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+        Objects.requireNonNull(name, NULL_NAME);
+        Objects.requireNonNull(surname, NULL_SURNAME);
+        return new Dipendente(name, surname, monthlySalary, employeeRole);
     }
 
     /**
@@ -138,7 +187,7 @@ public class DipendenteService {
      */
     public List<Dipendente> findEmployeesByEmployeeRole(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
         checkManagerRole(employeeId);
-        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
         return employeeRepository.findDipendenteByEmployeeRole(employeeRole);
     }
 
@@ -147,7 +196,7 @@ public class DipendenteService {
      */
     public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
         checkManagerRole(employeeId);
-        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
         return employeeRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
     }
 
@@ -156,7 +205,7 @@ public class DipendenteService {
      */
     public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
         checkManagerRole(employeeId);
-        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
         return employeeRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryDesc(employeeRole);
     }
 
@@ -197,7 +246,7 @@ public class DipendenteService {
      */
     public void updateEmployeeRoleById(@NonNull Long managerId,@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
         checkManagerRole(managerId);
-        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
         Dipendente employee = getEmployeeOrThrow(employeeId);
         employee.setEmployeeRole(employeeRole);
     }

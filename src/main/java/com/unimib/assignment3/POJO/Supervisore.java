@@ -36,7 +36,11 @@ public class Supervisore extends Dipendente {
         super(name, surname, EmployeeRole.SW_ARCHITECT);
     }
 
-    public Supervisore(String name, String surname, Double monthlySalary, EmployeeRole employeeRole) {
+    public Supervisore(String name, String surname, EmployeeRole employeeRole) {
+        super(name, surname, employeeRole);
+    }
+
+    public Supervisore(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
         super(name, surname, monthlySalary, employeeRole);
     }
 

@@ -41,13 +41,11 @@ class EmployeeIntegrationTest {
      */
     private Dipendente createEmployee(EmployeeRole role) {
         counter++;
-        return facade.saveEmployee(
-                new Dipendente(
-                        "Employee" + counter,
-                        "Employee" + counter,
-                        role.getMonthlySalary(),
-                        role
-                )
+        return facade.createEmployee(
+            "Employee" + counter,
+            "Employee",
+            role.getMonthlySalary(),
+            role
         );
     }
 
@@ -60,13 +58,11 @@ class EmployeeIntegrationTest {
      */
     private Dipendente createEmployee(EmployeeRole role, Double salary) {
         counter++;
-        return facade.saveEmployee(
-                new Dipendente(
-                        "Employee" + counter,
-                        "Employee" + counter,
-                        salary,
-                        role
-                )
+        return facade.createEmployee(
+            "Employee" + counter,
+            "Employee",
+            salary,
+            role
         );
     }
 
@@ -77,6 +73,7 @@ class EmployeeIntegrationTest {
     @Test
     void shouldFindEmployeeById() {
         Dipendente d = createEmployee(EmployeeRole.JUNIOR);
+        d = facade.saveEmployee(d);
 
         assertTrue(facade.findEmployeeById(d.getId()).isPresent());
     }
@@ -87,8 +84,10 @@ class EmployeeIntegrationTest {
     @Transactional
     @Test
     void shouldFindAllEmployees() {
-        createEmployee(EmployeeRole.JUNIOR);
-        createEmployee(EmployeeRole.SENIOR_SW_ENGINEER);
+        Dipendente d1 = createEmployee(EmployeeRole.JUNIOR);
+        Dipendente d2 = createEmployee(EmployeeRole.SENIOR_SW_ENGINEER);
+        facade.saveEmployee(d1);
+        facade.saveEmployee(d2);
 
         List<Dipendente> all = facade.findAllEmployees();
         assertTrue(all.size() >= 2); // at least 2 employees exist
@@ -103,10 +102,14 @@ class EmployeeIntegrationTest {
         Dipendente manager = createEmployee(EmployeeRole.MANAGER);
         Dipendente employee = createEmployee(EmployeeRole.JUNIOR);
 
+        manager = facade.saveEmployee(manager);
+        employee = facade.saveEmployee(employee);
+
         facade.fireEmployee(manager.getId(), employee.getId());
 
+        Dipendente finalEmployee = employee;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.findEmployeeById(employee.getId())
+                () -> facade.findEmployeeById(finalEmployee.getId())
         );
     }
 
@@ -119,8 +122,13 @@ class EmployeeIntegrationTest {
         Dipendente nonManager = createEmployee(EmployeeRole.JUNIOR);
         Dipendente employee = createEmployee(EmployeeRole.JUNIOR);
 
+        nonManager = facade.saveEmployee(nonManager);
+        employee = facade.saveEmployee(employee);
+
+        Dipendente finalNonManager = nonManager;
+        Dipendente finalEmployee = employee;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.fireEmployee(nonManager.getId(), employee.getId()));
+                () -> facade.fireEmployee(finalNonManager.getId(), finalEmployee.getId()));
     }
 
     /**
@@ -133,13 +141,19 @@ class EmployeeIntegrationTest {
         Dipendente e1 = createEmployee(EmployeeRole.JUNIOR);
         Dipendente e2 = createEmployee(EmployeeRole.JUNIOR);
 
+        manager = facade.saveEmployee(manager);
+        e1 = facade.saveEmployee(e1);
+        e2 = facade.saveEmployee(e2);
+
         facade.fireEmployees(manager.getId(), List.of(e1, e2));
 
+        Dipendente finalE = e1;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.findEmployeeById(e1.getId())
+                () -> facade.findEmployeeById(finalE.getId())
         );
+        Dipendente finalE1 = e2;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.findEmployeeById(e2.getId())
+                () -> facade.findEmployeeById(finalE1.getId())
         );
     }
 
@@ -151,6 +165,9 @@ class EmployeeIntegrationTest {
     void shouldUpdateMonthlySalary() {
         Dipendente manager = createEmployee(EmployeeRole.MANAGER);
         Dipendente employee = createEmployee(EmployeeRole.JUNIOR);
+
+        manager = facade.saveEmployee(manager);
+        employee = facade.saveEmployee(employee);
 
         facade.updateMonthlySalaryById(
                 manager.getId(),
@@ -171,6 +188,9 @@ class EmployeeIntegrationTest {
         Dipendente manager = createEmployee(EmployeeRole.MANAGER);
         Dipendente employee = createEmployee(EmployeeRole.JUNIOR);
 
+        manager = facade.saveEmployee(manager);
+        employee = facade.saveEmployee(employee);
+
         facade.updateEmployeeRoleById(
                 manager.getId(),
                 employee.getId(),
@@ -188,12 +208,17 @@ class EmployeeIntegrationTest {
     @Test
     void shouldThrowIfUpdateByNonManager() {
         Dipendente nonManager = createEmployee(EmployeeRole.JUNIOR);
-        Dipendente employee = createEmployee(EmployeeRole.JUNIOR);
+        nonManager = facade.saveEmployee(nonManager);
 
+        Dipendente employee = createEmployee(EmployeeRole.JUNIOR);
+        employee = facade.saveEmployee(employee);
+
+        Dipendente finalNonManager = nonManager;
+        Dipendente finalEmployee = employee;
         assertThrows(IllegalArgumentException.class,
                 () -> facade.updateMonthlySalaryById(
-                        nonManager.getId(),
-                        employee.getId(),
+                        finalNonManager.getId(),
+                        finalEmployee.getId(),
                         4000.0
                 ));
     }
@@ -205,10 +230,12 @@ class EmployeeIntegrationTest {
     @Test
     void shouldThrowIfEmployeeNotFound() {
         Dipendente manager = createEmployee(EmployeeRole.MANAGER);
+        manager = facade.saveEmployee(manager);
 
+        Dipendente finalManager = manager;
         assertThrows(IllegalArgumentException.class,
                 () -> facade.updateEmployeeRoleById(
-                        manager.getId(),
+                        finalManager.getId(),
                         999L,
                         EmployeeRole.JUNIOR
                 ));
@@ -221,11 +248,16 @@ class EmployeeIntegrationTest {
     @Test
     void shouldFindEmployeesByMonthlySalary() {
         Dipendente manager = createEmployee(EmployeeRole.MANAGER);
+        manager = facade.saveEmployee(manager);
 
         Dipendente e1 = createEmployee(EmployeeRole.JUNIOR);
+        e1 = facade.saveEmployee(e1);
+
         facade.updateMonthlySalaryById(manager.getId(), e1.getId(), 3100.0);
 
         Dipendente e2 = createEmployee(EmployeeRole.MANAGER);
+        e2 = facade.saveEmployee(e2);
+
         facade.updateMonthlySalaryById(manager.getId(), e2.getId(), 3100.0);
 
         List<Dipendente> foundSalary = facade.findEmployeesByMonthlySalary(manager.getId(), 3100.0);
@@ -244,9 +276,11 @@ class EmployeeIntegrationTest {
     @Test
     void shouldThrowIfNonManagerSearchBySalary() {
         Dipendente nonManager = createEmployee(EmployeeRole.JUNIOR);
+        nonManager = facade.saveEmployee(nonManager);
 
+        Dipendente finalNonManager = nonManager;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.findEmployeesByMonthlySalary(nonManager.getId(), 3000.0));
+                () -> facade.findEmployeesByMonthlySalary(finalNonManager.getId(), 3000.0));
     }
 
     /**
@@ -256,10 +290,16 @@ class EmployeeIntegrationTest {
     @Test
     void shouldSortEmployeesByMonthlySalaryAscAndDesc() {
         Dipendente manager = createEmployee(EmployeeRole.MANAGER);
+        manager = facade.saveEmployee(manager);
 
         Dipendente e1 = createEmployee(EmployeeRole.JUNIOR, 1500.0);
+        e1 = facade.saveEmployee(e1);
+
         Dipendente e2 = createEmployee(EmployeeRole.SENIOR, 1500.0);
+        e2 = facade.saveEmployee(e2);
+
         Dipendente e3 = createEmployee(EmployeeRole.SENIOR_SW_ENGINEER, 1500.0);
+        e3 = facade.saveEmployee(e3);
 
         // Ensure salaries are updated through service
         facade.updateMonthlySalaryById(manager.getId(), e1.getId(), e1.getMonthlySalary());
@@ -284,11 +324,19 @@ class EmployeeIntegrationTest {
     @Test
     void shouldSortEmployeesByRoleAscAndDesc() {
         Dipendente manager = createEmployee(EmployeeRole.MANAGER, 5000.0);
+        manager = facade.saveEmployee(manager);
 
-        createEmployee(EmployeeRole.JUNIOR, 2000.0);
-        createEmployee(EmployeeRole.JUNIOR, 3000.0);
-        createEmployee(EmployeeRole.JUNIOR, 6000.0);
-        createEmployee(EmployeeRole.JUNIOR, 4000.0);
+        Dipendente e1 = createEmployee(EmployeeRole.JUNIOR, 2000.0);
+        facade.saveEmployee(e1);
+
+        Dipendente e2 = createEmployee(EmployeeRole.JUNIOR, 3000.0);facade.saveEmployee(e2);
+        facade.saveEmployee(e2);
+
+        Dipendente e3 = createEmployee(EmployeeRole.JUNIOR, 6000.0);
+        facade.saveEmployee(e3);
+
+        Dipendente e4 = createEmployee(EmployeeRole.JUNIOR, 4000.0);
+        facade.saveEmployee(e4);
 
         // Ascending role order (all same role -> sorted by salary)
         List<Dipendente> roleAsc = facade.findEmployeesByEmployeeRoleAscByMonthlySalary(manager.getId(), EmployeeRole.JUNIOR);
@@ -310,6 +358,7 @@ class EmployeeIntegrationTest {
     @Test
     void testFindTaskByDipendenteAndState() {
         Dipendente e = createEmployee(EmployeeRole.JUNIOR);
+        e = facade.saveEmployee(e);
 
         Task t1 = facade.saveTask(new Task());
         Task t2 = facade.saveTask(new Task());

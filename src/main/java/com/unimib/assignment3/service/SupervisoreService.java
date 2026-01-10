@@ -1,6 +1,7 @@
 package com.unimib.assignment3.service;
 
 import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.repository.SupervisorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -8,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.unimib.assignment3.constants.CommonConstants.NULL_NAME;
+import static com.unimib.assignment3.constants.CommonConstants.NULL_SURNAME;
 import static com.unimib.assignment3.constants.SupervisorConstants.*;
 
 /**
@@ -23,14 +27,61 @@ public class SupervisoreService extends DipendenteService{
     private SupervisorRepository supervisorRepository;
 
     /**
-     * Save a supervisor entity to the repository.
+     * Save a new supervisor with the given name and surname.
      *
-     * @param supervisor the supervisor to save
-     * @return the saved supervisor
+     * @param supervisor the supervisor entity to save (must not be null)
+     * @throws NullPointerException if the name or surname is null
      */
     public Supervisore saveSupervisor(@NonNull Supervisore supervisor) {
         Objects.requireNonNull(supervisor, NULL_SUPERVISOR);
-        return supervisorRepository.save(supervisor);
+        return supervisorRepository.saveAndFlush(supervisor);
+    }
+
+
+    /**
+     * Create  a new supervisor with the given name and surname.
+     *
+     * @param name    the name of the supervisor (must not be null)
+     * @param surname the surname of the supervisor (must not be null)
+     * @return the created supervisor entity
+     * @throws NullPointerException if the name or surname is null
+     */
+    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname) {
+        Objects.requireNonNull(name, NULL_NAME);
+        Objects.requireNonNull(surname, NULL_SURNAME);
+        return new Supervisore(name, surname);
+    }
+
+    /**
+     * Create  a new supervisor with the given name, surname, monthly salary, and employee role.
+     *
+     * @param name          the name of the supervisor (must not be null)
+     * @param surname       the surname of the supervisor (must not be null)
+     * @param employeeRole  the role of the supervisor (must not be null)
+     * @return the created supervisor entity
+     * @throws NullPointerException if the name, surname, or employee role is null
+     */
+    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
+        Objects.requireNonNull(name, NULL_NAME);
+        Objects.requireNonNull(surname, NULL_SURNAME);
+        return new Supervisore(name, surname, employeeRole);
+    }
+
+
+    /**
+     * Create  a new supervisor with the given name, surname, monthly salary, and employee role.
+     *
+     * @param name          the name of the supervisor (must not be null)
+     * @param surname       the surname of the supervisor (must not be null)
+     * @param monthlySalary the monthly salary of the supervisor
+     * @param employeeRole  the role of the supervisor (must not be null)
+     * @return the created supervisor entity
+     * @throws NullPointerException if the name, surname, or employee role is null
+     */
+    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+        Objects.requireNonNull(name, NULL_NAME);
+        Objects.requireNonNull(surname, NULL_SURNAME);
+        return new Supervisore(name, surname, monthlySalary, employeeRole);
     }
 
     /**
