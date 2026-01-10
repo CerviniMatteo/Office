@@ -8,13 +8,13 @@ public enum EmployeeRole {
     SENIOR_SW_ARCHITECT(4000.00),
     MANAGER(7000.00);
 
-    private final Double monthlySalary;
+    private final double monthlySalary;
 
-    EmployeeRole(Double monthlySalary) {
+    EmployeeRole(double monthlySalary) {
         this.monthlySalary = monthlySalary;
     }
 
-    public Double getMonthlySalary() {
+    public double getMonthlySalary() {
         return monthlySalary;
     }
 }
