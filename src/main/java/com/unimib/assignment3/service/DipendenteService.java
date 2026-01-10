@@ -4,158 +4,228 @@ import com.unimib.assignment3.POJO.Dipendente;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
-import com.unimib.assignment3.repository.DipendenteRepository;
+import com.unimib.assignment3.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import static com.unimib.assignment3.constants.EmployeeConstants.NOT_A_MANAGER;
-import static com.unimib.assignment3.constants.EmployeeConstants.NULL_EMPLOYEE;
 
+import static com.unimib.assignment3.constants.EmployeeConstants.*;
+import static com.unimib.assignment3.constants.TaskConstants.NULL_TASK_STATE;
+
+/**
+ * Service class for managing Dipendente (employee) entities.
+ * <p>
+ * Provides CRUD operations, salary and role updates, task queries, and manager-authorized actions.
+ */
 @Service
 public class DipendenteService {
 
     @Autowired
-    DipendenteRepository dipendenteRepository;
+    private EmployeeRepository employeeRepository;
 
-    public Dipendente saveEmployee(Dipendente dipendente) {
-        return dipendenteRepository.save(dipendente);
+    /**
+     * Save a single employee to the database.
+     *
+     * @param employee the employee to save
+     * @return the saved employee
+     */
+    public Dipendente saveEmployee(@NonNull Dipendente employee) {
+        Objects.requireNonNull(employee, NULL_EMPLOYEE);
+        return employeeRepository.save(employee);
     }
 
-    public List<Dipendente> saveAllEmployees(List<Dipendente> dipendenti) {
-        return dipendenteRepository.saveAll(dipendenti);
+    /**
+     * Save multiple employees to the database in bulk.
+     *
+     * @param employees list of employees
+     * @return list of saved employees
+     */
+    public List<Dipendente> saveAllEmployees(@NonNull List<Dipendente> employees) {
+        Objects.requireNonNull(employees, NULL_EMPLOYEES);
+        return employeeRepository.saveAll(employees);
     }
 
-    public Optional<Dipendente> findById(Long id) {
-        return dipendenteRepository.findById(id);
+    /**
+     * Find an employee by their ID.
+     *
+     * @param employeeId the ID of the employee
+     * @return Optional containing the employee if found
+     */
+    public Optional<Dipendente> findEmployeeById(@NonNull Long employeeId) {
+        return Optional.of(getEmployeeOrThrow(employeeId));
+
     }
 
-    public Dipendente getReferenceById(Long id) {
-        return dipendenteRepository.getReferenceById(id);
+    /**
+     * Retrieve all employees.
+     *
+     * @return list of all employees
+     */
+    public List<Dipendente> findAllEmployees() {
+        return employeeRepository.findAll();
     }
 
-    public List<Dipendente> findAll() {
-        return dipendenteRepository.findAll();
+    /**
+     * Delete an employee by ID.
+     *
+     * @param employeeId the ID of the employee to delete
+     */
+    public void deleteEmployeeById(@NonNull Long employeeId) {
+        Objects.requireNonNull(employeeId, NULL_EMPLOYEE_ID);
+        employeeRepository.deleteById(employeeId);
     }
 
-    public boolean existById(Long id) {
-        return dipendenteRepository.existsById(id);
+    /**
+     * Fire (delete) a single employee.
+     * Only a manager can perform this action.
+     *
+     * @param managerId  the manager's ID
+     * @param employeeId the employee's ID to fire
+     */
+    public void fireEmployee(@NonNull Long managerId,@NonNull Long employeeId) {
+        checkManagerRole(managerId);
+        deleteEmployeeById(employeeId);
     }
 
-    public long countAll() {
-        return dipendenteRepository.count();
+    /**
+     * Fire multiple employees at once.
+     * Only a manager can perform this action.
+     *
+     * @param managerId the manager's ID
+     * @param employees list of employees to fire
+     */
+    public void fireEmployees(@NonNull Long managerId,@NonNull List<Dipendente> employees) {
+        checkManagerRole(managerId);
+        employees.forEach(employee -> deleteEmployeeById(employee.getId()));
     }
 
-    public void deleteById(Long id) {
-        dipendenteRepository.deleteById(id);
+    /**
+     * Find employees with a specific monthly salary.
+     * Only accessible by managers.
+     *
+     * @param managerId    the manager's ID
+     * @param monthlySalary the target salary
+     * @return list of employees with that salary
+     */
+    public List<Dipendente> findEmployeesByMonthlySalary(@NonNull Long managerId, double monthlySalary) {
+        checkManagerRole(managerId);
+        return employeeRepository.findDipendenteByMonthlySalary(monthlySalary);
     }
 
-    public void deleteEmployee(Dipendente dipendente) {
-        dipendenteRepository.delete(dipendente);
+    /**
+     * Find employees by salary and sort by role ascending.
+     */
+    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(@NonNull Long managerId, double monthlySalary) {
+        checkManagerRole(managerId);
+        return employeeRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleAsc(monthlySalary);
     }
 
-    public void deleteAllByList(List<Dipendente> dipendenti) {
-        dipendenteRepository.deleteAll(dipendenti);
+    /**
+     * Find employees by salary and sort by role descending.
+     */
+    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(@NonNull Long managerId, double monthlySalary) {
+        checkManagerRole(managerId);
+        return employeeRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleDesc(monthlySalary);
     }
 
-    public void deleteAll() {
-        dipendenteRepository.deleteAll();
+    /**
+     * Find employees by role.
+     * Only accessible by managers.
+     */
+    public List<Dipendente> findEmployeesByEmployeeRole(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        checkManagerRole(employeeId);
+        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        return employeeRepository.findDipendenteByEmployeeRole(employeeRole);
     }
 
-    public void flush() {
-        dipendenteRepository.flush();
+    /**
+     * Find employees by role, ordered by salary ascending.
+     */
+    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        checkManagerRole(employeeId);
+        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        return employeeRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
     }
 
-    public long countSupervisor() {
-        return dipendenteRepository.count(); // Se vuoi contare solo i manager, serve query custom
+    /**
+     * Find employees by role, ordered by salary descending.
+     */
+    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        checkManagerRole(employeeId);
+        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        return employeeRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryDesc(employeeRole);
     }
 
-    public List<Dipendente> findEmployeesByMonthlySalary(Long employeeId, Double monthlySalary) {
-        Dipendente manager = dipendenteRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
+    /**
+     * Retrieve all tasks assigned to an employee in a specific state.
+     *
+     * @param employeeId the employee's ID
+     * @param taskState  the state of tasks to filter
+     * @return list of tasks
+     */
+    public List<Task> findTasksByEmployeeAndTaskState(@NonNull Long employeeId,@NonNull TaskState taskState) {
+        Objects.requireNonNull(employeeId, NULL_EMPLOYEE_ID);
+        Objects.requireNonNull(taskState, NULL_TASK_STATE);
+        return employeeRepository.findTasksByEmployeeAndTaskState(employeeId, taskState);
+    }
 
-        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
+    /**
+     * Update an employee's monthly salary.
+     * Only a manager can perform this operation.
+     *
+     * @param managerId    the manager's ID
+     * @param employeeId   the employee's ID
+     * @param monthlySalary new monthly salary
+     */
+    public void updateMonthlySalaryById(@NonNull Long managerId,@NonNull Long employeeId, double monthlySalary) {
+        checkManagerRole(managerId);
+        Dipendente employee = getEmployeeOrThrow(employeeId);
+        employee.setMonthlySalary(monthlySalary);
+    }
+
+    /**
+     * Update an employee's role.
+     * Only a manager can perform this operation.
+     *
+     * @param managerId    the manager's ID
+     * @param employeeId   the employee's ID
+     * @param employeeRole the new role
+     */
+    public void updateEmployeeRoleById(@NonNull Long managerId,@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        checkManagerRole(managerId);
+        Objects.requireNonNull(employeeRole, NULL_EMPLOYEE_ROLE);
+        Dipendente employee = getEmployeeOrThrow(employeeId);
+        employee.setEmployeeRole(employeeRole);
+    }
+
+    /**
+     * Check that the given employee is a manager.
+     *
+     * @param managerId the employee ID to check
+     * @throws IllegalArgumentException if the employee is not a manager
+     */
+    private void checkManagerRole(Long managerId) {
+        Objects.requireNonNull(managerId, NULL_EMPLOYEE_ID);
+        Dipendente manager = getEmployeeOrThrow(managerId);
+        if (!manager.getEmployeeRole().equals(EmployeeRole.MANAGER)) {
             throw new IllegalArgumentException(NOT_A_MANAGER);
         }
-
-        return dipendenteRepository.findByMonthlySalaryOrderByMonthlySalaryAsc(monthlySalary);
     }
 
-    public List<Dipendente> findEmployeesWithSalaryGreaterThan(Long employeeId, Double monthlySalary) {
-        Dipendente manager = dipendenteRepository.findById(employeeId)
+    /**
+     * Check that an employee exists.
+     *
+     * @param employeeId the employee ID
+     * @return the employee if found
+     * @throws IllegalArgumentException if the employee does not exist
+     */
+    private Dipendente getEmployeeOrThrow(Long employeeId) {
+        Objects.requireNonNull(employeeId, NULL_EMPLOYEE_ID);
+        return employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
-
-        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
-            throw new IllegalArgumentException(NOT_A_MANAGER);
-        }
-
-        return dipendenteRepository.findByMonthlySalaryGreaterThanOrderByMonthlySalaryAsc(monthlySalary);
-    }
-
-    public List<Dipendente> findEmployeesWithSalaryLessThan(Long employeeId, Double monthlySalary) {
-        Dipendente manager = dipendenteRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
-
-        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
-            throw new IllegalArgumentException(NOT_A_MANAGER);
-        }
-
-        return dipendenteRepository.findByMonthlySalaryLessThanOrderByMonthlySalaryAsc(monthlySalary);
-    }
-
-    public List<Dipendente> findEmployeesWithSalaryBetween(Long employeeId, Double min, Double max) {
-        Dipendente manager = dipendenteRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
-
-        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
-            throw new IllegalArgumentException(NOT_A_MANAGER);
-        }
-
-        return dipendenteRepository.findByMonthlySalaryBetweenOrderByMonthlySalaryAsc(min, max);
-    }
-
-    public List<Dipendente> findEmployeesByEmployeeRole(Long employeeId, EmployeeRole employeeRole) {
-        Dipendente manager = dipendenteRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
-
-        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
-            throw new IllegalArgumentException(NOT_A_MANAGER);
-        }
-
-        return dipendenteRepository.findByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
-    }
-
-    public List<Task> findTasksByDipendenteId(Long dipendenteId) {
-        return dipendenteRepository.findTasksById(dipendenteId);
-    }
-
-    public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState taskState) {
-        return dipendenteRepository.findTasksByDipendenteAndState(dipendenteId, taskState);
-    }
-
-    public void fireEmployee(Long managerId, Long employeeId) {
-        Dipendente manager = dipendenteRepository.findById(managerId)
-                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
-        Dipendente employee = dipendenteRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));
-        if (checkRole(manager.getEmployeeRole(), EmployeeRole.MANAGER)) {
-            throw new IllegalArgumentException(NOT_A_MANAGER);
-        }
-
-        deleteById(employeeId);
-    }
-
-    public int updateMonthlySalary(Long dipendenteId, Double monthlySalary) {
-        return dipendenteRepository.updateMonthlySalaryById(dipendenteId, monthlySalary);
-    }
-
-    public int updateEmployeeRoleAndMonthlySalary(Long dipendenteId, Double monthlySalary, EmployeeRole employeeRole) {
-        return dipendenteRepository.updateEmployeeRoleAndMonthlySalaryById(dipendenteId, monthlySalary, employeeRole);
-    }
-
-    private boolean checkRole(EmployeeRole managerRole, EmployeeRole employeeRole) {
-        return managerRole != employeeRole;
     }
 }
-

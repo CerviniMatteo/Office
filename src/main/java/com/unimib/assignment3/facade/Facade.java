@@ -12,6 +12,7 @@ import com.unimib.assignment3.service.DipendenteService;
 import com.unimib.assignment3.service.SupervisoreService;
 import com.unimib.assignment3.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class Facade {
     @Autowired
     DipendenteService dipendenteService;
     @Autowired
-    SupervisoreService supervisoreService;
+    SupervisoreService supervisorService;
     @Autowired
     TaskRepository taskRepository;
     @Autowired
@@ -30,151 +31,104 @@ public class Facade {
     @Autowired
     TaskService taskService;
 
-    // <---- Dipendente ---->
+    // <---- Employee ---->
 
-    public Dipendente saveDipendente(Dipendente dipendente) {
-        return dipendenteService.saveEmployee(dipendente);
+    public Dipendente saveEmployee(@NonNull Dipendente employee) {
+        return dipendenteService.saveEmployee(employee);
     }
 
-    public List<Dipendente> saveAllDipendenti(List<Dipendente> dipendenti) {
-        return dipendenteService.saveAllEmployees(dipendenti);
+    public List<Dipendente> saveAllEmployees(@NonNull List<Dipendente> employees) {
+        return dipendenteService.saveAllEmployees(employees);
     }
 
-    public Optional<Dipendente> trovaPerIdDipendente(Long id) {
-        return dipendenteService.findById(id);
+    public Optional<Dipendente> findEmployeeById(@NonNull Long employeeId) {
+        return dipendenteService.findEmployeeById(employeeId);
     }
 
-    public Dipendente getReferenceDipendente(Long id) {
-        return dipendenteService.getReferenceById(id);
+    public List<Dipendente> findAllEmployees(){
+        return dipendenteService.findAllEmployees();
     }
 
-    public List<Dipendente> trovaTuttiDipendenti() {
-        return dipendenteService.findAll();
+    public void fireEmployee(@NonNull Long managerId,@NonNull Long employeeId) {
+        dipendenteService.fireEmployee(managerId, employeeId);
     }
 
-    public boolean esisteDipendentePerId(Long id) {
-        return dipendenteService.existById(id);
+    public void fireEmployees(@NonNull Long managerId,@NonNull List<Dipendente> employees) {
+        dipendenteService.fireEmployees(managerId, employees);
     }
 
-    public long contaTuttiDipendenti() {
-        return dipendenteService.countAll();
-    }
-
-    public void eliminaPerIdDipendente(Long id) {
-        dipendenteService.deleteById(id);
-    }
-
-    public void eliminaDipendente(Dipendente dipendente) {
-        dipendenteService.deleteEmployee(dipendente);
-    }
-
-    public void eliminaTuttiDipendenti(List<Dipendente> dipendenti) {
-        dipendenteService.deleteAllByList(dipendenti);
-    }
-
-    public void eliminaTuttiDipendenti() {
-        dipendenteService.deleteAll();
-    }
-
-    public void flushDipendenti() {
-        dipendenteService.flush();
-    }
-
-    public List<Dipendente> findDipendentiByMonthlySalary(Long employeeId, Double monthlySalary) {
+    public List<Dipendente> findEmployeesByMonthlySalary(@NonNull Long employeeId,double monthlySalary) {
         return dipendenteService.findEmployeesByMonthlySalary(employeeId, monthlySalary);
     }
 
-    public List<Dipendente> findDipendentiWithSalaryGreaterThan(Long employeeId, Double monthlySalary) {
-        return dipendenteService.findEmployeesWithSalaryGreaterThan(employeeId, monthlySalary);
+    public List<Dipendente> findEmployeesByMonthlySalaryAscByEmployeeRole(@NonNull Long employeeId,double monthlySalary) {
+        return dipendenteService.findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(employeeId, monthlySalary);
     }
 
-    public List<Dipendente> findDipendentiWithSalaryLessThan(Long employeeId, Double monthlySalary) {
-        return dipendenteService.findEmployeesWithSalaryLessThan(employeeId, monthlySalary);
+    public List<Dipendente> findEmployeesByMonthlySalaryDescByEmployeeRole(@NonNull Long employeeId,double monthlySalary) {
+        return dipendenteService.findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(employeeId, monthlySalary);
     }
 
-    public List<Dipendente> findDipendentiWithSalaryBetween(Long employeeId, Double min, Double max) {
-        return dipendenteService.findEmployeesWithSalaryBetween(employeeId, min, max);
-    }
-
-    public List<Dipendente> findDipendentiByGrado(Long employeeId, EmployeeRole employeeRole) {
+    public List<Dipendente> findEmployeesByEmployeeRole(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
         return dipendenteService.findEmployeesByEmployeeRole(employeeId, employeeRole);
     }
 
-    public void updateMonthlySalary(Long dipendenteId, Double monthlySalary) {
-        dipendenteService.updateMonthlySalary(dipendenteId, monthlySalary);
+    public List<Dipendente> findEmployeesByEmployeeRoleAscByMonthlySalary(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        return dipendenteService.findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(employeeId, employeeRole);
     }
 
-    public int updateEmployeeRoleAndMonthlySalary(Long dipendenteId, Double monthlySalary, EmployeeRole employeeRole) {
-        return dipendenteService.updateEmployeeRoleAndMonthlySalary(dipendenteId, monthlySalary, employeeRole);
+    public List<Dipendente> findEmployeesByEmployeeRoleDescByMonthlySalary(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+        return dipendenteService.findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(employeeId, employeeRole);
     }
 
-    public List<Task> findTasksByDipendenteAndState(Long dipendenteId, TaskState stato) {
-        return dipendenteService.findTasksByDipendenteAndState(dipendenteId, stato);
+    public void updateMonthlySalaryById(@NonNull Long managerId,@NonNull Long employeeId,double monthlySalary){
+        dipendenteService.updateMonthlySalaryById(managerId, employeeId, monthlySalary);
     }
 
-    // <---- Supervisore ---->
-    public Supervisore saveSupervisore(Supervisore supervisore) {
-        return supervisoreService.saveSupervisore(supervisore);
+    public void updateEmployeeRoleById(@NonNull Long managerId,@NonNull Long employeeId,@NonNull EmployeeRole employeeRole){
+        dipendenteService.updateEmployeeRoleById(managerId, employeeId, employeeRole);
     }
 
-    public Optional<Supervisore> trovaPerId(Long id) {
-        return supervisoreService.trovaPerId(id);
+    public List<Task> findTasksByEmployeeAndTaskState(@NonNull Long employeeId,@NonNull TaskState taskState) {
+        return dipendenteService.findTasksByEmployeeAndTaskState(employeeId, taskState);
     }
 
-    public List<Supervisore> trovaTutti() {
-        return supervisoreService.trovaTutti();
+    // <---- Supervisor ---->
+
+    public Supervisore saveSupervisor(@NonNull Supervisore supervisor) {
+        return supervisorService.saveSupervisor(supervisor);
     }
 
-    public boolean esistePerId(Long id) {
-        return supervisoreService.esistePerId(id);
+    public Optional<Supervisore> findSupervisorById(@NonNull Long supervisorId) {
+        return supervisorService.findSupervisorById(supervisorId);
     }
 
-    public void eliminaPerId(Long id) {
-        supervisoreService.eliminaPerId(id);
+    public List<Supervisore> findAllSupervisors() {
+        return supervisorService.findAllSupervisors();
     }
 
-    public void elimina(Supervisore supervisore) {
-        supervisoreService.elimina(supervisore);
+    public void deleteSupervisorById(@NonNull Long supervisorId) {
+        supervisorService.deleteSupervisorById(supervisorId);
     }
 
-    public long conta() {
-        return supervisoreService.contaSupervisori();
+    public void assignSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
+        supervisorService.assignSubordinate(supervisorId, subordinateId);
     }
 
-    public List<Supervisore> trovaSupervisionati(Long supervisoreId) {
-        return supervisoreService.trovaSupervisoriSupervisionatiPerId(supervisoreId);
+    public void removeSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
+        supervisorService.removeSubordinate(supervisorId, subordinateId);
     }
 
-    public List<Supervisore> trovaRoot() {
-        return supervisoreService.trovaSupervisoriSenzaSupervisore();
+    public List<Supervisore> findSupervisorsWithoutSupervisor() {
+        return supervisorService.findSupervisorsWithoutSupervisor();
     }
 
-    public long contaSupervisionati(Long supervisoreId) {
-        return supervisoreService.contaSupervisoriSupervisionati(supervisoreId);
+    public List<Supervisore> findSupervisorsWithoutSubordinates() {
+        return supervisorService.findSupervisorsWithoutSubordinates();
     }
 
-    public boolean haSubordinati(Long supervisoreId) {
-        return supervisoreService.esisteSupervisoreConSubordinati(supervisoreId);
-    }
-
-    public List<Supervisore> trovaConTeam() {
-        return supervisoreService.trovaSupervisoriConTeam();
-    }
-
-    public List<Supervisore> trovaConSubordinati() {
-        return supervisoreService.trovaSupervisoriConSubordinati();
-    }
-
-    public Supervisore trovaPerTeam(Long teamId) {
-        return supervisoreService.trovaSupervisorePerTeam(teamId);
-    }
-
-    public void assegnaSubordinato(Long capoId, Long subordinatoId) {
-        supervisoreService.assegnaSubordinato(capoId, subordinatoId);
-    }
-
-    public void rimuoviSubordinato(Long capoId, Long subordinatoId) {
-        supervisoreService.rimuoviSubordinato(capoId, subordinatoId);
+        public List<Supervisore> findSupervisorsWithoutSupervisionedTeam() {
+        return supervisorService.findSupervisorsWithoutSupervisionedTeam();
     }
 
     // <---- Task ---->
@@ -233,10 +187,7 @@ public class Facade {
     public void deleteTask(Long id) {
         taskService.deleteTask(id);
     }
-
-    public void deleteAllTasks() {
-        taskRepository.deleteAll();
-    }
+    public void deleteAllTasks() {taskRepository.deleteAll();}
 
     public boolean isDipendenteAssegnato(Long taskId, Long dipendenteId) {
         return taskService.isDipendenteAssegnato(taskId, dipendenteId);
@@ -244,4 +195,3 @@ public class Facade {
 
     // <---- Team ---->
 }
-
