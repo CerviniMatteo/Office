@@ -12,6 +12,7 @@ import com.unimib.assignment3.repository.TeamRepository;
 import com.unimib.assignment3.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -29,20 +30,23 @@ public class Facade {
     @Autowired
     TaskService taskService;
 
-    public  Dipendente saveDipendente(Dipendente dipendente){
-        return  dipendenteRepository.saveAndFlush(dipendente);
+    public Dipendente saveDipendente(Dipendente dipendente) {
+        return dipendenteRepository.saveAndFlush(dipendente);
     }
 
-    public Supervisore saveSupervisore(Supervisore supervisore){
-        return  supervisoreRepository.saveAndFlush(supervisore);
+    public Supervisore saveSupervisore(Supervisore supervisore) {
+        return supervisoreRepository.saveAndFlush(supervisore);
     }
 
-    public Task saveTask(Task task){
-        return taskRepository.saveAndFlush(task);
-    }
 
-    public Team saveTeam(Team team){
+
+    public Team saveTeam(Team team) {
         return teamRepository.saveAndFlush(team);
+    }
+
+
+    public Task saveTask(Task task) {
+        return taskRepository.saveAndFlush(task);
     }
 
     public Task createTask(TaskState initialState) {
@@ -50,8 +54,7 @@ public class Facade {
     }
 
     public Task assegnaDipendenteATask(Long taskId, Long dipendenteId) {
-        return taskService.assegnaDipendenteATask(taskId, dipendenteId);
-    }
+        return taskService.assegnaDipendenteATask(taskId, dipendenteId);}
 
     public Task rimuoviDipendenteDaTask(Long taskId, Long dipendenteId) {
         return taskService.rimuoviDipendenteDaTask(taskId, dipendenteId);
@@ -95,5 +98,26 @@ public class Facade {
 
     public boolean isDipendenteAssegnato(Long taskId, Long dipendenteId) {
         return taskService.isDipendenteAssegnato(taskId, dipendenteId);
+    }
+
+    public Task resetTask(Long taskId) {
+        return taskService.resetTask(taskId);
+    }
+
+
+    public List<Task> findTasksByStateWithDipendenti(TaskState stato) {
+        return taskService.getTasksByStatoConDipendenti(stato);
+    }
+
+    public Integer countDipendentiByTaskId(Long taskId) {
+        return taskService.getConteggioDipendentiPerTask(taskId);
+    }
+
+    public List<Task> findTasksByStateAndDipendentiCount(TaskState stato, int numDipendenti) {
+        return taskService.getTasksPerStatoEConteggioDipendenti(stato, numDipendenti);
+    }
+
+    public List<Task> findTasksByTeamId(Long idTeam) {
+        return taskService.getTasksPerTeam(idTeam);
     }
 }

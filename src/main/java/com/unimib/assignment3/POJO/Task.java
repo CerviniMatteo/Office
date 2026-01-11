@@ -2,7 +2,7 @@ package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.enums.TaskState;
 import jakarta.persistence.*;
-
+import java.time.LocalDate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +28,12 @@ public class Task implements Serializable {
     @Column(name = "task_state")
     private TaskState taskState;
 
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
+
     public Task() {
         this.taskState = TaskState.DAINIZIARE;
         this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
@@ -39,16 +45,11 @@ public class Task implements Serializable {
         this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
     }
 
-    public Task(Long idTask, TaskState taskState) {
-        this.idTask = idTask;
-        this.taskState = taskState != null ? taskState : TaskState.DAINIZIARE;
+    public Task(List<Dipendente> dipendentiAssegnati,  TaskState taskState, LocalDate startDate, LocalDate endDate) {
         this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
-    }
-
-    public Task(List<Dipendente> dipendentiAssegnati, Long idTask, TaskState taskState) {
-        this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
-        this.idTask = idTask;
         this.taskState = taskState != null ? taskState : TaskState.DAINIZIARE;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Long getIdTask() {
@@ -101,7 +102,27 @@ public class Task implements Serializable {
         return this.dipendentiAssegnati.size();
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
+    public void setStartDate(LocalDate startDate) {
+        if (startDate != null && this.endDate != null && startDate.isAfter(this.endDate)) {
+            throw new IllegalArgumentException("La data di inizio non può essere successiva alla data di fine.");
+        }
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        if (endDate != null && this.startDate != null && endDate.isBefore(this.startDate)) {
+            throw new IllegalArgumentException("La data di fine non può essere precedente alla data di inizio.");
+        }
+        this.endDate = endDate;
+    }
 
     public List<Long> getAllDipendentiId() {
         List<Long> idDipendenti = new ArrayList<>();
@@ -116,6 +137,8 @@ public class Task implements Serializable {
         return "Task{" +
                 "idTask=" + idTask +
                 ", dipendentiAssegnati=" + dipendentiAssegnati +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 ", taskState=" + taskState +
                 '}';
     }

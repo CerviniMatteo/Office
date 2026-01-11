@@ -8,7 +8,7 @@ import com.unimib.assignment3.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +24,17 @@ public class TaskService {
     // Creazione e salvataggio task tramite Repository
     @Transactional
     public Task createTask(TaskState initialState) {
-        Task task = new Task(initialState != null ? initialState : TaskState.DAINIZIARE);
+        TaskState state = initialState != null ? initialState : TaskState.DAINIZIARE;
+        Task task = new Task(state);
+
+
+        if (state == TaskState.INIZIATO) {
+            task.setStartDate(LocalDate.now());
+        } else if (state == TaskState.FINITO) {
+            task.setStartDate(LocalDate.now());
+            task.setEndDate(LocalDate.now());
+        }
+
         return taskRepository.saveAndFlush(task);
     }
 
@@ -60,6 +70,8 @@ public class TaskService {
         return taskRepository.saveAndFlush(task);
     }
 
+
+
     // Rimozione dipendente da task
     @Transactional
     public Task rimuoviDipendenteDaTask(Long taskId, Long dipendenteId) {
@@ -77,28 +89,50 @@ public class TaskService {
         return taskRepository.saveAndFlush(task);
     }
 
-    // Cambio stato task con validazione
     @Transactional
     public Task cambiaStatoTask(Long taskId, TaskState nuovoStato) {
-        Optional<Task> taskOpt = taskRepository.findById(taskId);
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task non trovato con id: " + taskId));
 
-        if (taskOpt.isEmpty()) {
-            throw new IllegalArgumentException("Task non trovato con id: " + taskId);
-        }
-
-        Task task = taskOpt.get();
         TaskState statoCorrente = task.getTaskState();
 
-        // Validazione transizioni di stato
-        if (statoCorrente == TaskState.FINITO && nuovoStato != TaskState.FINITO) {
-            throw new IllegalStateException("Impossibile cambiare stato di un task già completato");
-        }
+        // Se lo stato è già quello desiderato, non facciamo nulla
+        if (statoCorrente == nuovoStato) return task;
 
-        if (statoCorrente == TaskState.DAINIZIARE && nuovoStato == TaskState.FINITO) {
-            throw new IllegalStateException("Un task non può passare direttamente da DAINIZIARE a FINITO");
+        // --- LOGICA SEQUENZIALE RIGIDA ---
+        switch (statoCorrente) {
+            case DAINIZIARE:
+                if (nuovoStato != TaskState.INIZIATO) {
+                    throw new IllegalStateException("Da DAINIZIARE si può passare solo a INIZIATO.");
+                }
+                task.setStartDate(LocalDate.now());
+                break;
+
+            case INIZIATO:
+                if (nuovoStato != TaskState.FINITO) {
+                    throw new IllegalStateException("Da INIZIATO si può passare solo a FINITO. Usa reset() per ricominciare.");
+                }
+                task.setEndDate(LocalDate.now());
+                break;
+
+            case FINITO:
+                throw new IllegalStateException("Il task è FINITO e non può più cambiare stato. Usa reset() per ricominciare.");
         }
 
         task.setTaskState(nuovoStato);
+        return taskRepository.saveAndFlush(task);
+    }
+
+    @Transactional
+    public Task resetTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task non trovato con id: " + taskId));
+
+        task.setTaskState(TaskState.DAINIZIARE);
+
+        task.setEndDate(null);
+        task.setStartDate(null);
+
         return taskRepository.saveAndFlush(task);
     }
 
@@ -147,4 +181,23 @@ public class TaskService {
 
         return taskOpt.get().hasDipendente(dipOpt.get());
     }
+
+    // Aggiungi questi metodi in TaskService.java
+
+    public List<Task> getTasksByStatoConDipendenti(TaskState stato) {
+        return taskRepository.findTasksByStateWithDipendenti(stato);
+    }
+
+    public Integer getConteggioDipendentiPerTask(Long taskId) {
+        return taskRepository.countDipendentiByTaskId(taskId);
+    }
+
+    public List<Task> getTasksPerStatoEConteggioDipendenti(TaskState stato, int numDipendenti) {
+        return taskRepository.findTasksByStateAndDipendentiCount(stato, numDipendenti);
+    }
+
+    public List<Task> getTasksPerTeam(Long idTeam) {
+        return taskRepository.findTasksByTeamId(idTeam);
+    }
+
 }
