@@ -22,9 +22,9 @@ public abstract class Persona {
     public Persona() {}
 
     public Persona(String name, String surname) {
-        this.nome = name;
-        this.cognome = surname;
-        this.email = generateEmail(name,surname);
+       setNome(name);
+       setCognome(surname);
+       setEmail(generateEmail(name,surname));
     }
 
     public Long getId() {
