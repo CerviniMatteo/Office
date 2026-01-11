@@ -38,8 +38,6 @@ public class Facade {
         return supervisoreRepository.saveAndFlush(supervisore);
     }
 
-
-
     public Team saveTeam(Team team) {
         return teamRepository.saveAndFlush(team);
     }
@@ -54,34 +52,34 @@ public class Facade {
     }
 
     public Task assegnaDipendenteATask(Long taskId, Long dipendenteId) {
-        return taskService.assegnaDipendenteATask(taskId, dipendenteId);}
+        return taskService.assignEmployeeToTask(taskId, dipendenteId);}
 
     public Task rimuoviDipendenteDaTask(Long taskId, Long dipendenteId) {
-        return taskService.rimuoviDipendenteDaTask(taskId, dipendenteId);
+        return taskService.removeEmployeeFromTask(taskId, dipendenteId);
     }
 
     public Task cambiaStatoTask(Long taskId, TaskState nuovoStato) {
-        return taskService.cambiaStatoTask(taskId, nuovoStato);
+        return taskService.changeTaskState(taskId, nuovoStato);
     }
 
     public List<Task> getTasksByStato(TaskState stato) {
-        return taskService.getTasksByStato(stato);
+        return taskService.getTasksByState(stato);
     }
 
     public List<Task> getTasksByDipendente(Dipendente dipendente) {
-        return taskService.getTasksByDipendente(dipendente);
+        return taskService.getTasksByEmployee(dipendente);
     }
 
     public List<Task> getTasksNonAssegnati() {
-        return taskService.getTasksNonAssegnati();
+        return taskService.getUnassignedTasks();
     }
 
     public long countTasksByStato(TaskState stato) {
-        return taskService.countTasksByStato(stato);
+        return taskService.countTasksByState(stato);
     }
 
     public List<Task> getTasksComplessi(int sogliaDipendenti) {
-        return taskService.getTasksComplessi(sogliaDipendenti);
+        return taskService.getComplexTasks(sogliaDipendenti);
     }
 
     public Optional<Task> getTaskById(Long id) {
@@ -97,7 +95,7 @@ public class Facade {
     }
 
     public boolean isDipendenteAssegnato(Long taskId, Long dipendenteId) {
-        return taskService.isDipendenteAssegnato(taskId, dipendenteId);
+        return taskService.isEmployeeAssigned(taskId, dipendenteId);
     }
 
     public Task resetTask(Long taskId) {
@@ -106,18 +104,18 @@ public class Facade {
 
 
     public List<Task> findTasksByStateWithDipendenti(TaskState stato) {
-        return taskService.getTasksByStatoConDipendenti(stato);
+        return taskService.getTasksByStateWithEmployees(stato);
     }
 
     public Integer countDipendentiByTaskId(Long taskId) {
-        return taskService.getConteggioDipendentiPerTask(taskId);
+        return taskService.getEmployeeCountPerTask(taskId);
     }
 
     public List<Task> findTasksByStateAndDipendentiCount(TaskState stato, int numDipendenti) {
-        return taskService.getTasksPerStatoEConteggioDipendenti(stato, numDipendenti);
+        return taskService.getTasksByStateAndEmployeeCount(stato, numDipendenti);
     }
 
     public List<Task> findTasksByTeamId(Long idTeam) {
-        return taskService.getTasksPerTeam(idTeam);
+        return taskService.getTasksByTeam(idTeam);
     }
 }

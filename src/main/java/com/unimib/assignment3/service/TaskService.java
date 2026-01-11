@@ -40,7 +40,7 @@ public class TaskService {
 
     // Assegnazione dipendente a task con validazione
     @Transactional
-    public Task assegnaDipendenteATask(Long taskId, Long dipendenteId) {
+    public Task assignEmployeeToTask(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
         Optional<Dipendente> dipOpt = dipendenteRepository.findById(dipendenteId);
 
@@ -54,17 +54,15 @@ public class TaskService {
         Task task = taskOpt.get();
         Dipendente dipendente = dipOpt.get();
 
-        // Validazione: non assegnare a task già finiti
         if (task.getTaskState() == TaskState.FINITO) {
             throw new IllegalStateException("Impossibile assegnare dipendenti a task già completati");
         }
 
-        // Validazione: dipendente già assegnato
-        if (task.hasDipendente(dipendente)) {
+        if (task.hasEmployee(dipendente)) {
             throw new IllegalStateException("Dipendente già assegnato a questo task");
         }
 
-        task.assegnaDipendente(dipendente);
+        task.assignEmployee(dipendente);
 
         dipendenteRepository.saveAndFlush(dipendente);
         return taskRepository.saveAndFlush(task);
@@ -74,7 +72,7 @@ public class TaskService {
 
     // Rimozione dipendente da task
     @Transactional
-    public Task rimuoviDipendenteDaTask(Long taskId, Long dipendenteId) {
+    public Task removeEmployeeFromTask(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
         Optional<Dipendente> dipOpt = dipendenteRepository.findById(dipendenteId);
 
@@ -85,21 +83,19 @@ public class TaskService {
         Task task = taskOpt.get();
         Dipendente dipendente = dipOpt.get();
 
-        task.rimuoviDipendente(dipendente);
+        task.removeEmployee(dipendente);
         return taskRepository.saveAndFlush(task);
     }
 
     @Transactional
-    public Task cambiaStatoTask(Long taskId, TaskState nuovoStato) {
+    public Task changeTaskState(Long taskId, TaskState nuovoStato) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task non trovato con id: " + taskId));
 
         TaskState statoCorrente = task.getTaskState();
 
-        // Se lo stato è già quello desiderato, non facciamo nulla
         if (statoCorrente == nuovoStato) return task;
 
-        // --- LOGICA SEQUENZIALE RIGIDA ---
         switch (statoCorrente) {
             case DAINIZIARE:
                 if (nuovoStato != TaskState.INIZIATO) {
@@ -137,23 +133,23 @@ public class TaskService {
     }
 
     // Metodi di ricerca
-    public List<Task> getTasksByStato(TaskState stato) {
+    public List<Task> getTasksByState(TaskState stato) {
         return taskRepository.findByTaskState(stato);
     }
 
-    public List<Task> getTasksByDipendente(Dipendente dipendente) {
+    public List<Task> getTasksByEmployee(Dipendente dipendente) {
         return taskRepository.findTasksByDipendente(dipendente);
     }
 
-    public List<Task> getTasksNonAssegnati() {
+    public List<Task> getUnassignedTasks() {
         return taskRepository.findTasksWithoutDipendenti();
     }
 
-    public long countTasksByStato(TaskState stato) {
+    public long countTasksByState(TaskState stato) {
         return taskRepository.countByTaskState(stato);
     }
 
-    public List<Task> getTasksComplessi(int sogliaDipendenti) {
+    public List<Task> getComplexTasks(int sogliaDipendenti) {
         return taskRepository.findTasksWithMoreThanNDipendenti(sogliaDipendenti);
     }
 
@@ -170,8 +166,7 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
-    // Metodo per verificare se un dipendente è assegnato a un task
-    public boolean isDipendenteAssegnato(Long taskId, Long dipendenteId) {
+    public boolean isEmployeeAssigned(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
         Optional<Dipendente> dipOpt = dipendenteRepository.findById(dipendenteId);
 
@@ -179,24 +174,22 @@ public class TaskService {
             return false;
         }
 
-        return taskOpt.get().hasDipendente(dipOpt.get());
+        return taskOpt.get().hasEmployee(dipOpt.get());
     }
 
-    // Aggiungi questi metodi in TaskService.java
-
-    public List<Task> getTasksByStatoConDipendenti(TaskState stato) {
+    public List<Task> getTasksByStateWithEmployees(TaskState stato) {
         return taskRepository.findTasksByStateWithDipendenti(stato);
     }
 
-    public Integer getConteggioDipendentiPerTask(Long taskId) {
+    public Integer getEmployeeCountPerTask(Long taskId) {
         return taskRepository.countDipendentiByTaskId(taskId);
     }
 
-    public List<Task> getTasksPerStatoEConteggioDipendenti(TaskState stato, int numDipendenti) {
+    public List<Task> getTasksByStateAndEmployeeCount(TaskState stato, int numDipendenti) {
         return taskRepository.findTasksByStateAndDipendentiCount(stato, numDipendenti);
     }
 
-    public List<Task> getTasksPerTeam(Long idTeam) {
+    public List<Task> getTasksByTeam(Long idTeam) {
         return taskRepository.findTasksByTeamId(idTeam);
     }
 

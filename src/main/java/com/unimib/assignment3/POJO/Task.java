@@ -14,7 +14,7 @@ public class Task implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idTask;
+    private Long taskId;
 
     @ManyToMany
     @JoinTable(
@@ -52,19 +52,19 @@ public class Task implements Serializable {
         this.endDate = endDate;
     }
 
-    public Long getIdTask() {
-        return idTask;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setIdTask(Long idTask) {
-        this.idTask = idTask;
+    public void setTaskId(Long idTask) {
+        this.taskId = idTask;
     }
 
-    public List<Dipendente> getDipendentiAssegnati() {
+    public List<Dipendente> getAssignedEmployees() {
         return new ArrayList<>(dipendentiAssegnati);
     }
 
-    public void setDipendentiAssegnati(List<Dipendente> dipendentiAssegnati) {
+    public void setAssignedEmployees(List<Dipendente> dipendentiAssegnati) {
         this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
     }
 
@@ -76,8 +76,7 @@ public class Task implements Serializable {
         this.taskState = taskState;
     }
 
-    // Metodi helper per gestire la lista
-    public void assegnaDipendente(Dipendente dipendente) {
+    public void assignEmployee(Dipendente dipendente) {
         if (dipendente == null) return;
 
         if (!this.dipendentiAssegnati.contains(dipendente)) {
@@ -86,7 +85,7 @@ public class Task implements Serializable {
         }
     }
 
-    public void rimuoviDipendente(Dipendente dipendente) {
+    public void removeEmployee(Dipendente dipendente) {
         if (dipendente == null) return;
 
         if (this.dipendentiAssegnati.remove(dipendente)) {
@@ -94,11 +93,11 @@ public class Task implements Serializable {
         }
     }
 
-    public boolean hasDipendente(Dipendente dipendente) {
+    public boolean hasEmployee(Dipendente dipendente) {
         return this.dipendentiAssegnati.contains(dipendente);
     }
 
-    public int countDipendenti() {
+    public int countEmployees() {
         return this.dipendentiAssegnati.size();
     }
 
@@ -124,7 +123,7 @@ public class Task implements Serializable {
         this.endDate = endDate;
     }
 
-    public List<Long> getAllDipendentiId() {
+    public List<Long> getAllEmployeesId() {
         List<Long> idDipendenti = new ArrayList<>();
         for (Dipendente dipendente : dipendentiAssegnati) {
             idDipendenti.add(dipendente.getId()); // Assumendo che Task abbia un metodo getId()
@@ -135,8 +134,8 @@ public class Task implements Serializable {
     @Override
     public String toString() {
         return "Task{" +
-                "idTask=" + idTask +
-                ", dipendentiAssegnati=" + dipendentiAssegnati +
+                "idTask=" + taskId +
+                ", dipendentiAssegnati=" + getAllEmployeesId() +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", taskState=" + taskState +
@@ -147,7 +146,7 @@ public class Task implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task task)) return false;
-        return idTask != null && idTask.equals(task.getIdTask());
+        return taskId != null && taskId.equals(task.getTaskId());
     }
 
     @Override
