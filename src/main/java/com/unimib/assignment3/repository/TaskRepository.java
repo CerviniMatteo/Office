@@ -34,8 +34,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findTasksByStateWithDipendenti(@Param("stato") TaskState stato);
 
     // Query per contare i dipendenti assegnati a un task specifico
-    @Query("SELECT SIZE(t.dipendentiAssegnati) FROM task t WHERE t.idTask = :taskId")
-    Integer countDipendentiByTaskId(@Param("taskId") Long taskId);
+    @Query("SELECT SIZE(t.dipendentiAssegnati) FROM task t WHERE t.taskId = :taskId")
+    int countDipendentiByTaskId(@Param("taskId") Long taskId);
 
     // Query per trovare tutti i task di un certo stato con un numero specifico di dipendenti
     @Query("SELECT t FROM task t WHERE t.taskState = :stato AND SIZE(t.dipendentiAssegnati) = :numDipendenti")

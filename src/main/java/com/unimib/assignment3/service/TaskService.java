@@ -24,19 +24,25 @@ public class TaskService {
     // Creazione e salvataggio task tramite Repository
     @Transactional
     public Task createTask(TaskState initialState) {
-        TaskState state = initialState != null ? initialState : TaskState.DAINIZIARE;
+        TaskState state = initialState != null ? initialState : TaskState.STARTED;
         Task task = new Task(state);
 
 
-        if (state == TaskState.INIZIATO) {
+        if (state == TaskState.STARTED) {
             task.setStartDate(LocalDate.now());
-        } else if (state == TaskState.FINITO) {
+        } else if (state == TaskState.DONE) {
             task.setStartDate(LocalDate.now());
             task.setEndDate(LocalDate.now());
         }
 
-        return taskRepository.saveAndFlush(task);
+        return task;
     }
+
+    @Transactional
+    public Task saveTask(Task task) {
+          return taskRepository.saveAndFlush(task);
+    }
+
 
     // Assegnazione dipendente a task con validazione
     @Transactional
@@ -54,7 +60,7 @@ public class TaskService {
         Task task = taskOpt.get();
         Dipendente dipendente = dipOpt.get();
 
-        if (task.getTaskState() == TaskState.FINITO) {
+        if (task.getTaskState() == TaskState.DONE) {
             throw new IllegalStateException("Impossibile assegnare dipendenti a task già completati");
         }
 
@@ -97,21 +103,21 @@ public class TaskService {
         if (statoCorrente == nuovoStato) return task;
 
         switch (statoCorrente) {
-            case DAINIZIARE:
-                if (nuovoStato != TaskState.INIZIATO) {
+            case TO_BE_STARTED:
+                if (nuovoStato != TaskState.STARTED) {
                     throw new IllegalStateException("Da DAINIZIARE si può passare solo a INIZIATO.");
                 }
                 task.setStartDate(LocalDate.now());
                 break;
 
-            case INIZIATO:
-                if (nuovoStato != TaskState.FINITO) {
+            case STARTED:
+                if (nuovoStato != TaskState.DONE) {
                     throw new IllegalStateException("Da INIZIATO si può passare solo a FINITO. Usa reset() per ricominciare.");
                 }
                 task.setEndDate(LocalDate.now());
                 break;
 
-            case FINITO:
+            case DONE:
                 throw new IllegalStateException("Il task è FINITO e non può più cambiare stato. Usa reset() per ricominciare.");
         }
 
@@ -120,16 +126,16 @@ public class TaskService {
     }
 
     @Transactional
-    public Task resetTask(Long taskId) {
+    public void resetTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task non trovato con id: " + taskId));
 
-        task.setTaskState(TaskState.DAINIZIARE);
+        task.setTaskState(TaskState.TO_BE_STARTED);
 
         task.setEndDate(null);
         task.setStartDate(null);
 
-        return taskRepository.saveAndFlush(task);
+        taskRepository.saveAndFlush(task);
     }
 
     // Metodi di ricerca

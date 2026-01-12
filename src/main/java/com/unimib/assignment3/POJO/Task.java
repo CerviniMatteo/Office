@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity(name="task")
 public class Task implements Serializable {
@@ -35,19 +33,19 @@ public class Task implements Serializable {
     private LocalDate endDate;
 
     public Task() {
-        this.taskState = TaskState.DAINIZIARE;
+        this.taskState = TaskState.STARTED;
         this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
 
     }
 
     public Task(TaskState taskState) {
-        this.taskState = taskState != null ? taskState : TaskState.DAINIZIARE;
+        this.taskState = taskState != null ? taskState : TaskState.STARTED;
         this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
     }
 
     public Task(List<Dipendente> dipendentiAssegnati,  TaskState taskState, LocalDate startDate, LocalDate endDate) {
         this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
-        this.taskState = taskState != null ? taskState : TaskState.DAINIZIARE;
+        this.taskState = taskState != null ? taskState : TaskState.STARTED;
         this.startDate = startDate;
         this.endDate = endDate;
     }

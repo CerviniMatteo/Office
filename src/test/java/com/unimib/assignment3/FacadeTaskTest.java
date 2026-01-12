@@ -13,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -46,26 +44,26 @@ public class FacadeTaskTest {
         @DisplayName("Verifica creazione con stati iniziali differenti e impostazione date")
         void testCreateTaskWithInitialState() {
             // Caso INIZIATO: il Service deve impostare la startDate
-            Task tIniziato = facade.createTask(TaskState.INIZIATO);
+            Task tIniziato = facade.saveTask(facade.createTask(TaskState.STARTED));
             assertNotNull(tIniziato.getStartDate());
             assertNull(tIniziato.getEndDate());
 
             // Caso FINITO: il Service deve impostare sia startDate che endDate
-            Task tFinito = facade.createTask(TaskState.FINITO);
+            Task tFinito = facade.saveTask(facade.createTask(TaskState.DONE));
             assertNotNull(tFinito.getStartDate());
             assertNotNull(tFinito.getEndDate());
         }
         @Test
         @DisplayName("Verifica che createTask(null) imposti lo stato di default")
         void testCreateTaskNullState() {
-            Task t = facade.createTask(null);
-            assertEquals(TaskState.DAINIZIARE, t.getTaskState());
+            Task t = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            assertEquals(TaskState.TO_BE_STARTED, t.getTaskState());
             assertNull(t.getStartDate());
         }
 
         @Test
         void testDeleteTask() {
-            Task task = facade.createTask(TaskState.DAINIZIARE);
+            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
             Long id = task.getTaskId();
             facade.deleteTask(id);
             assertTrue(facade.getTaskById(id).isEmpty());
@@ -73,56 +71,56 @@ public class FacadeTaskTest {
 
         @Test
         void testCambioStatoEValidazioneDate() {
-            Task task = facade.createTask(TaskState.DAINIZIARE);
+            Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             Long id = task.getTaskId();
 
             // Test transizione DAINIZIARE -> INIZIATO
-            facade.cambiaStatoTask(id, TaskState.INIZIATO);
+            facade.changeTaskState(id, TaskState.STARTED);
             Task statusIniziato = facade.getTaskById(id).get();
-            assertEquals(TaskState.INIZIATO, statusIniziato.getTaskState());
+            assertEquals(TaskState.STARTED, statusIniziato.getTaskState());
             assertNotNull(statusIniziato.getStartDate());
 
             // Test transizione INIZIATO -> FINITO
-            facade.cambiaStatoTask(id, TaskState.FINITO);
+            facade.changeTaskState(id, TaskState.DONE);
             Task statusFinito = facade.getTaskById(id).get();
-            assertEquals(TaskState.FINITO, statusFinito.getTaskState());
+            assertEquals(TaskState.DONE, statusFinito.getTaskState());
             assertNotNull(statusFinito.getEndDate());
         }
 
         @Test
         @DisplayName("Il cambio verso lo stato attuale non deve produrre errori (Idempotenza)")
         void testCambioStatoIdempotente() {
-            Task task = facade.createTask(TaskState.INIZIATO);
+            Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             Long id = task.getTaskId();
 
-            assertDoesNotThrow(() -> facade.cambiaStatoTask(id, TaskState.INIZIATO));
-            assertEquals(TaskState.INIZIATO, facade.getTaskById(id).get().getTaskState());
+            assertDoesNotThrow(() -> facade.changeTaskState(id, TaskState.TO_BE_STARTED));
+            assertEquals(TaskState.TO_BE_STARTED, facade.getTaskById(id).get().getTaskState());
         }
 
         @Test
         @DisplayName("Verifica il reset del task allo stato iniziale e pulizia date")
         void testResetTask() {
-            Task t = facade.createTask(TaskState.INIZIATO);
-            facade.cambiaStatoTask(t.getTaskId(), TaskState.FINITO);
+            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
+            facade.changeTaskState(t.getTaskId(), TaskState.DONE);
 
             facade.resetTask(t.getTaskId()); // Copre resetTask
             Task reset = facade.getTaskById(t.getTaskId()).get();
 
-            assertEquals(TaskState.DAINIZIARE, reset.getTaskState());
+            assertEquals(TaskState.TO_BE_STARTED, reset.getTaskState());
             assertNull(reset.getStartDate());
             assertNull(reset.getEndDate());
         }
 
         @Test
         void testEccezioniCambioStato() {
-            Task task = facade.createTask(TaskState.DAINIZIARE);
+            Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             // Salto vietato: DAINIZIARE -> FINITO
-            assertThrows(IllegalStateException.class, () -> facade.cambiaStatoTask(task.getTaskId(), TaskState.FINITO));
+            assertThrows(IllegalStateException.class, () -> facade.changeTaskState(task.getTaskId(), TaskState.DONE));
 
-            facade.cambiaStatoTask(task.getTaskId(), TaskState.INIZIATO);
-            facade.cambiaStatoTask(task.getTaskId(), TaskState.FINITO);
+            facade.changeTaskState(task.getTaskId(), TaskState.STARTED);
+            facade.changeTaskState(task.getTaskId(), TaskState.DONE);
             // Modifica vietata se FINITO
-            assertThrows(IllegalStateException.class, () -> facade.cambiaStatoTask(task.getTaskId(), TaskState.INIZIATO));
+            assertThrows(IllegalStateException.class, () -> facade.changeTaskState(task.getTaskId(), TaskState.TO_BE_STARTED));
         }
     }
 
@@ -132,39 +130,46 @@ public class FacadeTaskTest {
 
         @Test
         void testAssegnazioneERimozioneDipendente() {
-            Dipendente d = facade.saveDipendente(new Dipendente("Mario", "Rossi"));
-            Task t = facade.createTask(TaskState.DAINIZIARE);
+            Dipendente d = facade.createEmployee("Mario", "Rossi");
+            d = facade.saveEmployee(d);
+            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
 
-            facade.assegnaDipendenteATask(t.getTaskId(), d.getId());
-            assertTrue(facade.isDipendenteAssegnato(t.getTaskId(), d.getId()));
+            facade.assignEmployeeToTask(t.getTaskId(), d.getId());
+            assertTrue(facade.isEmployeeAssigned(t.getTaskId(), d.getId()));
 
-            facade.rimuoviDipendenteDaTask(t.getTaskId(), d.getId());
-            assertFalse(facade.isDipendenteAssegnato(t.getTaskId(), d.getId()));
+            facade.removeEmployeeToTask(t.getTaskId(), d.getId());
+            assertFalse(facade.isEmployeeAssigned(t.getTaskId(), d.getId()));
         }
 
         @Test
         void testAssegnazioneMultiplaVietata() {
-            Dipendente d = facade.saveDipendente(new Dipendente("Luca", "Bianchi"));
-            Task t = facade.createTask(TaskState.DAINIZIARE);
-            facade.assegnaDipendenteATask(t.getTaskId(), d.getId());
+            Dipendente d = facade.createEmployee("Luca", "Bianchi");
+            d = facade.saveEmployee(d);
+            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
+            facade.assignEmployeeToTask(t.getTaskId(), d.getId());
 
-            assertThrows(IllegalStateException.class, () -> facade.assegnaDipendenteATask(t.getTaskId(), d.getId()));
+            Dipendente finalD = d;
+            assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalD.getId()));
         }
 
         @Test
         @DisplayName("Non deve essere possibile assegnare dipendenti a task già FINITI")
         void testAssegnazioneVietataInStatoFinito() {
-            Task t = facade.createTask(TaskState.FINITO); // Task già finito alla creazione
-            Dipendente d = facade.saveDipendente(new Dipendente("Test", "Test"));
+            Task t = facade.saveTask(facade.createTask(TaskState.DONE)); // Task già finito alla creazione
+            Dipendente d = facade.createEmployee("Test", "Test");
+            d = facade.saveEmployee(d);
 
-            assertThrows(IllegalStateException.class, () -> facade.assegnaDipendenteATask(t.getTaskId(), d.getId()));
+            Dipendente finalD = d;
+            assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalD.getId()));
         }
 
         @Test
         @DisplayName("Eccezione se si assegna un dipendente a un task inesistente")
         void testAssegnazioneTaskInesistente() {
-            Dipendente d = facade.saveDipendente(new Dipendente("Invisibile", "User"));
-            assertThrows(IllegalArgumentException.class, () -> facade.assegnaDipendenteATask(999L, d.getId()));
+            Dipendente d = facade.createEmployee("Invisibile", "User");
+            d = facade.saveEmployee(d);
+            Dipendente finalD = d;
+            assertThrows(IllegalArgumentException.class, () -> facade.assignEmployeeToTask(999L, finalD.getId()));
         }
     }
 
@@ -174,10 +179,11 @@ public class FacadeTaskTest {
         @Test
         @DisplayName("Verifica consistenza bidirezionale tra Task e Dipendente")
         void testConsistenzaBidirezionale() {
-            Dipendente d = facade.saveDipendente(new Dipendente("Mario", "Rossi"));
-            Task t = facade.createTask(TaskState.DAINIZIARE);
+            Dipendente d = facade.createEmployee("Mario", "Rossi");
+            d = facade.saveEmployee(d);
+            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
 
-            facade.assegnaDipendenteATask(t.getTaskId(), d.getId());
+            facade.assignEmployeeToTask(t.getTaskId(), d.getId());
 
             // Verifica lato Task
             assertTrue(facade.getTaskById(t.getTaskId()).get().getAssignedEmployees().contains(d));
@@ -185,7 +191,7 @@ public class FacadeTaskTest {
             // Nota: potrebbe servire un refresh o caricamento dal repository del dipendente
             assertTrue(d.getTasks().stream().anyMatch(task -> task.getTaskId().equals(t.getTaskId())));
 
-            facade.rimuoviDipendenteDaTask(t.getTaskId(), d.getId());
+            facade.removeEmployeeToTask(t.getTaskId(), d.getId());
             assertFalse(facade.getTaskById(t.getTaskId()).get().getAssignedEmployees().contains(d));
         }
     }
@@ -196,41 +202,44 @@ public class FacadeTaskTest {
 
         @Test
         void testFiltriEConteggi() {
-            facade.createTask(TaskState.DAINIZIARE);
-            facade.createTask(TaskState.DAINIZIARE);
-            facade.createTask(TaskState.INIZIATO);
+            facade.saveTask(facade.createTask(TaskState.STARTED));
+            facade.saveTask(facade.createTask(TaskState.STARTED));
+            facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
 
-            assertEquals(2, facade.countTasksByStato(TaskState.DAINIZIARE));
+            assertEquals(2, facade.countTasksByState(TaskState.STARTED));
             assertEquals(3, facade.getAllTasks().size());
 
-            List<Task> iniziati = facade.getTasksByStato(TaskState.INIZIATO);
+            List<Task> iniziati = facade.getTasksByState(TaskState.TO_BE_STARTED);
             assertEquals(1, iniziati.size());
         }
 
         @Test
         void testSearchByDipendente() {
-            Dipendente d = facade.saveDipendente(new Dipendente("Anna", "Verdi"));
-            Task t = facade.createTask(TaskState.DAINIZIARE);
-            facade.assegnaDipendenteATask(t.getTaskId(), d.getId());
+            Dipendente d = facade.createEmployee("Anna", "Verdi");
+            d = facade.saveEmployee(d);
+            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
+            facade.assignEmployeeToTask(t.getTaskId(), d.getId());
 
-            List<Task> tasksAnna = facade.getTasksByDipendente(d);
+            List<Task> tasksAnna = facade.getTasksByEmployee(d);
             assertEquals(1, tasksAnna.size());
             assertEquals(t.getTaskId(), tasksAnna.get(0).getTaskId());
         }
 
         @Test
         void testTasksComplessiENonAssegnati() {
-            Task t1 = facade.createTask(TaskState.DAINIZIARE);
-            Dipendente d1 = facade.saveDipendente(new Dipendente("D1", "C1"));
-            Dipendente d2 = facade.saveDipendente(new Dipendente("D2", "C2"));
+            Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Dipendente d1 = facade.createEmployee("D1", "C1");
+            d1 = facade.saveEmployee(d1);
+            Dipendente d2 = facade.createEmployee("D2", "C2");
+            d2 = facade.saveEmployee(d2);
 
-            facade.assegnaDipendenteATask(t1.getTaskId(), d1.getId());
-            facade.assegnaDipendenteATask(t1.getTaskId(), d2.getId());
+            facade.assignEmployeeToTask(t1.getTaskId(), d1.getId());
+            facade.assignEmployeeToTask(t1.getTaskId(), d2.getId());
 
-            List<Task> complessi = facade.getTasksComplessi(1);
+            List<Task> complessi = facade.getComplexTasks(1);
             assertTrue(complessi.contains(t1));
 
-            List<Task> nonAssegnati = facade.getTasksNonAssegnati();
+            List<Task> nonAssegnati = facade.getUnsignedTasks();
             assertFalse(nonAssegnati.contains(t1));
         }
     }
@@ -242,14 +251,15 @@ public class FacadeTaskTest {
         @Test
         @DisplayName("Test query per stato con almeno un dipendente")
         void testFindTasksByStateWithDipendenti() {
-            Task t1 = facade.createTask(TaskState.INIZIATO);
-            Dipendente d1 = facade.saveDipendente(new Dipendente("Test", "User"));
-            facade.assegnaDipendenteATask(t1.getTaskId(), d1.getId());
+            Task t1 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            Dipendente d1 = facade.createEmployee("Test", "User");
+            d1 = facade.saveEmployee(d1);
+            facade.assignEmployeeToTask(t1.getTaskId(), d1.getId());
 
             // Task nello stesso stato ma senza dipendenti
-            facade.createTask(TaskState.INIZIATO);
+            facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
 
-            List<Task> result = facade.findTasksByStateWithDipendenti(TaskState.INIZIATO);
+            List<Task> result = facade.findTasksByStateWithEmployee(TaskState.TO_BE_STARTED);
             assertEquals(1, result.size());
             assertEquals(t1.getTaskId(), result.get(0).getTaskId());
         }
@@ -257,25 +267,28 @@ public class FacadeTaskTest {
         @Test
         @DisplayName("Test conteggio dipendenti per specifico Task ID")
         void testCountDipendentiByTaskId() {
-            Task t1 = facade.createTask(TaskState.DAINIZIARE);
-            Dipendente d1 = facade.saveDipendente(new Dipendente("D1", "C1"));
-            Dipendente d2 = facade.saveDipendente(new Dipendente("D2", "C2"));
+            Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Dipendente d1 = facade.createEmployee("D1", "C1");
+            d1 = facade.saveEmployee(d1);
+            Dipendente d2 = facade.createEmployee("D2", "C2");
+            d2 = facade.saveEmployee(d2);
 
-            facade.assegnaDipendenteATask(t1.getTaskId(), d1.getId());
-            facade.assegnaDipendenteATask(t1.getTaskId(), d2.getId());
+            facade.assignEmployeeToTask(t1.getTaskId(), d1.getId());
+            facade.assignEmployeeToTask(t1.getTaskId(), d2.getId());
 
-            Integer count = facade.countDipendentiByTaskId(t1.getTaskId());
+            Integer count = facade.countEmployeeByTaskId(t1.getTaskId());
             assertEquals(2, count);
         }
 
         @Test
         @DisplayName("Test ricerca per stato e numero esatto di dipendenti")
         void testFindTasksByStateAndDipendentiCount() {
-            Task t1 = facade.createTask(TaskState.DAINIZIARE);
-            Dipendente d1 = facade.saveDipendente(new Dipendente("Solo", "User"));
-            facade.assegnaDipendenteATask(t1.getTaskId(), d1.getId());
+            Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Dipendente d1 = facade.createEmployee("Solo", "User");
+            d1 = facade.saveEmployee(d1);
+            facade.assignEmployeeToTask(t1.getTaskId(), d1.getId());
 
-            List<Task> result = facade.findTasksByStateAndDipendentiCount(TaskState.DAINIZIARE, 1);
+            List<Task> result = facade.findTasksByStateAndCountEmployee(TaskState.STARTED, 1);
             assertEquals(1, result.size());
             assertTrue(result.contains(t1));
         }
@@ -284,9 +297,10 @@ public class FacadeTaskTest {
         @DisplayName("Test ricerca Task per Team ID")
         void testFindTasksByTeamId() {
             // Creazione Team e Task
-            Supervisore s = facade.saveSupervisore(new Supervisore("Boss", "Generale"));
+            Supervisore s = facade.createSupervisor("Boss", "Generale");
+            s = facade.saveSupervisor(s);
             Team team = new Team(s);
-            Task t1 = facade.createTask(TaskState.DAINIZIARE);
+            Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
 
             // Colleghiamo il task al team (Verifica i metodi in Team.java)
             team.setTasksTeam(List.of(t1));

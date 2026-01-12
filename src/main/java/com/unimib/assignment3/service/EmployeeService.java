@@ -26,7 +26,7 @@ import static com.unimib.assignment3.constants.TaskConstants.NULL_TASK_STATE;
  * Provides CRUD operations, salary and role updates, task queries, and manager-authorized actions.
  */
 @Service
-public class DipendenteService {
+public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;

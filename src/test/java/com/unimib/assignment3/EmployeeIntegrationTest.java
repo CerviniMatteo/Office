@@ -377,30 +377,30 @@ class EmployeeIntegrationTest {
         Task t1 = facade.saveTask(new Task());
         Task t2 = facade.saveTask(new Task());
         Task t3 = facade.saveTask(new Task());
-        t3.setTaskState(TaskState.INIZIATO); // started
+        t3.setTaskState(TaskState.TO_BE_STARTED); // started
         Task t4 = facade.saveTask(new Task());
-        t4.setTaskState(TaskState.INIZIATO);
+        t4.setTaskState(TaskState.TO_BE_STARTED);
 
         // Assign tasks to employee
-        facade.assegnaDipendenteATask(t1.getIdTask(), e.getId());
-        facade.assegnaDipendenteATask(t2.getIdTask(), e.getId());
-        facade.assegnaDipendenteATask(t3.getIdTask(), e.getId());
-        facade.assegnaDipendenteATask(t4.getIdTask(), e.getId());
+        facade.assignEmployeeToTask(t1.getTaskId(), e.getId());
+        facade.assignEmployeeToTask(t2.getTaskId(), e.getId());
+        facade.assignEmployeeToTask(t3.getTaskId(), e.getId());
+        facade.assignEmployeeToTask(t4.getTaskId(), e.getId());
 
-        t4.setTaskState(TaskState.FINITO); // finished
+        t4.setTaskState(TaskState.DONE); // finished
 
         // Retrieve tasks by state
-        List<Task> openTasks = facade.findTasksByEmployeeAndTaskState(e.getId(), TaskState.DAINIZIARE);
+        List<Task> openTasks = facade.findTasksByEmployeeAndTaskState(e.getId(), TaskState.STARTED);
         assertEquals(2, openTasks.size());
-        openTasks.forEach(t -> assertEquals(TaskState.DAINIZIARE, t.getTaskState()));
+        openTasks.forEach(t -> assertEquals(TaskState.STARTED, t.getTaskState()));
 
-        List<Task> startedTasks = facade.findTasksByEmployeeAndTaskState(e.getId(), TaskState.INIZIATO);
+        List<Task> startedTasks = facade.findTasksByEmployeeAndTaskState(e.getId(), TaskState.TO_BE_STARTED);
         assertEquals(1, startedTasks.size());
-        assertEquals(TaskState.INIZIATO, startedTasks.getFirst().getTaskState());
+        assertEquals(TaskState.TO_BE_STARTED, startedTasks.getFirst().getTaskState());
 
-        List<Task> endedTasks = facade.findTasksByEmployeeAndTaskState(e.getId(), TaskState.FINITO);
+        List<Task> endedTasks = facade.findTasksByEmployeeAndTaskState(e.getId(), TaskState.DONE);
         assertEquals(1, endedTasks.size());
-        assertEquals(TaskState.FINITO, endedTasks.getFirst().getTaskState());
+        assertEquals(TaskState.DONE, endedTasks.getFirst().getTaskState());
     }
 
 }

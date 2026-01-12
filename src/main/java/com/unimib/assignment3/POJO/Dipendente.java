@@ -2,8 +2,6 @@ package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +64,7 @@ public class Dipendente extends Persona{
     private List<Long> getAllTaskId() {
         List<Long> idTask = new ArrayList<>();
         for (Task task : tasks) {
-            idTask.add(task.getIdTask());
+            idTask.add(task.getTaskId());
         }
         return idTask;
     }
