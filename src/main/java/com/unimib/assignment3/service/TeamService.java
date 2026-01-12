@@ -1,7 +1,7 @@
 package com.unimib.assignment3.service;
 
-import com.unimib.assignment3.POJO.Dipendente;
-import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.POJO.Employee;
+import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.enums.EmployeeRole;
@@ -31,32 +31,32 @@ public class TeamService {
     private TeamRepository teamRepository;
 
     @Transactional
-    public Team createTeam(Supervisore supervisore){
-        if(supervisore == null) {
+    public Team createTeam(Supervisor supervisor){
+        if(supervisor == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        return new Team(supervisore);
+        return new Team(supervisor);
     }
     @Transactional
-    public Team createTeam(List<Dipendente> dipendenti, Supervisore supervisore){
+    public Team createTeam(List<Employee> dipendenti, Supervisor supervisor){
         if(dipendenti.isEmpty()){
             throw new IllegalArgumentException(teamConstants.LIST_IS_EMPTY);
-        } else if(supervisore == null){
+        } else if(supervisor == null){
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        List<Dipendente> dipendentiList = new ArrayList<>(dipendenti);
-        return new Team(dipendentiList, supervisore);
+        List<Employee> dipendentiList = new ArrayList<>(dipendenti);
+        return new Team(dipendentiList, supervisor);
     }
     @Transactional
-    public Team createTeam(List<Dipendente> dipendenti, Supervisore supervisore, List<Task> tasks){
+    public Team createTeam(List<Employee> dipendenti, Supervisor supervisor, List<Task> tasks){
         if(dipendenti.isEmpty() || tasks.isEmpty()){
             throw new IllegalArgumentException(teamConstants.LIST_IS_EMPTY);
-        } else if(supervisore == null){
+        } else if(supervisor == null){
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        List<Dipendente> dipendentiList = new ArrayList<>(dipendenti);
+        List<Employee> dipendentiList = new ArrayList<>(dipendenti);
         List<Task> tasksList = new ArrayList<>(tasks);
-        return new Team(dipendentiList, supervisore, tasksList);
+        return new Team(dipendentiList, supervisor, tasksList);
     }
     public Team saveTeam(Team team){
         if(team == null) {
@@ -70,14 +70,14 @@ public class TeamService {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
         // Remove the association of the team from its employees
-        team.removeAllDipendenti();
+        team.removeAllEmployee();
 
         // Remove all tasks from the team
         team.removeAllTasks();
 
         // Remove the team from its supervisor
-        Supervisore supervisore = team.getSupervisore();
-        supervisore.removeTeamSupervisionato(team);
+        Supervisor supervisor = team.getSupervisor();
+        supervisor.removeTeamSupervisionato(team);
 
         // Finally, delete the team
         teamRepository.delete(team);
@@ -85,53 +85,53 @@ public class TeamService {
     // for now dont need getIdTeam
 
     // other methods as needed
-    public List<Dipendente> getDipendentiInTeam(Team team){
+    public List<Employee> getDipendentiInTeam(Team team){
         if(team == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        return team.getDipendenti();
+        return team.getEmployees();
     }
     @Transactional
-    public void addDipendenteToTeam(Team newTeam, Dipendente dipendente){
-        if(newTeam == null || dipendente == null) {
+    public void addDipendenteToTeam(Team newTeam, Employee employee){
+        if(newTeam == null || employee == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        Team oldTeam = dipendente.getDipendenteTeam();
+        Team oldTeam = employee.getEmployeeTeam();
         // if the dipendente is already in a team, remove him from the old team
         if(oldTeam != null) {
-            oldTeam.removeDipendente(dipendente);
+            oldTeam.removeEmployee(employee);
         }
-        newTeam.addDipendente(dipendente);
+        newTeam.addEmployee(employee);
     }
     @Transactional
     public void removeAllDipendentiFromTeam(Team team){
         if(team == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        team.removeAllDipendenti();
+        team.removeAllEmployee();
     }
     @Transactional
-    public void removeDipendenteFromTeam(Team team, Dipendente dipendente){
-        if(team == null || dipendente == null) {
+    public void removeDipendenteFromTeam(Team team, Employee employee){
+        if(team == null || employee == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
-        } else if(!team.getDipendenti().contains(dipendente)){
+        } else if(!team.getEmployees().contains(employee)){
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
-        team.removeDipendente(dipendente);
+        team.removeEmployee(employee);
     }
 
-    public Supervisore getTeamSupervisore(Team team){
+    public Supervisor getTeamSupervisore(Team team){
         if(team == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        return team.getSupervisore();
+        return team.getSupervisor();
     }
     @Transactional
-    public void setTeamSupervisore(Team team, Supervisore supervisore){
-        if(team == null || supervisore == null) {
+    public void setTeamSupervisore(Team team, Supervisor supervisor){
+        if(team == null || supervisor == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        team.setSupervisore(supervisore);
+        team.setSupervisor(supervisor);
     }
     public List<Task> getTeamTasks(Team team) {
         if (team == null) {
@@ -144,7 +144,7 @@ public class TeamService {
         if (newTeam == null || task == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        Team oldTeam = task.getTaskTeam();
+        Team oldTeam = task.getTeamTask();
         if (oldTeam != null) {
             oldTeam.removeTask(task);
         }
@@ -169,7 +169,7 @@ public class TeamService {
 
     // Repository functions
     public Optional<Team> getTeamById(Long id) {
-        return teamRepository.findByIdTeam(id);
+        return teamRepository.findByTeamId(id);
     }
     @Transactional
     public void deleteTeamById(Long id) {
@@ -179,14 +179,14 @@ public class TeamService {
         Team team = getTeamById(id).get();
 
         // Remove the association of the team from its employees
-        team.removeAllDipendenti();
+        team.removeAllEmployee();
 
         // Remove all tasks from the team
         team.removeAllTasks();
 
         // Remove the team from its supervisor
-        Supervisore supervisore = team.getSupervisore();
-        supervisore.removeTeamSupervisionato(team);
+        Supervisor supervisor = team.getSupervisor();
+        supervisor.removeTeamSupervisionato(team);
 
         teamRepository.deleteById(id);
     }
@@ -197,37 +197,37 @@ public class TeamService {
         if(supervisorRepository.findById(idSupervisore).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
-        return teamRepository.findBySupervisore_Id(idSupervisore);
+        return teamRepository.findBySupervisorPersonId(idSupervisore);
     }
     public Team getTeamByDipendente_Id(Long idDipendente) {
         if(employeeRepository.findById(idDipendente).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
-        return teamRepository.findByDipendenti_Id(idDipendente);
+        return teamRepository.findByEmployeesPersonId(idDipendente);
     }
     public Team getTeamByTask_Id(Long idTask) {
         if(taskRepository.findById(idTask).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
-        return teamRepository.findByTasks_TaskId(idTask);
+        return teamRepository.findByTasksTaskId(idTask);
     }
     public List<Task> getTasksByTeamId(Long idTeam) {
         if(getTeamById(idTeam).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
-        return teamRepository.findTasksByIdTeam(idTeam);
+        return teamRepository.findTasksByTeamId(idTeam);
     }
-    public Supervisore getSupervisoreByTeamId(Long idTeam) {
+    public Supervisor getSupervisoreByTeamId(Long idTeam) {
         if(getTeamById(idTeam).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
-        return teamRepository.findSupervisoreByIdTeam(idTeam);
+        return teamRepository.findSupervisorByTeamId(idTeam);
     }
-    public List<Dipendente> getDipendentiByTeamId(Long idTeam) {
+    public List<Employee> getDipendentiByTeamId(Long idTeam) {
         if(getTeamById(idTeam).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
-        return teamRepository.findDipendentiByIdTeam(idTeam);
+        return teamRepository.findEmployeesByTeamId(idTeam);
     }
 
     public List<Task> getTasksInTeamIdByTaskState(Long idTeam, TaskState taskState) {
@@ -238,28 +238,28 @@ public class TeamService {
         }
         return teamRepository.findTasksInTeamIdByTaskState(idTeam, taskState);
     }
-    public List<Dipendente> getDipendentiInTeamIdWithSalaryGreaterThan(Long idTeam, Double salary) {
+    public List<Employee> getDipendentiInTeamIdWithSalaryGreaterThan(Long idTeam, Double salary) {
         if(getTeamById(idTeam).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         } else if (salary <= 0) {
             throw new IllegalArgumentException(teamConstants.THIS_VALUE_MUST_BE_POSITIVE);
         }
-        return teamRepository.findDipendentiInTeamIdWithSalaryGreaterThan(idTeam, salary);
+        return teamRepository.findEmployeesInTeamIdWithSalaryGreaterThan(idTeam, salary);
     }
-    public List<Dipendente> getDipendentiInTeamIdWithSalaryLessThan(Long idTeam, Double salary) {
+    public List<Employee> getDipendentiInTeamIdWithSalaryLessThan(Long idTeam, Double salary) {
         if (getTeamById(idTeam).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         } else if (salary <= 0) {
             throw new IllegalArgumentException(teamConstants.THIS_VALUE_MUST_BE_POSITIVE);
         }
-        return teamRepository.findDipendentiInTeamIdWithSalaryLessThan(idTeam, salary);
+        return teamRepository.findEmployeesInTeamIdWithSalaryLessThan(idTeam, salary);
     }
-    public List<Dipendente> getDipendentiInTeamIdWithGrado(Long idTeam, EmployeeRole employeeRole) {
+    public List<Employee> getDipendentiInTeamIdWithGrado(Long idTeam, EmployeeRole employeeRole) {
         if(getTeamById(idTeam).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         } else if(employeeRole == null) {
             throw new IllegalArgumentException(teamConstants.ATTRIBUTE_CANNOT_BE_NULL);
         }
-        return teamRepository.findDipendentiInTeamIdWithGrado(idTeam, employeeRole);
+        return teamRepository.findEmployeesInTeamIdWithGrado(idTeam, employeeRole);
     }
 }

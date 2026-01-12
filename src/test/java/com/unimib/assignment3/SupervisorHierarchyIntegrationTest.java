@@ -1,7 +1,7 @@
 package com.unimib.assignment3;
 
-import com.unimib.assignment3.POJO.Dipendente;
-import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.POJO.Employee;
+import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.facade.Facade;
 import org.junit.jupiter.api.Test;
@@ -20,28 +20,28 @@ public class SupervisorHierarchyIntegrationTest {
     /**
      * Helper method to create and save a supervisor via the facade.
      */
-    private Supervisore createSupervisor() {
+    private Supervisor createSupervisor() {
         return facade.createSupervisor("Matteo", "Cervini");
     }
-    private Supervisore createSupervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
+    private Supervisor createSupervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
         return facade.createSupervisor(name, surname, monthlySalary, employeeRole);
     }
 
     @Test
     void supervisoreIsAnEmployee() {
-        Supervisore supervisor = createSupervisor();
+        Supervisor supervisor = createSupervisor();
         supervisor = facade.saveSupervisor(supervisor);
 
-        assertInstanceOf(Dipendente.class, supervisor);
+        assertInstanceOf(Employee.class, supervisor);
     }
 
     @Test
     void supervisoreHasInheritedProperties() {
-        Supervisore supervisor = createSupervisor();
+        Supervisor supervisor = createSupervisor();
         supervisor = facade.saveSupervisor(supervisor);
 
-        assertTrue(supervisor.getNome().contains("Matteo"));
-        assertEquals("Cervini", supervisor.getCognome());
+        assertTrue(supervisor.getName().contains("Matteo"));
+        assertEquals("Cervini", supervisor.getSurname());
         assertNotNull(supervisor.getMonthlySalary());
         assertNotNull(supervisor.getEmployeeRole());
     }

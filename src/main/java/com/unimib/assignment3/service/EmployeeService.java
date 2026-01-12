@@ -1,7 +1,7 @@
 package com.unimib.assignment3.service;
 
-import com.unimib.assignment3.POJO.Dipendente;
-import com.unimib.assignment3.POJO.Persona;
+import com.unimib.assignment3.POJO.Employee;
+import com.unimib.assignment3.POJO.Person;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.constants.CommonConstants;
 import com.unimib.assignment3.enums.EmployeeRole;
@@ -37,12 +37,12 @@ public class EmployeeService {
      * @param employee the employee to save
      * @return the saved employee
      */
-    public Dipendente saveEmployee(@NonNull Dipendente employee) {
+    public Employee saveEmployee(@NonNull Employee employee) {
         Objects.requireNonNull(employee, NULL_EMPLOYEE);
 
-        int emailCounter = employeeRepository.countEmailsStartingWithEmailPrefix(employee.getNome());
+        int emailCounter = employeeRepository.countEmailsStartingWithEmailPrefix(employee.getName());
         if(emailCounter != 0) {
-            employee.setEmail(Persona.generateEmail(employee.getNome(), employee.getCognome(), emailCounter));
+            employee.setEmail(Person.generateEmail(employee.getName(), employee.getSurname(), emailCounter));
         }
         try {
             return employeeRepository.saveAndFlush(employee);
@@ -60,10 +60,10 @@ public class EmployeeService {
      * @return the created supervisor entity
      * @throws NullPointerException if the name or surname is null
      */
-    public Dipendente createEmployee(@NonNull String name, @NonNull String surname) {
+    public Employee createEmployee(@NonNull String name, @NonNull String surname) {
         Objects.requireNonNull(name, NULL_NAME);
         Objects.requireNonNull(surname, NULL_SURNAME);
-        return new Dipendente(name, surname);
+        return new Employee(name, surname);
     }
 
     /**
@@ -75,10 +75,10 @@ public class EmployeeService {
      * @return the created supervisor entity
      * @throws NullPointerException if the name, surname, or employee role is null
      */
-    public Dipendente createEmployee(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
+    public Employee createEmployee(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
         Objects.requireNonNull(name, NULL_NAME);
         Objects.requireNonNull(surname, NULL_SURNAME);
-        return new Dipendente(name, surname, employeeRole);
+        return new Employee(name, surname, employeeRole);
     }
 
 
@@ -92,10 +92,10 @@ public class EmployeeService {
      * @return the created supervisor entity
      * @throws NullPointerException if the name, surname, or employee role is null
      */
-    public Dipendente createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+    public Employee createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
         Objects.requireNonNull(name, NULL_NAME);
         Objects.requireNonNull(surname, NULL_SURNAME);
-        return new Dipendente(name, surname, monthlySalary, employeeRole);
+        return new Employee(name, surname, monthlySalary, employeeRole);
     }
 
     /**
@@ -104,7 +104,7 @@ public class EmployeeService {
      * @param employees list of employees
      * @return list of saved employees
      */
-    public List<Dipendente> saveAllEmployees(@NonNull List<Dipendente> employees) {
+    public List<Employee> saveAllEmployees(@NonNull List<Employee> employees) {
         Objects.requireNonNull(employees, NULL_EMPLOYEES);
         return employeeRepository.saveAll(employees);
     }
@@ -115,7 +115,7 @@ public class EmployeeService {
      * @param employeeId the ID of the employee
      * @return Optional containing the employee if found
      */
-    public Optional<Dipendente> findEmployeeById(@NonNull Long employeeId) {
+    public Optional<Employee> findEmployeeById(@NonNull Long employeeId) {
         return Optional.of(getEmployeeOrThrow(employeeId));
 
     }
@@ -125,7 +125,7 @@ public class EmployeeService {
      *
      * @return list of all employees
      */
-    public List<Dipendente> findAllEmployees() {
+    public List<Employee> findAllEmployees() {
         return employeeRepository.findAll();
     }
 
@@ -158,9 +158,9 @@ public class EmployeeService {
      * @param managerId the manager's ID
      * @param employees list of employees to fire
      */
-    public void fireEmployees(@NonNull Long managerId,@NonNull List<Dipendente> employees) {
+    public void fireEmployees(@NonNull Long managerId,@NonNull List<Employee> employees) {
         checkManagerRole(managerId);
-        employees.forEach(employee -> deleteEmployeeById(employee.getId()));
+        employees.forEach(employee -> deleteEmployeeById(employee.getPersonId()));
     }
 
     /**
@@ -171,53 +171,53 @@ public class EmployeeService {
      * @param monthlySalary the target salary
      * @return list of employees with that salary
      */
-    public List<Dipendente> findEmployeesByMonthlySalary(@NonNull Long managerId, double monthlySalary) {
+    public List<Employee> findEmployeesByMonthlySalary(@NonNull Long managerId, double monthlySalary) {
         checkManagerRole(managerId);
-        return employeeRepository.findDipendenteByMonthlySalary(monthlySalary);
+        return employeeRepository.findEmployeeByMonthlySalary(monthlySalary);
     }
 
     /**
      * Find employees by salary and sort by role ascending.
      */
-    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(@NonNull Long managerId, double monthlySalary) {
+    public List<Employee> findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(@NonNull Long managerId, double monthlySalary) {
         checkManagerRole(managerId);
-        return employeeRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleAsc(monthlySalary);
+        return employeeRepository.findEmployeeByMonthlySalaryOrderByEmployeeRoleAsc(monthlySalary);
     }
 
     /**
      * Find employees by salary and sort by role descending.
      */
-    public List<Dipendente> findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(@NonNull Long managerId, double monthlySalary) {
+    public List<Employee> findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(@NonNull Long managerId, double monthlySalary) {
         checkManagerRole(managerId);
-        return employeeRepository.findDipendenteByMonthlySalaryOrderByEmployeeRoleDesc(monthlySalary);
+        return employeeRepository.findEmployeeByMonthlySalaryOrderByEmployeeRoleDesc(monthlySalary);
     }
 
     /**
      * Find employees by role.
      * Only accessible by managers.
      */
-    public List<Dipendente> findEmployeesByEmployeeRole(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+    public List<Employee> findEmployeesByEmployeeRole(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         checkManagerRole(employeeId);
         Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
-        return employeeRepository.findDipendenteByEmployeeRole(employeeRole);
+        return employeeRepository.findEmployeeByEmployeeRole(employeeRole);
     }
 
     /**
      * Find employees by role, ordered by salary ascending.
      */
-    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+    public List<Employee> findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         checkManagerRole(employeeId);
         Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
-        return employeeRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
+        return employeeRepository.findEmployeeByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
     }
 
     /**
      * Find employees by role, ordered by salary descending.
      */
-    public List<Dipendente> findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+    public List<Employee> findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         checkManagerRole(employeeId);
         Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
-        return employeeRepository.findDipendenteByEmployeeRoleOrderByMonthlySalaryDesc(employeeRole);
+        return employeeRepository.findEmployeeByEmployeeRoleOrderByMonthlySalaryDesc(employeeRole);
     }
 
     /**
@@ -243,7 +243,7 @@ public class EmployeeService {
      */
     public void updateMonthlySalaryById(@NonNull Long managerId,@NonNull Long employeeId, double monthlySalary) {
         checkManagerRole(managerId);
-        Dipendente employee = getEmployeeOrThrow(employeeId);
+        Employee employee = getEmployeeOrThrow(employeeId);
         employee.setMonthlySalary(monthlySalary);
     }
 
@@ -258,7 +258,7 @@ public class EmployeeService {
     public void updateEmployeeRoleById(@NonNull Long managerId,@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
         checkManagerRole(managerId);
         Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
-        Dipendente employee = getEmployeeOrThrow(employeeId);
+        Employee employee = getEmployeeOrThrow(employeeId);
         employee.setEmployeeRole(employeeRole);
     }
 
@@ -270,7 +270,7 @@ public class EmployeeService {
      */
     private void checkManagerRole(Long managerId) {
         Objects.requireNonNull(managerId, NULL_EMPLOYEE_ID);
-        Dipendente manager = getEmployeeOrThrow(managerId);
+        Employee manager = getEmployeeOrThrow(managerId);
         if (!manager.getEmployeeRole().equals(EmployeeRole.MANAGER)) {
             throw new IllegalArgumentException(NOT_A_MANAGER);
         }
@@ -283,7 +283,7 @@ public class EmployeeService {
      * @return the employee if found
      * @throws IllegalArgumentException if the employee does not exist
      */
-    private Dipendente getEmployeeOrThrow(Long employeeId) {
+    private Employee getEmployeeOrThrow(Long employeeId) {
         Objects.requireNonNull(employeeId, NULL_EMPLOYEE_ID);
         return employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException(NULL_EMPLOYEE));

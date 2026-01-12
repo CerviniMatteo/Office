@@ -1,6 +1,6 @@
 package com.unimib.assignment3.service;
 
-import com.unimib.assignment3.POJO.Dipendente;
+import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.EmployeeRepository;
@@ -48,7 +48,7 @@ public class TaskService {
     @Transactional
     public Task assignEmployeeToTask(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
-        Optional<Dipendente> dipOpt = employeeRepository.findById(dipendenteId);
+        Optional<Employee> dipOpt = employeeRepository.findById(dipendenteId);
 
         if (taskOpt.isEmpty()) {
             throw new IllegalArgumentException("Task non trovato con id: " + taskId);
@@ -58,19 +58,19 @@ public class TaskService {
         }
 
         Task task = taskOpt.get();
-        Dipendente dipendente = dipOpt.get();
+        Employee employee = dipOpt.get();
 
         if (task.getTaskState() == TaskState.DONE) {
             throw new IllegalStateException("Impossibile assegnare dipendenti a task già completati");
         }
 
-        if (task.hasEmployee(dipendente)) {
+        if (task.hasEmployee(employee)) {
             throw new IllegalStateException("Dipendente già assegnato a questo task");
         }
 
-        task.assignEmployee(dipendente);
+        task.assignEmployee(employee);
 
-        employeeRepository.saveAndFlush(dipendente);
+        employeeRepository.saveAndFlush(employee);
         return taskRepository.saveAndFlush(task);
     }
 
@@ -80,16 +80,16 @@ public class TaskService {
     @Transactional
     public Task removeEmployeeFromTask(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
-        Optional<Dipendente> dipOpt = employeeRepository.findById(dipendenteId);
+        Optional<Employee> dipOpt = employeeRepository.findById(dipendenteId);
 
         if (taskOpt.isEmpty() || dipOpt.isEmpty()) {
             throw new IllegalArgumentException("Task o Dipendente non trovato");
         }
 
         Task task = taskOpt.get();
-        Dipendente dipendente = dipOpt.get();
+        Employee employee = dipOpt.get();
 
-        task.removeEmployee(dipendente);
+        task.removeEmployee(employee);
         return taskRepository.saveAndFlush(task);
     }
 
@@ -143,12 +143,12 @@ public class TaskService {
         return taskRepository.findByTaskState(stato);
     }
 
-    public List<Task> getTasksByEmployee(Dipendente dipendente) {
-        return taskRepository.findTasksByDipendente(dipendente);
+    public List<Task> getTasksByEmployee(Employee employee) {
+        return taskRepository.findTasksByEmployee(employee);
     }
 
     public List<Task> getUnassignedTasks() {
-        return taskRepository.findTasksWithoutDipendenti();
+        return taskRepository.findTasksWithoutEmployee();
     }
 
     public long countTasksByState(TaskState stato) {
@@ -156,7 +156,7 @@ public class TaskService {
     }
 
     public List<Task> getComplexTasks(int sogliaDipendenti) {
-        return taskRepository.findTasksWithMoreThanNDipendenti(sogliaDipendenti);
+        return taskRepository.findTasksWithMoreThanNEmployees(sogliaDipendenti);
     }
 
     public Optional<Task> getTaskById(Long id) {
@@ -174,7 +174,7 @@ public class TaskService {
 
     public boolean isEmployeeAssigned(Long taskId, Long dipendenteId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
-        Optional<Dipendente> dipOpt = employeeRepository.findById(dipendenteId);
+        Optional<Employee> dipOpt = employeeRepository.findById(dipendenteId);
 
         if (taskOpt.isEmpty() || dipOpt.isEmpty()) {
             return false;
@@ -184,15 +184,15 @@ public class TaskService {
     }
 
     public List<Task> getTasksByStateWithEmployees(TaskState stato) {
-        return taskRepository.findTasksByStateWithDipendenti(stato);
+        return taskRepository.findTasksByStateWithEmployees(stato);
     }
 
     public Integer getEmployeeCountPerTask(Long taskId) {
-        return taskRepository.countDipendentiByTaskId(taskId);
+        return taskRepository.countEmployeesByTaskId(taskId);
     }
 
     public List<Task> getTasksByStateAndEmployeeCount(TaskState stato, int numDipendenti) {
-        return taskRepository.findTasksByStateAndDipendentiCount(stato, numDipendenti);
+        return taskRepository.findTasksByStateAndEmployeesCount(stato, numDipendenti);
     }
 
     public List<Task> getTasksByTeam(Long idTeam) {

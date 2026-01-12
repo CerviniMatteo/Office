@@ -1,7 +1,7 @@
 package com.unimib.assignment3.facade;
 
-import com.unimib.assignment3.POJO.Dipendente;
-import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.POJO.Employee;
+import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.enums.EmployeeRole;
@@ -29,31 +29,31 @@ public class Facade {
     private TeamService teamService;
 
     // <---- Employee ----
-    public Dipendente createEmployee(@NonNull String name, @NonNull String surname) {
+    public Employee createEmployee(@NonNull String name, @NonNull String surname) {
         return employeeService.createEmployee(name, surname);
     }
 
-    public Dipendente createEmployee(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
+    public Employee createEmployee(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
         return  employeeService.createEmployee(name, surname, employeeRole);
     }
 
-    public Dipendente createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+    public Employee createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
         return  employeeService.createEmployee(name, surname, monthlySalary, employeeRole);
     }
 
-    public Dipendente saveEmployee(@NonNull Dipendente employee) {
+    public Employee saveEmployee(@NonNull Employee employee) {
         return employeeService.saveEmployee(employee);
     }
 
-    public List<Dipendente> saveAllEmployees(@NonNull List<Dipendente> employees) {
+    public List<Employee> saveAllEmployees(@NonNull List<Employee> employees) {
         return employeeService.saveAllEmployees(employees);
     }
 
-    public Optional<Dipendente> findEmployeeById(@NonNull Long employeeId) {
+    public Optional<Employee> findEmployeeById(@NonNull Long employeeId) {
         return employeeService.findEmployeeById(employeeId);
     }
 
-    public List<Dipendente> findAllEmployees(){
+    public List<Employee> findAllEmployees(){
         return employeeService.findAllEmployees();
     }
 
@@ -61,31 +61,31 @@ public class Facade {
         employeeService.fireEmployee(managerId, employeeId);
     }
 
-    public void fireEmployees(@NonNull Long managerId,@NonNull List<Dipendente> employees) {
+    public void fireEmployees(@NonNull Long managerId,@NonNull List<Employee> employees) {
         employeeService.fireEmployees(managerId, employees);
     }
 
-    public List<Dipendente> findEmployeesByMonthlySalary(@NonNull Long employeeId, double monthlySalary) {
+    public List<Employee> findEmployeesByMonthlySalary(@NonNull Long employeeId, double monthlySalary) {
         return employeeService.findEmployeesByMonthlySalary(employeeId, monthlySalary);
     }
 
-    public List<Dipendente> findEmployeesByMonthlySalaryAscByEmployeeRole(@NonNull Long employeeId,double monthlySalary) {
+    public List<Employee> findEmployeesByMonthlySalaryAscByEmployeeRole(@NonNull Long employeeId, double monthlySalary) {
         return employeeService.findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(employeeId, monthlySalary);
     }
 
-    public List<Dipendente> findEmployeesByMonthlySalaryDescByEmployeeRole(@NonNull Long employeeId,double monthlySalary) {
+    public List<Employee> findEmployeesByMonthlySalaryDescByEmployeeRole(@NonNull Long employeeId, double monthlySalary) {
         return employeeService.findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(employeeId, monthlySalary);
     }
 
-    public List<Dipendente> findEmployeesByEmployeeRole(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+    public List<Employee> findEmployeesByEmployeeRole(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         return employeeService.findEmployeesByEmployeeRole(employeeId, employeeRole);
     }
 
-    public List<Dipendente> findEmployeesByEmployeeRoleAscByMonthlySalary(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+    public List<Employee> findEmployeesByEmployeeRoleAscByMonthlySalary(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         return employeeService.findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(employeeId, employeeRole);
     }
 
-    public List<Dipendente> findEmployeesByEmployeeRoleDescByMonthlySalary(@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
+    public List<Employee> findEmployeesByEmployeeRoleDescByMonthlySalary(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         return employeeService.findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(employeeId, employeeRole);
     }
 
@@ -102,27 +102,27 @@ public class Facade {
     }
 
     // <---- Supervisor ---->
-    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname) {
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname) {
         return supervisorService.createSupervisor(name, surname);
     }
 
-    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
         return  supervisorService.createSupervisor(name, surname, employeeRole);
     }
 
-    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
         return  supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole);
     }
 
-    public Supervisore saveSupervisor(@NonNull Supervisore supervisor) {
+    public Supervisor saveSupervisor(@NonNull Supervisor supervisor) {
         return supervisorService.saveSupervisor(supervisor);
     }
 
-    public Optional<Supervisore> findSupervisorById(@NonNull Long supervisorId) {
+    public Optional<Supervisor> findSupervisorById(@NonNull Long supervisorId) {
         return supervisorService.findSupervisorById(supervisorId);
     }
 
-    public List<Supervisore> findAllSupervisors() {
+    public List<Supervisor> findAllSupervisors() {
         return supervisorService.findAllSupervisors();
     }
 
@@ -138,15 +138,15 @@ public class Facade {
         supervisorService.removeSubordinate(supervisorId, subordinateId);
     }
 
-    public List<Supervisore> findSupervisorsWithoutSupervisor() {
+    public List<Supervisor> findSupervisorsWithoutSupervisor() {
         return supervisorService.findSupervisorsWithoutSupervisor();
     }
 
-    public List<Supervisore> findSupervisorsWithoutSubordinates() {
+    public List<Supervisor> findSupervisorsWithoutSubordinates() {
         return supervisorService.findSupervisorsWithoutSubordinates();
     }
 
-    public List<Supervisore> findSupervisorsWithoutSupervisionedTeam() {
+    public List<Supervisor> findSupervisorsWithoutSupervisionedTeam() {
         return supervisorService.findSupervisorsWithoutSupervisedTeam();
     }
 
@@ -178,7 +178,7 @@ public class Facade {
         return taskService.getTasksByState(taskState);
     }
 
-    public List<Task> getTasksByEmployee(Dipendente employee) {
+    public List<Task> getTasksByEmployee(Employee employee) {
         return taskService.getTasksByEmployee(employee);
     }
 
@@ -233,14 +233,14 @@ public class Facade {
 
     // <---- Team ---->
     // Function for team service
-    public Team createTeam(Supervisore supervisore) {
-        return teamService.createTeam(supervisore);
+    public Team createTeam(Supervisor supervisor) {
+        return teamService.createTeam(supervisor);
     }
-    public Team createTeam(List<Dipendente> dipendenti, Supervisore supervisore) {
-        return teamService.createTeam(dipendenti, supervisore);
+    public Team createTeam(List<Employee> dipendenti, Supervisor supervisor) {
+        return teamService.createTeam(dipendenti, supervisor);
     }
-    public Team createTeam(List<Dipendente> dipendenti, Supervisore supervisore, List<Task> tasks) {
-        return teamService.createTeam(dipendenti, supervisore, tasks);
+    public Team createTeam(List<Employee> dipendenti, Supervisor supervisor, List<Task> tasks) {
+        return teamService.createTeam(dipendenti, supervisor, tasks);
     }
     public Team saveTeam(Team team) {
         return teamService.saveTeam(team);
@@ -248,23 +248,23 @@ public class Facade {
     public void deleteTeam(Team team) {
         teamService.deleteTeam(team);
     }
-    public List<Dipendente> getDipendentiInTeam(Team team) {
+    public List<Employee> getDipendentiInTeam(Team team) {
         return teamService.getDipendentiInTeam(team);
     }
-    public void addDipendenteToTeam(Team team, Dipendente dipendente) {
-        teamService.addDipendenteToTeam(team, dipendente);
+    public void addDipendenteToTeam(Team team, Employee employee) {
+        teamService.addDipendenteToTeam(team, employee);
     }
     public void removeAllDipendentiFromTeam(Team team) {
         teamService.removeAllDipendentiFromTeam(team);
     }
-    public void removeDipendenteFromTeam(Team team, Dipendente dipendente) {
-        teamService.removeDipendenteFromTeam(team, dipendente);
+    public void removeDipendenteFromTeam(Team team, Employee employee) {
+        teamService.removeDipendenteFromTeam(team, employee);
     }
-    public Supervisore getTeamSupervisore(Team team) {
+    public Supervisor getTeamSupervisore(Team team) {
         return teamService.getTeamSupervisore(team);
     }
-    public void setTeamSupervisore(Team team, Supervisore supervisore) {
-        teamService.setTeamSupervisore(team, supervisore);
+    public void setTeamSupervisore(Team team, Supervisor supervisor) {
+        teamService.setTeamSupervisore(team, supervisor);
     }
     public List<Task> getTeamTasks(Team team) {
         return teamService.getTeamTasks(team);
@@ -300,22 +300,22 @@ public class Facade {
     public List<Task> getTasksByTeamId(Long teamId) {
         return teamService.getTasksByTeamId(teamId);
     }
-    public Supervisore getSupervisoreByTeamId(Long teamId) {
+    public Supervisor getSupervisoreByTeamId(Long teamId) {
         return teamService.getSupervisoreByTeamId(teamId);
     }
-    public List<Dipendente> getDipendentiByTeamId(Long teamId) {
+    public List<Employee> getDipendentiByTeamId(Long teamId) {
         return teamService.getDipendentiByTeamId(teamId);
     }
     public List<Task> getTasksInTeamIdByTaskState(Long teamId, TaskState taskState) {
         return teamService.getTasksInTeamIdByTaskState(teamId, taskState);
     }
-    public List<Dipendente> getDipendentiInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
+    public List<Employee> getDipendentiInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
         return teamService.getDipendentiInTeamIdWithSalaryGreaterThan(teamId, salary);
     }
-    public List<Dipendente> getDipendentiInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
+    public List<Employee> getDipendentiInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
         return teamService.getDipendentiInTeamIdWithSalaryLessThan(teamId, salary);
     }
-    public List<Dipendente> getDipendentiInTeamIdWithGrado(Long teamId, EmployeeRole employeeRole) {
+    public List<Employee> getDipendentiInTeamIdWithGrado(Long teamId, EmployeeRole employeeRole) {
         return teamService.getDipendentiInTeamIdWithGrado(teamId, employeeRole);
     }
 }

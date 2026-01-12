@@ -7,40 +7,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Entity(name = "supervisore")
-public class Supervisore extends Dipendente {
+@Entity(name = "supervisor")
+public class Supervisor extends Employee {
 
     @ManyToOne
-    @JoinColumn(name = "supervisore")
-    private Supervisore supervisore;
+    @JoinColumn(name = "supervisor")
+    private Supervisor supervisor;
 
     @OneToMany(
-            mappedBy = "supervisore",
+            mappedBy = "supervisor",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Supervisore> supervisoriSupervisionati = new ArrayList<>();
+    private List<Supervisor> subordinates = new ArrayList<>();
 
     @OneToMany(
-            mappedBy = "supervisore",
+            mappedBy = "supervisor",
             cascade = CascadeType.MERGE,
             orphanRemoval = true
     )
     private List<Team> supervisedTeams = new ArrayList<>();
 
-    protected Supervisore() {
+    protected Supervisor() {
         super();
     }
 
-    public Supervisore(String name, String surname) {
+    public Supervisor(String name, String surname) {
         super(name, surname, EmployeeRole.SW_ARCHITECT);
     }
 
-    public Supervisore(String name, String surname, EmployeeRole employeeRole) {
+    public Supervisor(String name, String surname, EmployeeRole employeeRole) {
         super(name, surname, employeeRole);
     }
 
-    public Supervisore(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
+    public Supervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
         super(name, surname, monthlySalary, employeeRole);
     }
 
@@ -56,27 +56,27 @@ public class Supervisore extends Dipendente {
         }
     }
 
-    public Supervisore getSupervisore() {
-        return supervisore;
+    public Supervisor getSupervisore() {
+        return supervisor;
     }
 
-    public void setSupervisore(Supervisore supervisore) {
-        this.supervisore = supervisore;
+    public void setSupervisore(Supervisor supervisor) {
+        this.supervisor = supervisor;
     }
 
-    public List<Supervisore> getSupervisoriSupervisionati() {
-        return supervisoriSupervisionati;
+    public List<Supervisor> getSubordinates() {
+        return subordinates;
     }
 
-    public void setSupervisoriSupervisionati(List<Supervisore> subordinates) {
-        this.supervisoriSupervisionati = subordinates;
+    public void setSubordinates(List<Supervisor> subordinates) {
+        this.subordinates = subordinates;
     }
 
-    public void setSupervisoriSupervisionati(Supervisore subordinate) {
-        this.supervisoriSupervisionati.add(subordinate);
+    public void setSupervisoriSupervisionati(Supervisor subordinate) {
+        this.subordinates.add(subordinate);
     }
 
-    // ho cambiato il setter di team supervisionato per gestire la relazione bidirezionale
+    //TODO ho cambiato il setter di team supervisionato per gestire la relazione bidirezionale
     // ricordati di aggiornare anche nel service e test
     public List<Team> getSupervisedTeams() {
         return supervisedTeams;
@@ -89,22 +89,22 @@ public class Supervisore extends Dipendente {
     private void setTeamsSupervisionato(List<Team> teams) {
         removeAllTeamsSupervisionato();
         for(Team team : teams) {
-            team.setSupervisore(this);
+            team.setSupervisor(this);
         }
         this.supervisedTeams = teams;
     }
 
-    public void addSubordinate(Supervisore subordinate) {
+    public void addSubordinate(Supervisor subordinate) {
         if (subordinate == null) return;
-        if (!this.supervisoriSupervisionati.contains(subordinate)) {
+        if (!this.subordinates.contains(subordinate)) {
             setSupervisoriSupervisionati(subordinate);
             subordinate.setSupervisore(this); // maintain bidirectional link
         }
     }
 
-    public void removeSubordinate(Supervisore subordinate) {
+    public void removeSubordinate(Supervisor subordinate) {
         if (subordinate == null) return;
-        if (this.supervisoriSupervisionati.remove(subordinate)) {
+        if (this.subordinates.remove(subordinate)) {
             subordinate.setSupervisore(null); // remove bidirectional link
         }
     }
@@ -112,28 +112,28 @@ public class Supervisore extends Dipendente {
     public void addTeamsSupervisionato(Team team) {
         if(!supervisedTeams.contains(team)){
             setSupervisedTeams(team);
-            team.setSupervisore(this);
+            team.setSupervisor(this);
         }
     }
 
     public void removeAllTeamsSupervisionato() {
         for(Team team : supervisedTeams) {
-            team.setSupervisore(null);
+            team.setSupervisor(null);
         }
         supervisedTeams.clear();
     }
 
     public void removeTeamSupervisionato(Team team) {
         if (supervisedTeams.remove(team)) {
-            team.setSupervisore(null);
+            team.setSupervisor(null);
         }
     }
 
     @Override
     public String toString() {
-        return "Supervisore{" + super.toString() +
-                ", supervisoriSupervisionati=" + supervisoriSupervisionati +
-                ", teamSupervisionato=" + supervisedTeams.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
+        return "Supervisor{" + super.toString() +
+                ", subordinates=" + subordinates +
+                ", supervisedTeams=" + supervisedTeams.stream().map(team -> team.getTeamId().toString()).collect(Collectors.joining(", ")) +
                 '}';
     }
 }

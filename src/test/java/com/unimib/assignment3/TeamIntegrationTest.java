@@ -1,9 +1,9 @@
 package com.unimib.assignment3;
 
+import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
-import com.unimib.assignment3.POJO.Supervisore;
-import com.unimib.assignment3.POJO.Dipendente;
+import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.enums.EmployeeRole;
@@ -29,16 +29,16 @@ class TeamIntegrationTest {
 
     /**
      * Helper method to create and save a supervisor via the facade.*/
-    private Supervisore createSupervisor() {
+    private Supervisor createSupervisor() {
         return facade.createSupervisor("nome" ,"cognome");
     }
     /**
      * Helper method to create and save a supervisor via the facade.*/
-    private Dipendente createDipendente() {
+    private Employee createDipendente() {
         return facade.createEmployee("nome", "cognome");
     }
 
-    private Dipendente createEmployee(double monthlySalary, EmployeeRole employeeRole) {
+    private Employee createEmployee(double monthlySalary, EmployeeRole employeeRole) {
         return facade.createEmployee("nome", "cognome", monthlySalary, employeeRole);
     }
 
@@ -46,25 +46,25 @@ class TeamIntegrationTest {
     void createSaveDeleteTeamTest() {
         System.out.println("----------Create save team test----------");
         // Create supervisore
-        Supervisore supervisore1 = facade.saveSupervisor(createSupervisor());
+        Supervisor supervisor1 = facade.saveSupervisor(createSupervisor());
 
         // Create a team with supervisore
-        Team teamOnlySupervisore = facade.createTeam(supervisore1);
+        Team teamOnlySupervisore = facade.createTeam(supervisor1);
         teamOnlySupervisore = facade.saveTeam(teamOnlySupervisore);
-        assertNotNull(teamOnlySupervisore.getIdTeam());
+        assertNotNull(teamOnlySupervisore.getTeamId());
         System.out.println(teamOnlySupervisore);
         
         // Create dipendenti
-        Dipendente dipendente1 = createDipendente();
-        Dipendente dipendente2 = createDipendente();
+        Employee employee1 = createDipendente();
+        Employee employee2 = createDipendente();
 
         // List of dipendenti
-        List<Dipendente> dipendenti1 = new ArrayList<>(List.of(dipendente1, dipendente2));
+        List<Employee> dipendenti1 = new ArrayList<>(List.of(employee1, employee2));
 
         // Create a team with dipendenti and supervisore
-        Team teamDipendentiSupervisore = facade.createTeam(dipendenti1, supervisore1);
+        Team teamDipendentiSupervisore = facade.createTeam(dipendenti1, supervisor1);
         teamDipendentiSupervisore = facade.saveTeam(teamDipendentiSupervisore);
-        assertNotNull(teamDipendentiSupervisore.getIdTeam());
+        assertNotNull(teamDipendentiSupervisore.getTeamId());
         System.out.println(teamDipendentiSupervisore);
 
         // Create tasks
@@ -77,51 +77,51 @@ class TeamIntegrationTest {
         List<Task> tasks = new ArrayList<>(List.of(task1, task2));
 
         // Create a team with dipendenti, supervisore and tasks
-        Dipendente dipendente3 = createDipendente();
-        List<Dipendente> dipendenti2 = new ArrayList<>(List.of(dipendente3));
-        Team teamDipendentiSupervisoreTasks = facade.createTeam(dipendenti2, supervisore1, tasks);
+        Employee employee3 = createDipendente();
+        List<Employee> dipendenti2 = new ArrayList<>(List.of(employee3));
+        Team teamDipendentiSupervisoreTasks = facade.createTeam(dipendenti2, supervisor1, tasks);
         teamDipendentiSupervisoreTasks = facade.saveTeam(teamDipendentiSupervisoreTasks);
-        assertNotNull(teamDipendentiSupervisoreTasks.getIdTeam());
+        assertNotNull(teamDipendentiSupervisoreTasks.getTeamId());
         System.out.println(teamDipendentiSupervisoreTasks);
 
         System.out.println("----------Delete team test----------");
-        Long idTeam = teamDipendentiSupervisoreTasks.getIdTeam();
+        Long idTeam = teamDipendentiSupervisoreTasks.getTeamId();
         System.out.println("Id team: " + idTeam);
-        List<Dipendente> dipendenti = facade.getDipendentiByTeamId((idTeam));
-        Supervisore supervisore = facade.getSupervisoreByTeamId(idTeam);
+        List<Employee> dipendenti = facade.getDipendentiByTeamId((idTeam));
+        Supervisor supervisor = facade.getSupervisoreByTeamId(idTeam);
         List<Task> tasksTeam = facade.getTasksByTeamId(idTeam);
         facade.deleteTeam(teamDipendentiSupervisoreTasks);
-        for (Dipendente dipendente : dipendenti) {
-            assertNull(dipendente.getDipendenteTeam());
-            System.out.println("Dipendente: " + dipendente.getId() + ", dipendenteTeam: null");
+        for (Employee employee : dipendenti) {
+            assertNull(employee.getEmployeeTeam());
+            System.out.println("Dipendente: " + employee.getPersonId() + ", dipendenteTeam: null");
         }
-        System.out.println("Supervisore: " + supervisore.getId() + ", teamsSupervisionato: " + supervisore.getSupervisedTeams().stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")));
+        System.out.println("Supervisore: " + supervisor.getPersonId() + ", teamsSupervisionato: " + supervisor.getSupervisedTeams().stream().map(team -> team.getTeamId().toString()).collect(Collectors.joining(", ")));
         for (Task task : tasksTeam) {
-            assertNull(task.getTaskTeam());
+            assertNull(task.getTeamTask());
             System.out.println("Task: " + task.getTaskId() + ", taskTeam: null");
         }
         assertFalse(facade.getTeamById(idTeam).isPresent());
         System.out.println("Team deleted successfully");
 
         System.out.println("----------Delete team by id test----------");
-        idTeam = teamDipendentiSupervisore.getIdTeam();
+        idTeam = teamDipendentiSupervisore.getTeamId();
         System.out.println("Id team: " + idTeam);
         dipendenti = facade.getDipendentiByTeamId(idTeam);
-        supervisore = facade.getSupervisoreByTeamId(idTeam);
+        supervisor = facade.getSupervisoreByTeamId(idTeam);
         facade.deleteTeamById(idTeam);
-        for (Dipendente dipendente : dipendenti) {
-            assertNull(dipendente.getDipendenteTeam());
-            System.out.println("Dipendente: " + dipendente.getId() + ", dipendenteTeam: null");
+        for (Employee employee : dipendenti) {
+            assertNull(employee.getEmployeeTeam());
+            System.out.println("Dipendente: " + employee.getPersonId() + ", dipendenteTeam: null");
         }
-        System.out.println("Supervisore: " + supervisore.getId() + ", teamsSupervisionato: " + supervisore.getSupervisedTeams().stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")));
+        System.out.println("Supervisore: " + supervisor.getPersonId() + ", teamsSupervisionato: " + supervisor.getSupervisedTeams().stream().map(team -> team.getTeamId().toString()).collect(Collectors.joining(", ")));
         assertFalse(facade.getTeamById(idTeam).isPresent());
         System.out.println("Team deleted by id successfully");
 
         // Test error messages
         System.out.println("----------Create save delete error team test----------");
         assertThrows(IllegalArgumentException.class, () -> facade.createTeam(null));
-        List<Dipendente> dipendentiNull = new ArrayList<>();
-        assertThrows(IllegalArgumentException.class, () -> facade.createTeam(dipendentiNull, supervisore1));
+        List<Employee> dipendentiNull = new ArrayList<>();
+        assertThrows(IllegalArgumentException.class, () -> facade.createTeam(dipendentiNull, supervisor1));
         assertThrows(IllegalArgumentException.class, () -> facade.saveTeam(null));
         assertThrows(IllegalArgumentException.class, () -> facade.deleteTeam(null));
         System.out.println("----------Team error test end successfully----------");
@@ -133,58 +133,58 @@ class TeamIntegrationTest {
     void teamDipendentiTest() {
         System.out.println("----------Team dipendenti test----------");
         // Create supervisore
-        Supervisore supervisore1 = facade.saveSupervisor(createSupervisor());
+        Supervisor supervisor1 = facade.saveSupervisor(createSupervisor());
         // Create dipendenti
-        Dipendente dipendente1 = facade.saveEmployee(createDipendente());
-        Dipendente dipendente2 = facade.saveEmployee(createDipendente());
-        List<Dipendente> dipendenti = new ArrayList<>(List.of(dipendente1, dipendente2));
+        Employee employee1 = facade.saveEmployee(createDipendente());
+        Employee employee2 = facade.saveEmployee(createDipendente());
+        List<Employee> dipendenti = new ArrayList<>(List.of(employee1, employee2));
 
         // Create a team with dipendenti and supervisore
-        Team teamDipendenti = facade.createTeam(dipendenti, supervisore1);
+        Team teamDipendenti = facade.createTeam(dipendenti, supervisor1);
         teamDipendenti = facade.saveTeam(teamDipendenti);
-        assertNotNull(teamDipendenti.getIdTeam());
+        assertNotNull(teamDipendenti.getTeamId());
         System.out.println(teamDipendenti);
 
         // Get dipendenti in a team
         System.out.println("----------Team get dipendenti test----------");
-        List<Dipendente> dipendentiTeam1 = facade.getDipendentiInTeam(teamDipendenti);
+        List<Employee> dipendentiTeam1 = facade.getDipendentiInTeam(teamDipendenti);
         assertEquals(2, dipendentiTeam1.size());
         System.out.println(dipendentiTeam1);
 
         //Get dipendenti by team id
         System.out.println("----------Team get dipendenti by team id test----------");
-        dipendentiTeam1 = facade.getDipendentiByTeamId(teamDipendenti.getIdTeam());
+        dipendentiTeam1 = facade.getDipendentiByTeamId(teamDipendenti.getTeamId());
         assertEquals(2, dipendentiTeam1.size());
         System.out.println(dipendentiTeam1);
 
         // Add a dipendente to a team
         System.out.println("----------Team add dipendenti test----------");
-        Dipendente dipendente3 = facade.saveEmployee(createDipendente());
-        facade.addDipendenteToTeam(teamDipendenti, dipendente3);
+        Employee employee3 = facade.saveEmployee(createDipendente());
+        facade.addDipendenteToTeam(teamDipendenti, employee3);
         dipendentiTeam1 = facade.getDipendentiInTeam(teamDipendenti);
         assertEquals(3, dipendentiTeam1.size());
         System.out.println(teamDipendenti);
 
         // Add a dipendente to another team
         System.out.println("----------Team add dipendente to another team test----------");
-        Supervisore supervisore2 = facade.saveSupervisor(createSupervisor());
-        Team teamToAddDipendente = facade.createTeam(supervisore2);
+        Supervisor supervisor2 = facade.saveSupervisor(createSupervisor());
+        Team teamToAddDipendente = facade.createTeam(supervisor2);
         teamToAddDipendente = facade.saveTeam(teamToAddDipendente);
-        facade.addDipendenteToTeam(teamToAddDipendente, dipendente3);
+        facade.addDipendenteToTeam(teamToAddDipendente, employee3);
         dipendentiTeam1 = facade.getDipendentiInTeam(teamDipendenti);
         assertEquals(2, dipendentiTeam1.size());
         System.out.println(teamDipendenti);
-        List<Dipendente> dipendentiTeam2 = facade.getDipendentiInTeam(teamToAddDipendente);
+        List<Employee> dipendentiTeam2 = facade.getDipendentiInTeam(teamToAddDipendente);
         assertEquals(1, dipendentiTeam2.size());
         System.out.println(teamToAddDipendente);
 
         // Remove one dipendente from a team
         System.out.println("----------Team remove dipendente test----------");
-        facade.removeDipendenteFromTeam(teamToAddDipendente, dipendente3);
+        facade.removeDipendenteFromTeam(teamToAddDipendente, employee3);
         dipendentiTeam2 = facade.getDipendentiInTeam(teamToAddDipendente);
         assertEquals(0, dipendentiTeam2.size());
         System.out.println(teamToAddDipendente);
-        System.out.println(dipendente3);
+        System.out.println(employee3);
 
         // Remove all dipendenti from a team
         System.out.println("----------Team remove all dipendenti test----------");
@@ -192,8 +192,8 @@ class TeamIntegrationTest {
         dipendentiTeam1 = facade.getDipendentiInTeam(teamDipendenti);
         assertEquals(0, dipendentiTeam1.size());
         System.out.println(teamDipendenti);
-        System.out.println(dipendente1);
-        System.out.println(dipendente2);
+        System.out.println(employee1);
+        System.out.println(employee2);
 
         // Test error messages
         System.out.println("----------Team dipendenti error test----------");
@@ -211,25 +211,25 @@ class TeamIntegrationTest {
         System.out.println("----------Team supervisore test----------");
 
         // Create supervisore
-        Supervisore supervisore1 = facade.saveSupervisor(createSupervisor());
+        Supervisor supervisor1 = facade.saveSupervisor(createSupervisor());
 
         // Create a team with supervisore
-        Team teamOnlySupervisore = facade.createTeam(supervisore1);
+        Team teamOnlySupervisore = facade.createTeam(supervisor1);
         teamOnlySupervisore = facade.saveTeam(teamOnlySupervisore);
-        assertNotNull(teamOnlySupervisore.getIdTeam());
+        assertNotNull(teamOnlySupervisore.getTeamId());
         System.out.println(teamOnlySupervisore);
 
         // Get supervisore in a team
         System.out.println("----------Get supervisore test----------");
-        Supervisore supervisoreTeam = facade.getTeamSupervisore(teamOnlySupervisore);
-        assertEquals(supervisore1, supervisoreTeam);
-        System.out.println(supervisoreTeam);
+        Supervisor supervisorTeam = facade.getTeamSupervisore(teamOnlySupervisore);
+        assertEquals(supervisor1, supervisorTeam);
+        System.out.println(supervisorTeam);
 
         //Get supervisore by team id
         System.out.println("----------Get supervisore by team id test----------");
-        supervisoreTeam = facade.getSupervisoreByTeamId(teamOnlySupervisore.getIdTeam());
-        assertEquals(supervisore1, supervisoreTeam);
-        System.out.println(supervisoreTeam);
+        supervisorTeam = facade.getSupervisoreByTeamId(teamOnlySupervisore.getTeamId());
+        assertEquals(supervisor1, supervisorTeam);
+        System.out.println(supervisorTeam);
 
         // Dont need test setSupervisor
 
@@ -247,12 +247,12 @@ class TeamIntegrationTest {
         System.out.println("----------Team tasks test----------");
 
         // Create supervisore
-        Supervisore supervisore1 = facade.saveSupervisor(createSupervisor());
+        Supervisor supervisor1 = facade.saveSupervisor(createSupervisor());
 
         // Create dipendenti
-        Dipendente dipendente1 = facade.saveEmployee(createDipendente());
-        Dipendente dipendente2 = facade.saveEmployee(createDipendente());
-        List<Dipendente> dipendenti = new ArrayList<>(List.of(dipendente1, dipendente2));
+        Employee employee1 = facade.saveEmployee(createDipendente());
+        Employee employee2 = facade.saveEmployee(createDipendente());
+        List<Employee> dipendenti = new ArrayList<>(List.of(employee1, employee2));
 
         // Create tasks
         Task task1 = facade.createTask(TaskState.TO_BE_STARTED);
@@ -262,9 +262,9 @@ class TeamIntegrationTest {
         List<Task> tasks = new ArrayList<>(List.of(task1, task2));
 
         // Create a team with dipendenti, supervisore and tasks
-        Team teamDipendentiSupervisoreTasks = facade.createTeam(dipendenti, supervisore1, tasks);
+        Team teamDipendentiSupervisoreTasks = facade.createTeam(dipendenti, supervisor1, tasks);
         teamDipendentiSupervisoreTasks = facade.saveTeam(teamDipendentiSupervisoreTasks);
-        assertNotNull(teamDipendentiSupervisoreTasks.getIdTeam());
+        assertNotNull(teamDipendentiSupervisoreTasks.getTeamId());
         System.out.println(teamDipendentiSupervisoreTasks);
 
         // Get tasks in a team
@@ -275,7 +275,7 @@ class TeamIntegrationTest {
 
         // Get tasks by team id
         System.out.println("----------Get tasks by team id test----------");
-        tasksTeam = facade.getTasksByTeamId(teamDipendentiSupervisoreTasks.getIdTeam());
+        tasksTeam = facade.getTasksByTeamId(teamDipendentiSupervisoreTasks.getTeamId());
         assertEquals(2, tasksTeam.size());
         System.out.println(tasksTeam);
 
@@ -290,7 +290,7 @@ class TeamIntegrationTest {
 
         // Add a task to another team
         System.out.println("----------Add task to another team test----------");
-        Team teamToAddTask = facade.createTeam(supervisore1);
+        Team teamToAddTask = facade.createTeam(supervisor1);
         teamToAddTask = facade.saveTeam(teamToAddTask);
         facade.addTaskToTeam(teamToAddTask, task3);
         tasksTeam = facade.getTeamTasks(teamToAddTask);
@@ -332,12 +332,12 @@ class TeamIntegrationTest {
     void getTeamTest(){
         System.out.println("----------Get team test----------");
         // Create supervisore
-        Supervisore supervisore1 = facade.saveSupervisor(createSupervisor());
+        Supervisor supervisor1 = facade.saveSupervisor(createSupervisor());
 
         // Create dipendenti
-        Dipendente dipendente1 = facade.saveEmployee(createDipendente());
-        Dipendente dipendente2 = facade.saveEmployee(createDipendente());
-        List<Dipendente> dipendenti = new ArrayList<>(List.of(dipendente1, dipendente2));
+        Employee employee1 = facade.saveEmployee(createDipendente());
+        Employee employee2 = facade.saveEmployee(createDipendente());
+        List<Employee> dipendenti = new ArrayList<>(List.of(employee1, employee2));
 
         // Create tasks
         Task task1 = facade.createTask(TaskState.TO_BE_STARTED);
@@ -347,14 +347,14 @@ class TeamIntegrationTest {
         List<Task> tasks = new ArrayList<>(List.of(task1, task2));
 
         // Create a team with dipendenti, supervisore and tasks
-        Team teamDipendentiSupervisoreTasks = facade.createTeam(dipendenti, supervisore1, tasks);
+        Team teamDipendentiSupervisoreTasks = facade.createTeam(dipendenti, supervisor1, tasks);
         teamDipendentiSupervisoreTasks = facade.saveTeam(teamDipendentiSupervisoreTasks);
-        assertNotNull(teamDipendentiSupervisoreTasks.getIdTeam());
+        assertNotNull(teamDipendentiSupervisoreTasks.getTeamId());
         System.out.println(teamDipendentiSupervisoreTasks);
 
         // Get team by id
         System.out.println("----------Get team by id test----------");
-        Long idTeam = teamDipendentiSupervisoreTasks.getIdTeam();
+        Long idTeam = teamDipendentiSupervisoreTasks.getTeamId();
         if(facade.getTeamById(idTeam).isPresent()) {
             Team team = facade.getTeamById(idTeam).get();
             assertEquals(teamDipendentiSupervisoreTasks, team);
@@ -362,9 +362,9 @@ class TeamIntegrationTest {
         }
         // Get all teams !!!(trova solo i test di questa transazione, da discutere)!!!!
         System.out.println("----------Get all teams test----------");
-        Team teamTest1 = facade.createTeam(supervisore1);
+        Team teamTest1 = facade.createTeam(supervisor1);
         teamTest1 = facade.saveTeam(teamTest1);
-        Team teamTest2 = facade.createTeam(supervisore1);
+        Team teamTest2 = facade.createTeam(supervisor1);
         teamTest2 = facade.saveTeam(teamTest2);
         /*
         teamTasksTest();
@@ -372,18 +372,18 @@ class TeamIntegrationTest {
          */
         List<Team> teams = facade.getAllTeams();
         assertTrue(teams.contains(teamDipendentiSupervisoreTasks));
-        System.out.println(teams.stream().map(Team::getIdTeam  ).collect(Collectors.toList()));
+        System.out.println(teams.stream().map(Team::getTeamId).collect(Collectors.toList()));
 
         // Get teams by supervisore id
         System.out.println("----------Get teams by supervisore id test----------");
-        Long idSupervisore = supervisore1.getId();
+        Long idSupervisore = supervisor1.getPersonId();
         teams = facade.getTeamsBySupervisore_Id(idSupervisore);
         assertTrue(teams.contains(teamDipendentiSupervisoreTasks));
-        System.out.println(teams.stream().map(Team::getIdTeam  ).collect(Collectors.toList()));
+        System.out.println(teams.stream().map(Team::getTeamId).collect(Collectors.toList()));
 
         // Get team by dipendente id
         System.out.println("----------Get team by dipendente id test----------");
-        Team teamByDipendente = facade.getTeamByDipendente_Id(dipendente1.getId());
+        Team teamByDipendente = facade.getTeamByDipendente_Id(employee1.getPersonId());
         assertEquals(teamDipendentiSupervisoreTasks, teamByDipendente);
         System.out.println(teamByDipendente);
 
@@ -408,13 +408,13 @@ class TeamIntegrationTest {
     void complexRepositoryQueryTest(){
         System.out.println("----------Complex repository query test----------");
         // Create supervisore
-        Supervisore supervisore1 = facade.saveSupervisor(createSupervisor());
+        Supervisor supervisor1 = facade.saveSupervisor(createSupervisor());
 
         // Create dipendenti
-        Dipendente dipendente1 = facade.saveEmployee(createEmployee(2000.0, EmployeeRole.JUNIOR));
-        Dipendente dipendente2 = facade.saveEmployee(createEmployee(3000.0, EmployeeRole.JUNIOR));
-        Dipendente dipendente3 = facade.saveEmployee(createEmployee( 4000.0, EmployeeRole.MANAGER));
-        List<Dipendente> dipendenti = new ArrayList<>(List.of(dipendente1, dipendente2, dipendente3));
+        Employee employee1 = facade.saveEmployee(createEmployee(2000.0, EmployeeRole.JUNIOR));
+        Employee employee2 = facade.saveEmployee(createEmployee(3000.0, EmployeeRole.JUNIOR));
+        Employee employee3 = facade.saveEmployee(createEmployee( 4000.0, EmployeeRole.MANAGER));
+        List<Employee> dipendenti = new ArrayList<>(List.of(employee1, employee2, employee3));
 
         // Create tasks
         Task task1 = facade.createTask(TaskState.TO_BE_STARTED);
@@ -426,14 +426,14 @@ class TeamIntegrationTest {
         List<Task> tasks = new ArrayList<>(List.of(task1, task2, task3));
 
         // Create a team with dipendenti, supervisore and tasks
-        Team teamDipendentiSupervisoreTasks = facade.createTeam(dipendenti, supervisore1, tasks);
+        Team teamDipendentiSupervisoreTasks = facade.createTeam(dipendenti, supervisor1, tasks);
         teamDipendentiSupervisoreTasks = facade.saveTeam(teamDipendentiSupervisoreTasks);
-        assertNotNull(teamDipendentiSupervisoreTasks.getIdTeam());
+        assertNotNull(teamDipendentiSupervisoreTasks.getTeamId());
         System.out.println(teamDipendentiSupervisoreTasks);
 
         // Get tasks in a team by task state
         System.out.println("----------Get tasks by task state test----------");
-        Long idTeam = teamDipendentiSupervisoreTasks.getIdTeam();
+        Long idTeam = teamDipendentiSupervisoreTasks.getTeamId();
         List<Task> tasksByState = facade.getTasksInTeamIdByTaskState(idTeam, TaskState.TO_BE_STARTED);
         for (Task task : tasksByState) {
             assertEquals(TaskState.TO_BE_STARTED, task.getTaskState());
@@ -442,25 +442,25 @@ class TeamIntegrationTest {
 
         // Get dipendenti with the salary greater than
         System.out.println("----------Get dipendenti with salary greater than 1900.0 test----------");
-        List<Dipendente> dipendentiWithSalaryGreaterThan = facade.getDipendentiInTeamIdWithSalaryGreaterThan(idTeam, 1900.0);
-        for(Dipendente dipendente : dipendentiWithSalaryGreaterThan) {
-            assertTrue(Double.compare(dipendente.getMonthlySalary(),1900)>0);
+        List<Employee> dipendentiWithSalaryGreaterThan = facade.getDipendentiInTeamIdWithSalaryGreaterThan(idTeam, 1900.0);
+        for(Employee employee : dipendentiWithSalaryGreaterThan) {
+            assertTrue(Double.compare(employee.getMonthlySalary(),1900)>0);
         }
         System.out.println(dipendentiWithSalaryGreaterThan);
 
         // Get dipendenti with the salary less than
         System.out.println("----------Get dipendenti with salary less than 3000.0 test----------");
-        List<Dipendente> dipendentiWithSalaryLessThan = facade.getDipendentiInTeamIdWithSalaryLessThan(idTeam, 3000.0);
-        for(Dipendente dipendente : dipendentiWithSalaryLessThan) {
-            assertTrue(Double.compare(dipendente.getMonthlySalary(),3000)<0);
+        List<Employee> dipendentiWithSalaryLessThan = facade.getDipendentiInTeamIdWithSalaryLessThan(idTeam, 3000.0);
+        for(Employee employee : dipendentiWithSalaryLessThan) {
+            assertTrue(Double.compare(employee.getMonthlySalary(),3000)<0);
         }
         System.out.println(dipendentiWithSalaryLessThan);
 
         // Get dipendenti with the grado as
         System.out.println("----------Get dipendenti with grado as JUNIOR test----------");
-        List<Dipendente> dipendentiWithGrado = facade.getDipendentiInTeamIdWithGrado(idTeam, EmployeeRole.JUNIOR);
-        for(Dipendente dipendente : dipendentiWithGrado) {
-            assertEquals(0, EmployeeRole.JUNIOR.compareTo(dipendente.getEmployeeRole()));
+        List<Employee> dipendentiWithGrado = facade.getDipendentiInTeamIdWithGrado(idTeam, EmployeeRole.JUNIOR);
+        for(Employee employee : dipendentiWithGrado) {
+            assertEquals(0, EmployeeRole.JUNIOR.compareTo(employee.getEmployeeRole()));
         }
         System.out.println(dipendentiWithGrado);
 

@@ -39,15 +39,15 @@ Breve panoramica delle entità principali e del loro ruolo nel modello:
   - Relazioni:
     - Ha assegnate a 1..n Task, ha una relazione molti a molti con un Task: 
       - una task può essere assegnata a più dipendenti
-      - un dipendente può avere più task assegnate
-    - Appartiene a 0..1 Team (un dipendente può non essere in un team).
+      - un employee può avere più task assegnate
+    - Appartiene a 0..1 Team (un employee può non essere in un team).
     - È possibile promuovere un Employee a Supervisor
 
 - Supervisor
-  - Attributi: il proprio supervisore, una collezione di supervisori supervisionati e il team supervisionato
+  - Attributi: il proprio supervisor, una collezione di supervisori supervisionati e il team supervisionato
   - È una specializzazione di Employee (eredita quindi anche da Person)
   - Relazioni gerarchiche: 
-    - Ha 0..1 capi (un supervisore può non avere un capo);
+    - Ha 0..1 capi (un supervisor può non avere un capo);
     - Ha 0..n subordinati (altri Supervisors) che supervisiona.
     - Ha 0..1 Team supervisionato (un supervisor supervisiona esattamente un team oppure nessuno).
   - Vincoli: la gerarchia deve essere aciclica; non è permesso che un supervisor sia suo proprio
@@ -65,7 +65,7 @@ Breve panoramica delle entità principali e del loro ruolo nel modello:
     - Un Employee può avere più task assegnate
   
 - Team
-  - Attributi: una collezione di dipendenti membri, il supervisore del team
+  - Attributi: una collezione di dipendenti membri, il supervisor del team
   e una collezione di Task assegnate al Team.
   - Relazioni:
     - 1..n Employee (un team ha membri; attenzione: un Employee può appartenere ad al più un Team).
@@ -92,13 +92,13 @@ La repository `EmploeeyRepository` gestisce la persistenza dell’entità **Dipe
 - Recupera i dipendenti con uno specifico **ruolo**
 - Recupera i dipendenti con uno specifico **ruolo**, ordinati per **stipendio mensile** (crescente)
 - Recupera i dipendenti con uno specifico **ruolo**, ordinati per **stipendio mensile** (decrescente)
-- Recupera i **task** associati a un dipendente specifico, filtrati per **stato del task**
+- Recupera i **task** associati a un employee specifico, filtrati per **stato del task**
 - Recupera il numero di dipendenti con email che inizia con uno specifico **nome utente**
 
 ## 2. SupervisorRepository
 La repository `SupervisoreRepository` gestisce la persistenza dell’entità **Supervisore**.
 ### Metodi personalizzati
-- Recupera i **supervisori che non hanno un supervisore** (livello più alto della gerarchia)
+- Recupera i **supervisori che non hanno un supervisor** (livello più alto della gerarchia)
 - Recupera i **supervisori senza subordinati**
 - Recupera i **supervisori che non supervisionano alcun team**
 
@@ -117,16 +117,16 @@ inclusi ruoli, stipendi e task.
 Tutti i parametri in input devono essere validati per garantire che non siano null.
 
 ### CRUD di base
-- Creazione di un dipendente
-- Salvataggio di un dipendente
+- Creazione di un employee
+- Salvataggio di un employee
 - Salvataggio di una lista di dipendenti
-- Recupero di un dipendente per ID
+- Recupero di un employee per ID
 - Recupero di tutti i dipendenti
-- Rimozione di un dipendente per ID
+- Rimozione di un employee per ID
 
 ### CRUD avanzato e funzionalità specifiche
-- Nella gestione della creazione di un dipendente, viene controllato che l'email non sia già
-  utilizzata da un altro dipendente. In caso contrario, viene gestita la creazione di una email
+- Nella gestione della creazione di un employee, viene controllato che l'email non sia già
+  utilizzata da un altro employee. In caso contrario, viene gestita la creazione di una email
   unica, aggiungendo un numero progressivo alla fine dell'username. Viene ritentando il salvataggio, 
   in caso non andasse a buon fine viene sollevata eccezione.
   Una stampa di output durante la creazione di due dipendenti è la seguente:
@@ -134,21 +134,21 @@ Tutti i parametri in input devono essere validati per garantire che non siano nu
     Employee{id=1, name='Employee', surname='Employee', email='employee.employee@example.com'}monthlySalaray=2400.0, employeeRole=JUNIOR, tasks=[]}
     Employee{id=2, name='Employee', surname='Employee', email='employee1.employee@example.com'}monthlySalaray=2400.0, employeeRole=JUNIOR, tasks=[]}
   ``` 
-- Licenziamento di un dipendente per Id o lista di Dipendenti(accessibile solo se il dipendente che
+- Licenziamento di un employee per Id o lista di Dipendenti(accessibile solo se il employee che
 richiede l'operazione è un MANAGER)
 - Cerca tutti i dipendenti con stipendio mensile uguale, maggiore, minore o in un intervallo di un 
-certo valore e ordinato per ruolo(accessibile solo se il dipendente che richiede l'operazione è un 
+certo valore e ordinato per ruolo(accessibile solo se il employee che richiede l'operazione è un 
 (`MANAGER`)
 - Cerca tutti i dipendenti con ruolo uguale, maggiore, minore o in un intervallo di un
-  certo valore e ordinato per stipendio mensile(accessibile solo se il dipendente che richiede
+  certo valore e ordinato per stipendio mensile(accessibile solo se il employee che richiede
 l'operazione è un (`MANAGER`))
-- Si può modificare il salario mensile e il ruolo di un dipendente fornito il corretto ID
-(accessibile solo se il dipendente
+- Si può modificare il salario mensile e il ruolo di un employee fornito il corretto ID
+(accessibile solo se il employee
 che richiede l'operazione è un (`MANAGER`))
-- Cerca un insieme di task dato l'Id del dipendente e un filtro sullo stato della task
+- Cerca un insieme di task dato l'Id del employee e un filtro sullo stato della task
 - Due metodi helper controllano che gli ID e gli oggetti passati non siano Null tramite
     Optional.requireNonNull. Forniscono inoltre il controllo per i (`MANAGER`).
-Se un oggetto non è (`MANAGER`)(e dovrebbe esserlo) oppure non esiste un dipendente con l'Id
+Se un oggetto non è (`MANAGER`)(e dovrebbe esserlo) oppure non esiste un employee con l'Id
 fornito, viene lanciata l'eccezione: (`IllegalArgumentException`). Vengono forniti
 messaggi di errore memorizzati nel file: EmployeeContants.
 - 
@@ -160,16 +160,16 @@ La classe `SupervisoreService` gestisce le operazioni di business relative all�
 Tutti i parametri in input devono essere validati per garantire che non siano null.
 
 ### CRUD di base
-- Creazione di un supervisore
-- Salvataggio di un supervisore
-- Ricerca di un supervisore per ID
+- Creazione di un supervisor
+- Salvataggio di un supervisor
+- Ricerca di un supervisor per ID
 - Recupero di tutti i supervisori
-- Eliminazione di un supervisore per ID 
+- Eliminazione di un supervisor per ID 
 
 ### CRUD avanzato e funzionalità specifiche
-- Assegnazione di un subordinato a un supervisore 
-- Rimozione di un subordinato da un supervisore
-- Ricerca di supervisori che non hanno supervisore (radici della gerarchia)
+- Assegnazione di un subordinato a un supervisor 
+- Rimozione di un subordinato da un supervisor
+- Ricerca di supervisori che non hanno supervisor (radici della gerarchia)
 - Ricerca di tutti i supervisori che non hanno subordinati (foglie della gerarchia oppure utile per
 a quali supervisori non è stato assegnato nessun subordinato)
 - Ricerca di tutti i supervisori non che supervisionano un team (foglie della gerarchia oppure utile per
@@ -178,7 +178,7 @@ a quali supervisori non è stato assegnato nessun subordinato)
     Optional.requireNonNull. Forniscono inoltre il controllo per i (`SUPERVISORI`) ai quali si sta
 cercando di assegnare un subordinato che creerebbe un ciclo nella gerarchia dei supervisori.
     Se un oggetto (`SUPERVISORE`) che è in fase di assegnamento come subordinato crea un loop,
-    oppure non esiste un dipendente con l'Id fornito, viene lanciata l'eccezione: 
+    oppure non esiste un employee con l'Id fornito, viene lanciata l'eccezione: 
 - (`IllegalArgumentException`). Vengono forniti messaggi di errore memorizzati nel file: 
 SupervisorContants.
 ---

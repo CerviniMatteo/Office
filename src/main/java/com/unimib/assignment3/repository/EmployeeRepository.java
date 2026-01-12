@@ -1,6 +1,6 @@
 package com.unimib.assignment3.repository;
 
-import com.unimib.assignment3.POJO.Dipendente;
+import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
@@ -10,18 +10,18 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface EmployeeRepository extends JpaRepository<Dipendente, Long> {
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-    List<Dipendente> findDipendenteByMonthlySalary(Double monthlySalary);
-    List<Dipendente> findDipendenteByMonthlySalaryOrderByEmployeeRoleAsc(Double monthlySalary);
-    List<Dipendente> findDipendenteByMonthlySalaryOrderByEmployeeRoleDesc(Double monthlySalary);
-    List<Dipendente> findDipendenteByEmployeeRole(EmployeeRole employeeRole);
-    List<Dipendente> findDipendenteByEmployeeRoleOrderByMonthlySalaryAsc(EmployeeRole employeeRole);
-    List<Dipendente> findDipendenteByEmployeeRoleOrderByMonthlySalaryDesc(EmployeeRole employeeRole);
-    @Query("SELECT t FROM dipendente d JOIN d.tasks t WHERE d.id = :employeeId AND t.taskState = :taskState")
+    List<Employee> findEmployeeByMonthlySalary(Double monthlySalary);
+    List<Employee> findEmployeeByMonthlySalaryOrderByEmployeeRoleAsc(Double monthlySalary);
+    List<Employee> findEmployeeByMonthlySalaryOrderByEmployeeRoleDesc(Double monthlySalary);
+    List<Employee> findEmployeeByEmployeeRole(EmployeeRole employeeRole);
+    List<Employee> findEmployeeByEmployeeRoleOrderByMonthlySalaryAsc(EmployeeRole employeeRole);
+    List<Employee> findEmployeeByEmployeeRoleOrderByMonthlySalaryDesc(EmployeeRole employeeRole);
+    @Query("SELECT t FROM employee d JOIN d.tasks t WHERE d.personId = :employeeId AND t.taskState = :taskState")
     List<Task> findTasksByEmployeeAndTaskState(@Param("employeeId") Long employeeId,
                                                @Param("taskState") TaskState taskState);
 
-    @Query("SELECT COUNT(d) FROM dipendente d WHERE LOWER(d.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
+    @Query("SELECT COUNT(d) FROM employee d WHERE LOWER(d.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
     int countEmailsStartingWithEmailPrefix(@Param("emailPrefix") String emailPrefix);
 }

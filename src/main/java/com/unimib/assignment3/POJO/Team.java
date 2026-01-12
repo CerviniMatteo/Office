@@ -9,85 +9,85 @@ import java.util.List;
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idTeam;
+    private Long teamId;
 
     // orphane removal not necessary as the deletion of a team does not imply
     // the deletion of the associated employees
-    @OneToMany(mappedBy = "dipendenteTeam", cascade = CascadeType.MERGE)
-    private List<Dipendente> dipendenti = new ArrayList<>();
+    @OneToMany(mappedBy = "employeeTeam", cascade = CascadeType.MERGE)
+    private List<Employee> employees = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "supervisore")
-    private Supervisore supervisore;
+    @JoinColumn(name = "supervisor")
+    private Supervisor supervisor;
 
     // orphane removal not necessary as the deletion of a team does not imply
     // the deletion of the associated tasks
-    @OneToMany(mappedBy = "taskTeam", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "teamTask", cascade = CascadeType.MERGE)
     private List<Task> tasks = new ArrayList<>();
 
     protected Team() {
     }
 
-    public Team(Supervisore supervisore) {
+    public Team(Supervisor supervisor) {
         // da discutere
-        supervisore.addTeamsSupervisionato(this);
+        supervisor.addTeamsSupervisionato(this);
     }
-    public Team(List<Dipendente> dipendenti, Supervisore supervisore) {
-        setDipendenti(dipendenti);
+    public Team(List<Employee> employees, Supervisor supervisor) {
+        setEmployees(employees);
         // da discutere
-        supervisore.addTeamsSupervisionato(this);
+        supervisor.addTeamsSupervisionato(this);
     }
-    public Team(List<Dipendente> dipendenti, Supervisore supervisore, List<Task> tasks) {
-        setDipendenti(dipendenti);
+    public Team(List<Employee> employees, Supervisor supervisor, List<Task> tasks) {
+        setEmployees(employees);
         // da discutere
-        supervisore.addTeamsSupervisionato(this);
+        supervisor.addTeamsSupervisionato(this);
         setTasks(tasks);
     }
 
-    public Long getIdTeam() {
-        return idTeam;
+    public Long getTeamId() {
+        return teamId;
     }
     // non serve il setIdTeam in quanto l'id viene generato automaticamente
 
-    public List<Dipendente> getDipendenti() {
-        return dipendenti;
+    public List<Employee> getEmployees() {
+        return employees;
     }
     // per motivi di progettazione la set della lista di dipendenti viene usato solo all'interno della
     // classe per gestire la relazione bidirezionale, al di fuori della classe per aggiungere una lista di
     // dipendenti si usa un ciclo con addDipendente --> nella doc.
-    private void setDipendenti(List<Dipendente> dipendenti) {
-        removeAllDipendenti();
-        for(Dipendente dipendente : dipendenti) {
-            dipendente.setDipendenteTeam(this);
+    private void setEmployees(List<Employee> employees) {
+        removeAllEmployee();
+        for(Employee employee : employees) {
+            employee.setEmployeeTeam(this);
         }
-        this.dipendenti = dipendenti;
+        this.employees = employees;
     }
-    private void setDipendenti(Dipendente dipendente) {
-        this.dipendenti.add(dipendente);
+    private void setEmployee(Employee employee) {
+        this.employees.add(employee);
     }
-    public void addDipendente(Dipendente dipendente) {
-        if(!dipendenti.contains(dipendente)){
-            setDipendenti(dipendente);
-            dipendente.setDipendenteTeam(this);
+    public void addEmployee(Employee employee) {
+        if(!employees.contains(employee)){
+            setEmployee(employee);
+            employee.setEmployeeTeam(this);
         }
     }
-    public void removeAllDipendenti() {
-        for(Dipendente dipendente : dipendenti) {
-            dipendente.setDipendenteTeam(null);
+    public void removeAllEmployee() {
+        for(Employee employee : employees) {
+            employee.setEmployeeTeam(null);
         }
-        dipendenti.clear();
+        employees.clear();
     }
-    public void removeDipendente(Dipendente dipendente) {
-        if(dipendenti.remove(dipendente)){
-            dipendente.setDipendenteTeam(null);
+    public void removeEmployee(Employee employee) {
+        if(employees.remove(employee)){
+            employee.setEmployeeTeam(null);
         }
     }
 
-    public Supervisore getSupervisore() {
-        return supervisore;
+    public Supervisor getSupervisor() {
+        return supervisor;
     }
-    public void setSupervisore(Supervisore supervisore) {
-        this.supervisore = supervisore;
+    public void setSupervisor(Supervisor supervisor) {
+        this.supervisor = supervisor;
     }
 
     public List<Task> getTasks() {
@@ -96,7 +96,7 @@ public class Team {
     private void setTasks(List<Task> tasks) {
         removeAllTasks();
         for(Task task : tasks) {
-            task.setTaskTeam(this);
+            task.setTeamTask(this);
         }
         this.tasks = tasks;
     }
@@ -106,27 +106,27 @@ public class Team {
     public void addTask(Task task) {
         if(!tasks.contains(task)){
             setTasks(task);
-            task.setTaskTeam(this);
+            task.setTeamTask(this);
         }
     }
     public void removeAllTasks() {
         for(Task task : tasks) {
-            task.setTaskTeam(null);
+            task.setTeamTask(null);
         }
         tasks.clear();
     }
     public void removeTask(Task task) {
         if(tasks.remove(task)){
-            task.setTaskTeam(null);
+            task.setTeamTask(null);
         }
     }
 
     @Override
     public String toString() {
         return "Team{" +
-                "idTeam=" + idTeam +
-                ", dipendenti=" + dipendenti +
-                ", supervisore=" + supervisore +
+                "idTeam=" + teamId +
+                ", employees=" + employees +
+                ", supervisor=" + supervisor +
                 ", tasks=" + tasks +
                 '}';
     }

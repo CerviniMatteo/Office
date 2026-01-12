@@ -1,25 +1,25 @@
 package com.unimib.assignment3.repository;
 
-import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.POJO.Supervisor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface SupervisorRepository extends JpaRepository<Supervisore, Long> {
+public interface SupervisorRepository extends JpaRepository<Supervisor, Long> {
 
     //Search supervisors without supervisors
-    List<Supervisore> findBySupervisoreIsNull();
+    List<Supervisor> findBySupervisorIsNull();
 
     // Supervisors without subordinates
-    @Query("SELECT s FROM supervisore s WHERE s.supervisoriSupervisionati IS EMPTY")
-    List<Supervisore> findSupervisorWithoutSubordinates();
+    @Query("SELECT s FROM supervisor s WHERE s.subordinates IS EMPTY")
+    List<Supervisor> findSupervisorWithoutSubordinates();
 
     // Supervisors without teams
-    @Query("SELECT s FROM supervisore s WHERE s.supervisedTeams IS EMPTY")
-    List<Supervisore> findSupervisoreWithoutSupervisedTeams();
+    @Query("SELECT s FROM supervisor s WHERE s.supervisedTeams IS EMPTY")
+    List<Supervisor> findSupervisorWithoutSupervisedTeams();
 
-    @Query("SELECT COUNT(s) FROM supervisore s WHERE LOWER(s.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
+    @Query("SELECT COUNT(s) FROM supervisor s WHERE LOWER(s.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
     int countEmailsStartingWithEmailPrefix(@Param("emailPrefix") String emailPrefix);
 }

@@ -1,7 +1,7 @@
 package com.unimib.assignment3.service;
 
-import com.unimib.assignment3.POJO.Persona;
-import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.POJO.Person;
+import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.repository.SupervisorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +34,12 @@ public class SupervisorService extends EmployeeService {
      * @param supervisor the supervisor to save
      * @return the saved supervisor
      */
-    public Supervisore saveSupervisor(@NonNull Supervisore supervisor) {
+    public Supervisor saveSupervisor(@NonNull Supervisor supervisor) {
         Objects.requireNonNull(supervisor, NULL_EMPLOYEE);
 
-        int emailCounter = supervisorRepository.countEmailsStartingWithEmailPrefix(supervisor.getNome());
+        int emailCounter = supervisorRepository.countEmailsStartingWithEmailPrefix(supervisor.getName());
         if(emailCounter != 0) {
-            supervisor.setEmail(Persona.generateEmail(supervisor.getNome(), supervisor.getCognome(), emailCounter));
+            supervisor.setEmail(Person.generateEmail(supervisor.getName(), supervisor.getSurname(), emailCounter));
         }
         try {
             return supervisorRepository.saveAndFlush(supervisor);
@@ -57,10 +57,10 @@ public class SupervisorService extends EmployeeService {
      * @return the created supervisor entity
      * @throws NullPointerException if the name or surname is null
      */
-    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname) {
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname) {
         Objects.requireNonNull(name, NULL_NAME);
         Objects.requireNonNull(surname, NULL_SURNAME);
-        return new Supervisore(name, surname);
+        return new Supervisor(name, surname);
     }
 
     /**
@@ -72,10 +72,10 @@ public class SupervisorService extends EmployeeService {
      * @return the created supervisor entity
      * @throws NullPointerException if the name, surname, or employee role is null
      */
-    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
         Objects.requireNonNull(name, NULL_NAME);
         Objects.requireNonNull(surname, NULL_SURNAME);
-        return new Supervisore(name, surname, employeeRole);
+        return new Supervisor(name, surname, employeeRole);
     }
 
 
@@ -89,10 +89,10 @@ public class SupervisorService extends EmployeeService {
      * @return the created supervisor entity
      * @throws NullPointerException if the name, surname, or employee role is null
      */
-    public Supervisore createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
         Objects.requireNonNull(name, NULL_NAME);
         Objects.requireNonNull(surname, NULL_SURNAME);
-        return new Supervisore(name, surname, monthlySalary, employeeRole);
+        return new Supervisor(name, surname, monthlySalary, employeeRole);
     }
 
     /**
@@ -101,7 +101,7 @@ public class SupervisorService extends EmployeeService {
      * @param supervisorId the ID of the supervisor
      * @return Optional containing the supervisor if found
      */
-    public Optional<Supervisore> findSupervisorById(@NonNull Long supervisorId) {
+    public Optional<Supervisor> findSupervisorById(@NonNull Long supervisorId) {
         return Optional.of(getSupervisorOrThrow(supervisorId));
     }
 
@@ -110,7 +110,7 @@ public class SupervisorService extends EmployeeService {
      *
      * @return a list of all supervisors
      */
-    public List<Supervisore> findAllSupervisors() {
+    public List<Supervisor> findAllSupervisors() {
         return supervisorRepository.findAll();
     }
 
@@ -135,8 +135,8 @@ public class SupervisorService extends EmployeeService {
      * @throws IllegalStateException if the assignment creates a cyclic hierarchy
      */
     public void assignSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
-        Supervisore supervisor = getSupervisorOrThrow(supervisorId);
-        Supervisore subordinate = getSupervisorOrThrow(subordinateId);
+        Supervisor supervisor = getSupervisorOrThrow(supervisorId);
+        Supervisor subordinate = getSupervisorOrThrow(subordinateId);
 
         // Add subordinate using helper method
         supervisor.addSubordinate(subordinate);
@@ -158,8 +158,8 @@ public class SupervisorService extends EmployeeService {
      * @param subordinateId the subordinate's ID
      */
     public void removeSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
-        Supervisore supervisor = getSupervisorOrThrow(supervisorId);
-        Supervisore subordinate = getSupervisorOrThrow(subordinateId);
+        Supervisor supervisor = getSupervisorOrThrow(supervisorId);
+        Supervisor subordinate = getSupervisorOrThrow(subordinateId);
 
         supervisor.removeSubordinate(subordinate);
     }
@@ -171,8 +171,8 @@ public class SupervisorService extends EmployeeService {
      *
      * @return a list of supervisors without subordinates
      */
-    public List<Supervisore> findSupervisorsWithoutSupervisor() {
-        return supervisorRepository.findBySupervisoreIsNull();
+    public List<Supervisor> findSupervisorsWithoutSupervisor() {
+        return supervisorRepository.findBySupervisorIsNull();
     }
 
     /**
@@ -181,7 +181,7 @@ public class SupervisorService extends EmployeeService {
      *
      * @return a list of supervisors without subordinates
      */
-    public List<Supervisore> findSupervisorsWithoutSubordinates() {
+    public List<Supervisor> findSupervisorsWithoutSubordinates() {
         return supervisorRepository.findSupervisorWithoutSubordinates();
     }
 
@@ -191,7 +191,7 @@ public class SupervisorService extends EmployeeService {
      *
      * @return a list of supervisors without subordinates
      */
-    public List<Supervisore> findSupervisorsWithoutSupervisedTeam() {
+    public List<Supervisor> findSupervisorsWithoutSupervisedTeam() {
         return supervisorRepository.findSupervisorWithoutSubordinates();
     }
 
@@ -202,7 +202,7 @@ public class SupervisorService extends EmployeeService {
      * @return the supervisor
      * @throws IllegalArgumentException if the supervisor does not exist
      */
-    private Supervisore getSupervisorOrThrow(Long supervisorId) {
+    private Supervisor getSupervisorOrThrow(Long supervisorId) {
         Objects.requireNonNull(supervisorId, NULL_SUPERVISOR_ID);
         return supervisorRepository.findById(supervisorId)
                 .orElseThrow(() -> new IllegalArgumentException(NULL_SUPERVISOR));
@@ -215,8 +215,8 @@ public class SupervisorService extends EmployeeService {
      * @param subordinate the subordinate
      * @return true if a loop would be created
      */
-    private boolean createsSupervisorsLoop(Supervisore supervisor, Supervisore subordinate) {
-        Supervisore current = supervisor;
+    private boolean createsSupervisorsLoop(Supervisor supervisor, Supervisor subordinate) {
+        Supervisor current = supervisor;
         while (current != null) {
             if (current.equals(subordinate)) {
                 return true; // loop detected

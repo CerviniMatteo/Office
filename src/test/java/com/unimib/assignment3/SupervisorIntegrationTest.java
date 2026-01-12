@@ -1,6 +1,6 @@
 package com.unimib.assignment3;
 
-import com.unimib.assignment3.POJO.Supervisore;
+import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.facade.Facade;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class SupervisorIntegrationTest {
     /**
      * Helper method to create and save a supervisor via the facade.
      */
-    private Supervisore createSupervisor() {
+    private Supervisor createSupervisor() {
         return facade.createSupervisor("Supervisor" , "Supervisor");
     }
     private void createSupervisor(EmployeeRole employeeRole) {
@@ -44,9 +44,9 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldCreateSupervisorsAndFindById() {
-        Supervisore s1 = createSupervisor();
-        Supervisore s2 = createSupervisor();
-        Supervisore boss = createSupervisor();
+        Supervisor s1 = createSupervisor();
+        Supervisor s2 = createSupervisor();
+        Supervisor boss = createSupervisor();
 
         boss =facade.saveSupervisor(boss);
         s1 = facade.saveSupervisor(s1);
@@ -60,18 +60,18 @@ class SupervisorIntegrationTest {
         boss.addSubordinate(s1);
         boss.addSubordinate(s2);
 
-        assertNotNull(s1.getId());
-        assertNotNull(s2.getId());
-        assertNotNull(boss.getId());
-        assertNotEquals(s1.getId(), s2.getId());
+        assertNotNull(s1.getPersonId());
+        assertNotNull(s2.getPersonId());
+        assertNotNull(boss.getPersonId());
+        assertNotEquals(s1.getPersonId(), s2.getPersonId());
 
-        Optional<Supervisore> found = facade.findSupervisorById(s1.getId());
+        Optional<Supervisor> found = facade.findSupervisorById(s1.getPersonId());
         assertTrue(found.isPresent());
-        assertEquals(s1.getNome(), found.get().getNome());
+        assertEquals(s1.getName(), found.get().getName());
 
-        Supervisore finalBoss = boss;
+        Supervisor finalBoss = boss;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.findSupervisorById(finalBoss.getId() + 1000)
+                () -> facade.findSupervisorById(finalBoss.getPersonId() + 1000)
         );
     }
 
@@ -90,12 +90,12 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldFindAllSupervisors() {
-        Supervisore s1 = createSupervisor();
-        Supervisore s2 = createSupervisor();
+        Supervisor s1 = createSupervisor();
+        Supervisor s2 = createSupervisor();
         s1 = facade.saveSupervisor(s1);
         s2 = facade.saveSupervisor(s2);
 
-        List<Supervisore> all = facade.findAllSupervisors();
+        List<Supervisor> all = facade.findAllSupervisors();
 
         assertTrue(all.contains(s1));
         assertTrue(all.contains(s2));
@@ -104,63 +104,63 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldDeleteSupervisor() {
-        Supervisore supervisor = createSupervisor();
+        Supervisor supervisor = createSupervisor();
         supervisor = facade.saveSupervisor(supervisor);
-        assertTrue(facade.findSupervisorById(supervisor.getId()).isPresent());
+        assertTrue(facade.findSupervisorById(supervisor.getPersonId()).isPresent());
 
-        facade.deleteSupervisorById(supervisor.getId());
+        facade.deleteSupervisorById(supervisor.getPersonId());
 
-        Supervisore finalSupervisor = supervisor;
+        Supervisor finalSupervisor = supervisor;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.findSupervisorById(finalSupervisor.getId())
+                () -> facade.findSupervisorById(finalSupervisor.getPersonId())
         );
     }
 
     @Test
     @Transactional
     void shouldAssignAndRemoveSubordinates() {
-        Supervisore boss = createSupervisor();
-        Supervisore sub = createSupervisor();
+        Supervisor boss = createSupervisor();
+        Supervisor sub = createSupervisor();
 
         boss = facade.saveSupervisor(boss);
         sub = facade.saveSupervisor(sub);
 
-        facade.assignSubordinate(boss.getId(), sub.getId());
+        facade.assignSubordinate(boss.getPersonId(), sub.getPersonId());
 
-        Supervisore bossCheck = facade.findSupervisorById(boss.getId()).get();
-        Supervisore subCheck = facade.findSupervisorById(sub.getId()).get();
+        Supervisor bossCheck = facade.findSupervisorById(boss.getPersonId()).get();
+        Supervisor subCheck = facade.findSupervisorById(sub.getPersonId()).get();
 
-        assertTrue(bossCheck.getSupervisoriSupervisionati().contains(subCheck));
+        assertTrue(bossCheck.getSubordinates().contains(subCheck));
         assertEquals(subCheck.getSupervisore(), bossCheck);
 
-        facade.removeSubordinate(boss.getId(), sub.getId());
+        facade.removeSubordinate(boss.getPersonId(), sub.getPersonId());
 
-        assertFalse(bossCheck.getSupervisoriSupervisionati().contains(subCheck));
+        assertFalse(bossCheck.getSubordinates().contains(subCheck));
         assertNull(subCheck.getSupervisore());
 
-        Supervisore finalBoss = boss;
+        Supervisor finalBoss = boss;
         assertThrows(IllegalStateException.class,
-                () -> facade.assignSubordinate(finalBoss.getId(), finalBoss.getId()));
+                () -> facade.assignSubordinate(finalBoss.getPersonId(), finalBoss.getPersonId()));
     }
 
     @Test
     @Transactional
     void shouldPreventComplexLoop() {
-        Supervisore a = createSupervisor();
-        Supervisore b = createSupervisor();
-        Supervisore c = createSupervisor();
+        Supervisor a = createSupervisor();
+        Supervisor b = createSupervisor();
+        Supervisor c = createSupervisor();
 
         a = facade.saveSupervisor(a);
         b = facade.saveSupervisor(b);
         c = facade.saveSupervisor(c);
 
-        facade.assignSubordinate(a.getId(), b.getId());
-        facade.assignSubordinate(b.getId(), c.getId());
+        facade.assignSubordinate(a.getPersonId(), b.getPersonId());
+        facade.assignSubordinate(b.getPersonId(), c.getPersonId());
 
-        Supervisore finalC = c;
-        Supervisore finalA = a;
+        Supervisor finalC = c;
+        Supervisor finalA = a;
         assertThrows(IllegalStateException.class,
-                () -> facade.assignSubordinate(finalC.getId(), finalA.getId()));
+                () -> facade.assignSubordinate(finalC.getPersonId(), finalA.getPersonId()));
 
         assertEquals(b, c.getSupervisore());
         assertEquals(a, b.getSupervisore());
@@ -170,15 +170,15 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldFindRootSupervisors() {
-        Supervisore root = createSupervisor();
-        Supervisore child = createSupervisor();
+        Supervisor root = createSupervisor();
+        Supervisor child = createSupervisor();
 
         root = facade.saveSupervisor(root);
         child = facade.saveSupervisor(child);
 
-        facade.assignSubordinate(root.getId(), child.getId());
+        facade.assignSubordinate(root.getPersonId(), child.getPersonId());
 
-        List<Supervisore> roots = facade.findSupervisorsWithoutSupervisor();
+        List<Supervisor> roots = facade.findSupervisorsWithoutSupervisor();
         assertTrue(roots.contains(root));
         assertFalse(roots.contains(child));
     }
@@ -186,17 +186,17 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldFindSupervisorsWithoutSubordinates() {
-        Supervisore sub = createSupervisor();
-        Supervisore supervisor = createSupervisor();
-        Supervisore supervisor2 = createSupervisor();
+        Supervisor sub = createSupervisor();
+        Supervisor supervisor = createSupervisor();
+        Supervisor supervisor2 = createSupervisor();
 
         sub = facade.saveSupervisor(sub);
         supervisor = facade.saveSupervisor(supervisor);
         supervisor2 = facade.saveSupervisor(supervisor2);
 
-        facade.assignSubordinate(supervisor.getId(), sub.getId());
+        facade.assignSubordinate(supervisor.getPersonId(), sub.getPersonId());
         // sub2 is not assigned -> should appear in "without subordinates"
-        List<Supervisore> withoutSubordinates = facade.findSupervisorsWithoutSubordinates();
+        List<Supervisor> withoutSubordinates = facade.findSupervisorsWithoutSubordinates();
 
         assertTrue(withoutSubordinates.contains(supervisor2));
         assertFalse(withoutSubordinates.contains(supervisor));
@@ -206,23 +206,23 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldPreventMultiLevelLoop() {
-        Supervisore s1 = createSupervisor();
-        Supervisore s2 = createSupervisor();
-        Supervisore s3 = createSupervisor();
-        Supervisore s4 = createSupervisor();
+        Supervisor s1 = createSupervisor();
+        Supervisor s2 = createSupervisor();
+        Supervisor s3 = createSupervisor();
+        Supervisor s4 = createSupervisor();
 
         s1 = facade.saveSupervisor(s1);
         s2 = facade.saveSupervisor(s2);
         s3 = facade.saveSupervisor(s3);
         s4 = facade.saveSupervisor(s4);
 
-        facade.assignSubordinate(s1.getId(), s2.getId());
-        facade.assignSubordinate(s2.getId(), s3.getId());
-        facade.assignSubordinate(s3.getId(), s4.getId());
+        facade.assignSubordinate(s1.getPersonId(), s2.getPersonId());
+        facade.assignSubordinate(s2.getPersonId(), s3.getPersonId());
+        facade.assignSubordinate(s3.getPersonId(), s4.getPersonId());
 
-        Supervisore finalS = s4;
-        Supervisore finalS1 = s1;
+        Supervisor finalS = s4;
+        Supervisor finalS1 = s1;
         assertThrows(IllegalStateException.class,
-                () -> facade.assignSubordinate(finalS.getId(), finalS1.getId()));
+                () -> facade.assignSubordinate(finalS.getPersonId(), finalS1.getPersonId()));
     }
 }

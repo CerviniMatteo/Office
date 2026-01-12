@@ -5,45 +5,45 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name="dipendente")
-public class Dipendente extends Persona{
+@Entity(name="employee")
+public class Employee extends Person {
 
     private double monthlySalary;
     private EmployeeRole employeeRole;
 
-    @ManyToMany(mappedBy = "dipendentiAssegnati")
+    @ManyToMany(mappedBy = "assignedEmployees")
     private List<Task> tasks = new ArrayList<>();
 
     // prototipo di relazione ManyToOne con Team
     @ManyToOne
-    @JoinColumn(name = "dipendenteTeam")
-    private Team dipendenteTeam;
+    @JoinColumn(name = "employeeTeam")
+    private Team employeeTeam;
 
-    public Team getDipendenteTeam() {
-        return dipendenteTeam;
+    public Team getEmployeeTeam() {
+        return employeeTeam;
     }
 
-    public void setDipendenteTeam(Team team) {
-        this.dipendenteTeam = team;
+    public void setEmployeeTeam(Team team) {
+        this.employeeTeam = team;
     }
 
-    protected Dipendente() {
+    protected Employee() {
         super();
     }
 
-    public Dipendente(String name, String surname) {
+    public Employee(String name, String surname) {
         super(name, surname);
         setEmployeeRole(EmployeeRole.JUNIOR);
         setMonthlySalary(EmployeeRole.JUNIOR.getMonthlySalary());
     }
 
-    public Dipendente(String name, String surname, EmployeeRole employeeRole) {
+    public Employee(String name, String surname, EmployeeRole employeeRole) {
         super(name, surname);
         setEmployeeRole(employeeRole);
         setMonthlySalary(employeeRole.getMonthlySalary());
     }
 
-    public Dipendente(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
+    public Employee(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
         super(name, surname);
         setMonthlySalary(monthlySalary);
         setEmployeeRole(employeeRole);
@@ -84,7 +84,7 @@ public class Dipendente extends Persona{
 
     @Override
     public String toString() {
-        String teamId = dipendenteTeam != null ? dipendenteTeam.getIdTeam().toString() : "null";
+        String teamId = employeeTeam != null ? employeeTeam.getTeamId().toString() : "null";
         return "Dipendente{" + super.toString() +
                 "stipendio=" + monthlySalary +
                 ", grado=" + employeeRole +
