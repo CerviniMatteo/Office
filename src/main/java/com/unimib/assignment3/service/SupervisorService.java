@@ -191,7 +191,7 @@ public class SupervisorService extends EmployeeService {
      *
      * @return a list of supervisors without subordinates
      */
-    public List<Supervisore> findSupervisorsWithoutSupervisionedTeam() {
+    public List<Supervisore> findSupervisorsWithoutSupervisedTeam() {
         return supervisorRepository.findSupervisorWithoutSubordinates();
     }
 

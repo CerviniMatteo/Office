@@ -28,7 +28,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     // Find team by a specific employee's ID
     Team findByDipendenti_Id(Long idDipendente);
     // Find team by a specific task's ID
-    Team findByTasks_IdTask(Long idTask);
+    Team findByTasks_TaskId(Long idTask);
     // Find tasks associated with a specific team ID
     @Query("SELECT t.tasks FROM team t WHERE t.idTeam = :idTeam")
     List<Task> findTasksByIdTeam(@Param("idTeam") Long idTeam);
@@ -43,11 +43,11 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("SELECT t_task FROM team t JOIN t.tasks t_task WHERE t.idTeam = :idTeam AND t_task.taskState = :taskState")
     List<Task> findTasksInTeamIdByTaskState(@Param("idTeam") Long idTeam, @Param("taskState") TaskState taskState);
     // Find employees with salary greater than a specified amount in a specific team
-    @Query("SELECT d FROM team t JOIN t.dipendenti d WHERE t.idTeam = :idTeam AND d.stipendio > :salary")
-    List<Dipendente> findDipendentiInTeamIdWithSalaryGreaterThan(@Param("idTeam") Long idTeam, @Param("salary") Double salary);
+    @Query("SELECT d FROM team t JOIN t.dipendenti d WHERE t.idTeam = :idTeam AND d.monthlySalary > :monthlySalary")
+    List<Dipendente> findDipendentiInTeamIdWithSalaryGreaterThan(@Param("idTeam") Long idTeam, @Param("monthlySalary") double monthlySalary);
     // Find employees with salary less than a specified amount in a specific team
-    @Query("SELECT d FROM team t JOIN t.dipendenti d WHERE t.idTeam = :idTeam AND d.stipendio < :salary")
-    List<Dipendente> findDipendentiInTeamIdWithSalaryLessThan(@Param("idTeam") Long idTeam, @Param("salary") Double salary);
+    @Query("SELECT d FROM team t JOIN t.dipendenti d WHERE t.idTeam = :idTeam AND d.monthlySalary < :monthlySalary")
+    List<Dipendente> findDipendentiInTeamIdWithSalaryLessThan(@Param("idTeam") Long idTeam, @Param("monthlySalary") double monthlySalary);
     // Find employees with a specific grade in a specific team
     @Query("SELECT d FROM team t JOIN t.dipendenti d WHERE t.idTeam = :idTeam AND d.employeeRole = :employeeRole")
     List<Dipendente> findDipendentiInTeamIdWithGrado(@Param("idTeam") Long idTeam, @Param("employeeRole") EmployeeRole employeeRole);

@@ -2,7 +2,6 @@ package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 

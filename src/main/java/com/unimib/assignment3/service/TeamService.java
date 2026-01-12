@@ -7,8 +7,8 @@ import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.constants.teamConstants;
-import com.unimib.assignment3.repository.DipendenteRepository;
-import com.unimib.assignment3.repository.SupervisoreRepository;
+import com.unimib.assignment3.repository.EmployeeRepository;
+import com.unimib.assignment3.repository.SupervisorRepository;
 import com.unimib.assignment3.repository.TaskRepository;
 import com.unimib.assignment3.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,9 @@ public class TeamService {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
-    private SupervisoreRepository supervisoreRepository;
+    private SupervisorRepository supervisorRepository;
     @Autowired
-    private DipendenteRepository dipendenteRepository;
+    private EmployeeRepository employeeRepository;
     @Autowired
     private TeamRepository teamRepository;
 
@@ -194,13 +194,13 @@ public class TeamService {
         return teamRepository.findAll();
     }
     public List<Team> getTeamsBySupervisore_Id(Long idSupervisore) {
-        if(supervisoreRepository.findById(idSupervisore).isEmpty()) {
+        if(supervisorRepository.findById(idSupervisore).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
         return teamRepository.findBySupervisore_Id(idSupervisore);
     }
     public Team getTeamByDipendente_Id(Long idDipendente) {
-        if(dipendenteRepository.findById(idDipendente).isEmpty()) {
+        if(employeeRepository.findById(idDipendente).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
         return teamRepository.findByDipendenti_Id(idDipendente);
@@ -209,7 +209,7 @@ public class TeamService {
         if(taskRepository.findById(idTask).isEmpty()) {
             throw new IllegalArgumentException(teamConstants.ENTITY_NOT_FOUND);
         }
-        return teamRepository.findByTasks_IdTask(idTask);
+        return teamRepository.findByTasks_TaskId(idTask);
     }
     public List<Task> getTasksByTeamId(Long idTeam) {
         if(getTeamById(idTeam).isEmpty()) {

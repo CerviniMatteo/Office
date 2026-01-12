@@ -26,7 +26,7 @@ public class Supervisore extends Dipendente {
             cascade = CascadeType.MERGE,
             orphanRemoval = true
     )
-    private List<Team> teamsSupervisionato = new ArrayList<>();
+    private List<Team> supervisedTeams = new ArrayList<>();
 
     protected Supervisore() {
         super();
@@ -48,6 +48,12 @@ public class Supervisore extends Dipendente {
     public void setEmployeeRole(EmployeeRole employeeRole) {
         checkRole(employeeRole);
         super.setEmployeeRole(employeeRole);
+    }
+
+    protected void checkRole(EmployeeRole employeeRole) {
+        if(employeeRole.compareTo(EmployeeRole.SW_ARCHITECT) < 0) {
+            throw new IllegalArgumentException(SupervisorConstants.SUPERVISOR_AT_LEAST_SW_ARCHITECT);
+        }
     }
 
     public Supervisore getSupervisore() {
@@ -72,12 +78,12 @@ public class Supervisore extends Dipendente {
 
     // ho cambiato il setter di team supervisionato per gestire la relazione bidirezionale
     // ricordati di aggiornare anche nel service e test
-    public List<Team> getTeamsSupervisionato() {
-        return teamsSupervisionato;
+    public List<Team> getSupervisedTeams() {
+        return supervisedTeams;
     }
 
-    private void setTeamsSupervisionato(Team team) {
-        this.teamsSupervisionato.add(team);
+    private void setSupervisedTeams(Team team) {
+        this.supervisedTeams.add(team);
     }
 
     private void setTeamsSupervisionato(List<Team> teams) {
@@ -85,7 +91,7 @@ public class Supervisore extends Dipendente {
         for(Team team : teams) {
             team.setSupervisore(this);
         }
-        this.teamsSupervisionato = teams;
+        this.supervisedTeams = teams;
     }
 
     public void addSubordinate(Supervisore subordinate) {
@@ -104,21 +110,21 @@ public class Supervisore extends Dipendente {
     }
 
     public void addTeamsSupervisionato(Team team) {
-        if(!teamsSupervisionato.contains(team)){
-            setTeamsSupervisionato(team);
+        if(!supervisedTeams.contains(team)){
+            setSupervisedTeams(team);
             team.setSupervisore(this);
         }
     }
 
     public void removeAllTeamsSupervisionato() {
-        for(Team team : teamsSupervisionato) {
+        for(Team team : supervisedTeams) {
             team.setSupervisore(null);
         }
-        teamsSupervisionato.clear();
+        supervisedTeams.clear();
     }
 
     public void removeTeamSupervisionato(Team team) {
-        if(teamsSupervisionato.remove(team)){
+        if (supervisedTeams.remove(team)) {
             team.setSupervisore(null);
         }
     }
@@ -127,7 +133,7 @@ public class Supervisore extends Dipendente {
     public String toString() {
         return "Supervisore{" + super.toString() +
                 ", supervisoriSupervisionati=" + supervisoriSupervisionati +
-                ", teamSupervisionato=" + teamsSupervisionato.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
+                ", teamSupervisionato=" + supervisedTeams.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
                 '}';
     }
 }

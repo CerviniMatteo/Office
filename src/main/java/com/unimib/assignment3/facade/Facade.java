@@ -6,7 +6,6 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
-import com.unimib.assignment3.repository.TeamRepository;
 import com.unimib.assignment3.service.EmployeeService;
 import com.unimib.assignment3.service.SupervisorService;
 import com.unimib.assignment3.service.TaskService;
@@ -148,7 +147,7 @@ public class Facade {
     }
 
     public List<Supervisore> findSupervisorsWithoutSupervisionedTeam() {
-        return supervisorService.findSupervisorsWithoutSupervisionedTeam();
+        return supervisorService.findSupervisorsWithoutSupervisedTeam();
     }
 
 

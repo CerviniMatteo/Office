@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class FacadeTaskTest {
+public class TaskIntegrationTest {
 
     @Autowired
     private Facade facade;
@@ -303,12 +303,12 @@ public class FacadeTaskTest {
             Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
 
             // Colleghiamo il task al team (Verifica i metodi in Team.java)
-            team.setTasksTeam(List.of(t1));
+            team.addTask(t1);
             Team savedTeam = facade.saveTeam(team);
 
             List<Task> tasksDelTeam = facade.findTasksByTeamId(savedTeam.getIdTeam());
             assertFalse(tasksDelTeam.isEmpty());
-            assertEquals(t1.getTaskId(), tasksDelTeam.get(0).getTaskId());
+            assertEquals(t1.getTaskId(), tasksDelTeam.getFirst().getTaskId());
         }
     }
 

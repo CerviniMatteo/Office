@@ -17,8 +17,8 @@ public interface SupervisorRepository extends JpaRepository<Supervisore, Long> {
     List<Supervisore> findSupervisorWithoutSubordinates();
 
     // Supervisors without teams
-    @Query("SELECT s FROM supervisore s WHERE s.teamSupervisionati IS EMPTY")
-    List<Supervisore> findSupervisorWithoutSupervisionedTeams();
+    @Query("SELECT s FROM supervisore s WHERE s.supervisedTeams IS EMPTY")
+    List<Supervisore> findSupervisoreWithoutSupervisedTeams();
 
     @Query("SELECT COUNT(s) FROM supervisore s WHERE LOWER(s.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
     int countEmailsStartingWithEmailPrefix(@Param("emailPrefix") String emailPrefix);
