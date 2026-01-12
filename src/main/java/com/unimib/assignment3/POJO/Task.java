@@ -144,12 +144,12 @@ public class Task implements Serializable {
     public String toString() {
         String idTeam = teamTask != null ? teamTask.getTeamId().toString() : "null";
         return "Task{" +
-                "idTask=" + taskId +
-                ", dipendentiAssegnati=" + getAllEmployeesId() +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", taskState=" + taskState +
-                ", taskTeam=" + idTeam +
+                "task id=" + taskId +
+                ", assigned employees=" + getAllEmployeesId() +
+                ", start date=" + startDate +
+                ", end date=" + endDate +
+                ", task state=" + taskState +
+                ", team=" + idTeam +
                 '}';
     }
 

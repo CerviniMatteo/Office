@@ -6,4 +6,5 @@ public class CommonConstants {
     public static String NULL_NAME = "The employee id cannot be null";
     public static String NULL_SURNAME = "Surname cannot be null";
     public static String NULL_EMPLOYEE_ROLE = "The EmployeeRole cannot be null";
+    public static final String SALARY_MUST_BE_POSITIVE = "The salary must be positive";
 }

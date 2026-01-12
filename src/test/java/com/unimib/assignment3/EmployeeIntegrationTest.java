@@ -279,7 +279,7 @@ class EmployeeIntegrationTest {
 
         assertEquals(2, foundSalary.size());
         assertEquals(2, foundRole.size());
-        assertTrue(foundSalary.stream().allMatch(d -> d.getMonthlySalary().equals(3100.0)));
+        assertTrue(foundSalary.stream().allMatch(d -> Double.compare(d.getMonthlySalary(), 3100.0) == 0));
         assertTrue(foundRole.stream().allMatch(d -> d.getEmployeeRole().equals(EmployeeRole.MANAGER)));
     }
 

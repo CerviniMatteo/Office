@@ -1,6 +1,7 @@
 package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.constants.SupervisorConstants;
+import static com.unimib.assignment3.constants.CommonConstants.*;
 import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -48,6 +49,16 @@ public class Supervisor extends Employee {
     public void setEmployeeRole(EmployeeRole employeeRole) {
         checkRole(employeeRole);
         super.setEmployeeRole(employeeRole);
+    }
+
+    @Override
+    public void setMonthlySalary(double monthlySalary) {
+        if(monthlySalary < EmployeeRole.SW_ARCHITECT.getMonthlySalary()){
+            throw new IllegalArgumentException(SALARY_MUST_BE_POSITIVE);
+        } else {
+            super.setMonthlySalary(monthlySalary);
+
+        }
     }
 
     protected void checkRole(EmployeeRole employeeRole) {

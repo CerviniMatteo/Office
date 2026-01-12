@@ -25,9 +25,9 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Team> findAll();
     // Find teams by supervisor's ID
     List<Team> findBySupervisorPersonId(Long supervisorId);
-    // Find team by a specific employee's ID
+    // Find the team by a specific employee's ID
     Team findByEmployeesPersonId(Long employeeId);
-    // Find team by a specific task's ID
+    // Find the team by a specific task's ID
     Team findByTasksTaskId(Long taskId);
     // Find tasks associated with a specific team ID
     @Query("SELECT t.tasks FROM team t WHERE t.teamId = :teamId")
@@ -50,7 +50,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Employee> findEmployeesInTeamIdWithSalaryLessThan(@Param("teamId") Long teamId, @Param("monthlySalary") double monthlySalary);
     // Find employees with a specific grade in a specific team
     @Query("SELECT d FROM team t JOIN t.employees d WHERE t.teamId = :teamId AND d.employeeRole = :employeeRole")
-    List<Employee> findEmployeesInTeamIdWithGrado(@Param("teamId") Long teamId, @Param("employeeRole") EmployeeRole employeeRole);
+    List<Employee> findEmployeesInTeamIdWithEmployeeRole(@Param("teamId") Long teamId, @Param("employeeRole") EmployeeRole employeeRole);
 }
 
 

@@ -232,15 +232,15 @@ public class Facade {
     }
 
     // <---- Team ---->
-    // Function for team service
+
     public Team createTeam(Supervisor supervisor) {
         return teamService.createTeam(supervisor);
     }
-    public Team createTeam(List<Employee> dipendenti, Supervisor supervisor) {
-        return teamService.createTeam(dipendenti, supervisor);
+    public Team createTeam(List<Employee> employees, Supervisor supervisor) {
+        return teamService.createTeam(employees, supervisor);
     }
-    public Team createTeam(List<Employee> dipendenti, Supervisor supervisor, List<Task> tasks) {
-        return teamService.createTeam(dipendenti, supervisor, tasks);
+    public Team createTeam(List<Employee> employees, Supervisor supervisor, List<Task> tasks) {
+        return teamService.createTeam(employees, supervisor, tasks);
     }
     public Team saveTeam(Team team) {
         return teamService.saveTeam(team);
@@ -248,23 +248,23 @@ public class Facade {
     public void deleteTeam(Team team) {
         teamService.deleteTeam(team);
     }
-    public List<Employee> getDipendentiInTeam(Team team) {
-        return teamService.getDipendentiInTeam(team);
+    public List<Employee> getEmployeesInTeam(Team team) {
+        return teamService.getEmployeesInTeam(team);
     }
-    public void addDipendenteToTeam(Team team, Employee employee) {
-        teamService.addDipendenteToTeam(team, employee);
+    public void addEmployeeToTeam(Team team, Employee employee) {
+        teamService.addEmployeeToTeam(team, employee);
     }
-    public void removeAllDipendentiFromTeam(Team team) {
-        teamService.removeAllDipendentiFromTeam(team);
+    public void removeAllEmployeesFromTeam(Team team) {
+        teamService.removeAllEmployeesFromTeam(team);
     }
-    public void removeDipendenteFromTeam(Team team, Employee employee) {
-        teamService.removeDipendenteFromTeam(team, employee);
+    public void removeEmployeeFromTeam(Team team, Employee employee) {
+        teamService.removeEmployeeFromTeam(team, employee);
     }
-    public Supervisor getTeamSupervisore(Team team) {
-        return teamService.getTeamSupervisore(team);
+    public Supervisor getTeamSupervisor(Team team) {
+        return teamService.getTeamSupervisor(team);
     }
-    public void setTeamSupervisore(Team team, Supervisor supervisor) {
-        teamService.setTeamSupervisore(team, supervisor);
+    public void setTeamSupervisor(Team team, Supervisor supervisor) {
+        teamService.setTeamSupervisor(team, supervisor);
     }
     public List<Task> getTeamTasks(Team team) {
         return teamService.getTeamTasks(team);
@@ -288,34 +288,34 @@ public class Facade {
     public void deleteTeamById(Long id) {
         teamService.deleteTeamById(id);
     }
-    public List<Team> getTeamsBySupervisore_Id(Long supervisoreId) {
-        return teamService.getTeamsBySupervisore_Id(supervisoreId);
+    public List<Team> getTeamsBySupervisorPersonId(Long supervisorId) {
+        return teamService.getTeamsBySupervisorPersonId(supervisorId);
     }
-    public Team getTeamByDipendente_Id(Long dipendenteId) {
-        return teamService.getTeamByDipendente_Id(dipendenteId);
+    public Team getTeamByEmployeePersonId(Long employeeId) {
+        return teamService.getTeamByEmployeesPersonId(employeeId);
     }
     public Team getTeamByTask_Id(Long taskId) {
-        return teamService.getTeamByTask_Id(taskId);
+        return teamService.getTeamByTaskId(taskId);
     }
     public List<Task> getTasksByTeamId(Long teamId) {
         return teamService.getTasksByTeamId(teamId);
     }
-    public Supervisor getSupervisoreByTeamId(Long teamId) {
-        return teamService.getSupervisoreByTeamId(teamId);
+    public Supervisor getSupervisorByTeamId(Long teamId) {
+        return teamService.getSupervisorByTeamId(teamId);
     }
-    public List<Employee> getDipendentiByTeamId(Long teamId) {
-        return teamService.getDipendentiByTeamId(teamId);
+    public List<Employee> getEmployeesByTeamId(Long teamId) {
+        return teamService.getEmployeesByTeamId(teamId);
     }
     public List<Task> getTasksInTeamIdByTaskState(Long teamId, TaskState taskState) {
         return teamService.getTasksInTeamIdByTaskState(teamId, taskState);
     }
-    public List<Employee> getDipendentiInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
-        return teamService.getDipendentiInTeamIdWithSalaryGreaterThan(teamId, salary);
+    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
+        return teamService.getEmployeesInTeamIdWithSalaryGreaterThan(teamId, salary);
     }
-    public List<Employee> getDipendentiInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
-        return teamService.getDipendentiInTeamIdWithSalaryLessThan(teamId, salary);
+    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
+        return teamService.getEmployeesInTeamIdWithSalaryLessThan(teamId, salary);
     }
-    public List<Employee> getDipendentiInTeamIdWithGrado(Long teamId, EmployeeRole employeeRole) {
-        return teamService.getDipendentiInTeamIdWithGrado(teamId, employeeRole);
+    public List<Employee> getEmployeesInTeamIdWithEmployeeRole(Long teamId, EmployeeRole employeeRole) {
+        return teamService.getEmployeesInTeamIdWithEmployeeRole(teamId, employeeRole);
     }
 }

@@ -11,7 +11,7 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teamId;
 
-    // orphane removal not necessary as the deletion of a team does not imply
+    // orphan removal not necessary as the deletion of a team does not imply
     // the deletion of the associated employees
     @OneToMany(mappedBy = "employeeTeam", cascade = CascadeType.MERGE)
     private List<Employee> employees = new ArrayList<>();
@@ -20,7 +20,7 @@ public class Team {
     @JoinColumn(name = "supervisor")
     private Supervisor supervisor;
 
-    // orphane removal not necessary as the deletion of a team does not imply
+    // orphan removal not necessary as the deletion of a team does not imply
     // the deletion of the associated tasks
     @OneToMany(mappedBy = "teamTask", cascade = CascadeType.MERGE)
     private List<Task> tasks = new ArrayList<>();
@@ -29,17 +29,14 @@ public class Team {
     }
 
     public Team(Supervisor supervisor) {
-        // da discutere
         supervisor.addTeamsSupervisionato(this);
     }
     public Team(List<Employee> employees, Supervisor supervisor) {
         setEmployees(employees);
-        // da discutere
         supervisor.addTeamsSupervisionato(this);
     }
     public Team(List<Employee> employees, Supervisor supervisor, List<Task> tasks) {
         setEmployees(employees);
-        // da discutere
         supervisor.addTeamsSupervisionato(this);
         setTasks(tasks);
     }
@@ -47,12 +44,12 @@ public class Team {
     public Long getTeamId() {
         return teamId;
     }
-    // non serve il setIdTeam in quanto l'id viene generato automaticamente
+    //TODO non serve il setIdTeam in quanto l'id viene generato automaticamente
 
     public List<Employee> getEmployees() {
         return employees;
     }
-    // per motivi di progettazione la set della lista di dipendenti viene usato solo all'interno della
+    //TODO per motivi di progettazione la set della lista di dipendenti viene usato solo all'interno della
     // classe per gestire la relazione bidirezionale, al di fuori della classe per aggiungere una lista di
     // dipendenti si usa un ciclo con addDipendente --> nella doc.
     private void setEmployees(List<Employee> employees) {
@@ -124,7 +121,7 @@ public class Team {
     @Override
     public String toString() {
         return "Team{" +
-                "idTeam=" + teamId +
+                "team id=" + teamId +
                 ", employees=" + employees +
                 ", supervisor=" + supervisor +
                 ", tasks=" + tasks +

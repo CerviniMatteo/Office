@@ -1,6 +1,7 @@
 package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.enums.EmployeeRole;
+import static com.unimib.assignment3.constants.CommonConstants.*;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +50,14 @@ public class Employee extends Person {
         setEmployeeRole(employeeRole);
     }
 
-    public Double getMonthlySalary() {
+    public double getMonthlySalary() {
         return monthlySalary;
     }
 
-    public void setMonthlySalary(Double monthlySalary) {
+    public void setMonthlySalary(double monthlySalary) {
+        if(monthlySalary < 0){
+            throw new IllegalArgumentException(SALARY_MUST_BE_POSITIVE);
+        }
         this.monthlySalary = monthlySalary;
     }
 
@@ -85,11 +89,11 @@ public class Employee extends Person {
     @Override
     public String toString() {
         String teamId = employeeTeam != null ? employeeTeam.getTeamId().toString() : "null";
-        return "Dipendente{" + super.toString() +
-                "stipendio=" + monthlySalary +
-                ", grado=" + employeeRole +
+        return "Employee{" + super.toString() +
+                "salary=" + monthlySalary +
+                ", employee role=" + employeeRole +
                 ", tasks=" + getAllTaskId() +
-                ", dipendenteTeam=" + teamId +
+                ", team=" + teamId +
                 '}';
     }
 }
