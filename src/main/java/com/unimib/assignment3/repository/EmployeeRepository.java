@@ -22,4 +22,6 @@ public interface EmployeeRepository extends JpaRepository<Dipendente, Long> {
     List<Task> findTasksByEmployeeAndTaskState(@Param("employeeId") Long employeeId,
                                                @Param("taskState") TaskState taskState);
 
+    @Query("SELECT COUNT(d) FROM dipendente d WHERE LOWER(d.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
+    int countEmailsStartingWithEmailPrefix(@Param("emailPrefix") String emailPrefix);
 }

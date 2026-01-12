@@ -27,6 +27,12 @@ public abstract class Persona {
        setEmail(generateEmail(name,surname));
     }
 
+    public Persona(String name, String surname, int emailCounter) {
+        setNome(name);
+        setCognome(surname);
+        setEmail(generateEmail(name,surname,emailCounter));
+    }
+
     public Long getId() {
         return id;
     }
@@ -62,6 +68,10 @@ public abstract class Persona {
 
     private static String generateEmail(String name, String surname) {
         return name.toLowerCase(Locale.ROOT)+"."+surname.toLowerCase(Locale.ROOT)+"@example.com";
+    }
+
+    public static String generateEmail(String name, String surname, int emailCounter) {
+        return generateEmail(name+emailCounter, surname);
     }
 
     @Override

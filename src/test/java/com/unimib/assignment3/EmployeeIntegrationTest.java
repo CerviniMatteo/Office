@@ -31,8 +31,6 @@ class EmployeeIntegrationTest {
     @Autowired
     private Facade facade;
 
-    private static long counter = 0;
-
     /**
      * Helper method to create an employee with a default salary from the role.
      *
@@ -40,9 +38,8 @@ class EmployeeIntegrationTest {
      * @return the saved employee
      */
     private Dipendente createEmployee(EmployeeRole role) {
-        counter++;
         return facade.createEmployee(
-            "Employee" + counter,
+            "Employee",
             "Employee",
             role.getMonthlySalary(),
             role
@@ -57,9 +54,8 @@ class EmployeeIntegrationTest {
      * @return the saved employee
      */
     private Dipendente createEmployee(EmployeeRole role, Double salary) {
-        counter++;
         return facade.createEmployee(
-            "Employee" + counter,
+            "Employee",
             "Employee",
             salary,
             role
@@ -88,6 +84,24 @@ class EmployeeIntegrationTest {
         Dipendente d2 = createEmployee(EmployeeRole.SENIOR_SW_ENGINEER);
         facade.saveEmployee(d1);
         facade.saveEmployee(d2);
+
+        List<Dipendente> all = facade.findAllEmployees();
+        assertTrue(all.size() >= 2); // at least 2 employees exist
+    }
+
+    /**
+     * Test employee creation.
+     */
+    @Transactional
+    @Test
+    void employeeCreation() {
+        Dipendente d1 = createEmployee(EmployeeRole.JUNIOR);
+        Dipendente d2 = createEmployee(EmployeeRole.JUNIOR);
+        facade.saveEmployee(d1);
+        facade.saveEmployee(d2);
+
+        System.out.println(d1);
+        System.out.println(d2);
 
         List<Dipendente> all = facade.findAllEmployees();
         assertTrue(all.size() >= 2); // at least 2 employees exist
@@ -329,7 +343,7 @@ class EmployeeIntegrationTest {
         Dipendente e1 = createEmployee(EmployeeRole.JUNIOR, 2000.0);
         facade.saveEmployee(e1);
 
-        Dipendente e2 = createEmployee(EmployeeRole.JUNIOR, 3000.0);facade.saveEmployee(e2);
+        Dipendente e2 = createEmployee(EmployeeRole.JUNIOR, 3000.0);
         facade.saveEmployee(e2);
 
         Dipendente e3 = createEmployee(EmployeeRole.JUNIOR, 6000.0);

@@ -1,12 +1,14 @@
 package com.unimib.assignment3.service;
 
 import com.unimib.assignment3.POJO.Dipendente;
+import com.unimib.assignment3.POJO.Persona;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.constants.CommonConstants;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.unimib.assignment3.constants.CommonConstants.NULL_NAME;
-import static com.unimib.assignment3.constants.CommonConstants.NULL_SURNAME;
+import static com.unimib.assignment3.constants.CommonConstants.*;
 import static com.unimib.assignment3.constants.EmployeeConstants.*;
 import static com.unimib.assignment3.constants.TaskConstants.NULL_TASK_STATE;
 
@@ -31,15 +32,25 @@ public class DipendenteService {
     private EmployeeRepository employeeRepository;
 
     /**
-     * Save a single employee to the database.
+     * Save a single employee to the database and handles email uniqueness.
      *
      * @param employee the employee to save
      * @return the saved employee
      */
     public Dipendente saveEmployee(@NonNull Dipendente employee) {
         Objects.requireNonNull(employee, NULL_EMPLOYEE);
-        return employeeRepository.save(employee);
+
+        int emailCounter = employeeRepository.countEmailsStartingWithEmailPrefix(employee.getNome());
+        if(emailCounter != 0) {
+            employee.setEmail(Persona.generateEmail(employee.getNome(), employee.getCognome(), emailCounter));
+        }
+        try {
+            return employeeRepository.saveAndFlush(employee);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(EMAIL_HAVE_TO_BE_UNIQUE);
+        }
     }
+
 
     /**
      * Create a new employee with the given name and surname.

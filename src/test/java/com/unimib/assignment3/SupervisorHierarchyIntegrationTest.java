@@ -16,18 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SupervisorHierarchyIntegrationTest {
     @Autowired
     private Facade facade;
-    private static long counter = 0;
 
     /**
      * Helper method to create and save a supervisor via the facade.
      */
     private Supervisore createSupervisor() {
-        counter++;
-        return facade.createSupervisor("Matteo"+counter, "Cervini");
+        return facade.createSupervisor("Matteo", "Cervini");
     }
     private Supervisore createSupervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
-        counter++;
-        return facade.createSupervisor(name+counter, surname, monthlySalary, employeeRole);
+        return facade.createSupervisor(name, surname, monthlySalary, employeeRole);
     }
 
     @Test

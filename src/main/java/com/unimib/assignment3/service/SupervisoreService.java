@@ -1,17 +1,19 @@
 package com.unimib.assignment3.service;
 
+import com.unimib.assignment3.POJO.Persona;
 import com.unimib.assignment3.POJO.Supervisore;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.repository.SupervisorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.unimib.assignment3.constants.CommonConstants.NULL_NAME;
-import static com.unimib.assignment3.constants.CommonConstants.NULL_SURNAME;
+import static com.unimib.assignment3.constants.CommonConstants.*;
+import static com.unimib.assignment3.constants.EmployeeConstants.NULL_EMPLOYEE;
 import static com.unimib.assignment3.constants.SupervisorConstants.*;
 
 /**
@@ -27,14 +29,23 @@ public class SupervisoreService extends DipendenteService{
     private SupervisorRepository supervisorRepository;
 
     /**
-     * Save a new supervisor with the given name and surname.
+     * Save a single supervisor to the database and handles email uniqueness.
      *
-     * @param supervisor the supervisor entity to save (must not be null)
-     * @throws NullPointerException if the name or surname is null
+     * @param supervisor the supervisor to save
+     * @return the saved supervisor
      */
     public Supervisore saveSupervisor(@NonNull Supervisore supervisor) {
-        Objects.requireNonNull(supervisor, NULL_SUPERVISOR);
-        return supervisorRepository.saveAndFlush(supervisor);
+        Objects.requireNonNull(supervisor, NULL_EMPLOYEE);
+
+        int emailCounter = supervisorRepository.countEmailsStartingWithEmailPrefix(supervisor.getNome());
+        if(emailCounter != 0) {
+            supervisor.setEmail(Persona.generateEmail(supervisor.getNome(), supervisor.getCognome(), emailCounter));
+        }
+        try {
+            return supervisorRepository.saveAndFlush(supervisor);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(EMAIL_HAVE_TO_BE_UNIQUE);
+        }
     }
 
 

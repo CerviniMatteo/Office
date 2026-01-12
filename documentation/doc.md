@@ -83,8 +83,8 @@ poiché abbiamo concluso che non ci sono metodi comuni necessari a tutte le enti
 Non verranno trattati tutti i metodi CRUD di base forniti da `JpaRepository`, ma solo i metodi
 personalizzati implementati per soddisfare i requisiti specifici del dominio.
 
-## 1. DipendenteRepository
-La repository `DipendenteRepository` gestisce la persistenza dell’entità **Dipendente**.
+## 1. EmploeeyRepository
+La repository `EmploeeyRepository` gestisce la persistenza dell’entità **Dipendente**.
 ### Metodi personalizzati
 - Recupera i dipendenti con uno specifico **stipendio mensile**
 - Recupera i dipendenti con uno specifico **stipendio mensile**, ordinati per **ruolo** (crescente)
@@ -93,8 +93,9 @@ La repository `DipendenteRepository` gestisce la persistenza dell’entità **Di
 - Recupera i dipendenti con uno specifico **ruolo**, ordinati per **stipendio mensile** (crescente)
 - Recupera i dipendenti con uno specifico **ruolo**, ordinati per **stipendio mensile** (decrescente)
 - Recupera i **task** associati a un dipendente specifico, filtrati per **stato del task**
+- Recupera il numero di dipendenti con email che inizia con uno specifico **nome utente**
 
-## 2. SupervisoreRepository
+## 2. SupervisorRepository
 La repository `SupervisoreRepository` gestisce la persistenza dell’entità **Supervisore**.
 ### Metodi personalizzati
 - Recupera i **supervisori che non hanno un supervisore** (livello più alto della gerarchia)
@@ -119,11 +120,20 @@ Tutti i parametri in input devono essere validati per garantire che non siano nu
 - Creazione di un dipendente
 - Salvataggio di un dipendente
 - Salvataggio di una lista di dipendenti
-- Recupero di un dipendente per ID (normale o reference)
+- Recupero di un dipendente per ID
 - Recupero di tutti i dipendenti
 - Rimozione di un dipendente per ID
 
 ### CRUD avanzato e funzionalità specifiche
+- Nella gestione della creazione di un dipendente, viene controllato che l'email non sia già
+  utilizzata da un altro dipendente. In caso contrario, viene gestita la creazione di una email
+  unica, aggiungendo un numero progressivo alla fine dell'username. Viene ritentando il salvataggio, 
+  in caso non andasse a buon fine viene sollevata eccezione.
+  Una stampa di output durante la creazione di due dipendenti è la seguente:
+  ``` bash
+    Employee{id=1, name='Employee', surname='Employee', email='employee.employee@example.com'}monthlySalaray=2400.0, employeeRole=JUNIOR, tasks=[]}
+    Employee{id=2, name='Employee', surname='Employee', email='employee1.employee@example.com'}monthlySalaray=2400.0, employeeRole=JUNIOR, tasks=[]}
+  ``` 
 - Licenziamento di un dipendente per Id o lista di Dipendenti(accessibile solo se il dipendente che
 richiede l'operazione è un MANAGER)
 - Cerca tutti i dipendenti con stipendio mensile uguale, maggiore, minore o in un intervallo di un 

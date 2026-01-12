@@ -30,25 +30,16 @@ class SupervisorIntegrationTest {
 
     @Autowired
     private Facade facade;
-    private static long counter = 0;
 
     /**
      * Helper method to create and save a supervisor via the facade.
      */
     private Supervisore createSupervisor() {
-        counter++;
-        return facade.createSupervisor("nome" + counter, "cognome");
+        return facade.createSupervisor("Supervisor" , "Supervisor");
     }
     private void createSupervisor(EmployeeRole employeeRole) {
-        counter++;
-        facade.createSupervisor("nome" + counter, "cognome", employeeRole);
+        facade.createSupervisor("Supervisor", "Supervisor", employeeRole);
     }
-    private Supervisore createSupervisor(double monthlySalary, EmployeeRole employeeRole) {
-        counter++;
-        return facade.createSupervisor("nome" + counter, "cognome", monthlySalary, employeeRole);
-    }
-
-
 
     @Test
     @Transactional
@@ -57,14 +48,17 @@ class SupervisorIntegrationTest {
         Supervisore s2 = createSupervisor();
         Supervisore boss = createSupervisor();
 
+        boss =facade.saveSupervisor(boss);
         s1 = facade.saveSupervisor(s1);
         s2 = facade.saveSupervisor(s2);
+
+        System.out.println(boss);
+        System.out.println(s1);
+        System.out.println(s2);
 
         // Assign subordinates to boss
         boss.addSubordinate(s1);
         boss.addSubordinate(s2);
-
-        boss =facade.saveSupervisor(boss);
 
         assertNotNull(s1.getId());
         assertNotNull(s2.getId());
