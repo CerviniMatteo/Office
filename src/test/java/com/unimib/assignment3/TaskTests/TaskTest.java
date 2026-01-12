@@ -1,7 +1,7 @@
 package com.unimib.assignment3.TaskTests;
 
 import com.unimib.assignment3.POJO.*;
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.repository.*;
@@ -38,10 +38,10 @@ class TaskTest {
 
     @BeforeEach
     void setUp() {
-        dipendente1 = new Dipendente("Mario", "Rossi", 2000.0, Grado.JUNIOR);
+        dipendente1 = new Dipendente("Mario", "Rossi", 2000.0, EmployeeRole.JUNIOR);
         dipendente1 = facade.saveDipendente(dipendente1);
 
-        dipendente2 = new Dipendente("Luigi", "Verdi", 2500.0, Grado.SENIOR);
+        dipendente2 = new Dipendente("Luigi", "Verdi", 2500.0, EmployeeRole.SENIOR);
         dipendente2 = facade.saveDipendente(dipendente2);
 
         supervisore = new Supervisore("Anna", "Bianchi");
@@ -350,13 +350,13 @@ class TaskTest {
         Task task1 = facade.saveTask(new Task(TaskState.INIZIATO));
         Task task2 = facade.saveTask(new Task(TaskState.DAINIZIARE));
 
-        team.addTaskTeam(task1, "Team Task");
-        team.addTaskTeam(task2, "Team Task");
+        team.addTask(task1);
+        team.addTask(task2);
         team = facade.saveTeam(team);
 
-        assertNotNull(team.getTasksTeam());
-        assertEquals(2, team.getTasksTeam().size());
-        System.out.println("Team con tasks: " + team.getTasksTeam().size());
+        assertNotNull(team.getTasks());
+        assertEquals(2, team.getTasks().size());
+        System.out.println("Team con tasks: " + team.getTasks().size());
     }
 
     @Test

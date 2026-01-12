@@ -1,6 +1,6 @@
 package com.unimib.assignment3.enums;
 
-public enum Grado {
+public enum EmployeeRole {
     JUNIOR,
     SENIOR,
     SENIOR_SW_ENGINEER,

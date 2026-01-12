@@ -28,6 +28,19 @@ public class Task implements Serializable {
     @Column(name = "task_state")
     private TaskState taskState;
 
+    // funziona per la relazione ManyToOne con Team per adesso
+    // ricordati di wrapparlo nel service quando lo usi e di conseguenza nel facade
+    @ManyToOne
+    @JoinColumn(name = "taskTeam")
+    private Team taskTeam;
+
+    public Team getTaskTeam() {
+        return taskTeam;
+    }
+    public void setTaskTeam(Team team) {
+        this.taskTeam = team;
+    }
+
     public Task() {
         this.taskState = TaskState.DAINIZIARE;
         this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
@@ -113,10 +126,12 @@ public class Task implements Serializable {
 
     @Override
     public String toString() {
+        String idTeam = taskTeam != null ? taskTeam.getIdTeam().toString() : "null";
         return "Task{" +
                 "idTask=" + idTask +
                 ", dipendentiAssegnati=" + dipendentiAssegnati +
                 ", taskState=" + taskState +
+                ", taskTeam=" + idTeam +
                 '}';
     }
 

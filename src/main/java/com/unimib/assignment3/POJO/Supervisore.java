@@ -1,7 +1,7 @@
 // java
 package com.unimib.assignment3.POJO;
 
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +23,21 @@ public class Supervisore extends Dipendente {
 
     @OneToMany(
             mappedBy = "supervisore",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.MERGE,
             orphanRemoval = true
     )
-    private List<Team> teamSupervisionato = new ArrayList<>();
+    private List<Team> teamsSupervisionato = new ArrayList<>();
 
     protected Supervisore() {
         super();
     }
 
     public Supervisore(String nome, String cognome) {
-        super(nome, cognome, 2800.0, Grado.SW_ARCHITECT);
+        super(nome, cognome, 2800.0, EmployeeRole.SW_ARCHITECT);
     }
 
-    public Supervisore(String nome, String cognome, Double stipendio, Grado grado) {
-        super(nome, cognome, stipendio, grado);
+    public Supervisore(String nome, String cognome, Double stipendio, EmployeeRole employeeRole) {
+        super(nome, cognome, stipendio, employeeRole);
     }
 
     public Supervisore getSupervisore() {
@@ -60,31 +60,36 @@ public class Supervisore extends Dipendente {
         this.supervisoriSupervisionati.add(supervisoreSupervisionato);
     }
 
-    public List<Team> getTeamSupervisionato() {
-        return teamSupervisionato;
+    // ho cambiato il setter di team supervisionato per gestire la relazione bidirezionale
+    // ricordati di aggiornare anche nel service e test
+    public List<Team> getTeamsSupervisionato() {
+        return teamsSupervisionato;
     }
 
-    public void setTeamSupervisionato(List<Team> teamSupervisionati) {
-        for (Team team : teamSupervisionati) {
-            addTeam(team);
+    private void setTeamsSupervisionato(List<Team> teams) {
+        removeAllTeamsSupervisionato();
+        for(Team team : teams) {
+            team.setSupervisore(this);
         }
+        this.teamsSupervisionato = teams;
     }
-
-    public void setTeamSupervisionato(Team teamSupervisionato) {
-        addTeam(teamSupervisionato);
+    private void setTeamsSupervisionato(Team team) {
+        this.teamsSupervisionato.add(team);
     }
-
-    private void addTeam(Team team) {
-        if (team == null) return;
-        if (!this.teamSupervisionato.contains(team)) {
-            this.teamSupervisionato.add(team);
+    public void addTeamsSupervisionato(Team team) {
+        if(!teamsSupervisionato.contains(team)){
+            setTeamsSupervisionato(team);
             team.setSupervisore(this);
         }
     }
-
-    private void removeTeam(Team team) {
-        if (team == null) return;
-        if (this.teamSupervisionato.remove(team)) {
+    public void removeAllTeamsSupervisionato() {
+        for(Team team : teamsSupervisionato) {
+            team.setSupervisore(null);
+        }
+        teamsSupervisionato.clear();
+    }
+    public void removeTeamSupervisionato(Team team) {
+        if(teamsSupervisionato.remove(team)){
             team.setSupervisore(null);
         }
     }
@@ -93,7 +98,7 @@ public class Supervisore extends Dipendente {
     public String toString() {
         return "Supervisore{" + super.toString() +
                 ", supervisoriSupervisionati=" + supervisoriSupervisionati +
-                ", teamSupervisionato=" + teamSupervisionato.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
+                ", teamSupervisionato=" + teamsSupervisionato.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
                 '}';
     }
 }
