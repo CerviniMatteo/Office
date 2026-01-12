@@ -1,16 +1,17 @@
 package com.unimib.assignment3.POJO;
 
-import com.unimib.assignment3.enums.Grado;
+import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="dipendente")
-public class Dipendente extends Persona {
+public class Dipendente extends Persona{
 
-    private Double stipendio;
-    private Grado grado;
+    private double monthlySalary;
+    private EmployeeRole employeeRole;
 
     @ManyToMany(mappedBy = "dipendentiAssegnati")
     private List<Task> tasks = new ArrayList<>();
@@ -19,41 +20,38 @@ public class Dipendente extends Persona {
         super();
     }
 
-    public Dipendente(String nome, String cognome) {
-        super(nome, cognome);
-        this.stipendio = 1800.0;
-        this.grado = Grado.JUNIOR;
-        this.tasks = new ArrayList<>();
+    public Dipendente(String name, String surname) {
+        super(name, surname);
+        setEmployeeRole(EmployeeRole.JUNIOR);
+        setMonthlySalary(EmployeeRole.JUNIOR.getMonthlySalary());
     }
 
-    public Dipendente(String nome, String cognome, Double stipendio) {
-        super(nome, cognome);
-        this.stipendio = stipendio;
-        this.grado = Grado.JUNIOR;
-        this.tasks = new ArrayList<>();
+    public Dipendente(String name, String surname, EmployeeRole employeeRole) {
+        super(name, surname);
+        setEmployeeRole(employeeRole);
+        setMonthlySalary(employeeRole.getMonthlySalary());
     }
 
-    public Dipendente(String nome, String cognome, Double stipendio, Grado grado) {
-        super(nome, cognome);
-        this.stipendio = stipendio;
-        this.grado = grado;
-        this.tasks = new ArrayList<>();
+    public Dipendente(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
+        super(name, surname);
+        setMonthlySalary(monthlySalary);
+        setEmployeeRole(employeeRole);
     }
 
-    public Double getStipendio() {
-        return stipendio;
+    public Double getMonthlySalary() {
+        return monthlySalary;
     }
 
-    public void setStipendio(Double stipendio) {
-        this.stipendio = stipendio;
+    public void setMonthlySalary(Double monthlySalary) {
+        this.monthlySalary = monthlySalary;
     }
 
-    public Grado getGrado() {
-        return grado;
+    public EmployeeRole getEmployeeRole() {
+        return employeeRole;
     }
 
-    public void setGrado(Grado grado) {
-        this.grado = grado;
+    public void setEmployeeRole(EmployeeRole employeeRole) {
+        this.employeeRole = employeeRole;
     }
 
     public List<Task> getTasks() {
@@ -65,19 +63,19 @@ public class Dipendente extends Persona {
     }
 
 
-    public List<Long> getAllTaskId() {
+    private List<Long> getAllTaskId() {
         List<Long> idTask = new ArrayList<>();
         for (Task task : tasks) {
-            idTask.add(task.getIdTask()); // Assumendo che Task abbia un metodo getId()
+            idTask.add(task.getIdTask());
         }
         return idTask;
     }
 
     @Override
     public String toString() {
-        return "Dipendente{" + super.toString() +
-                "stipendio=" + stipendio +
-                ", grado=" + grado +
+        return "Employee{" + super.toString() +
+                "monthlySalaray=" + monthlySalary +
+                ", employeeRole=" + employeeRole +
                 ", tasks=" + getAllTaskId() +
                 '}';
     }
