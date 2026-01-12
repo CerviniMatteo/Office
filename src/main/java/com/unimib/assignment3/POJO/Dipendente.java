@@ -2,6 +2,7 @@ package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,19 @@ public class Dipendente extends Persona{
 
     @ManyToMany(mappedBy = "dipendentiAssegnati")
     private List<Task> tasks = new ArrayList<>();
+
+    // prototipo di relazione ManyToOne con Team
+    @ManyToOne
+    @JoinColumn(name = "dipendenteTeam")
+    private Team dipendenteTeam;
+
+    public Team getDipendenteTeam() {
+        return dipendenteTeam;
+    }
+
+    public void setDipendenteTeam(Team team) {
+        this.dipendenteTeam = team;
+    }
 
     protected Dipendente() {
         super();
@@ -71,10 +85,12 @@ public class Dipendente extends Persona{
 
     @Override
     public String toString() {
-        return "Employee{" + super.toString() +
-                "monthlySalaray=" + monthlySalary +
-                ", employeeRole=" + employeeRole +
+        String teamId = dipendenteTeam != null ? dipendenteTeam.getIdTeam().toString() : "null";
+        return "Dipendente{" + super.toString() +
+                "stipendio=" + monthlySalary +
+                ", grado=" + employeeRole +
                 ", tasks=" + getAllTaskId() +
+                ", dipendenteTeam=" + teamId +
                 '}';
     }
 }

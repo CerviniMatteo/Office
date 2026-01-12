@@ -14,14 +14,6 @@ public class Task implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskId;
 
-    @ManyToMany
-    @JoinTable(
-            name = "task_dipendenti",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "dipendente_id")
-    )
-    private List<Dipendente> dipendentiAssegnati = new ArrayList<>();
-
     @Enumerated(EnumType.STRING)
     @Column(name = "task_state")
     private TaskState taskState;
@@ -32,15 +24,34 @@ public class Task implements Serializable {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @ManyToMany
+    @JoinTable(
+            name = "task_dipendenti",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "dipendente_id")
+    )
+    private List<Dipendente> dipendentiAssegnati = new ArrayList<>();
+
+    // funziona per la relazione ManyToOne con Team per adesso
+    // ricordati di wrapparlo nel service quando lo usi e di conseguenza nel facade
+    @ManyToOne
+    @JoinColumn(name = "taskTeam")
+    private Team taskTeam;
+
+    public Team getTaskTeam() {
+        return taskTeam;
+    }
+    public void setTaskTeam(Team team) {
+        this.taskTeam = team;
+    }
+
     public Task() {
         this.taskState = TaskState.STARTED;
-        this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
 
     }
 
     public Task(TaskState taskState) {
         this.taskState = taskState != null ? taskState : TaskState.STARTED;
-        this.dipendentiAssegnati = dipendentiAssegnati != null ? dipendentiAssegnati : new ArrayList<>();
     }
 
     public Task(List<Dipendente> dipendentiAssegnati,  TaskState taskState, LocalDate startDate, LocalDate endDate) {
@@ -131,12 +142,14 @@ public class Task implements Serializable {
 
     @Override
     public String toString() {
+        String idTeam = taskTeam != null ? taskTeam.getIdTeam().toString() : "null";
         return "Task{" +
                 "idTask=" + taskId +
                 ", dipendentiAssegnati=" + getAllEmployeesId() +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", taskState=" + taskState +
+                ", taskTeam=" + idTeam +
                 '}';
     }
 

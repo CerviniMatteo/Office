@@ -23,10 +23,10 @@ public class Supervisore extends Dipendente {
 
     @OneToMany(
             mappedBy = "supervisore",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.MERGE,
             orphanRemoval = true
     )
-    private List<Team> teamSupervisionati = new ArrayList<>();
+    private List<Team> teamsSupervisionato = new ArrayList<>();
 
     protected Supervisore() {
         super();
@@ -62,24 +62,30 @@ public class Supervisore extends Dipendente {
         return supervisoriSupervisionati;
     }
 
-    public List<Team> getTeamSupervisionati() {
-        return teamSupervisionati;
-    }
-
     public void setSupervisoriSupervisionati(List<Supervisore> subordinates) {
         this.supervisoriSupervisionati = subordinates;
     }
 
-    public void setSupervisoriSupervisionati(Supervisore subordiante) {
-        this.supervisoriSupervisionati.add(subordiante);
+    public void setSupervisoriSupervisionati(Supervisore subordinate) {
+        this.supervisoriSupervisionati.add(subordinate);
     }
 
-    public void setTeamSupervisionati(List<Team> supervisedTeams) {
-        this.teamSupervisionati = supervisedTeams;
+    // ho cambiato il setter di team supervisionato per gestire la relazione bidirezionale
+    // ricordati di aggiornare anche nel service e test
+    public List<Team> getTeamsSupervisionato() {
+        return teamsSupervisionato;
     }
 
-    public void setTeamSupervisionati(Team supervisedTeams) {
-        this.teamSupervisionati.add(supervisedTeams);
+    private void setTeamsSupervisionato(Team team) {
+        this.teamsSupervisionato.add(team);
+    }
+
+    private void setTeamsSupervisionato(List<Team> teams) {
+        removeAllTeamsSupervisionato();
+        for(Team team : teams) {
+            team.setSupervisore(this);
+        }
+        this.teamsSupervisionato = teams;
     }
 
     public void addSubordinate(Supervisore subordinate) {
@@ -97,17 +103,31 @@ public class Supervisore extends Dipendente {
         }
     }
 
-    private void checkRole(EmployeeRole employeeRole) {
-        if(employeeRole.compareTo(EmployeeRole.SW_ARCHITECT) < 0) {
-            throw new IllegalArgumentException(SupervisorConstants.SUPERVISOR_AT_LEAST_SW_ARCHITECT);
+    public void addTeamsSupervisionato(Team team) {
+        if(!teamsSupervisionato.contains(team)){
+            setTeamsSupervisionato(team);
+            team.setSupervisore(this);
+        }
+    }
+
+    public void removeAllTeamsSupervisionato() {
+        for(Team team : teamsSupervisionato) {
+            team.setSupervisore(null);
+        }
+        teamsSupervisionato.clear();
+    }
+
+    public void removeTeamSupervisionato(Team team) {
+        if(teamsSupervisionato.remove(team)){
+            team.setSupervisore(null);
         }
     }
 
     @Override
     public String toString() {
-        return "Supervisor{" + super.toString() +
-                ", subordinates=" + supervisoriSupervisionati.stream().map(team -> team.getId().toString()).collect(Collectors.joining(", ")) +
-                ", supervisedTeams=" + teamSupervisionati.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
+        return "Supervisore{" + super.toString() +
+                ", supervisoriSupervisionati=" + supervisoriSupervisionati +
+                ", teamSupervisionato=" + teamsSupervisionato.stream().map(team -> team.getIdTeam().toString()).collect(Collectors.joining(", ")) +
                 '}';
     }
 }
