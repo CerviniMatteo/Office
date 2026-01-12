@@ -13,6 +13,8 @@ import com.unimib.assignment3.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -229,6 +231,22 @@ public class Facade {
 
     public List<Task> findTasksByTeamId(Long idTeam) {
         return taskService.getTasksByTeam(idTeam);
+    }
+
+    public Task setTaskStartDate(Long taskId, LocalDate startDate) {
+        return taskService.setTaskStartDate(taskId, startDate);
+    }
+
+    public Task setTaskEndDate(Long taskId, LocalDate endDate) {
+        return taskService.setTaskEndDate(taskId, endDate);
+    }
+
+    public void setTeamTask(Task task, Team team) {
+        taskService.setTeamTask(task, team);
+    }
+
+    public Team getTeamTask(Task task) {
+        return taskService.getTeamTask(task);
     }
 
     // <---- Team ---->

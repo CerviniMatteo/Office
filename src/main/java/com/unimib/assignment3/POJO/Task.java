@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import com.unimib.assignment3.constants.*;
 
 @Entity(name="task")
 public class Task implements Serializable {
@@ -32,18 +33,11 @@ public class Task implements Serializable {
     )
     private List<Employee> assignedEmployees = new ArrayList<>();
 
-    //TODO funziona per la relazione ManyToOne con Team per adesso
-    // ricordati di wrapparlo nel service quando lo usi e di conseguenza nel facade
+
     @ManyToOne
     @JoinColumn(name = "teamTask")
     private Team teamTask;
 
-    public Team getTeamTask() {
-        return teamTask;
-    }
-    public void setTeamTask(Team team) {
-        this.teamTask = team;
-    }
 
     public Task() {
         this.taskState = TaskState.STARTED;
@@ -106,17 +100,13 @@ public class Task implements Serializable {
         return this.assignedEmployees.contains(employee);
     }
 
-    public int countEmployees() {
-        return this.assignedEmployees.size();
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
 
     public void setStartDate(LocalDate startDate) {
         if (startDate != null && this.endDate != null && startDate.isAfter(this.endDate)) {
-            throw new IllegalArgumentException("La data di inizio non può essere successiva alla data di fine.");
+            throw new IllegalArgumentException(TaskConstants.START_DATE_AFTER_END);
         }
         this.startDate = startDate;
     }
@@ -127,7 +117,7 @@ public class Task implements Serializable {
 
     public void setEndDate(LocalDate endDate) {
         if (endDate != null && this.startDate != null && endDate.isBefore(this.startDate)) {
-            throw new IllegalArgumentException("La data di fine non può essere precedente alla data di inizio.");
+            throw new IllegalArgumentException(TaskConstants.END_DATE_BEFORE_START);
         }
         this.endDate = endDate;
     }
@@ -135,9 +125,16 @@ public class Task implements Serializable {
     public List<Long> getAllEmployeesId() {
         List<Long> idDipendenti = new ArrayList<>();
         for (Employee employee : assignedEmployees) {
-            idDipendenti.add(employee.getPersonId()); // Assumendo che Task abbia un metodo getId()
+            idDipendenti.add(employee.getPersonId());
         }
         return idDipendenti;
+    }
+
+    public Team getTeamTask() {
+        return teamTask;
+    }
+    public void setTeamTask(Team team) {
+        this.teamTask = team;
     }
 
     @Override

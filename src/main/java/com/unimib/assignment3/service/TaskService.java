@@ -1,8 +1,8 @@
 package com.unimib.assignment3.service;
 
-import com.unimib.assignment3.POJO.Employee;
-import com.unimib.assignment3.POJO.Task;
-import com.unimib.assignment3.enums.EmployeeRole;
+
+import com.unimib.assignment3.POJO.*;
+import com.unimib.assignment3.constants.*;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.EmployeeRepository;
 import com.unimib.assignment3.repository.TaskRepository;
@@ -13,6 +13,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Service class for managing Task entities.
+ * <p>
+ * Provides operations for task creation, state management, employee assignment,
+ * and advanced queries regarding task complexity and scheduling.
+ */
 @Service
 public class TaskService {
 
@@ -22,7 +29,12 @@ public class TaskService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    // Creazione e salvataggio task tramite Repository
+    /**
+     * Creates a new task with an initial state and sets relevant dates.
+     *
+     * @param initialState the starting state of the task
+     * @return the newly created task entity
+     */
     @Transactional
     public Task createTask(TaskState initialState) {
         TaskState state = initialState != null ? initialState : TaskState.STARTED;
@@ -39,66 +51,99 @@ public class TaskService {
         return task;
     }
 
+
+    /**
+     * Saves or updates a task in the database.
+     *
+     * @param task the task entity to save
+     * @return the persisted task entity
+     */
     @Transactional
     public Task saveTask(Task task) {
           return taskRepository.saveAndFlush(task);
     }
 
 
-    // Assegnazione dipendente a task con validazione
+    /**
+     * Assigns an employee to a specific task.
+     *
+     * @param taskId     the ID of the task
+     * @param employeeId the ID of the employee to assign
+     * @return the updated task entity
+     * @throws IllegalArgumentException if the task or employee is not found
+     * @throws IllegalStateException    if the task is already completed or the employee is already assigned
+     */
     @Transactional
     public Task assignEmployeeToTask(Long taskId, Long employeeId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
         Optional<Employee> dipOpt = employeeRepository.findById(employeeId);
 
         if (taskOpt.isEmpty()) {
-            throw new IllegalArgumentException("Task not found with id: " + taskId);
+            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
         }
         if (dipOpt.isEmpty()) {
-            throw new IllegalArgumentException("Employee not found with: " + employeeId);
+            throw new IllegalArgumentException(teamConstants.EMPLOYEE_NOT_FOUND);
         }
 
         Task task = taskOpt.get();
         Employee employee = dipOpt.get();
 
         if (task.getTaskState() == TaskState.DONE) {
-            throw new IllegalStateException("Isn't allowed to assign to employees tasks in" + TaskState.DONE +  "state");
+            throw new IllegalStateException(TaskConstants.CANNOT_ASSIGN_DONE_TASK);
 
         }
 
         if (task.hasEmployee(employee)) {
-            throw new IllegalStateException("Employee already assigned to this task");
+            throw new IllegalStateException(EmployeeConstants.EMPLOYEE_ALREADY_ASSIGNED_TASK);
         }
 
         task.assignEmployee(employee);
 
         employeeRepository.saveAndFlush(employee);
-        return taskRepository.saveAndFlush(task);
+        return task;
     }
 
 
-
-    // Rimozione dipendente da task
+    /**
+     * Removes an employee from a specific task.
+     *
+     * @param taskId     the ID of the task
+     * @param employeeId the ID of the employee to remove
+     * @return the updated task entity
+     * @throws IllegalArgumentException if the task or employee is not found
+     */
     @Transactional
     public Task removeEmployeeFromTask(Long taskId, Long employeeId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
         Optional<Employee> dipOpt = employeeRepository.findById(employeeId);
 
-        if (taskOpt.isEmpty() || dipOpt.isEmpty()) {
-            throw new IllegalArgumentException("Task o Employee not found");
+        if (taskOpt.isEmpty()) {
+            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+        }
+        if (dipOpt.isEmpty()) {
+            throw new IllegalArgumentException(teamConstants.EMPLOYEE_NOT_FOUND);
         }
 
         Task task = taskOpt.get();
         Employee employee = dipOpt.get();
 
         task.removeEmployee(employee);
-        return taskRepository.saveAndFlush(task);
+        return task;
     }
 
+
+    /**
+     * Transitions a task to a new state and updates dates accordingly.
+     *
+     * @param taskId   the ID of the task to update
+     * @param newState the target state
+     * @return the updated task entity
+     * @throws IllegalStateException if the transition is logically invalid
+     */
     @Transactional
     public Task changeTaskState(Long taskId, TaskState newState) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task non trovato con id: " + taskId));
+                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
 
         TaskState currentState = task.getTaskState();
 
@@ -107,73 +152,166 @@ public class TaskService {
         switch (currentState) {
             case TO_BE_STARTED:
                 if (newState != TaskState.STARTED) {
-                    throw new IllegalStateException("Da DAINIZIARE si può passare solo a INIZIATO.");
+                    throw new IllegalStateException(TaskConstants.ONLY_STARTED_FROM_TO_BE_STARTED);
                 }
                 task.setStartDate(LocalDate.now());
                 break;
 
             case STARTED:
                 if (newState != TaskState.DONE) {
-                    throw new IllegalStateException("Da INIZIATO si può passare solo a FINITO. Usa reset() per ricominciare.");
+                    throw new IllegalStateException(TaskConstants.ONLY_DONE_FROM_STARTED);
                 }
                 task.setEndDate(LocalDate.now());
                 break;
 
             case DONE:
-                throw new IllegalStateException("Il task è FINITO e non può più cambiare stato. Usa reset() per ricominciare.");
+                throw new IllegalStateException(TaskConstants.TASK_ALREADY_FINISHED);
         }
 
         task.setTaskState(newState);
-        return taskRepository.saveAndFlush(task);
+        return task;
     }
 
+
+    /**
+     * Resets a task to the 'TO_BE_STARTED' state and clears all associated dates.
+     *
+     * @param taskId the ID of the task to reset
+     */
     @Transactional
     public void resetTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task non trovato con id: " + taskId));
+                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
 
         task.setTaskState(TaskState.TO_BE_STARTED);
 
         task.setEndDate(null);
         task.setStartDate(null);
-
-        taskRepository.saveAndFlush(task);
     }
 
-    // Metodi di ricerca
+
+    /**
+     * Associates a task with a team.
+     *
+     * @param task the task entity
+     * @param team the team entity
+     */
+    @Transactional
+    public void setTeamTask(Task task, Team team) {
+        if (task == null) {
+            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+        }
+        task.setTeamTask(team);
+    }
+
+
+    /**
+     * Retrieves the team associated with a task.
+     *
+     * @param task the task entity
+     * @return the associated team
+     */
+    public Team getTeamTask(Task task) {
+        if (task == null) {
+            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+        }
+        return task.getTeamTask();
+    }
+
+
+    /**
+     * Retrieves tasks filtered by their current state.
+     *
+     * @param state the task state to filter by
+     * @return a list of matching tasks
+     */
     public List<Task> getTasksByState(TaskState state) {
         return taskRepository.findByTaskState(state);
     }
 
+
+    /**
+     * Retrieves all tasks assigned to a specific employee.
+     *
+     * @param employee the employee entity
+     * @return a list of tasks assigned to the employee
+     */
     public List<Task> getTasksByEmployee(Employee employee) {
         return taskRepository.findTasksByEmployee(employee);
     }
 
+
+    /**
+     * Retrieves all tasks that have no employees assigned.
+     *
+     * @return a list of unassigned tasks
+     */
     public List<Task> getUnassignedTasks() {
         return taskRepository.findTasksWithoutEmployee();
     }
 
+
+    /**
+     * Counts the total number of tasks in a specific state.
+     *
+     * @param state the task state to count
+     * @return the count of tasks
+     */
     public long countTasksByState(TaskState state) {
         return taskRepository.countByTaskState(state);
     }
 
+
+    /**
+     * Retrieves 'complex' tasks that have more than a specified number of employees assigned.
+     *
+     * @param numEmployees the employee threshold
+     * @return a list of complex tasks
+     */
     public List<Task> getComplexTasks(int numEmployees) {
         return taskRepository.findTasksWithMoreThanNEmployees(numEmployees);
     }
 
+
+    /**
+     * Finds a task by its unique ID.
+     *
+     * @param id the task ID
+     * @return an Optional containing the task if found
+     */
     public Optional<Task> getTaskById(Long id) {
         return taskRepository.findById(id);
     }
 
+
+    /**
+     * Retrieves all tasks in the system.
+     *
+     * @return a list of all tasks
+     */
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
+
+    /**
+     * Deletes a task from the system by ID.
+     *
+     * @param id the ID of the task to delete
+     */
     @Transactional
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
 
+
+    /**
+     * Checks if a specific employee is assigned to a specific task.
+     *
+     * @param taskId     the task ID
+     * @param employeeId the employee ID
+     * @return true if the employee is assigned, false otherwise
+     */
     public boolean isEmployeeAssigned(Long taskId, Long employeeId) {
         Optional<Task> taskOpt = taskRepository.findById(taskId);
         Optional<Employee> dipOpt = employeeRepository.findById(employeeId);
@@ -185,20 +323,83 @@ public class TaskService {
         return taskOpt.get().hasEmployee(dipOpt.get());
     }
 
+
+    /**
+     * Retrieves tasks in a specific state that have at least one employee assigned.
+     *
+     * @param state the task state
+     * @return a list of matching tasks
+     */
     public List<Task> getTasksByStateWithEmployees(TaskState state) {
         return taskRepository.findTasksByStateWithEmployees(state);
     }
 
+
+    /**
+     * Gets the total number of employees assigned to a specific task.
+     *
+     * @param taskId the task ID
+     * @return the count of assigned employees
+     */
     public Integer getEmployeeCountPerTask(Long taskId) {
         return taskRepository.countEmployeesByTaskId(taskId);
     }
 
+
+    /**
+     * Retrieves tasks that match a specific state and an exact employee count.
+     *
+     * @param state        the task state
+     * @param numEmployees the exact number of employees required
+     * @return a list of matching tasks
+     */
     public List<Task> getTasksByStateAndEmployeeCount(TaskState state, int numEmployees) {
         return taskRepository.findTasksByStateAndEmployeesCount(state, numEmployees);
     }
 
+
+    /**
+     * Retrieves all tasks belonging to a specific team.
+     *
+     * @param idTeam the team ID
+     * @return a list of tasks for that team
+     */
     public List<Task> getTasksByTeam(Long idTeam) {
         return taskRepository.findTasksByTeamId(idTeam);
+    }
+
+
+    /**
+     * Sets the start date for a specific task.
+     *
+     * @param taskId    the task ID
+     * @param startDate the new start date
+     * @return the updated task entity
+     */
+    @Transactional
+    public Task setTaskStartDate(Long taskId, LocalDate startDate) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
+
+        task.setStartDate(startDate);
+        return task;
+    }
+
+
+    /**
+     * Sets the end date for a specific task.
+     *
+     * @param taskId  the task ID
+     * @param endDate the new end date
+     * @return the updated task entity
+     */
+    @Transactional
+    public Task setTaskEndDate(Long taskId, LocalDate endDate) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
+
+        task.setEndDate(endDate);
+        return task;
     }
 
 }

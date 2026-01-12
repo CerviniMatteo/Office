@@ -203,6 +203,9 @@ public class TeamService {
 
         teamRepository.deleteById(id);
     }
+
+
+
     public List<Team> getAllTeams() {
         return teamRepository.findAll();
     }
