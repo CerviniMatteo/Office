@@ -3,23 +3,35 @@ package com.unimib.assignment3.repository;
 import com.unimib.assignment3.POJO.Supervisor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Repository interface for managing {@link Supervisor} entities.
+ * Extends JpaRepository to provide CRUD operations and custom queries.
+ */
 public interface SupervisorRepository extends JpaRepository<Supervisor, Long> {
 
-    //Search supervisors without supervisors
+    /**
+     * Retrieves all supervisors who do not have a supervisor themselves.
+     *
+     * @return a list of supervisors with no supervisor assigned.
+     */
     List<Supervisor> findBySupervisorIsNull();
 
-    // Supervisors without subordinates
+    /**
+     * Retrieves all supervisors who do not have any subordinates.
+     *
+     * @return a list of supervisors with no subordinates.
+     */
     @Query("SELECT s FROM supervisor s WHERE s.subordinates IS EMPTY")
     List<Supervisor> findSupervisorWithoutSubordinates();
 
-    // Supervisors without teams
+    /**
+     * Retrieves all supervisors who do not supervise any teams.
+     *
+     * @return a list of supervisors with no supervised teams.
+     */
     @Query("SELECT s FROM supervisor s WHERE s.supervisedTeams IS EMPTY")
-    List<Supervisor> findSupervisorWithoutSupervisedTeams();
-
-    @Query("SELECT COUNT(s) FROM supervisor s WHERE LOWER(s.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
-    int countEmailsStartingWithEmailPrefix(@Param("emailPrefix") String emailPrefix);
+    List<Supervisor> findSupervisorWithoutSupervisedTeam();
 }

@@ -62,7 +62,7 @@ public class Team {
      * @param supervisor the supervisor of the team
      */
     public Team(Supervisor supervisor) {
-        supervisor.addTeamsSupervisionato(this);
+        supervisor.addSupervisedTeam(this);
     }
 
     /**
@@ -73,7 +73,7 @@ public class Team {
      */
     public Team(List<Employee> employees, Supervisor supervisor) {
         setEmployees(employees);
-        supervisor.addTeamsSupervisionato(this);
+        supervisor.addSupervisedTeam(this);
     }
 
     /**
@@ -85,7 +85,7 @@ public class Team {
      */
     public Team(List<Employee> employees, Supervisor supervisor, List<Task> tasks) {
         setEmployees(employees);
-        supervisor.addTeamsSupervisionato(this);
+        supervisor.addSupervisedTeam(this);
         setTasks(tasks);
     }
 

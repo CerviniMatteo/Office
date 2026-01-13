@@ -38,14 +38,12 @@ public class Task implements Serializable {
     @JoinColumn(name = "teamTask")
     private Team teamTask;
 
-    //TODO metterlo protected, cioé causa problemi nei test, verificare
-    // con Teo
-    public Task() {
+
+    protected Task() {
         this.taskState = TaskState.STARTED;
 
     }
 
-    //TODO nei costruttori usare setter e non this.
     public Task(TaskState taskState) {
         this.taskState = taskState != null ? taskState : TaskState.STARTED;
     }

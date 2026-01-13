@@ -1,20 +1,44 @@
 package com.unimib.assignment3.POJO;
 
-import com.unimib.assignment3.constants.SupervisorConstants;
-import static com.unimib.assignment3.constants.CommonConstants.*;
 import com.unimib.assignment3.enums.EmployeeRole;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a Supervisor, which is a specialized type of Employee capable of supervising other employees
+ * and managing teams. This class supports hierarchical relationships between supervisors and their subordinates.
+ *
+ * <p>
+ * The class maintains bidirectional associations with:
+ * <ul>
+ *     <li>Other Supervisors (subordinates)</li>
+ *     <li>Teams supervised by this Supervisor</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Entities are persisted using JPA annotations. Cascade rules ensure that subordinates and teams are
+ * managed appropriately when a Supervisor entity is modified.
+ * </p>
+ *
+ * @see Employee
+ * @see Team
+ */
 @Entity(name = "supervisor")
 public class Supervisor extends Employee {
 
+    /**
+     * The supervisor of this Supervisor.
+     */
     @ManyToOne
     @JoinColumn(name = "supervisor")
     private Supervisor supervisor;
 
+    /**
+     * List of subordinates reporting directly to this Supervisor.
+     */
     @OneToMany(
             mappedBy = "supervisor",
             cascade = CascadeType.ALL,
@@ -22,6 +46,9 @@ public class Supervisor extends Employee {
     )
     private List<Supervisor> subordinates = new ArrayList<>();
 
+    /**
+     * List of teams supervised by this Supervisor.
+     */
     @OneToMany(
             mappedBy = "supervisor",
             cascade = CascadeType.MERGE,
@@ -29,112 +56,220 @@ public class Supervisor extends Employee {
     )
     private List<Team> supervisedTeams = new ArrayList<>();
 
+    /**
+     * Protected no-argument constructor required by JPA.
+     */
     protected Supervisor() {
         super();
     }
 
+    /**
+     * Creates a Supervisor with default role {@link EmployeeRole#SW_ARCHITECT}.
+     *
+     * @param name    the supervisor's first name
+     * @param surname the supervisor's last name
+     */
     public Supervisor(String name, String surname) {
         super(name, surname, EmployeeRole.SW_ARCHITECT);
     }
 
+    /**
+     * Creates a Supervisor with a specified role.
+     *
+     * @param name         the supervisor's first name
+     * @param surname      the supervisor's last name
+     * @param employeeRole the role of the supervisor
+     */
     public Supervisor(String name, String surname, EmployeeRole employeeRole) {
         super(name, surname, employeeRole);
     }
 
+    /**
+     * Creates a Supervisor with full details including hierarchy and supervised teams.
+     *
+     * @param name            the supervisor's first name
+     * @param surname         the supervisor's last name
+     * @param employeeRole    the role of the supervisor
+     * @param supervisor      the supervisor of this supervisor
+     * @param subordinates    list of subordinates
+     * @param supervisedTeams list of teams supervised
+     */
+    public Supervisor(String name, String surname, EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates, List<Team> supervisedTeams) {
+        super(name, surname, employeeRole);
+        setSupervisor(supervisor);
+        setSubordinates(subordinates);
+        setSupervisedTeams(supervisedTeams);
+    }
+
+    /**
+     * Creates a Supervisor with specified salary.
+     *
+     * @param name          the supervisor's first name
+     * @param surname       the supervisor's last name
+     * @param monthlySalary the monthly salary of the supervisor
+     * @param employeeRole  the role of the supervisor
+     */
     public Supervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
         super(name, surname, monthlySalary, employeeRole);
     }
 
+    /**
+     * Creates a Supervisor with full details including salary, hierarchy, and supervised teams.
+     *
+     * @param name            the supervisor's first name
+     * @param surname         the supervisor's last name
+     * @param monthlySalary   the monthly salary of the supervisor
+     * @param employeeRole    the role of the supervisor
+     * @param supervisor      the supervisor of this supervisor
+     * @param subordinates    list of subordinates
+     * @param supervisedTeams list of teams supervised
+     */
+    public Supervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates, List<Team> supervisedTeams) {
+        super(name, surname, monthlySalary, employeeRole);
+        setSupervisor(supervisor);
+        setSubordinates(subordinates);
+        setSupervisedTeams(supervisedTeams);
+    }
+
     @Override
     public void setEmployeeRole(EmployeeRole employeeRole) {
-        checkRole(employeeRole);
         super.setEmployeeRole(employeeRole);
     }
 
     @Override
     public void setMonthlySalary(double monthlySalary) {
-        if(monthlySalary < EmployeeRole.SW_ARCHITECT.getMonthlySalary()){
-            throw new IllegalArgumentException(SALARY_MUST_BE_POSITIVE);
-        } else {
-            super.setMonthlySalary(monthlySalary);
-
-        }
+        super.setMonthlySalary(monthlySalary);
     }
 
-    protected void checkRole(EmployeeRole employeeRole) {
-        if(employeeRole.compareTo(EmployeeRole.SW_ARCHITECT) < 0) {
-            throw new IllegalArgumentException(SupervisorConstants.SUPERVISOR_AT_LEAST_SW_ARCHITECT);
-        }
-    }
-
-    public Supervisor getSupervisore() {
+    /**
+     * Returns the supervisor of this supervisor.
+     *
+     * @return the supervisor
+     */
+    public Supervisor getSupervisor() {
         return supervisor;
     }
 
-    public void setSupervisore(Supervisor supervisor) {
+    /**
+     * Sets the supervisor of this supervisor.
+     *
+     * @param supervisor the supervisor to set
+     */
+    public void setSupervisor(Supervisor supervisor) {
         this.supervisor = supervisor;
     }
 
+    /**
+     * Returns the list of subordinates.
+     *
+     * @return list of subordinates
+     */
     public List<Supervisor> getSubordinates() {
         return subordinates;
     }
 
+    /**
+     * Sets the list of subordinates, replacing existing ones.
+     *
+     * @param subordinates the new list of subordinates
+     */
     public void setSubordinates(List<Supervisor> subordinates) {
         this.subordinates = subordinates;
     }
 
-    public void setSupervisoriSupervisionati(Supervisor subordinate) {
+    /**
+     * Adds a single subordinate to the list.
+     *
+     * @param subordinate the subordinate to add
+     */
+    public void setSubordinates(Supervisor subordinate) {
         this.subordinates.add(subordinate);
     }
 
-    //TODO ho cambiato il setter di team supervisionato per gestire la relazione bidirezionale
-    // ricordati di aggiornare anche nel service e test
+    /**
+     * Returns the list of teams supervised by this supervisor.
+     *
+     * @return list of supervised teams
+     */
     public List<Team> getSupervisedTeams() {
         return supervisedTeams;
     }
 
+    /**
+     * Adds a single team to the list of supervised teams.
+     *
+     * @param team the team to add
+     */
     private void setSupervisedTeams(Team team) {
         this.supervisedTeams.add(team);
     }
 
-    private void setTeamsSupervisionato(List<Team> teams) {
-        removeAllTeamsSupervisionato();
+    /**
+     * Replaces all supervised teams with the provided list.
+     *
+     * @param teams the new list of teams
+     */
+    private void setSupervisedTeams(List<Team> teams) {
+        removeAllSupervisedTeams();
         for(Team team : teams) {
             team.setSupervisor(this);
         }
         this.supervisedTeams = teams;
     }
 
+    /**
+     * Adds a subordinate and maintains bidirectional link.
+     *
+     * @param subordinate the subordinate to add
+     */
     public void addSubordinate(Supervisor subordinate) {
         if (subordinate == null) return;
         if (!this.subordinates.contains(subordinate)) {
-            setSupervisoriSupervisionati(subordinate);
-            subordinate.setSupervisore(this); // maintain bidirectional link
+            setSubordinates(subordinate);
+            subordinate.setSupervisor(this);
         }
     }
 
+    /**
+     * Removes a subordinate and clears bidirectional link.
+     *
+     * @param subordinate the subordinate to remove
+     */
     public void removeSubordinate(Supervisor subordinate) {
         if (subordinate == null) return;
         if (this.subordinates.remove(subordinate)) {
-            subordinate.setSupervisore(null); // remove bidirectional link
+            subordinate.setSupervisor(null);
         }
     }
 
-    public void addTeamsSupervisionato(Team team) {
+    /**
+     * Adds a team to the supervised teams and maintains bidirectional link.
+     *
+     * @param team the team to add
+     */
+    public void addSupervisedTeam(Team team) {
         if(!supervisedTeams.contains(team)){
             setSupervisedTeams(team);
             team.setSupervisor(this);
         }
     }
 
-    public void removeAllTeamsSupervisionato() {
+    /**
+     * Removes all supervised teams and clears their supervisor reference.
+     */
+    public void removeAllSupervisedTeams() {
         for(Team team : supervisedTeams) {
             team.setSupervisor(null);
         }
         supervisedTeams.clear();
     }
 
-    public void removeTeamSupervisionato(Team team) {
+    /**
+     * Removes a specific team from the supervised teams.
+     *
+     * @param team the team to remove
+     */
+    public void removeSupervisedTeam(Team team) {
         if (supervisedTeams.remove(team)) {
             team.setSupervisor(null);
         }

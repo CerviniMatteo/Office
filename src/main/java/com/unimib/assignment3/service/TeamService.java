@@ -123,7 +123,7 @@ public class TeamService {
 
         // Remove the team from its supervisor
         Supervisor supervisor = team.getSupervisor();
-        supervisor.removeTeamSupervisionato(team);
+        supervisor.removeSupervisedTeam(team);
 
         // Finally, delete the team
         teamRepository.delete(team);
@@ -333,7 +333,7 @@ public class TeamService {
 
         // Remove the team from its supervisor
         Supervisor supervisor = team.getSupervisor();
-        supervisor.removeTeamSupervisionato(team);
+        supervisor.removeSupervisedTeam(team);
 
         teamRepository.deleteById(id);
     }
