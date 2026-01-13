@@ -27,8 +27,6 @@ import java.util.Optional;
 @Service
 public class TeamService {
     @Autowired
-    private TaskService taskService;
-    @Autowired
     private SupervisorService supervisorService;
     @Autowired
     private EmployeeService employeeService;
@@ -118,14 +116,14 @@ public class TeamService {
             throw new IllegalArgumentException(TeamConstants.TEAM_CANNOT_BE_NULL);
         }
         // Remove the association of the team from its employees
-        team.removeAllEmployee();
+        team.removeAllEmployees();
 
         // Remove all tasks from the team
         team.removeAllTasks();
 
         // Remove the team from its supervisor
         Supervisor supervisor = team.getSupervisor();
-        supervisor.removeTeamSupervisionato(team);
+        supervisor.removeSupervisedTeam(team);
 
         // Finally, delete the team
         teamRepository.delete(team);
@@ -181,7 +179,7 @@ public class TeamService {
         if(team == null) {
             throw new IllegalArgumentException(TeamConstants.TEAM_CANNOT_BE_NULL);
         }
-        team.removeAllEmployee();
+        team.removeAllEmployees();
     }
 
     /**
@@ -328,14 +326,14 @@ public class TeamService {
         Team team = getTeamById(id).get();
 
         // Remove the association of the team from its employees
-        team.removeAllEmployee();
+        team.removeAllEmployees();
 
         // Remove all tasks from the team
         team.removeAllTasks();
 
         // Remove the team from its supervisor
         Supervisor supervisor = team.getSupervisor();
-        supervisor.removeTeamSupervisionato(team);
+        supervisor.removeSupervisedTeam(team);
 
         teamRepository.deleteById(id);
     }
@@ -380,10 +378,6 @@ public class TeamService {
      * @throws IllegalArgumentException if the task with the given id is not found
      */
     public Team getTeamByTaskId(Long taskId) {
-        //TODO aspettare che aiva aggiunge le eccezioni in taskService.getTaskById
-        if(taskService.getTaskById(taskId).isEmpty()) {
-            throw new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND);
-        }
         return teamRepository.findByTasksTaskId(taskId);
     }
 
@@ -454,7 +448,7 @@ public class TeamService {
      * @return a list of employees in the team with a salary greater than the given value
      * @throws IllegalArgumentException if the team with the given id is not found, or if the salary is negative
      */
-    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
+    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, double salary) {
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         } else if (salary <= 0) {
@@ -471,7 +465,7 @@ public class TeamService {
      * @return a list of employees in the team with a salary less than the given value
      * @throws IllegalArgumentException if the team with the given id is not found, or if the salary is negative
      */
-    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
+    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, double salary) {
         if (getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         } else if (salary <= 0) {

@@ -13,4 +13,18 @@ public class TaskConstants {
     // Costanti per la validazione date (viste precedentemente)
     public static final String START_DATE_AFTER_END = "La data di inizio non può essere successiva alla data di fine.";
     public static final String END_DATE_BEFORE_START = "La data di fine non può essere precedente alla data di inizio.";
+
+    public static final String NULL_TASK = "Task object cannot be null";
+    public static final String NULL_TASK_ID = "Task ID cannot be null";
+    public static final String NULL_EMPLOYEE_ID = "Employee ID cannot be null";
+    public static final String NULL_DATE = "Date cannot be null";
+
+    // Aggiunte a TaskConstants.java
+    public static final String NULL_EMPLOYEE = "Employee object cannot be null";
+    public static final String NULL_TASK_STATE_PARAM = "The provided TaskState cannot be null";
+    public static final String NULL_TEAM_ID = "Team ID cannot be null";
+
+    public static final String NEGATIVE_THRESHOLD = "Employee threshold cannot be negative";
+
+
 }

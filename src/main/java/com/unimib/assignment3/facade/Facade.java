@@ -13,146 +13,351 @@ import com.unimib.assignment3.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Facade class providing a unified interface to manage Employees, Supervisors, Tasks, and Teams.
+ * <p>
+ * This class delegates calls to the underlying services:
+ * {@link EmployeeService}, {@link SupervisorService}, {@link TaskService}, and {@link TeamService}.
+ * It simplifies the interaction between controllers and services by exposing high-level methods.
+ */
 @Service
 public class Facade {
 
     @Autowired
-    EmployeeService employeeService;
+    private EmployeeService employeeService;
+
     @Autowired
-    SupervisorService supervisorService;
+    private SupervisorService supervisorService;
+
     @Autowired
-    TaskService taskService;
+    private TaskService taskService;
+
     @Autowired
     private TeamService teamService;
 
-    // <---- Employee ----
+    // <---- Employee Methods ---->
+
+    /**
+     * Creates a new employee with only name and surname.
+     *
+     * @param name    the employee's first name (must not be null)
+     * @param surname the employee's surname (must not be null)
+     * @return the newly created Employee object
+     */
     public Employee createEmployee(@NonNull String name, @NonNull String surname) {
         return employeeService.createEmployee(name, surname);
     }
 
-    public Employee createEmployee(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
-        return  employeeService.createEmployee(name, surname, employeeRole);
-    }
-
+    /**
+     * Creates a new employee with name, surname, role, and monthly salary.
+     *
+     * @param name          the employee's first name (must not be null)
+     * @param surname       the employee's surname (must not be null)
+     * @param monthlySalary the employee's monthly salary
+     * @param employeeRole  the employee's role (must not be null)
+     * @return the newly created Employee object
+     */
     public Employee createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
-        return  employeeService.createEmployee(name, surname, monthlySalary, employeeRole);
+        return employeeService.createEmployee(name, surname, monthlySalary, employeeRole);
     }
 
+    /**
+     * Saves an employee to the database.
+     *
+     * @param employee the employee to save (must not be null)
+     * @return the saved Employee object
+     */
     public Employee saveEmployee(@NonNull Employee employee) {
         return employeeService.saveEmployee(employee);
     }
 
+    /**
+     * Saves a list of employees to the database.
+     *
+     * @param employees list of employees to save (must not be null)
+     * @return list of saved Employee objects
+     */
     public List<Employee> saveAllEmployees(@NonNull List<Employee> employees) {
         return employeeService.saveAllEmployees(employees);
     }
 
+    /**
+     * Finds an employee by their ID.
+     *
+     * @param employeeId the employee's ID (must not be null)
+     * @return an Optional containing the Employee if found
+     */
     public Optional<Employee> findEmployeeById(@NonNull Long employeeId) {
         return employeeService.findEmployeeById(employeeId);
     }
 
-    public List<Employee> findAllEmployees(){
+    /**
+     * Retrieves all employees.
+     *
+     * @return list of all Employee objects
+     */
+    public List<Employee> findAllEmployees() {
         return employeeService.findAllEmployees();
     }
 
-    public void fireEmployee(@NonNull Long managerId,@NonNull Long employeeId) {
+    /**
+     * Fires/removes a single employee under a specific manager.
+     *
+     * @param managerId  the manager's ID (must not be null)
+     * @param employeeId the employee's ID (must not be null)
+     */
+    public void fireEmployee(@NonNull Long managerId, @NonNull Long employeeId) {
         employeeService.fireEmployee(managerId, employeeId);
     }
 
-    public void fireEmployees(@NonNull Long managerId,@NonNull List<Employee> employees) {
+    /**
+     * Fires/removes multiple employees under a specific manager.
+     *
+     * @param managerId the manager's ID (must not be null)
+     * @param employees list of employees to fire (must not be null)
+     */
+    public void fireEmployees(@NonNull Long managerId, @NonNull List<Employee> employees) {
         employeeService.fireEmployees(managerId, employees);
     }
 
+    /**
+     * Finds employees under a manager filtered by monthly salary.
+     *
+     * @param employeeId    the manager's employee ID (must not be null)
+     * @param monthlySalary the salary to filter
+     * @return list of employees matching the salary criteria
+     */
     public List<Employee> findEmployeesByMonthlySalary(@NonNull Long employeeId, double monthlySalary) {
         return employeeService.findEmployeesByMonthlySalary(employeeId, monthlySalary);
     }
 
+    /**
+     * Finds employees under a manager filtered by salary, ordered ascending by role.
+     *
+     * @param employeeId    the manager's employee ID (must not be null)
+     * @param monthlySalary the salary to filter
+     * @return list of employees sorted by role ascending
+     */
     public List<Employee> findEmployeesByMonthlySalaryAscByEmployeeRole(@NonNull Long employeeId, double monthlySalary) {
         return employeeService.findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(employeeId, monthlySalary);
     }
 
+    /**
+     * Finds employees under a manager filtered by salary, ordered descending by role.
+     *
+     * @param employeeId    the manager's employee ID (must not be null)
+     * @param monthlySalary the salary to filter
+     * @return list of employees sorted by role descending
+     */
     public List<Employee> findEmployeesByMonthlySalaryDescByEmployeeRole(@NonNull Long employeeId, double monthlySalary) {
         return employeeService.findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(employeeId, monthlySalary);
     }
 
+    /**
+     * Finds employees under a manager filtered by role.
+     *
+     * @param employeeId   the manager's employee ID (must not be null)
+     * @param employeeRole the role to filter (must not be null)
+     * @return list of employees matching the role
+     */
     public List<Employee> findEmployeesByEmployeeRole(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         return employeeService.findEmployeesByEmployeeRole(employeeId, employeeRole);
     }
 
+    /**
+     * Finds employees under a manager filtered by role, ordered ascending by salary.
+     *
+     * @param employeeId   the manager's employee ID (must not be null)
+     * @param employeeRole the role to filter (must not be null)
+     * @return list of employees sorted by salary ascending
+     */
     public List<Employee> findEmployeesByEmployeeRoleAscByMonthlySalary(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         return employeeService.findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(employeeId, employeeRole);
     }
 
+    /**
+     * Finds employees under a manager filtered by role, ordered descending by salary.
+     *
+     * @param employeeId   the manager's employee ID (must not be null)
+     * @param employeeRole the role to filter (must not be null)
+     * @return list of employees sorted by salary descending
+     */
     public List<Employee> findEmployeesByEmployeeRoleDescByMonthlySalary(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         return employeeService.findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(employeeId, employeeRole);
     }
 
-    public void updateMonthlySalaryById(@NonNull Long managerId,@NonNull Long employeeId,double monthlySalary){
+    /**
+     * Updates an employee's monthly salary.
+     *
+     * @param managerId     the manager's ID (must not be null)
+     * @param employeeId    the employee's ID (must not be null)
+     * @param monthlySalary the new monthly salary
+     */
+    public void updateMonthlySalaryById(@NonNull Long managerId, @NonNull Long employeeId, double monthlySalary) {
         employeeService.updateMonthlySalaryById(managerId, employeeId, monthlySalary);
     }
 
-    public void updateEmployeeRoleById(@NonNull Long managerId,@NonNull Long employeeId,@NonNull EmployeeRole employeeRole){
+    /**
+     * Updates an employee's role.
+     *
+     * @param managerId    the manager's ID (must not be null)
+     * @param employeeId   the employee's ID (must not be null)
+     * @param employeeRole the new role (must not be null)
+     */
+    public void updateEmployeeRoleById(@NonNull Long managerId, @NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
         employeeService.updateEmployeeRoleById(managerId, employeeId, employeeRole);
     }
 
-    public List<Task> findTasksByEmployeeAndTaskState(@NonNull Long employeeId,@NonNull TaskState taskState) {
+    /**
+     * Finds tasks assigned to a specific employee filtered by task state.
+     *
+     * @param employeeId the employee's ID (must not be null)
+     * @param taskState  the state of tasks to filter (must not be null)
+     * @return list of tasks assigned to the employee with the given state
+     */
+    public List<Task> findTasksByEmployeeAndTaskState(@NonNull Long employeeId, @NonNull TaskState taskState) {
         return employeeService.findTasksByEmployeeAndTaskState(employeeId, taskState);
     }
 
-    // <---- Supervisor ---->
+    // <---- Supervisor Methods ---->
+
+    /**
+     * Creates a new supervisor with only name and surname.
+     *
+     * @param name    the supervisor's first name (must not be null)
+     * @param surname the supervisor's surname (must not be null)
+     * @return the newly created Supervisor object
+     */
     public Supervisor createSupervisor(@NonNull String name, @NonNull String surname) {
         return supervisorService.createSupervisor(name, surname);
     }
 
+    /**
+     * Creates a new supervisor with name, surname, and role.
+     *
+     * @param name         the supervisor's first name (must not be null)
+     * @param surname      the supervisor's surname (must not be null)
+     * @param employeeRole the supervisor's role (must not be null)
+     * @return the newly created Supervisor object
+     */
     public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
-        return  supervisorService.createSupervisor(name, surname, employeeRole);
+        return supervisorService.createSupervisor(name, surname, employeeRole);
     }
 
+    /**
+     * Creates a new supervisor with name, surname, role, and monthly salary.
+     *
+     * @param name          the supervisor's first name (must not be null)
+     * @param surname       the supervisor's surname (must not be null)
+     * @param monthlySalary the supervisor's monthly salary
+     * @param employeeRole  the supervisor's role (must not be null)
+     * @return the newly created Supervisor object
+     */
     public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
-        return  supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole);
+        return supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole);
     }
 
+    /**
+     * Creates a new supervisor with name, surname, role, and monthly salary.
+     *
+     * @param name          the supervisor's first name (must not be null)
+     * @param surname       the supervisor's surname (must not be null)
+     * @param monthlySalary the supervisor's monthly salary
+     * @param employeeRole  the supervisor's role (must not be null)
+     * @return the newly created Supervisor object
+     */
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole, @NonNull Supervisor supervisor, List<Supervisor> subordinates, List<Team> supervisedTeams) {
+        return supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole, supervisor, subordinates, supervisedTeams);
+    }
+
+    /**
+     * Saves a supervisor to the database.
+     *
+     * @param supervisor the supervisor to save (must not be null)
+     * @return the saved Supervisor object
+     */
     public Supervisor saveSupervisor(@NonNull Supervisor supervisor) {
         return supervisorService.saveSupervisor(supervisor);
     }
 
+    /**
+     * Retrieves a supervisor by ID.
+     *
+     * @param supervisorId the supervisor's ID (must not be null)
+     * @return an Optional containing the Supervisor if found
+     */
     public Optional<Supervisor> findSupervisorById(@NonNull Long supervisorId) {
         return supervisorService.findSupervisorById(supervisorId);
     }
 
+    /**
+     * Retrieves all supervisors.
+     *
+     * @return list of all Supervisor objects
+     */
     public List<Supervisor> findAllSupervisors() {
         return supervisorService.findAllSupervisors();
     }
 
+    /**
+     * Deletes a supervisor by ID.
+     *
+     * @param supervisorId the supervisor's ID (must not be null)
+     */
     public void deleteSupervisorById(@NonNull Long supervisorId) {
         supervisorService.deleteSupervisorById(supervisorId);
     }
 
-    public void assignSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
+    /**
+     * Assigns a subordinate to a supervisor.
+     *
+     * @param supervisorId  the supervisor's ID (must not be null)
+     * @param subordinateId the subordinate's ID (must not be null)
+     */
+    public void assignSubordinate(@NonNull Long supervisorId, @NonNull Long subordinateId) {
         supervisorService.assignSubordinate(supervisorId, subordinateId);
     }
 
-    public void removeSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
+    /**
+     * Removes a subordinate from a supervisor.
+     *
+     * @param supervisorId  the supervisor's ID (must not be null)
+     * @param subordinateId the subordinate's ID (must not be null)
+     */
+    public void removeSubordinate(@NonNull Long supervisorId, @NonNull Long subordinateId) {
         supervisorService.removeSubordinate(supervisorId, subordinateId);
     }
 
+    /**
+     * Finds supervisors without a supervisor (top-level supervisors).
+     *
+     * @return list of top-level supervisors
+     */
     public List<Supervisor> findSupervisorsWithoutSupervisor() {
         return supervisorService.findSupervisorsWithoutSupervisor();
     }
 
+    /**
+     * Finds supervisors without any subordinates.
+     *
+     * @return list of supervisors with no subordinates
+     */
     public List<Supervisor> findSupervisorsWithoutSubordinates() {
         return supervisorService.findSupervisorsWithoutSubordinates();
     }
 
-    public List<Supervisor> findSupervisorsWithoutSupervisionedTeam() {
+    /**
+     * Finds supervisors without any supervised teams.
+     *
+     * @return list of supervisors who are not supervising any team
+     */
+    public List<Supervisor> findSupervisorsWithoutSupervisedTeam() {
         return supervisorService.findSupervisorsWithoutSupervisedTeam();
     }
-
-
     // <---- Task ---->
 
     public Task createTask(TaskState initialState) {
@@ -196,7 +401,7 @@ public class Facade {
         return taskService.getComplexTasks(employeeThreshold);
     }
 
-    public Optional<Task> getTaskById(Long taskId) {
+    public Task getTaskById(Long taskId) {
         return taskService.getTaskById(taskId);
     }
 
@@ -241,13 +446,6 @@ public class Facade {
         return taskService.setTaskEndDate(taskId, endDate);
     }
 
-    public void setTeamTask(Task task, Team team) {
-        taskService.setTeamTask(task, team);
-    }
-
-    public Team getTeamTask(Task task) {
-        return taskService.getTeamTask(task);
-    }
 
     // <---- Team ---->
     /**
@@ -506,7 +704,7 @@ public class Facade {
      * @param salary the salary threshold
      * @return the list of employees in the given team with salary greater than the specified amount
      */
-    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
+    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, double salary) {
         return teamService.getEmployeesInTeamIdWithSalaryGreaterThan(teamId, salary);
     }
 
@@ -517,7 +715,7 @@ public class Facade {
      * @param salary the salary threshold
      * @return the list of employees in the given team with salary less than the specified amount
      */
-    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
+    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, double salary) {
         return teamService.getEmployeesInTeamIdWithSalaryLessThan(teamId, salary);
     }
     /**

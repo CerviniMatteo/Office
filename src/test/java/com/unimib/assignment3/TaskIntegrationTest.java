@@ -36,8 +36,9 @@ public class TaskIntegrationTest {
             Task saved = facade.saveTask(task);
             assertNotNull(saved.getTaskId());
 
-            Optional<Task> found = facade.getTaskById(saved.getTaskId());
-            assertTrue(found.isPresent());
+            Task found = facade.getTaskById(saved.getTaskId());
+            assertNotNull(found);
+            assertEquals(saved.getTaskId(), found.getTaskId());
         }
 
         @Test
@@ -65,7 +66,7 @@ public class TaskIntegrationTest {
             Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
             Long id = task.getTaskId();
             facade.deleteTask(id);
-            assertTrue(facade.getTaskById(id).isEmpty());
+            assertThrows(IllegalArgumentException.class, () -> facade.getTaskById(id));
         }
 
         @Test
@@ -74,12 +75,12 @@ public class TaskIntegrationTest {
             Long id = task.getTaskId();
 
             facade.changeTaskState(id, TaskState.STARTED);
-            Task statusStarted = facade.getTaskById(id).get();
+            Task statusStarted = facade.getTaskById(id);
             assertEquals(TaskState.STARTED, statusStarted.getTaskState());
             assertNotNull(statusStarted.getStartDate());
 
             facade.changeTaskState(id, TaskState.DONE);
-            Task statusDone = facade.getTaskById(id).get();
+            Task statusDone = facade.getTaskById(id);
             assertEquals(TaskState.DONE, statusDone.getTaskState());
             assertNotNull(statusDone.getEndDate());
         }
@@ -91,7 +92,7 @@ public class TaskIntegrationTest {
             Long id = task.getTaskId();
 
             assertDoesNotThrow(() -> facade.changeTaskState(id, TaskState.TO_BE_STARTED));
-            assertEquals(TaskState.TO_BE_STARTED, facade.getTaskById(id).get().getTaskState());
+            assertEquals(TaskState.TO_BE_STARTED, facade.getTaskById(id).getTaskState());
         }
 
         @Test
@@ -101,7 +102,7 @@ public class TaskIntegrationTest {
             facade.changeTaskState(t.getTaskId(), TaskState.DONE);
 
             facade.resetTask(t.getTaskId());
-            Task reset = facade.getTaskById(t.getTaskId()).get();
+            Task reset = facade.getTaskById(t.getTaskId());
 
             assertEquals(TaskState.TO_BE_STARTED, reset.getTaskState());
             assertNull(reset.getStartDate());
@@ -182,11 +183,11 @@ public class TaskIntegrationTest {
 
             facade.assignEmployeeToTask(t.getTaskId(), employee.getPersonId());
 
-            assertTrue(facade.getTaskById(t.getTaskId()).get().getAssignedEmployees().contains(employee));
+            assertTrue(facade.getTaskById(t.getTaskId()).getAssignedEmployees().contains(employee));
             assertTrue(employee.getTasks().stream().anyMatch(task -> task.getTaskId().equals(t.getTaskId())));
 
             facade.removeEmployeeToTask(t.getTaskId(), employee.getPersonId());
-            assertFalse(facade.getTaskById(t.getTaskId()).get().getAssignedEmployees().contains(employee));
+            assertFalse(facade.getTaskById(t.getTaskId()).getAssignedEmployees().contains(employee));
         }
     }
 

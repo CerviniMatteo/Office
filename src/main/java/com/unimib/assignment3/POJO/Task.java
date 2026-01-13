@@ -69,7 +69,7 @@ public class Task implements Serializable {
      * Default constructor.
      * Initializes the task state to STARTED.
      */
-    public Task() {
+    protected Task() {
         this.taskState = TaskState.STARTED;
 
     }
