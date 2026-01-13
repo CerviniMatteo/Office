@@ -33,11 +33,12 @@ class TeamIntegrationTest {
         return facade.createSupervisor("nome" ,"cognome");
     }
     /**
-     * Helper method to create and save a supervisor via the facade.*/
+     * Helper method to create and save an Employee via the facade.*/
     private Employee createEmployee() {
         return facade.createEmployee("nome", "cognome");
     }
-
+    /**
+     * Helper method to create and save an Employee with the salary and employee role via the facade.*/
     private Employee createEmployee(double monthlySalary, EmployeeRole employeeRole) {
         return facade.createEmployee("nome", "cognome", monthlySalary, employeeRole);
     }

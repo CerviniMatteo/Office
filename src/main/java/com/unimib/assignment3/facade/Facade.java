@@ -1,5 +1,12 @@
 package com.unimib.assignment3.facade;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
 import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.POJO.Task;
@@ -10,11 +17,6 @@ import com.unimib.assignment3.service.EmployeeService;
 import com.unimib.assignment3.service.SupervisorService;
 import com.unimib.assignment3.service.TaskService;
 import com.unimib.assignment3.service.TeamService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class Facade {
@@ -232,89 +234,283 @@ public class Facade {
     }
 
     // <---- Team ---->
-
+    /**
+     * Create a new team with the given supervisor.
+     * 
+     * @param supervisor the supervisor of the team
+     * @return the created team
+     */
     public Team createTeam(Supervisor supervisor) {
         return teamService.createTeam(supervisor);
     }
+
+    /**
+     * Create a new team with the given employees and supervisor.
+     * 
+     * @param employees the list of employees in the team
+     * @param supervisor the supervisor of the team
+     * @return the created team
+     */
     public Team createTeam(List<Employee> employees, Supervisor supervisor) {
         return teamService.createTeam(employees, supervisor);
     }
+
+    /**
+     * Create a new team with the given employees, supervisor and tasks.
+     * 
+     * @param employees the list of employees in the team
+     * @param supervisor the supervisor of the team
+     * @param tasks the list of tasks assigned to the team
+     * @return the created team
+     */
     public Team createTeam(List<Employee> employees, Supervisor supervisor, List<Task> tasks) {
         return teamService.createTeam(employees, supervisor, tasks);
     }
+
+    /**
+     * Save the given team.
+     * 
+     * @param team the team to be saved
+     * @return the saved team
+     */
     public Team saveTeam(Team team) {
         return teamService.saveTeam(team);
     }
+
+    /**
+     * Delete the given team.
+     * 
+     * @param team the team to be deleted
+     */
     public void deleteTeam(Team team) {
         teamService.deleteTeam(team);
     }
+
+    /**
+     * Get the list of employees in the given team.
+     * 
+     * @param team the team whose employees are to be retrieved
+     * @return the list of employees in the team
+     */
     public List<Employee> getEmployeesInTeam(Team team) {
         return teamService.getEmployeesInTeam(team);
     }
+
+    /**
+     * Add an employee to the given team.
+     * 
+     * @param team the team to which the employee is to be added
+     * @param employee the employee to be added to the team
+     */
     public void addEmployeeToTeam(Team team, Employee employee) {
         teamService.addEmployeeToTeam(team, employee);
     }
+
+    /**
+     * Remove all employees from the given team.
+     * 
+     * @param team the team from which all employees are to be removed
+     */
     public void removeAllEmployeesFromTeam(Team team) {
         teamService.removeAllEmployeesFromTeam(team);
     }
+
+    /**
+     * Remove an employee from the given team.
+     * 
+     * @param team the team from which the employee is to be removed
+     * @param employee the employee to be removed from the team
+     */
     public void removeEmployeeFromTeam(Team team, Employee employee) {
         teamService.removeEmployeeFromTeam(team, employee);
     }
+
+    /**
+     * Get the supervisor of the given team.
+     * 
+     * @param team the team whose supervisor is to be retrieved
+     * @return the supervisor of the team
+     */
     public Supervisor getTeamSupervisor(Team team) {
         return teamService.getTeamSupervisor(team);
     }
+
+    /**
+     * Set the supervisor of the given team.
+     * 
+     * @param team the team whose supervisor is to be set
+     * @param supervisor the supervisor to be set for the team
+     */
     public void setTeamSupervisor(Team team, Supervisor supervisor) {
         teamService.setTeamSupervisor(team, supervisor);
     }
+
+    /**
+     * Get the list of tasks assigned to the given team.
+     * 
+     * @param team the team whose tasks are to be retrieved
+     * @return the list of tasks assigned to the team
+     */
     public List<Task> getTeamTasks(Team team) {
         return teamService.getTeamTasks(team);
     }
+
+    /**
+     * Add a task to the given team.
+     * 
+     * @param team the team to which the task is to be added    
+     * @param task the task to be added to the team
+     */
     public void addTaskToTeam(Team team, Task task) {
         teamService.addTaskToTeam(team, task);
     }
+
+    /**
+     * Remove all tasks from the given team.
+     * 
+     * @param team the team from which all tasks are to be removed
+     */
     public void removeAllTasksFromTeam(Team team) {
         teamService.removeAllTasksFromTeam(team);
     }
+
+    /**
+     * Remove a task from the given team.
+     * 
+     * @param team the team from which the task is to be removed
+     * @param task the task to be removed from the team
+     */
     public void removeTaskFromTeam(Team team, Task task) {
         teamService.removeTaskFromTeam(team, task);
     }
 
+    /**
+     * Get a team by its ID.
+     * 
+     * @param id the ID of the team
+     * @return an Optional containing the team if found, or empty if not found
+     */
     public Optional<Team> getTeamById(Long id) {
         return teamService.getTeamById(id);
     }
+
+    /**
+     * Get all teams.
+     * 
+     * @return the list of all teams
+     */
     public List<Team> getAllTeams() {
         return teamService.getAllTeams();
     }
+
+    /**
+     * Delete a team by its ID.
+     * 
+     * @param id the ID of the team to be deleted
+     */
     public void deleteTeamById(Long id) {
         teamService.deleteTeamById(id);
     }
+
+    /**
+     * Get teams by supervisor's person ID.
+     * 
+     * @param supervisorId the supervisor's ID
+     * @return the list of teams supervised by the given supervisor
+     */
     public List<Team> getTeamsBySupervisorPersonId(Long supervisorId) {
         return teamService.getTeamsBySupervisorPersonId(supervisorId);
     }
+
+    /**
+     * Get team by employee's person ID.
+     * 
+     * @param employeeId the employee's ID
+     * @return the team associated with the given employee
+     */
     public Team getTeamByEmployeePersonId(Long employeeId) {
         return teamService.getTeamByEmployeesPersonId(employeeId);
     }
+
+    /**
+     * Get team by task ID.
+     * 
+     * @param taskId the task's ID
+     * @return the team associated with the given task
+     */
     public Team getTeamByTask_Id(Long taskId) {
         return teamService.getTeamByTaskId(taskId);
     }
+
+    /**
+     * Get tasks by team ID.
+     * 
+     * @param teamId the team's ID
+     * @return the list of tasks associated with the given team
+     */
     public List<Task> getTasksByTeamId(Long teamId) {
         return teamService.getTasksByTeamId(teamId);
     }
+
+    /**
+     * Get supervisor by team ID.
+     * 
+     * @param teamId the team's ID
+     * @return the supervisor associated with the given team
+     */
     public Supervisor getSupervisorByTeamId(Long teamId) {
         return teamService.getSupervisorByTeamId(teamId);
     }
+    
+    /**
+     * Get employees by team ID.
+     * 
+     * @param teamId the team's ID
+     * @return the list of employees associated with the given team
+     */
     public List<Employee> getEmployeesByTeamId(Long teamId) {
         return teamService.getEmployeesByTeamId(teamId);
     }
+
+    /**
+     * Get tasks in a team by task state.
+     * 
+     * @param teamId the team's ID
+     * @param taskState the state of the tasks to filter by
+     * @return the list of tasks in the given team with the specified state
+     */
     public List<Task> getTasksInTeamIdByTaskState(Long teamId, TaskState taskState) {
         return teamService.getTasksInTeamIdByTaskState(teamId, taskState);
     }
+
+    /**
+     * Get employees in a team with salary greater than the specified amount.
+     * 
+     * @param teamId the team's ID
+     * @param salary the salary threshold
+     * @return the list of employees in the given team with salary greater than the specified amount
+     */
     public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
         return teamService.getEmployeesInTeamIdWithSalaryGreaterThan(teamId, salary);
     }
+
+    /**
+     * Get employees in a team with salary less than the specified amount.
+     * 
+     * @param teamId the team's ID
+     * @param salary the salary threshold
+     * @return the list of employees in the given team with salary less than the specified amount
+     */
     public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
         return teamService.getEmployeesInTeamIdWithSalaryLessThan(teamId, salary);
     }
+    /**
+     * Get employees in team with specific employee role.
+     * 
+     * @param teamId the team's ID
+     * @param employeeRole the role of the employees to filter by
+     * @return the list of employees in the given team with the specified role
+     */
     public List<Employee> getEmployeesInTeamIdWithEmployeeRole(Long teamId, EmployeeRole employeeRole) {
         return teamService.getEmployeesInTeamIdWithEmployeeRole(teamId, employeeRole);
     }
