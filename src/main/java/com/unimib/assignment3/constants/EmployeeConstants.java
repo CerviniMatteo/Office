@@ -8,4 +8,5 @@ public class EmployeeConstants {
     public static final String NULL_EMPLOYEES = "The employees list cannot be null";
     public static final String NOT_A_MANAGER = "The employee requesting salaries must be a " + EmployeeRole.MANAGER;
     public static final String  EMPLOYEE_ALREADY_ASSIGNED_TASK= "Employee already assigned to this task";
+    public static final String SALARY_MUST_BE_AT_LEAST_ROLE_MINIMUM = "The salary must be at least the minimum for role: ";
 }

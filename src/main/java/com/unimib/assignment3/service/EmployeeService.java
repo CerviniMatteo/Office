@@ -1,18 +1,18 @@
 package com.unimib.assignment3.service;
 
-import com.unimib.assignment3.POJO.Employee;
-import com.unimib.assignment3.POJO.Person;
-import com.unimib.assignment3.POJO.Task;
+import com.unimib.assignment3.POJO.*;
 import com.unimib.assignment3.constants.CommonConstants;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -49,6 +49,33 @@ public class EmployeeService {
     }
 
     /**
+     * Save multiple employees to the database in bulk.
+     *
+     * @param employees list of employees
+     * @throws IllegalArgumentException if the employees list is null
+     * @return list of saved employees
+     */
+    public List<Employee> saveAllEmployees(@NonNull List<Employee> employees) {
+        assertNotNull(employees, NULL_EMPLOYEES);
+
+        List<Employee> savedEmployees = new ArrayList<>();
+
+        for (Employee employee : employees) {
+            checkUniqueEmail(employee);
+
+            try {
+                Employee saved = employeeRepository.saveAndFlush(employee);
+                savedEmployees.add(saved);
+            } catch (DataIntegrityViolationException e) {
+                throw new IllegalArgumentException(EMAIL_HAVE_TO_BE_UNIQUE);
+            }
+        }
+
+        return savedEmployees;
+    }
+
+
+    /**
      * Ensure the employee's email is unique by appending a counter if necessary.
      * @param employee the employee whose email needs to be checked
      * @throws IllegalArgumentException if the employee is null
@@ -72,25 +99,9 @@ public class EmployeeService {
      */
     public Employee createEmployee(@NonNull String name, @NonNull String surname) {
         assertNotNull(name, NULL_NAME);
-        Objects.requireNonNull(surname, NULL_SURNAME);
+        assertNotNull(surname, NULL_SURNAME);
         return new Employee(name, surname);
     }
-
-    /**
-     * Create a new employee with the given name, surname, monthly salary, and employee role.
-     *
-     * @param name          the name of the supervisor (must not be null)
-     * @param surname       the surname of the supervisor (must not be null)
-     * @param employeeRole  the role of the supervisor (must not be null)
-     * @return the created supervisor entity
-     * @throws IllegalArgumentException if the name, surname, or employee role is null
-     */
-    public Employee createEmployee(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
-        assertNotNull(name, NULL_NAME);
-        assertNotNull(surname, NULL_SURNAME);
-        return new Employee(name, surname, employeeRole);
-    }
-
 
     /**
      * Create a new employee with the given name, surname, monthly salary, and employee role.
@@ -100,26 +111,23 @@ public class EmployeeService {
      * @param monthlySalary the monthly salary of the supervisor
      * @param employeeRole  the role of the supervisor (must not be null)
      * @return the created supervisor entity
-     * @throws IllegalArgumentException if the name, surname, or employee role is null
+     * @throws IllegalArgumentException if the name, surname, or employee role is null or if the email is not unique
      */
     public Employee createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
+        checkSalary(monthlySalary, employeeRole);
         assertNotNull(name, NULL_NAME);
         assertNotNull(surname, NULL_SURNAME);
         return new Employee(name, surname, monthlySalary, employeeRole);
     }
 
-    /**
-     * Save multiple employees to the database in bulk.
-     *
-     * @param employees list of employees
-     * @throws IllegalArgumentException if the employees list is null
-     * @return list of saved employees
-     */
-    public List<Employee> saveAllEmployees(@NonNull List<Employee> employees) {
-        assertNotNull(employees, NULL_EMPLOYEES);
-        return employeeRepository.saveAll(employees);
+    protected void checkSalary(double monthlySalary, EmployeeRole employeeRole) {
+       if(monthlySalary < 0) {
+           throw new IllegalArgumentException(SALARY_MUST_BE_POSITIVE);
+       }
+       if(Double.compare(monthlySalary, employeeRole.getMonthlySalary()) < 0) {
+           throw new IllegalArgumentException(SALARY_MUST_BE_AT_LEAST_ROLE_MINIMUM + employeeRole);
+       }
     }
-
     /**
      * Find an employee by their ID.
      *

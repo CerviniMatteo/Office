@@ -10,6 +10,7 @@ public class teamConstants {
 
     public static final String EMPLOYEE_LIST_IS_EMPTY = "The list of employees in input is empty";
     public static final String TASK_LIST_IS_EMPTY = "The list of tasks in input is empty";
+    public static final String TEAM_LIST_CANNOT_BE_NULL = "The team list cannot";
     
     public static final String EMPLOYEE_NOT_FOUND = "Employee not found";
     public static final String TASK_NOT_FOUND = "Task not found";
