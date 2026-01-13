@@ -118,7 +118,7 @@ public class Supervisor extends Employee {
         }
     }
 
-    public void addSupervisedTeams(Team team) {
+    public void addSupervisedTeam(Team team) {
         if(!supervisedTeams.contains(team)){
             setSupervisedTeams(team);
             team.setSupervisor(this);
@@ -132,7 +132,7 @@ public class Supervisor extends Employee {
         supervisedTeams.clear();
     }
 
-    public void removeSupervisedTeams(Team team) {
+    public void removeSupervisedTeam(Team team) {
         if (supervisedTeams.remove(team)) {
             team.setSupervisor(null);
         }
