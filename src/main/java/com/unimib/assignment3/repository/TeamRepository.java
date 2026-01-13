@@ -13,6 +13,7 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
+import org.springframework.lang.NonNull;
 
 /**
  * TeamRepository interface for managing Team entities.
@@ -34,7 +35,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
      * @param teamId must not be {@literal null}. The ID of the team to delete.
      */
     @Override
-    void deleteById(Long teamId);
+    void deleteById(@NonNull Long teamId);
 
     /**
      * Retrieve all teams.
@@ -42,6 +43,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
      * @return all teams
      */
     @Override
+    @NonNull
     List<Team> findAll();
 
     /**
