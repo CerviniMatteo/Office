@@ -137,7 +137,7 @@ public class SupervisorService extends EmployeeService {
         supervisor.addSubordinate(subordinate);
 
         // Check for loops in the hierarchy
-        if (subordinate.getSupervisore() != null && supervisor.getSupervisore() != null) {
+        if (subordinate.getSupervisor() != null && supervisor.getSupervisor() != null) {
             if (createsSupervisorsLoop(supervisor, subordinate)) {
                 // Undo assignment
                 removeSubordinate(supervisorId, subordinateId);
@@ -218,7 +218,7 @@ public class SupervisorService extends EmployeeService {
             if (current.equals(subordinate)) {
                 return true; // loop detected
             }
-            current = current.getSupervisore();
+            current = current.getSupervisor();
         }
         return false;
     }

@@ -39,7 +39,7 @@ public class Task implements Serializable {
     private Team teamTask;
 
 
-    public Task() {
+    protected Task() {
         this.taskState = TaskState.STARTED;
 
     }

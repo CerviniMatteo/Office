@@ -29,15 +29,15 @@ public class Team {
     }
 
     public Team(Supervisor supervisor) {
-        supervisor.addTeamsSupervisionato(this);
+        supervisor.addSupervisedTeams(this);
     }
     public Team(List<Employee> employees, Supervisor supervisor) {
         setEmployees(employees);
-        supervisor.addTeamsSupervisionato(this);
+        supervisor.addSupervisedTeams(this);
     }
     public Team(List<Employee> employees, Supervisor supervisor, List<Task> tasks) {
         setEmployees(employees);
-        supervisor.addTeamsSupervisionato(this);
+        supervisor.addSupervisedTeams(this);
         setTasks(tasks);
     }
 

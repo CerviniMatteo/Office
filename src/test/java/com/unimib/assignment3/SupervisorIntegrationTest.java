@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Integration tests for Supervisore entity and related operations.
+ * Integration tests for Supervisor entity and related operations.
  * <p>
  * Tests include:
  * - Creating supervisors
@@ -132,12 +132,12 @@ class SupervisorIntegrationTest {
         Supervisor subCheck = facade.findSupervisorById(sub.getPersonId()).get();
 
         assertTrue(bossCheck.getSubordinates().contains(subCheck));
-        assertEquals(subCheck.getSupervisore(), bossCheck);
+        assertEquals(subCheck.getSupervisor(), bossCheck);
 
         facade.removeSubordinate(boss.getPersonId(), sub.getPersonId());
 
         assertFalse(bossCheck.getSubordinates().contains(subCheck));
-        assertNull(subCheck.getSupervisore());
+        assertNull(subCheck.getSupervisor());
 
         Supervisor finalBoss = boss;
         assertThrows(IllegalStateException.class,
@@ -163,9 +163,9 @@ class SupervisorIntegrationTest {
         assertThrows(IllegalStateException.class,
                 () -> facade.assignSubordinate(finalC.getPersonId(), finalA.getPersonId()));
 
-        assertEquals(b, c.getSupervisore());
-        assertEquals(a, b.getSupervisore());
-        assertNotEquals(a, c.getSupervisore());
+        assertEquals(b, c.getSupervisor());
+        assertEquals(a, b.getSupervisor());
+        assertNotEquals(a, c.getSupervisor());
     }
 
     @Test

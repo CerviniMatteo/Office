@@ -80,7 +80,7 @@ public class TeamService {
 
         // Remove the team from its supervisor
         Supervisor supervisor = team.getSupervisor();
-        supervisor.removeTeamSupervisionato(team);
+        supervisor.removeSupervisedTeams(team);
 
         // Finally, delete the team
         teamRepository.delete(team);
@@ -199,7 +199,7 @@ public class TeamService {
 
         // Remove the team from its supervisor
         Supervisor supervisor = team.getSupervisor();
-        supervisor.removeTeamSupervisionato(team);
+        supervisor.removeSupervisedTeams(team);
 
         teamRepository.deleteById(id);
     }

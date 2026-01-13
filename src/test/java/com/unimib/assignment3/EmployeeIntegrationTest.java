@@ -371,16 +371,16 @@ class EmployeeIntegrationTest {
      */
     @Transactional
     @Test
-    void testFindTaskByDipendenteAndState() {
+    void testFindTaskByEmployeeAndState() {
         Employee e = createEmployee(EmployeeRole.JUNIOR);
         e = facade.saveEmployee(e);
 
-        Task t1 = facade.saveTask(new Task());
-        Task t2 = facade.saveTask(new Task());
-        Task t3 = facade.saveTask(new Task());
-        t3.setTaskState(TaskState.TO_BE_STARTED); // started
-        Task t4 = facade.saveTask(new Task());
-        t4.setTaskState(TaskState.TO_BE_STARTED);
+        Task t1 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+        Task t2 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+        Task t3 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+        t3.setTaskState(TaskState.STARTED); // started
+        Task t4 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+        t4.setTaskState(TaskState.STARTED);
 
         // Assign tasks to employee
         facade.assignEmployeeToTask(t1.getTaskId(), e.getPersonId());

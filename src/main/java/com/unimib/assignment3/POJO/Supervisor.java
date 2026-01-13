@@ -67,11 +67,11 @@ public class Supervisor extends Employee {
         }
     }
 
-    public Supervisor getSupervisore() {
+    public Supervisor getSupervisor() {
         return supervisor;
     }
 
-    public void setSupervisore(Supervisor supervisor) {
+    public void setSupervisor(Supervisor supervisor) {
         this.supervisor = supervisor;
     }
 
@@ -83,12 +83,10 @@ public class Supervisor extends Employee {
         this.subordinates = subordinates;
     }
 
-    public void setSupervisoriSupervisionati(Supervisor subordinate) {
+    public void setSubordinates(Supervisor subordinate) {
         this.subordinates.add(subordinate);
     }
 
-    //TODO ho cambiato il setter di team supervisionato per gestire la relazione bidirezionale
-    // ricordati di aggiornare anche nel service e test
     public List<Team> getSupervisedTeams() {
         return supervisedTeams;
     }
@@ -97,8 +95,8 @@ public class Supervisor extends Employee {
         this.supervisedTeams.add(team);
     }
 
-    private void setTeamsSupervisionato(List<Team> teams) {
-        removeAllTeamsSupervisionato();
+    private void setSupervisedTeams(List<Team> teams) {
+        removeAllSupervisedTeams();
         for(Team team : teams) {
             team.setSupervisor(this);
         }
@@ -108,33 +106,33 @@ public class Supervisor extends Employee {
     public void addSubordinate(Supervisor subordinate) {
         if (subordinate == null) return;
         if (!this.subordinates.contains(subordinate)) {
-            setSupervisoriSupervisionati(subordinate);
-            subordinate.setSupervisore(this); // maintain bidirectional link
+            setSubordinates(subordinate);
+            subordinate.setSupervisor(this); // maintain bidirectional link
         }
     }
 
     public void removeSubordinate(Supervisor subordinate) {
         if (subordinate == null) return;
         if (this.subordinates.remove(subordinate)) {
-            subordinate.setSupervisore(null); // remove bidirectional link
+            subordinate.setSupervisor(null); // remove bidirectional link
         }
     }
 
-    public void addTeamsSupervisionato(Team team) {
+    public void addSupervisedTeams(Team team) {
         if(!supervisedTeams.contains(team)){
             setSupervisedTeams(team);
             team.setSupervisor(this);
         }
     }
 
-    public void removeAllTeamsSupervisionato() {
+    public void removeAllSupervisedTeams() {
         for(Team team : supervisedTeams) {
             team.setSupervisor(null);
         }
         supervisedTeams.clear();
     }
 
-    public void removeTeamSupervisionato(Team team) {
+    public void removeSupervisedTeams(Team team) {
         if (supervisedTeams.remove(team)) {
             team.setSupervisor(null);
         }
