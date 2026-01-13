@@ -445,7 +445,7 @@ class TeamIntegrationTest {
         System.out.println("----------Get employees with salary greater than 1900.0 test----------");
         List<Employee> employeesWithSalaryGreaterThan = facade.getEmployeesInTeamIdWithSalaryGreaterThan(teamId, 2900.0);
         for(Employee employee : employeesWithSalaryGreaterThan) {
-            assertTrue(Double.compare(employee.getMonthlySalary(),1900)>0);
+            assertTrue(Double.compare(employee.getMonthlySalary(),2900)>0);
         }
         System.out.println(employeesWithSalaryGreaterThan);
 
@@ -453,7 +453,7 @@ class TeamIntegrationTest {
         System.out.println("----------Get employees with salary less than 3000.0 test----------");
         List<Employee> employeesWithSalaryLessThan = facade.getEmployeesInTeamIdWithSalaryLessThan(teamId, 3100.0);
         for(Employee employee : employeesWithSalaryLessThan) {
-            assertTrue(Double.compare(employee.getMonthlySalary(),3000)<0);
+            assertTrue(Double.compare(employee.getMonthlySalary(),3100)<0);
         }
         System.out.println(employeesWithSalaryLessThan);
 
