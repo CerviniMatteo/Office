@@ -79,10 +79,10 @@ public class TaskService {
         Optional<Employee> dipOpt = employeeRepository.findById(employeeId);
 
         if (taskOpt.isEmpty()) {
-            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+            throw new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND);
         }
         if (dipOpt.isEmpty()) {
-            throw new IllegalArgumentException(teamConstants.EMPLOYEE_NOT_FOUND);
+            throw new IllegalArgumentException(TeamConstants.EMPLOYEE_NOT_FOUND);
         }
 
         Task task = taskOpt.get();
@@ -118,10 +118,10 @@ public class TaskService {
         Optional<Employee> dipOpt = employeeRepository.findById(employeeId);
 
         if (taskOpt.isEmpty()) {
-            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+            throw new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND);
         }
         if (dipOpt.isEmpty()) {
-            throw new IllegalArgumentException(teamConstants.EMPLOYEE_NOT_FOUND);
+            throw new IllegalArgumentException(TeamConstants.EMPLOYEE_NOT_FOUND);
         }
 
         Task task = taskOpt.get();
@@ -143,7 +143,7 @@ public class TaskService {
     @Transactional
     public Task changeTaskState(Long taskId, TaskState newState) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND));
 
         TaskState currentState = task.getTaskState();
 
@@ -181,7 +181,7 @@ public class TaskService {
     @Transactional
     public void resetTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND));
 
         task.setTaskState(TaskState.TO_BE_STARTED);
 
@@ -199,7 +199,7 @@ public class TaskService {
     @Transactional
     public void setTeamTask(Task task, Team team) {
         if (task == null) {
-            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+            throw new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND);
         }
         task.setTeamTask(team);
     }
@@ -213,7 +213,7 @@ public class TaskService {
      */
     public Team getTeamTask(Task task) {
         if (task == null) {
-            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+            throw new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND);
         }
         return task.getTeamTask();
     }
@@ -379,7 +379,7 @@ public class TaskService {
     @Transactional
     public Task setTaskStartDate(Long taskId, LocalDate startDate) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND));
 
         task.setStartDate(startDate);
         return task;
@@ -396,7 +396,7 @@ public class TaskService {
     @Transactional
     public Task setTaskEndDate(Long taskId, LocalDate endDate) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND));
 
         task.setEndDate(endDate);
         return task;
