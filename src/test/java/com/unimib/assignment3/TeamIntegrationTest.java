@@ -7,6 +7,7 @@ import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.enums.EmployeeRole;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -397,8 +398,8 @@ class TeamIntegrationTest {
         // Test error messages
         System.out.println("----------Get team error test----------");
         assertFalse(facade.getTeamById(null).isPresent());
-        assertThrows(IllegalArgumentException.class, () -> facade.getTeamsBySupervisorPersonId(0L));
-        assertThrows(IllegalArgumentException.class, () -> facade.getTeamByEmployeePersonId(0L));
+        assertThrows(EntityNotFoundException.class, () -> facade.getTeamsBySupervisorPersonId(0L));
+        assertThrows(EntityNotFoundException.class, () -> facade.getTeamByEmployeePersonId(0L));
         System.out.println("----------Get team error test end successfully----------");
 
         System.out.println("----------End get team test----------");

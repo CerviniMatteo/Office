@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import static com.unimib.assignment3.constants.CommonConstants.*;
 import static com.unimib.assignment3.constants.SupervisorConstants.*;
-import static com.unimib.assignment3.constants.teamConstants.*;
+import static com.unimib.assignment3.constants.TeamConstants.*;
 
 /**
  * Service class for managing {@link Supervisor} entities.
@@ -239,7 +239,7 @@ public class SupervisorService extends EmployeeService {
     private Supervisor getSupervisorOrThrow(Long supervisorId) {
         assertNotNull(supervisorId, NULL_SUPERVISOR_ID);
         return supervisorRepository.findById(supervisorId)
-                .orElseThrow(() -> new EntityNotFoundException(NULL_SUPERVISOR));
+                .orElseThrow(() -> new EntityNotFoundException(SUPERVISOR_NOT_FOUND));
     }
 
     /**

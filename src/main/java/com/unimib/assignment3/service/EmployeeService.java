@@ -6,7 +6,6 @@ import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.lang.NonNull;
@@ -366,6 +365,6 @@ public class EmployeeService {
     private Employee getEmployeeOrThrow(Long employeeId) {
         assertNotNull(employeeId, NULL_EMPLOYEE_ID);
         return employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException(NULL_EMPLOYEE));
+                .orElseThrow(() -> new EntityNotFoundException(EMPLOYEE_NOT_FOUND));
     }
 }
