@@ -117,7 +117,7 @@ public class Team {
      * @param employees the employees to set
      */
     private void setEmployees(List<Employee> employees) {
-        removeAllEmployee();
+        removeAllEmployees();
         for(Employee employee : employees) {
             employee.setEmployeeTeam(this);
         }
@@ -152,7 +152,7 @@ public class Team {
      * Removes all employees from the team.
      * Removes the relationship bidirectionally between employees and teams and clears the list.
      */
-    public void removeAllEmployee() {
+    public void removeAllEmployees() {
         for(Employee employee : employees) {
             employee.setEmployeeTeam(null);
         }
@@ -223,7 +223,7 @@ public class Team {
      *
      * @param task the task to add
      */
-    private void setTasks(Task task) {
+    private void setTask(Task task) {
         this.tasks.add(task);
     }
 
@@ -236,7 +236,7 @@ public class Team {
      */
     public void addTask(Task task) {
         if(!tasks.contains(task)){
-            setTasks(task);
+            setTask(task);
             task.setTeamTask(this);
         }
     }

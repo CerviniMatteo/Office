@@ -506,7 +506,7 @@ public class Facade {
      * @param salary the salary threshold
      * @return the list of employees in the given team with salary greater than the specified amount
      */
-    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
+    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, double salary) {
         return teamService.getEmployeesInTeamIdWithSalaryGreaterThan(teamId, salary);
     }
 
@@ -517,7 +517,7 @@ public class Facade {
      * @param salary the salary threshold
      * @return the list of employees in the given team with salary less than the specified amount
      */
-    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
+    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, double salary) {
         return teamService.getEmployeesInTeamIdWithSalaryLessThan(teamId, salary);
     }
     /**
