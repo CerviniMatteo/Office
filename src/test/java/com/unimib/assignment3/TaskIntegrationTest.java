@@ -32,7 +32,7 @@ public class TaskIntegrationTest {
 
         @Test
         void testCreateAndSaveTask() {
-            Task task = new Task();
+            Task task = facade.createTask(TaskState.TO_BE_STARTED);
             Task saved = facade.saveTask(task);
             assertNotNull(saved.getTaskId());
 
@@ -41,20 +41,19 @@ public class TaskIntegrationTest {
         }
 
         @Test
-        @DisplayName("Verifica creazione con stati iniziali differenti e impostazione date")
+        @DisplayName("Verify task creation with different initial states and date setting")
         void testCreateTaskWithInitialState() {
-            // Caso INIZIATO: il Service deve impostare la startDate
             Task tStarted = facade.saveTask(facade.createTask(TaskState.STARTED));
             assertNotNull(tStarted.getStartDate());
             assertNull(tStarted.getEndDate());
 
-            // Caso FINITO: il Service deve impostare sia startDate che endDate
+
             Task tDone = facade.saveTask(facade.createTask(TaskState.DONE));
             assertNotNull(tDone.getStartDate());
             assertNotNull(tDone.getEndDate());
         }
         @Test
-        @DisplayName("Verifica che createTask(null) imposti lo stato di default")
+        @DisplayName("Verify that createTask(null) sets the default state")
         void testCreateTaskNullState() {
             Task t = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             assertEquals(TaskState.TO_BE_STARTED, t.getTaskState());
@@ -74,13 +73,11 @@ public class TaskIntegrationTest {
             Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             Long id = task.getTaskId();
 
-            // Test transizione DAINIZIARE -> INIZIATO
             facade.changeTaskState(id, TaskState.STARTED);
             Task statusStarted = facade.getTaskById(id).get();
             assertEquals(TaskState.STARTED, statusStarted.getTaskState());
             assertNotNull(statusStarted.getStartDate());
 
-            // Test transizione INIZIATO -> FINITO
             facade.changeTaskState(id, TaskState.DONE);
             Task statusDone = facade.getTaskById(id).get();
             assertEquals(TaskState.DONE, statusDone.getTaskState());
@@ -88,7 +85,7 @@ public class TaskIntegrationTest {
         }
 
         @Test
-        @DisplayName("Il cambio verso lo stato attuale non deve produrre errori (Idempotenza)")
+        @DisplayName("Changing to the current state should not produce errors (Idempotency)")
         void testIdempotentStateChange() {
             Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             Long id = task.getTaskId();
@@ -98,12 +95,12 @@ public class TaskIntegrationTest {
         }
 
         @Test
-        @DisplayName("Verifica il reset del task allo stato iniziale e pulizia date")
+        @DisplayName("Verify task reset to initial state and date clearing")
         void testResetTask() {
             Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
             facade.changeTaskState(t.getTaskId(), TaskState.DONE);
 
-            facade.resetTask(t.getTaskId()); // Copre resetTask
+            facade.resetTask(t.getTaskId());
             Task reset = facade.getTaskById(t.getTaskId()).get();
 
             assertEquals(TaskState.TO_BE_STARTED, reset.getTaskState());
@@ -114,18 +111,18 @@ public class TaskIntegrationTest {
         @Test
         void testStateChangeException() {
             Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-            // Salto vietato: DAINIZIARE -> FINITO
+
             assertThrows(IllegalStateException.class, () -> facade.changeTaskState(task.getTaskId(), TaskState.DONE));
 
             facade.changeTaskState(task.getTaskId(), TaskState.STARTED);
             facade.changeTaskState(task.getTaskId(), TaskState.DONE);
-            // Modifica vietata se FINITO
+
             assertThrows(IllegalStateException.class, () -> facade.changeTaskState(task.getTaskId(), TaskState.TO_BE_STARTED));
         }
     }
 
     @Nested
-    @DisplayName("Gestione Assegnazioni e Relazioni")
+    @DisplayName("Assignments and Relationships Management")
     class TaskAssignmentTests {
 
         @Test
@@ -153,9 +150,9 @@ public class TaskIntegrationTest {
         }
 
         @Test
-        @DisplayName("Non deve essere possibile assegnare dipendenti a task già FINITI")
+        @DisplayName("Should not be possible to assign employees to already COMPLETED tasks")
         void testAssignmentForbiddenInFinalState() {
-            Task t = facade.saveTask(facade.createTask(TaskState.DONE)); // Task già finito alla creazione
+            Task t = facade.saveTask(facade.createTask(TaskState.DONE));
             Employee employee = facade.createEmployee("Test", "Test");
             employee = facade.saveEmployee(employee);
 
@@ -164,7 +161,7 @@ public class TaskIntegrationTest {
         }
 
         @Test
-        @DisplayName("Eccezione se si assegna un dipendente a un task inesistente")
+        @DisplayName("Throws exception when assigning an employee to a non-existent task")
         void testAssignmentToNonExistentTask() {
             Employee employee = facade.createEmployee("Invisibile", "User");
             employee = facade.saveEmployee(employee);
@@ -174,10 +171,10 @@ public class TaskIntegrationTest {
     }
 
     @Nested
-    @DisplayName("Copertura bidirezionale")
+    @DisplayName("Bidirectional Mapping Coverage")
     class TaskBidirectionalTests {
         @Test
-        @DisplayName("Verifica consistenza bidirezionale tra Task e Dipendente")
+        @DisplayName("Verify bidirectional consistency between Task and Employee")
         void testBidirectionalConsistency() {
             Employee employee = facade.createEmployee("Mario", "Rossi");
             employee = facade.saveEmployee(employee);
@@ -185,10 +182,7 @@ public class TaskIntegrationTest {
 
             facade.assignEmployeeToTask(t.getTaskId(), employee.getPersonId());
 
-            // Verifica lato Task
             assertTrue(facade.getTaskById(t.getTaskId()).get().getAssignedEmployees().contains(employee));
-            // Verifica lato Dipendente (molto importante per JPA)
-            // Nota: potrebbe servire un refresh o caricamento dal repository del dipendente
             assertTrue(employee.getTasks().stream().anyMatch(task -> task.getTaskId().equals(t.getTaskId())));
 
             facade.removeEmployeeToTask(t.getTaskId(), employee.getPersonId());
@@ -197,7 +191,7 @@ public class TaskIntegrationTest {
     }
 
     @Nested
-    @DisplayName("Query, Filtri e Statistiche")
+    @DisplayName("Queries, Filters, and Statistics")
     class TaskQueryTests {
 
         @Test
@@ -245,18 +239,17 @@ public class TaskIntegrationTest {
     }
 
     @Nested
-    @DisplayName("Estensione Query Avanzate")
+    @DisplayName("Advanced Query Extensions")
     class TaskAdvancedQueryTests {
 
         @Test
-        @DisplayName("Test query per stato con almeno un dipendente")
+        @DisplayName("Test query for state with at least one employee")
         void testFindTasksByStateWithEmployees() {
             Task t1 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             Employee employee1 = facade.createEmployee("Test", "User");
             employee1 = facade.saveEmployee(employee1);
             facade.assignEmployeeToTask(t1.getTaskId(), employee1.getPersonId());
 
-            // Task nello stesso stato ma senza dipendenti
             facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
 
             List<Task> result = facade.findTasksByStateWithEmployee(TaskState.TO_BE_STARTED);
@@ -265,7 +258,7 @@ public class TaskIntegrationTest {
         }
 
         @Test
-        @DisplayName("Test conteggio dipendenti per specifico Task ID")
+        @DisplayName("Test employee count for a specific Task ID")
         void testCountEmployeesByTaskId() {
             Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
             Employee employee1 = facade.createEmployee("D1", "C1");
@@ -281,7 +274,7 @@ public class TaskIntegrationTest {
         }
 
         @Test
-        @DisplayName("Test ricerca per stato e numero esatto di dipendenti")
+        @DisplayName("Test search by state and exact number of employees")
         void testFindTasksByStateAndEmployeesCount() {
             Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
             Employee employee = facade.createEmployee("Solo", "User");
@@ -294,40 +287,38 @@ public class TaskIntegrationTest {
         }
 
         @Test
-        @DisplayName("Test ricerca Task per Team ID")
+        @DisplayName("Test task search by Team ID")
         void testFindTasksByTeamId() {
-            // Creazione Team e Task
-            Supervisor s = facade.createSupervisor("Boss", "Generale");
-            s = facade.saveSupervisor(s);
-            Team team = new Team(s);
+            Supervisor s = facade.saveSupervisor(facade.createSupervisor("Boss", "Generale"));
+
+            Team team = facade.saveTeam(facade.createTeam(s));
             Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
+            facade.addTaskToTeam(team, t1);
 
-            // Colleghiamo il task al team (Verifica i metodi in Team.java)
-            team.addTask(t1);
-            Team savedTeam = facade.saveTeam(team);
-
-            List<Task> tasksDelTeam = facade.findTasksByTeamId(savedTeam.getTeamId());
+            List<Task> tasksDelTeam = facade.findTasksByTeamId(team.getTeamId());
             assertFalse(tasksDelTeam.isEmpty());
             assertEquals(t1.getTaskId(), tasksDelTeam.getFirst().getTaskId());
         }
     }
 
     @Nested
-    @DisplayName("Validazioni Logica Interna (POJO)")
+    @DisplayName("Internal Logic Validations (POJO)")
     class TaskPojoTests {
         @Test
-        @DisplayName("Verifica che il POJO impedisca date incoerenti")
+        @DisplayName("Verify that POJO prevents inconsistent dates")
         void testInconsistentDateValidation() {
-            Task t = new Task();
-            t.setEndDate(LocalDate.now());
+            Task t = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            facade.setTaskEndDate(t.getTaskId(), LocalDate.now());
 
-            // Provare a mettere start date dopo end date deve lanciare eccezione
-            assertThrows(IllegalArgumentException.class, () -> t.setStartDate(LocalDate.now().plusDays(1)));
 
-            Task t2 = new Task();
-            t2.setStartDate(LocalDate.now());
-            // Provare a mettere end date prima di start date deve lanciare eccezione
-            assertThrows(IllegalArgumentException.class, () -> t2.setEndDate(LocalDate.now().minusDays(1)));
+            assertThrows(IllegalArgumentException.class, () ->
+                    facade.setTaskStartDate(t.getTaskId(), LocalDate.now().plusDays(1))
+            );
+
+            facade.setTaskStartDate(t.getTaskId(), LocalDate.now());
+            assertThrows(IllegalArgumentException.class, () ->
+                    facade.setTaskEndDate(t.getTaskId(), LocalDate.now().minusDays(1))
+            );
         }
     }
 

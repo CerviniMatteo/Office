@@ -1,12 +1,5 @@
 package com.unimib.assignment3.facade;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
-
 import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.POJO.Task;
@@ -17,6 +10,13 @@ import com.unimib.assignment3.service.EmployeeService;
 import com.unimib.assignment3.service.SupervisorService;
 import com.unimib.assignment3.service.TaskService;
 import com.unimib.assignment3.service.TeamService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class Facade {
@@ -233,10 +233,26 @@ public class Facade {
         return taskService.getTasksByTeam(idTeam);
     }
 
+    public Task setTaskStartDate(Long taskId, LocalDate startDate) {
+        return taskService.setTaskStartDate(taskId, startDate);
+    }
+
+    public Task setTaskEndDate(Long taskId, LocalDate endDate) {
+        return taskService.setTaskEndDate(taskId, endDate);
+    }
+
+    public void setTeamTask(Task task, Team team) {
+        taskService.setTeamTask(task, team);
+    }
+
+    public Team getTeamTask(Task task) {
+        return taskService.getTeamTask(task);
+    }
+
     // <---- Team ---->
     /**
      * Create a new team with the given supervisor.
-     * 
+     *
      * @param supervisor the supervisor of the team
      * @return the created team
      */
@@ -246,7 +262,7 @@ public class Facade {
 
     /**
      * Create a new team with the given employees and supervisor.
-     * 
+     *
      * @param employees the list of employees in the team
      * @param supervisor the supervisor of the team
      * @return the created team
@@ -257,7 +273,7 @@ public class Facade {
 
     /**
      * Create a new team with the given employees, supervisor and tasks.
-     * 
+     *
      * @param employees the list of employees in the team
      * @param supervisor the supervisor of the team
      * @param tasks the list of tasks assigned to the team
@@ -269,7 +285,7 @@ public class Facade {
 
     /**
      * Save the given team.
-     * 
+     *
      * @param team the team to be saved
      * @return the saved team
      */
@@ -279,7 +295,7 @@ public class Facade {
 
     /**
      * Delete the given team.
-     * 
+     *
      * @param team the team to be deleted
      */
     public void deleteTeam(Team team) {
@@ -288,7 +304,7 @@ public class Facade {
 
     /**
      * Get the list of employees in the given team.
-     * 
+     *
      * @param team the team whose employees are to be retrieved
      * @return the list of employees in the team
      */
@@ -298,7 +314,7 @@ public class Facade {
 
     /**
      * Add an employee to the given team.
-     * 
+     *
      * @param team the team to which the employee is to be added
      * @param employee the employee to be added to the team
      */
@@ -308,7 +324,7 @@ public class Facade {
 
     /**
      * Remove all employees from the given team.
-     * 
+     *
      * @param team the team from which all employees are to be removed
      */
     public void removeAllEmployeesFromTeam(Team team) {
@@ -317,7 +333,7 @@ public class Facade {
 
     /**
      * Remove an employee from the given team.
-     * 
+     *
      * @param team the team from which the employee is to be removed
      * @param employee the employee to be removed from the team
      */
@@ -327,7 +343,7 @@ public class Facade {
 
     /**
      * Get the supervisor of the given team.
-     * 
+     *
      * @param team the team whose supervisor is to be retrieved
      * @return the supervisor of the team
      */
@@ -337,7 +353,7 @@ public class Facade {
 
     /**
      * Set the supervisor of the given team.
-     * 
+     *
      * @param team the team whose supervisor is to be set
      * @param supervisor the supervisor to be set for the team
      */
@@ -347,7 +363,7 @@ public class Facade {
 
     /**
      * Get the list of tasks assigned to the given team.
-     * 
+     *
      * @param team the team whose tasks are to be retrieved
      * @return the list of tasks assigned to the team
      */
@@ -357,8 +373,8 @@ public class Facade {
 
     /**
      * Add a task to the given team.
-     * 
-     * @param team the team to which the task is to be added    
+     *
+     * @param team the team to which the task is to be added
      * @param task the task to be added to the team
      */
     public void addTaskToTeam(Team team, Task task) {
@@ -367,7 +383,7 @@ public class Facade {
 
     /**
      * Remove all tasks from the given team.
-     * 
+     *
      * @param team the team from which all tasks are to be removed
      */
     public void removeAllTasksFromTeam(Team team) {
@@ -376,7 +392,7 @@ public class Facade {
 
     /**
      * Remove a task from the given team.
-     * 
+     *
      * @param team the team from which the task is to be removed
      * @param task the task to be removed from the team
      */
@@ -386,7 +402,7 @@ public class Facade {
 
     /**
      * Get a team by its ID.
-     * 
+     *
      * @param id the ID of the team
      * @return an Optional containing the team if found, or empty if not found
      */
@@ -396,7 +412,7 @@ public class Facade {
 
     /**
      * Get all teams.
-     * 
+     *
      * @return the list of all teams
      */
     public List<Team> getAllTeams() {
@@ -405,7 +421,7 @@ public class Facade {
 
     /**
      * Delete a team by its ID.
-     * 
+     *
      * @param id the ID of the team to be deleted
      */
     public void deleteTeamById(Long id) {
@@ -414,7 +430,7 @@ public class Facade {
 
     /**
      * Get teams by supervisor's person ID.
-     * 
+     *
      * @param supervisorId the supervisor's ID
      * @return the list of teams supervised by the given supervisor
      */
@@ -424,7 +440,7 @@ public class Facade {
 
     /**
      * Get team by employee's person ID.
-     * 
+     *
      * @param employeeId the employee's ID
      * @return the team associated with the given employee
      */
@@ -434,7 +450,7 @@ public class Facade {
 
     /**
      * Get team by task ID.
-     * 
+     *
      * @param taskId the task's ID
      * @return the team associated with the given task
      */
@@ -444,7 +460,7 @@ public class Facade {
 
     /**
      * Get tasks by team ID.
-     * 
+     *
      * @param teamId the team's ID
      * @return the list of tasks associated with the given team
      */
@@ -454,17 +470,17 @@ public class Facade {
 
     /**
      * Get supervisor by team ID.
-     * 
+     *
      * @param teamId the team's ID
      * @return the supervisor associated with the given team
      */
     public Supervisor getSupervisorByTeamId(Long teamId) {
         return teamService.getSupervisorByTeamId(teamId);
     }
-    
+
     /**
      * Get employees by team ID.
-     * 
+     *
      * @param teamId the team's ID
      * @return the list of employees associated with the given team
      */
@@ -474,7 +490,7 @@ public class Facade {
 
     /**
      * Get tasks in a team by task state.
-     * 
+     *
      * @param teamId the team's ID
      * @param taskState the state of the tasks to filter by
      * @return the list of tasks in the given team with the specified state
@@ -485,7 +501,7 @@ public class Facade {
 
     /**
      * Get employees in a team with salary greater than the specified amount.
-     * 
+     *
      * @param teamId the team's ID
      * @param salary the salary threshold
      * @return the list of employees in the given team with salary greater than the specified amount
@@ -496,7 +512,7 @@ public class Facade {
 
     /**
      * Get employees in a team with salary less than the specified amount.
-     * 
+     *
      * @param teamId the team's ID
      * @param salary the salary threshold
      * @return the list of employees in the given team with salary less than the specified amount
@@ -506,7 +522,7 @@ public class Facade {
     }
     /**
      * Get employees in team with specific employee role.
-     * 
+     *
      * @param teamId the team's ID
      * @param employeeRole the role of the employees to filter by
      * @return the list of employees in the given team with the specified role
