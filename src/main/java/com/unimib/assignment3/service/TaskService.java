@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
+import static com.unimib.assignment3.constants.TaskConstants.TASK_NOT_FOUND;
+import static com.unimib.assignment3.constants.TeamConstants.EMPLOYEE_NOT_FOUND;
+import static com.unimib.assignment3.constants.TeamConstants.TEAM_NOT_FOUND;
 
 
 /**
@@ -27,9 +30,6 @@ public class TaskService {
 
     @Autowired
     private EmployeeService employeeService;
-
-    @Autowired
-    private TeamService teamService;
 
     /**
      * Creates a new task with an initial state and sets relevant dates.
@@ -85,7 +85,7 @@ public class TaskService {
         Task task = getTaskOrThrow(taskId);
 
         Employee employee = employeeService.findEmployeeById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.EMPLOYEE_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
 
         if (task.getTaskState() == TaskState.DONE) {
             throw new IllegalStateException(TaskConstants.CANNOT_ASSIGN_DONE_TASK);
@@ -118,7 +118,7 @@ public class TaskService {
         Task task = getTaskOrThrow(taskId);
 
         Employee employee = employeeService.findEmployeeById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.EMPLOYEE_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
         task.removeEmployee(employee);
 
 
@@ -195,7 +195,7 @@ public class TaskService {
     @Transactional
     public void setTeamTask(Task task, Team team) {
         if (task == null) {
-            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+            throw new IllegalArgumentException(TASK_NOT_FOUND);
         }
         task.setTeamTask(team);
     }
@@ -209,7 +209,7 @@ public class TaskService {
      */
     public Team getTeamTask(Task task) {
         if (task == null) {
-            throw new IllegalArgumentException(teamConstants.TASK_NOT_FOUND);
+            throw new IllegalArgumentException(TASK_NOT_FOUND);
         }
         return task.getTeamTask();
     }
@@ -239,7 +239,7 @@ public class TaskService {
         if (employee.getPersonId() == null) throw new IllegalArgumentException(EmployeeConstants.NULL_EMPLOYEE_ID);
 
         employeeService.findEmployeeById(employee.getPersonId())
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.EMPLOYEE_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
         return taskRepository.findTasksByEmployee(employee);
     }
 
@@ -309,7 +309,7 @@ public class TaskService {
         if (id == null) throw new IllegalArgumentException(TaskConstants.NULL_TASK_ID);
 
         if (!taskRepository.existsById(id)) {
-            throw new IllegalArgumentException(TaskConstants.TASK_NOT_FOUND);
+            throw new IllegalArgumentException(TASK_NOT_FOUND);
         }
         taskRepository.deleteById(id);
     }
@@ -328,7 +328,7 @@ public class TaskService {
         Task task = getTaskOrThrow(taskId);
 
         Employee employee = employeeService.findEmployeeById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.EMPLOYEE_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
 
         return task.hasEmployee(employee);
     }
@@ -381,10 +381,6 @@ public class TaskService {
      */
     public List<Task> getTasksByTeam(Long idTeam) {
         if (idTeam == null) throw new IllegalArgumentException(TaskConstants.NULL_TEAM_ID);
-
-        teamService.getTeamById(idTeam)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TEAM_NOT_FOUND));
-
         return taskRepository.findTasksByTeamId(idTeam);
     }
 
@@ -429,7 +425,7 @@ public class TaskService {
             throw new IllegalArgumentException(TaskConstants.NULL_TASK_ID);
         }
         return taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException(teamConstants.TASK_NOT_FOUND));
+                .orElseThrow(() -> new IllegalArgumentException(TASK_NOT_FOUND));
     }
 
 }

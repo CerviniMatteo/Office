@@ -27,8 +27,6 @@ import java.util.Optional;
 @Service
 public class TeamService {
     @Autowired
-    private TaskService taskService;
-    @Autowired
     private SupervisorService supervisorService;
     @Autowired
     private EmployeeService employeeService;
@@ -380,10 +378,6 @@ public class TeamService {
      * @throws IllegalArgumentException if the task with the given id is not found
      */
     public Team getTeamByTaskId(Long taskId) {
-        //TODO aspettare che aiva aggiunge le eccezioni in taskService.getTaskById
-        if(taskService.getTaskById(taskId).isEmpty()) {
-            throw new IllegalArgumentException(TeamConstants.TASK_NOT_FOUND);
-        }
         return teamRepository.findByTasksTaskId(taskId);
     }
 

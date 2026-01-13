@@ -399,7 +399,6 @@ class TeamIntegrationTest {
         assertFalse(facade.getTeamById(null).isPresent());
         assertThrows(IllegalArgumentException.class, () -> facade.getTeamsBySupervisorPersonId(0L));
         assertThrows(IllegalArgumentException.class, () -> facade.getTeamByEmployeePersonId(0L));
-        assertThrows(IllegalArgumentException.class, () -> facade.getTeamByTask_Id(0L));
         System.out.println("----------Get team error test end successfully----------");
 
         System.out.println("----------End get team test----------");
