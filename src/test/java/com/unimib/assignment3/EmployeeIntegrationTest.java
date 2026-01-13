@@ -5,6 +5,7 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -122,7 +123,7 @@ class EmployeeIntegrationTest {
         facade.fireEmployee(manager.getPersonId(), employee.getPersonId());
 
         Employee finalEmployee = employee;
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> facade.findEmployeeById(finalEmployee.getPersonId())
         );
     }
@@ -162,11 +163,11 @@ class EmployeeIntegrationTest {
         facade.fireEmployees(manager.getPersonId(), List.of(e1, e2));
 
         Employee finalE = e1;
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> facade.findEmployeeById(finalE.getPersonId())
         );
         Employee finalE1 = e2;
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> facade.findEmployeeById(finalE1.getPersonId())
         );
     }
@@ -247,7 +248,7 @@ class EmployeeIntegrationTest {
         manager = facade.saveEmployee(manager);
 
         Employee finalManager = manager;
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> facade.updateEmployeeRoleById(
                         finalManager.getPersonId(),
                         999L,

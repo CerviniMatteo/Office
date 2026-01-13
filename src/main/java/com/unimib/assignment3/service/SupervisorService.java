@@ -1,19 +1,17 @@
 package com.unimib.assignment3.service;
 
-import com.unimib.assignment3.POJO.Person;
 import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.repository.SupervisorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.unimib.assignment3.constants.CommonConstants.*;
-import static com.unimib.assignment3.constants.EmployeeConstants.NULL_EMPLOYEE;
 import static com.unimib.assignment3.constants.SupervisorConstants.*;
 
 /**
@@ -32,15 +30,11 @@ public class SupervisorService extends EmployeeService {
      * Save a single supervisor to the database and handles email uniqueness.
      *
      * @param supervisor the supervisor to save
+     * @throws IllegalArgumentException if email is not unique and if supervisor is null
      * @return the saved supervisor
      */
     public Supervisor saveSupervisor(@NonNull Supervisor supervisor) {
-        Objects.requireNonNull(supervisor, NULL_EMPLOYEE);
-
-        int emailCounter = supervisorRepository.countEmailsStartingWithEmailPrefix(supervisor.getName());
-        if(emailCounter != 0) {
-            supervisor.setEmail(Person.generateEmail(supervisor.getName(), supervisor.getSurname(), emailCounter));
-        }
+        checkUniqueEmail(supervisor);
         try {
             return supervisorRepository.saveAndFlush(supervisor);
         } catch (DataIntegrityViolationException e) {
@@ -55,11 +49,11 @@ public class SupervisorService extends EmployeeService {
      * @param name    the name of the supervisor (must not be null)
      * @param surname the surname of the supervisor (must not be null)
      * @return the created supervisor entity
-     * @throws NullPointerException if the name or surname is null
+     * @throws IllegalArgumentException if the name or surname is null
      */
     public Supervisor createSupervisor(@NonNull String name, @NonNull String surname) {
-        Objects.requireNonNull(name, NULL_NAME);
-        Objects.requireNonNull(surname, NULL_SURNAME);
+        assertNotNull(name, NULL_NAME);
+        assertNotNull(surname, NULL_SURNAME);
         return new Supervisor(name, surname);
     }
 
@@ -70,14 +64,13 @@ public class SupervisorService extends EmployeeService {
      * @param surname       the surname of the supervisor (must not be null)
      * @param employeeRole  the role of the supervisor (must not be null)
      * @return the created supervisor entity
-     * @throws NullPointerException if the name, surname, or employee role is null
+     * @throws IllegalArgumentException if the name, surname, or employee role is null
      */
     public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
-        Objects.requireNonNull(name, NULL_NAME);
-        Objects.requireNonNull(surname, NULL_SURNAME);
+        assertNotNull(name, NULL_NAME);
+        assertNotNull(surname, NULL_SURNAME);
         return new Supervisor(name, surname, employeeRole);
     }
-
 
     /**
      * Create  a new supervisor with the given name, surname, monthly salary, and employee role.
@@ -87,11 +80,11 @@ public class SupervisorService extends EmployeeService {
      * @param monthlySalary the monthly salary of the supervisor
      * @param employeeRole  the role of the supervisor (must not be null)
      * @return the created supervisor entity
-     * @throws NullPointerException if the name, surname, or employee role is null
+     * @throws IllegalArgumentException if the name, surname, or employee role is null
      */
     public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
-        Objects.requireNonNull(name, NULL_NAME);
-        Objects.requireNonNull(surname, NULL_SURNAME);
+        assertNotNull(name, NULL_NAME);
+        assertNotNull(surname, NULL_SURNAME);
         return new Supervisor(name, surname, monthlySalary, employeeRole);
     }
 
@@ -100,6 +93,7 @@ public class SupervisorService extends EmployeeService {
      *
      * @param supervisorId the ID of the supervisor
      * @return Optional containing the supervisor if found
+     * @throws IllegalArgumentException if the supervisor does not exist
      */
     public Optional<Supervisor> findSupervisorById(@NonNull Long supervisorId) {
         return Optional.of(getSupervisorOrThrow(supervisorId));
@@ -118,9 +112,10 @@ public class SupervisorService extends EmployeeService {
      * Delete a supervisor by ID.
      *
      * @param supervisorId the ID of the supervisor to delete
+     * @throws IllegalArgumentException if the supervisorId is null
      */
     public void deleteSupervisorById(@NonNull Long supervisorId) {
-        Objects.requireNonNull(supervisorId, NULL_SUPERVISOR_ID);
+        assertNotNull(supervisorId, NULL_SUPERVISOR_ID);
         supervisorRepository.deleteById(supervisorId);
     }
 
@@ -156,6 +151,7 @@ public class SupervisorService extends EmployeeService {
      *
      * @param supervisorId  the supervisor's ID
      * @param subordinateId the subordinate's ID
+     * @throws IllegalArgumentException if the supervisor or subordinate does not exist
      */
     public void removeSubordinate(@NonNull Long supervisorId,@NonNull Long subordinateId) {
         Supervisor supervisor = getSupervisorOrThrow(supervisorId);
@@ -195,6 +191,7 @@ public class SupervisorService extends EmployeeService {
         return supervisorRepository.findSupervisorWithoutSubordinates();
     }
 
+
     /**
      * Helper method to retrieve a supervisor or throw an exception if not found.
      *
@@ -203,9 +200,9 @@ public class SupervisorService extends EmployeeService {
      * @throws IllegalArgumentException if the supervisor does not exist
      */
     private Supervisor getSupervisorOrThrow(Long supervisorId) {
-        Objects.requireNonNull(supervisorId, NULL_SUPERVISOR_ID);
+        assertNotNull(supervisorId, NULL_SUPERVISOR_ID);
         return supervisorRepository.findById(supervisorId)
-                .orElseThrow(() -> new IllegalArgumentException(NULL_SUPERVISOR));
+                .orElseThrow(() -> new EntityNotFoundException(NULL_SUPERVISOR));
     }
 
     /**

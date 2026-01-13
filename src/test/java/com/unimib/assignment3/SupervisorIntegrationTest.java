@@ -3,6 +3,7 @@ package com.unimib.assignment3;
 import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.facade.Facade;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -70,7 +71,7 @@ class SupervisorIntegrationTest {
         assertEquals(s1.getName(), found.get().getName());
 
         Supervisor finalBoss = boss;
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> facade.findSupervisorById(finalBoss.getPersonId() + 1000)
         );
     }
@@ -111,7 +112,7 @@ class SupervisorIntegrationTest {
         facade.deleteSupervisorById(supervisor.getPersonId());
 
         Supervisor finalSupervisor = supervisor;
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> facade.findSupervisorById(finalSupervisor.getPersonId())
         );
     }
