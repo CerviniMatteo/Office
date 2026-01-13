@@ -196,7 +196,7 @@ public class Facade {
         return taskService.getComplexTasks(employeeThreshold);
     }
 
-    public Optional<Task> getTaskById(Long taskId) {
+    public Task getTaskById(Long taskId) {
         return taskService.getTaskById(taskId);
     }
 
@@ -241,13 +241,6 @@ public class Facade {
         return taskService.setTaskEndDate(taskId, endDate);
     }
 
-    public void setTeamTask(Task task, Team team) {
-        taskService.setTeamTask(task, team);
-    }
-
-    public Team getTeamTask(Task task) {
-        return taskService.getTeamTask(task);
-    }
 
     // <---- Team ---->
     /**
