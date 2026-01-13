@@ -412,9 +412,9 @@ class TeamIntegrationTest {
         Supervisor supervisor1 = facade.saveSupervisor(createSupervisor());
 
         // Create employees
-        Employee employee1 = facade.saveEmployee(createEmployee(2000.0, EmployeeRole.JUNIOR));
-        Employee employee2 = facade.saveEmployee(createEmployee(3000.0, EmployeeRole.JUNIOR));
-        Employee employee3 = facade.saveEmployee(createEmployee( 4000.0, EmployeeRole.MANAGER));
+        Employee employee1 = facade.saveEmployee(createEmployee(EmployeeRole.JUNIOR.getMonthlySalary() + 100.0, EmployeeRole.JUNIOR));
+        Employee employee2 = facade.saveEmployee(createEmployee(EmployeeRole.JUNIOR.getMonthlySalary() + 600.0, EmployeeRole.JUNIOR));
+        Employee employee3 = facade.saveEmployee(createEmployee( EmployeeRole.MANAGER.getMonthlySalary(), EmployeeRole.MANAGER));
         List<Employee> employees = new ArrayList<>(List.of(employee1, employee2, employee3));
 
         // Create tasks
@@ -443,7 +443,7 @@ class TeamIntegrationTest {
 
         // Get employees with the salary greater than
         System.out.println("----------Get employees with salary greater than 1900.0 test----------");
-        List<Employee> employeesWithSalaryGreaterThan = facade.getEmployeesInTeamIdWithSalaryGreaterThan(teamId, 1900.0);
+        List<Employee> employeesWithSalaryGreaterThan = facade.getEmployeesInTeamIdWithSalaryGreaterThan(teamId, 2900.0);
         for(Employee employee : employeesWithSalaryGreaterThan) {
             assertTrue(Double.compare(employee.getMonthlySalary(),1900)>0);
         }
@@ -451,7 +451,7 @@ class TeamIntegrationTest {
 
         // Get employees with the salary less than
         System.out.println("----------Get employees with salary less than 3000.0 test----------");
-        List<Employee> employeesWithSalaryLessThan = facade.getEmployeesInTeamIdWithSalaryLessThan(teamId, 3000.0);
+        List<Employee> employeesWithSalaryLessThan = facade.getEmployeesInTeamIdWithSalaryLessThan(teamId, 3100.0);
         for(Employee employee : employeesWithSalaryLessThan) {
             assertTrue(Double.compare(employee.getMonthlySalary(),3000)<0);
         }
