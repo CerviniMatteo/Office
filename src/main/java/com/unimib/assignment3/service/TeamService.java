@@ -116,7 +116,7 @@ public class TeamService {
             throw new IllegalArgumentException(TeamConstants.TEAM_CANNOT_BE_NULL);
         }
         // Remove the association of the team from its employees
-        team.removeAllEmployee();
+        team.removeAllEmployees();
 
         // Remove all tasks from the team
         team.removeAllTasks();
@@ -179,7 +179,7 @@ public class TeamService {
         if(team == null) {
             throw new IllegalArgumentException(TeamConstants.TEAM_CANNOT_BE_NULL);
         }
-        team.removeAllEmployee();
+        team.removeAllEmployees();
     }
 
     /**
@@ -326,7 +326,7 @@ public class TeamService {
         Team team = getTeamById(id).get();
 
         // Remove the association of the team from its employees
-        team.removeAllEmployee();
+        team.removeAllEmployees();
 
         // Remove all tasks from the team
         team.removeAllTasks();
@@ -448,7 +448,7 @@ public class TeamService {
      * @return a list of employees in the team with a salary greater than the given value
      * @throws IllegalArgumentException if the team with the given id is not found, or if the salary is negative
      */
-    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, Double salary) {
+    public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, double salary) {
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         } else if (salary <= 0) {
@@ -465,7 +465,7 @@ public class TeamService {
      * @return a list of employees in the team with a salary less than the given value
      * @throws IllegalArgumentException if the team with the given id is not found, or if the salary is negative
      */
-    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, Double salary) {
+    public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, double salary) {
         if (getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         } else if (salary <= 0) {
