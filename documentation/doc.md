@@ -185,6 +185,36 @@ SupervisorContants.
 
 ## 3. TaskService
 
+La classe `TaskService` gestisce il ciclo di vita delle entità Task, occupandosi della loro creazione, della progressione degli stati e delle assegnazioni dei dipendenti.
+
+### Controlli preliminari
+- Tutti i parametri critici (ID, entità, stati, date) vengono validati per garantire che non siano null prima di procedere con le operazioni di business.
+- Viene verificata la coerenza logica delle date (es. la data di inizio non può essere successiva a quella di fine).
+
+### CRUD di base
+
+- Creazione: Gestisce l'inizializzazione di un task con uno stato specifico, impostando automaticamente la data di inizio se lo stato è STARTED.
+- Salvataggio: Permette di persistere o aggiornare un task esistente tramite il repository.
+- Recupero: Offre metodi per trovare task tramite il loro ID univoco o per ottenere l'elenco completo dei task presenti nel sistema.
+- Eliminazione: Rimuove un task dal sistema previa verifica della sua esistenza tramite ID.
+
+### Logica degli Stati e Workflow
+- Il servizio implementa una macchina a stati per garantire che il flusso di lavoro sia coerente:
+- Transizioni vincolate: È possibile passare a STARTED solo partendo da TO_BE_STARTED, e a DONE solo partendo da STARTED.
+- Gestione Date: Il sistema aggiorna automaticamente startDate al passaggio in STARTED e endDate al completamento (DONE).
+- Reset: Un task può essere riportato allo stato TO_BE_STARTED, operazione che comporta la cancellazione di tutte le date precedentemente registrate.
+
+### Gestione Assegnazioni e Team
+- Assegnazione Dipendenti: Permette di associare un Employee a un task, gestendo la relazione bidirezionale e impedendo assegnazioni duplicate o su task già chiusi.
+- Rimozione Dipendenti: Gestisce la rimozione di un dipendente dal task, aggiornando correttamente i riferimenti in entrambi gli oggetti.
+- Associazione Team: Gestisce il collegamento tra un task e il Team di riferimento che deve supervisionarlo.
+
+### Query Avanzate
+- Task Complessi: Recupera i task definiti "complessi" in base a una soglia minima di dipendenti assegnati.
+- Filtri di Stato: Permette di filtrare i task per stato (DONE, STARTED, ecc.) o di contare quanti task si trovano in una determinata fase.
+- Task Non Assegnati: Identifica tutti i task che non hanno ancora alcun dipendente assegnato.
+- Filtri per Team: Permette di estrarre tutti i task associati a uno specifico identificativo di team.
+
 ## 4. TeamService
 
 # Facade
