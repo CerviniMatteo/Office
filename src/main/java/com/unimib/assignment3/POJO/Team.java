@@ -22,8 +22,6 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teamId;
 
-    // orphan removal not necessary as the deletion of a team does not imply
-    // the deletion of the associated employees
     /**
      * List of employees in the team.
      * Mapped by the 'employeeTeam' field in the Employee entity.
