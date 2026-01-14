@@ -10,7 +10,6 @@ public class TeamConstants {
 
     public static final String EMPLOYEE_LIST_CANNOT_BE_NULL = "The list of employees in input cannot be null";
     public static final String TASK_LIST_CANNOT_BE_NULL = "The list of tasks in input cannot be null";
-    public static final String TEAM_LIST_CANNOT_BE_NULL = "The list of team in input cannot be null";
     
     public static final String EMPLOYEE_NOT_FOUND = "Employee not found";
     public static final String TASK_NOT_FOUND = "Task not found";

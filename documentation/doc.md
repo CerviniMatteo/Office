@@ -7,6 +7,9 @@ Bug-busters
 | Andrea Aivaliotis | 903571    | a.aivaliotis@campus.unimib.it |
 | Le Yang Shi       | 894536    | l.shi1@campus.unimib.it       |
 
+# Link alla repo
+https://gitlab.com/gruppo10-bug-busters/2025_assignment3_gruppo10-bug-busters
+
 # Il dominio scelto
 
 È stata modellata una versione minimale di un sistema di gestione di task simile a Trello/Notion.
