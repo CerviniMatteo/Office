@@ -66,7 +66,7 @@ Breve panoramica delle entità principali e del loro ruolo nel modello:
   
 - Team
   - Attributi: una collezione di dipendenti membri, il supervisor del team
-  e una collezione di Task assegnate al Team.
+    e una collezione di Task assegnate al Team.
   - Relazioni:
     - 1..n Employee (un team ha membri; attenzione: un Employee può appartenere ad al più un Team).
     - 0..* Task assegnate al team (visibili a tutti i membri).
@@ -101,6 +101,20 @@ La repository `SupervisoreRepository` gestisce la persistenza dell’entità **S
 - Recupera i **supervisori che non hanno un supervisor** (livello più alto della gerarchia)
 - Recupera i **supervisori senza subordinati**
 - Recupera i **supervisori che non supervisionano alcun team**
+
+## 4. TeamRepository
+La repository `TeamRepository` gestisce la persistenza dell’entità **Team**.
+### Metodi personalizzati
+- Recupera i team con uno specifico **supervisore**
+- Recupera il team con uno specifico **dipendente**
+- Recupera il team con uno specifico **task**
+- Recupera tutti i task assegnati a uno specifico **team**
+- Recupera il supervisore di uno specifico **team**
+- Recupera tutti i dipendenti assegnati a uno specifico **team**
+- Recupera tutti i task in uno specifico **team** con uno specifico **stato**
+- Recupera tutti i dipendenti in uno specifico **team** con lo stipendio maggiore di una **soglia**
+- Recupera tutti i dipendenti in uno specifico **team** con lo stipendio minore di una **soglia**
+- Recupera tutti i dipendenti in uno specifico **team** con uno specifico **ruolo**
 
 # Descrizione funzionale delle classi di servizio
 Le classi service offrono metodi "complessi" che combinano più operazioni di persistenza e
@@ -174,14 +188,13 @@ Tutti i parametri in input devono essere validati per garantire che non siano nu
 a quali supervisori non è stato assegnato nessun subordinato)
 - Ricerca di tutti i supervisori non che supervisionano un team (foglie della gerarchia oppure utile per
   a quali supervisori non è stato assegnato nessun team)
-- - Due metodi helper controllano che gli ID e gli oggetti passati non siano Null tramite
+- Due metodi helper controllano che gli ID e gli oggetti passati non siano Null tramite
     Optional.requireNonNull. Forniscono inoltre il controllo per i (`SUPERVISORI`) ai quali si sta
 cercando di assegnare un subordinato che creerebbe un ciclo nella gerarchia dei supervisori.
     Se un oggetto (`SUPERVISORE`) che è in fase di assegnamento come subordinato crea un loop,
     oppure non esiste un employee con l'Id fornito, viene lanciata l'eccezione: 
 - (`IllegalArgumentException`). Vengono forniti messaggi di errore memorizzati nel file: 
 SupervisorContants.
----
 
 ## 3. TaskService
 
@@ -216,6 +229,43 @@ La classe `TaskService` gestisce il ciclo di vita delle entità Task, occupandos
 - Filtri per Team: Permette di estrarre tutti i task associati a uno specifico identificativo di team.
 
 ## 4. TeamService
+
+La classe `TeamService` gestisce le operazioni di business relative all’entità **Team**, inclusi dipendenti, supervisori e task assegnate.
+
+### Controlli preliminari
+- Tutti i parametri in input devono essere validati per garantire che non siano null.
+- Il controllo dell'esistenza di un'entità dato ID viene delegato al service apposito dell'entità.
+
+### CRUD di base
+- Creazione di un team
+- Salvataggio di un team
+- Ricerca di un team per ID
+- Recupero di tutti i team
+- Eliminazione di un team per ID
+
+### CRUD avanzato e funzionalità specifiche
+- Assegnazione di dipendenti a un team gestendo anche la relazione bidirezionale, inoltre se il dipendente 
+  appartenesse a un altro team lo si elimina dal team precedente e lo si assegna al nuovo team.
+- Rimozione di dipendenti da un team gestendo anche la relazione bidirezionale. 
+- Rimozione di tutti i dipendenti da un team gestendo anche la relazione bidirezionale.
+- Assegnazione di task a un team gestendo anche la relazione bidirezionale, inoltre se il task appartenesse a
+  un altro team lo si elimina dal team precedente e lo si assegna al nuovo team.
+- Rimozione di task da un team gestendo anche la relazione bidirezionale.
+- Rimozione di tutti i task da un team gestendo anche la relazione bidirezionale.
+- Ricerca di tutti i team che hanno una specifica persona come supervisore, controllando che il supervisore esista.
+- Ricerca del team a cui appartiene un dipendente specifico, controllando che il dipendente esista.
+- Ricerca del team a cui è assegnato un task specifico, controllando che il task esista.
+- Ricerca di tutti i task assegnati a un team specifico, controllando che il team esista.
+- Ricerca del supervisore di un team specifico, controllando che il team esista.
+- Ricerca di tutti i dipendenti assegnati a un team specifico, controllando che il team esista.
+- Ricerca di tutti i task in un team specifico con uno specifico stato, controllando che il team esista.
+- Ricerca di tutti i dipendenti in un team specifico con lo stipendio maggiore di una certa soglia, controllando che 
+  il team esista e che la soglia sia positiva.
+- Ricerca di tutti i dipendenti in un team specifico con lo stipendio minore di una certa soglia, controllando che 
+  il team esista e che la soglia sia positiva.
+- Ricerca di tutti i dipendenti in un team specifico con uno specifico ruolo, controllando che il team esista.
+- Quattro metodi helper controllano che gli ID passati non siano Null. Se l'ID fornito è null viene lanciata 
+  l'eccezione: (`IllegalArgumentException`). Vengono forniti messaggi di errore memorizzati nel file: TeamContants.
 
 # Facade
 - La classe `Facade` è un **wrapper** verso i layer di **service**, esponendo un punto di accesso
