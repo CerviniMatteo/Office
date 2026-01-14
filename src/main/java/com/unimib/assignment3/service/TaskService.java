@@ -180,37 +180,6 @@ public class TaskService {
         task.setStartDate(null);
     }
 
-
-    /**
-     * Associates a task with a team.
-     *
-     * @param task the task entity
-     * @param team the team entity
-     */
-    @Transactional
-    public void setTeamTask(Task task, Team team) {
-        if (task == null) {
-            throw new IllegalArgumentException(TASK_NOT_FOUND);
-        }
-        task.setTeamTask(team);
-    }
-
-
-    /**
-     * Retrieves the team associated with a task.
-     *
-     * @param task the task entity
-     * @return the associated team
-     */
-    public Team getTeamTask(Task task) {
-        if (task == null) {
-            throw new IllegalArgumentException(TASK_NOT_FOUND);
-        }
-        return task.getTeamTask();
-    }
-
-
-
     /**
      * Retrieves tasks filtered by their current state.
      *
