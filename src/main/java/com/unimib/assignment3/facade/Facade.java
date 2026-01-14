@@ -27,15 +27,19 @@ import java.util.Optional;
 @Service
 public class Facade {
 
+    /** Employee service for managing employee-related operations. */
     @Autowired
     private EmployeeService employeeService;
 
+    /** Supervisor service for managing supervisor-related operations. */
     @Autowired
     private SupervisorService supervisorService;
 
+    /** Task service for managing task-related operations. */
     @Autowired
     private TaskService taskService;
 
+    /** Team service for managing team-related operations. */
     @Autowired
     private TeamService teamService;
 
