@@ -1,6 +1,8 @@
 ## Nome gruppo
 Bug-busters
 ## Membri del gruppo
+
+
 | Nome              | Matricola | Email                         |
 |-------------------|-----------|-------------------------------|
 | Matteo Cervini    | 902225    | m.cervini1@campus.unimib.it   |
@@ -211,8 +213,11 @@ Tutti i parametri in input devono essere validati per garantire che non siano nu
   in caso non andasse a buon fine viene sollevata eccezione.
   Una stampa di output durante la creazione di due dipendenti è la seguente:
   ``` bash
-    Employee{id=1, name='Employee', surname='Employee', email='employee.employee@example.com'}monthlySalaray=2400.0, employeeRole=JUNIOR, tasks=[]}
-    Employee{id=2, name='Employee', surname='Employee', email='employee1.employee@example.com'}monthlySalaray=2400.0, employeeRole=JUNIOR, tasks=[]}
+    Employee{id=1, name='Employee', surname='Employee', 
+    email='employee.employee@example.com'}monthlySalaray=2400.0, employeeRole=JUNIOR, tasks=[]}
+    
+    Employee{id=2, name='Employee', surname='Employee',
+    email='employee1.employee@example.com'}monthlySalaray=2400.0, employeeRole=JUNIOR, tasks=[]}
   ``` 
   Ciò mostra che non viene usato l'id per generare l'email, ma viene aggiunto un numero progressivo
   per garantire l'unicità.
