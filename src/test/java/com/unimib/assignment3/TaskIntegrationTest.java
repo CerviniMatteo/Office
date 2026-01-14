@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -203,6 +204,87 @@ public class TaskIntegrationTest {
             employee = facade.saveEmployee(employee);
             Employee finalEmployee = employee;
             assertThrows(IllegalArgumentException.class, () -> facade.assignEmployeeToTask(999L, finalEmployee.getPersonId()));
+        }
+    }
+
+    @Nested
+    @DisplayName("Detailed tests for setAssignedEmployees")
+    class TaskSetAssignedEmployeesTests {
+
+        /**
+         * Tests the successful bulk assignment of a list of employees.
+         */
+        @Test
+        @DisplayName("Successfully assign a list of employees to a task")
+        void testSetAssignedEmployeesSuccess() {
+            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Employee e1 = facade.saveEmployee(facade.createEmployee("Alice", "Wonderland"));
+            Employee e2 = facade.saveEmployee(facade.createEmployee("Bob", "Builder"));
+            List<Employee> employeeList = new ArrayList<>(List.of(e1, e2));
+            facade.setAssignedEmployees(task.getTaskId(), employeeList);
+
+            facade.setAssignedEmployees(task.getTaskId(), employeeList);
+
+            Task resultTask = facade.getTaskById(task.getTaskId());
+            List<Employee> assigned = resultTask.getAssignedEmployees();
+
+            assertEquals(2, assigned.size());
+            assertTrue(assigned.stream().anyMatch(e -> e.getPersonId().equals(e1.getPersonId())));
+            assertTrue(assigned.stream().anyMatch(e -> e.getPersonId().equals(e2.getPersonId())));
+        }
+
+        /**
+         * Ensures that setAssignedEmployees replaces any previous assignments.
+         */
+        @Test
+        @DisplayName("Verify that setting a new list overwrites existing assignments")
+        void testSetAssignedEmployeesOverwrite() {
+            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Employee oldEmp = facade.saveEmployee(facade.createEmployee("Old", "Employee"));
+            facade.assignEmployeeToTask(task.getTaskId(), oldEmp.getPersonId());
+
+            Employee newEmp = facade.saveEmployee(facade.createEmployee("New", "Employee"));
+            List<Employee> newList = new ArrayList<>(List.of(newEmp));
+
+            facade.setAssignedEmployees(task.getTaskId(), newList);
+
+            Task resultTask = facade.getTaskById(task.getTaskId());
+            assertEquals(1, resultTask.getAssignedEmployees().size());
+
+            assertFalse(resultTask.getAssignedEmployees().stream()
+                    .anyMatch(e -> e.getPersonId().equals(oldEmp.getPersonId())));
+        }
+
+        /**
+         * Validates that an IllegalArgumentException is thrown if the list is null.
+         */
+        @Test
+        @DisplayName("Should throw exception when the employee list is null")
+        @SuppressWarnings("ConstantConditions")
+        void testSetAssignedEmployeesValidationNullList() {
+            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
+
+            List<Employee> nullList = null;
+
+            assertThrows(IllegalArgumentException.class, () ->
+                    facade.setAssignedEmployees(task.getTaskId(), nullList)
+            );
+        }
+
+        /**
+         * Validates that an IllegalArgumentException is thrown if the list contains null elements.
+         */
+        @Test
+        @DisplayName("Should throw exception when the list contains null elements")
+        void testSetAssignedEmployeesValidationNullElements() {
+            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
+
+            List<Employee> listWithNull = new java.util.ArrayList<>();
+            listWithNull.add(null);
+
+            assertThrows(IllegalArgumentException.class, () ->
+                    facade.setAssignedEmployees(task.getTaskId(), listWithNull)
+            );
         }
     }
 

@@ -108,15 +108,6 @@ public class Task implements Serializable {
     }
 
     /**
-     * Setter for task ID.
-     *
-     * @param idTask the task ID to set
-     */
-    public void setTaskId(Long idTask) {
-        this.taskId = idTask;
-    }
-
-    /**
      * Getter for assigned employees.
      * Returns a copy of the list to maintain encapsulation.
      *

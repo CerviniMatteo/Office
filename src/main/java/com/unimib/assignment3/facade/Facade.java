@@ -418,88 +418,223 @@ public class Facade {
     }
     // <---- Task ---->
 
+    /**
+     * Creates a new task with an initial state.
+     *
+     * @param initialState the starting state of the task
+     * @return the newly created task entity
+     */
     public Task createTask(TaskState initialState) {
         return taskService.createTask(initialState);
     }
 
-
+    /**
+     * Saves or updates a task in the database.
+     *
+     * @param task the task entity to save
+     * @return the persisted task entity
+     */
     public Task saveTask(Task task) {
         return taskService.saveTask(task);
     }
 
+    /**
+     * Assigns an employee to a specific task.
+     *
+     * @param taskId     the ID of the task
+     * @param employeeId the ID of the employee to assign
+     */
     public void assignEmployeeToTask(Long taskId, Long employeeId) {
         taskService.assignEmployeeToTask(taskId, employeeId);
     }
 
+    /**
+     * Removes an employee from a specific task.
+     *
+     * @param taskId     the ID of the task
+     * @param employeeId the ID of the employee to remove
+     */
     public void removeEmployeeToTask(Long taskId, Long employeeId) {
         taskService.removeEmployeeFromTask(taskId, employeeId);
     }
 
+    /**
+     * Transitions a task to a new state and updates relevant dates.
+     *
+     * @param taskId       the ID of the task to update
+     * @param newTaskState the target state
+     * @return the updated task entity
+     */
     public Task changeTaskState(Long taskId, TaskState newTaskState) {
         return taskService.changeTaskState(taskId, newTaskState);
     }
 
+    /**
+     * Retrieves tasks filtered by their current state.
+     *
+     * @param taskState the task state to filter by
+     * @return a list of matching tasks
+     */
     public List<Task> getTasksByState(TaskState taskState) {
         return taskService.getTasksByState(taskState);
     }
 
+    /**
+     * Retrieves all tasks assigned to a specific employee.
+     *
+     * @param employee the employee entity
+     * @return a list of tasks assigned to the employee
+     */
     public List<Task> getTasksByEmployee(Employee employee) {
         return taskService.getTasksByEmployee(employee);
     }
 
+    /**
+     * Retrieves all tasks that have no employees assigned.
+     *
+     * @return a list of unassigned tasks
+     */
     public List<Task> getUnsignedTasks() {
         return taskService.getUnassignedTasks();
     }
 
+    /**
+     * Counts the total number of tasks in a specific state.
+     *
+     * @param taskState the task state to count
+     * @return the count of tasks
+     */
     public long countTasksByState(TaskState taskState) {
         return taskService.countTasksByState(taskState);
     }
 
+    /**
+     * Retrieves tasks that have more than a specified number of employees assigned.
+     *
+     * @param employeeThreshold the employee threshold
+     * @return a list of complex tasks
+     */
     public List<Task> getComplexTasks(int employeeThreshold) {
         return taskService.getComplexTasks(employeeThreshold);
     }
 
+    /**
+     * Finds a task by its unique ID.
+     *
+     * @param taskId the task ID
+     * @return the task entity if found
+     */
     public Task getTaskById(Long taskId) {
         return taskService.getTaskById(taskId);
     }
 
+    /**
+     * Retrieves all tasks in the system.
+     *
+     * @return a list of all tasks
+     */
     public List<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
 
+    /**
+     * Deletes a task from the system by ID.
+     *
+     * @param taskId the ID of the task to delete
+     */
     public void deleteTask(Long taskId) {
         taskService.deleteTask(taskId);
     }
 
+    /**
+     * Checks if a specific employee is assigned to a specific task.
+     *
+     * @param taskId     the task ID
+     * @param employeeId the employee ID
+     * @return true if the employee is assigned, false otherwise
+     */
     public boolean isEmployeeAssigned(Long taskId, Long employeeId) {
         return taskService.isEmployeeAssigned(taskId, employeeId);
     }
 
+    /**
+     * Resets a task to the default state and clears associated dates.
+     *
+     * @param taskId the ID of the task to reset
+     */
     public void resetTask(Long taskId) {
         taskService.resetTask(taskId);
     }
 
-
+    /**
+     * Retrieves tasks in a specific state that have at least one employee assigned.
+     *
+     * @param taskState the task state
+     * @return a list of matching tasks
+     */
     public List<Task> findTasksByStateWithEmployee(TaskState taskState) {
         return taskService.getTasksByStateWithEmployees(taskState);
     }
 
+    /**
+     * Gets the total number of employees assigned to a specific task.
+     *
+     * @param taskId the task ID
+     * @return the count of assigned employees
+     */
     public Integer countEmployeeByTaskId(Long taskId) {
         return taskService.getEmployeeCountPerTask(taskId);
     }
 
+    /**
+     * Retrieves tasks that match a specific state and an exact employee count.
+     *
+     * @param taskState      the task state
+     * @param employeeNumber the exact number of employees required
+     * @return a list of matching tasks
+     */
     public List<Task> findTasksByStateAndCountEmployee(TaskState taskState, int employeeNumber) {
         return taskService.getTasksByStateAndEmployeeCount(taskState, employeeNumber);
     }
 
+    /**
+     * Retrieves all tasks belonging to a specific team.
+     *
+     * @param idTeam the team ID
+     * @return a list of tasks for that team
+     */
     public List<Task> findTasksByTeamId(Long idTeam) {
         return taskService.getTasksByTeam(idTeam);
     }
 
+    /**
+     * Sets the list of employees assigned to a task.
+     *
+     * @param taskId    the ID of the task (must not be null)
+     * @param employees the list of employees to assign (must not be null)
+     */
+    public void setAssignedEmployees(@NonNull Long taskId, @NonNull List<Employee> employees) {
+        taskService.setAssignedEmployees(taskId, employees);
+    }
+
+    /**
+     * Sets the start date for a specific task.
+     *
+     * @param taskId    the task ID
+     * @param startDate the new start date
+     * @return the updated task entity
+     */
     public Task setTaskStartDate(Long taskId, LocalDate startDate) {
         return taskService.setTaskStartDate(taskId, startDate);
     }
 
+    /**
+     * Sets the end date for a specific task.
+     *
+     * @param taskId  the task ID
+     * @param endDate the new end date
+     * @return the updated task entity
+     */
     public Task setTaskEndDate(Long taskId, LocalDate endDate) {
         return taskService.setTaskEndDate(taskId, endDate);
     }

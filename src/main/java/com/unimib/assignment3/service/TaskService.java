@@ -320,6 +320,30 @@ public class TaskService {
         return getTaskOrThrow(taskId).getAssignedEmployees().size();
     }
 
+    /**
+     * Sets the list of employees assigned to a specific task.
+     * Checks that the list and the employees within it are not null.
+     *
+     * @param taskId    the ID of the task
+     * @param employees the list of employees to assign
+     * @throws IllegalArgumentException if the list is null or contains null elements
+     */
+    @Transactional
+    public void setAssignedEmployees(Long taskId, List<Employee> employees) {
+        if (employees == null) {
+            throw new IllegalArgumentException(TaskConstants.NULL_EMPLOYEE);
+        }
+
+        for (Employee employee : employees) {
+            if (employee == null) {
+                throw new IllegalArgumentException(EmployeeConstants.NULL_EMPLOYEE);
+            }
+        }
+
+        Task task = getTaskOrThrow(taskId);
+        task.setAssignedEmployees(employees);
+        taskRepository.saveAndFlush(task);
+    }
 
     /**
      * Retrieves tasks that match a specific state and an exact employee count.
