@@ -41,7 +41,7 @@ public class Supervisor extends Employee {
      */
     @OneToMany(
             mappedBy = "supervisor",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             orphanRemoval = true
     )
     private List<Supervisor> subordinates = new ArrayList<>();

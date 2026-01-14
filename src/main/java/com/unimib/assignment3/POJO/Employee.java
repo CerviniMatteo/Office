@@ -31,7 +31,8 @@ public class Employee extends Person {
      * List of tasks assigned to this employee.
      * Many-to-many relationship mapped by "assignedEmployees" in {@link Task}.
      */
-    @ManyToMany(mappedBy = "assignedEmployees")
+    @ManyToMany(mappedBy = "assignedEmployees",
+                cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Task> tasks = new ArrayList<>();
 
     /**
