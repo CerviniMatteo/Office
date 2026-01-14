@@ -1,5 +1,6 @@
 ## Nome gruppo
 Bug-busters
+
 ## Membri del gruppo
 
 
@@ -19,7 +20,9 @@ Il gestionale è focalizzato sulle entità e sulle regole che gestiscono le asse
 un team e/o ai dipendenti, gestisce inoltre l'assegnamento di un gruppo di dipendenti a un team
 e la gerarchia tra supervisori che supervisionano altri supervisori oppure la supervisione di uno
 specifico team. 
-Lo scopo è rappresentare in modo semplice:
+
+Lo scopo è rappresentare in modo semplice: 
+
 - Come vengono gestite le informazioni di base di un dipendente/supervisore, quali, per esempio,
 la sua email non deve provocare conflitti con altri dipendenti, ne viene quindi gestita 
 l'unicità tramite un opportuno helper. Un esempio può essere omonimi con lo stesso nome e cognome 
@@ -36,6 +39,7 @@ e come vengono assegnati i dipendenti a un certo team.
 
  
 # Analisi di dominio
+
 ## Diagramma delle classi
 ![Diagramma delle classi](class_diagram.png)
 
@@ -108,6 +112,7 @@ Puoi aprire direttamente il file [`📜index.html`](javadoc/index.html) per visu
 # Architettura del progetto
 L’architettura del progetto segue il pattern a più livelli (multi-layered architecture),
 con una chiara separazione tra i vari livelli funzionali:
+
 - **Layer di dominio**: definisce le entità JPA e le loro relazioni
 - **Layer di persistenza**: gestisce l’interazione con il database tramite JPA
 - **Layer di servizio**: implementa la logica di business e coordina le operazioni tra i repository
@@ -124,7 +129,9 @@ personalizzati implementati per soddisfare i requisiti specifici del dominio.
 
 ## 1. EmploeeyRepository
 La repository `EmploeeyRepository` gestisce la persistenza dell’entità **Employee**.
+
 ### Metodi personalizzati
+
 - Recupera i dipendenti con uno specifico **stipendio mensile**
 - Recupera i dipendenti con uno specifico **stipendio mensile**, ordinati per **ruolo** (crescente)
 - Recupera i dipendenti con uno specifico **stipendio mensile**, ordinati per **ruolo** (decrescente)
@@ -146,14 +153,18 @@ Recupera i **task** associati a un employee specifico, filtrati per **stato del 
 
 ## 2. SupervisorRepository
 La repository `SupervisorRepository` gestisce la persistenza dell’entità **Supervisor**.
+
 ### Metodi personalizzati
+
 - Recupera i **supervisori che non hanno un supervisore** (livello più alto della gerarchia)
 - Recupera i **supervisori senza subordinati**
 - Recupera i **supervisori che non supervisionano alcun team**
 
 ## 3. TaskRepository
 La repository `TaskRepository` gestisce la persistenza dell’entità **Task**.
+
 ### Metodi personalizzati
+
 - Recupera l'elenco dei task in base a uno specifico **stato**.
 - Restituisce il numero totale di task presenti in un determinato **stato**.
 - Filtra i task che, oltre a essere in uno specifico stato, hanno almeno un **dipendente** assegnato
@@ -172,7 +183,9 @@ suo **ID**.
 
 ## 4. TeamRepository
 La repository `TeamRepository` gestisce la persistenza dell’entità **Team**.
+
 ### Metodi personalizzati
+
 - Recupera i team con uno specifico **supervisore**
 - Recupera il team con uno specifico **dipendente**
 - Recupera il team con uno specifico **task**
@@ -199,6 +212,7 @@ inclusi ruoli, stipendi e task.
 Tutti i parametri in input devono essere validati per garantire che non siano null.
 
 ### CRUD di base
+
 - Creazione di un dipendente
 - Salvataggio di un dipendente
 - Salvataggio di una lista di dipendenti
@@ -207,6 +221,7 @@ Tutti i parametri in input devono essere validati per garantire che non siano nu
 - Rimozione di un dipendente per ID
 
 ### CRUD avanzato e funzionalità specifiche
+
 - Nella gestione della creazione di un dipendente, viene controllato che l'email non sia già
   utilizzata da un altro dipendente. In caso contrario, viene gestita la creazione di un'email
   unica, aggiungendo un numero progressivo alla fine dell'username. Viene ritentato il salvataggio, 
@@ -241,7 +256,7 @@ Se un oggetto non è (`MANAGER`) o *null* viene lanciata l'eccezione: (`IllegalA
 Se non esiste un dipendente con l'id fornito, viene lanciata l'eccezione: 
 (`EntityNotFoundException`). 
 - I messaggi di errore sono memorizzati nel file: EmployeeContants.
-- 
+
 ## 2. SupervisorService
 
 La classe `SupervisorService` gestisce le operazioni di business relative all’entità **Supervisor** e alle **relazioni gerarchiche** tra supervisori.
@@ -250,6 +265,7 @@ La classe `SupervisorService` gestisce le operazioni di business relative all’
 Tutti i parametri in input devono essere validati per garantire che non siano null.
 
 ### CRUD di base
+
 - Creazione di un supervisor
 - Salvataggio di un supervisor
 - Ricerca di un supervisor per ID
@@ -257,6 +273,7 @@ Tutti i parametri in input devono essere validati per garantire che non siano nu
 - Eliminazione di un supervisor per ID 
 
 ### CRUD avanzato e funzionalità specifiche
+
 - Assegnazione di un subordinato a un supervisore 
 - Rimozione di un subordinato da un supervisore
 - Ricerca di supervisori che non hanno supervisori (radici della gerarchia)
@@ -311,10 +328,12 @@ La classe `TaskService` gestisce il ciclo di vita delle entità Task, occupandos
 La classe `TeamService` gestisce le operazioni di business relative all’entità **Team**, inclusi dipendenti, supervisori e task assegnate.
 
 ### Controlli preliminari
+
 - Tutti i parametri in input devono essere validati per garantire che non siano null.
 - Il controllo dell'esistenza di un'entità dato ID viene delegato al service apposito dell'entità.
 
 ### CRUD di base
+
 - Creazione di un team
 - Salvataggio di un team
 - Ricerca di un team per ID
@@ -322,6 +341,7 @@ La classe `TeamService` gestisce le operazioni di business relative all’entit�
 - Eliminazione di un team per ID
 
 ### CRUD avanzato e funzionalità specifiche
+
 - Assegnazione di dipendenti a un team gestendo anche la relazione bidirezionale, inoltre se il dipendente 
   appartenesse a un altro team lo si elimina dal team precedente e lo si assegna al nuovo team.
 - Rimozione di dipendenti da un team gestendo anche la relazione bidirezionale. 
@@ -344,7 +364,9 @@ La classe `TeamService` gestisce le operazioni di business relative all’entit�
 - Ricerca di tutti i dipendenti in un team specifico con uno specifico ruolo, controllando che il team esista.
 - Quattro metodi helper controllano che gli ID passati non siano Null. Se l'id fornito è null viene lanciata 
   l'eccezione: (`IllegalArgumentException`). Vengono forniti messaggi di errore memorizzati nel file: TeamContants.
+
 ### Note aggiuntive
+
 È stato fatto il test per verificare il giusto comportamento della funzione `getAllTeams()`, si è notato che la 
 funzione restituisce tutti i team creati in quel specifico test, invece non restituisce i team creati in altri test.
 Questo comportamento è dovuto al fatto che ogni test viene eseguito in una transazione separata, e i dati 
