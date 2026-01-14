@@ -58,8 +58,8 @@ public class TeamService {
      */
     @Transactional
     public Team createTeam(List<Employee> employees, Supervisor supervisor){
-        if(employees.isEmpty()){
-            throw new IllegalArgumentException(TeamConstants.EMPLOYEE_LIST_IS_EMPTY);
+        if(employees == null){
+            throw new IllegalArgumentException(TeamConstants.EMPLOYEE_LIST_CANNOT_BE_NULL);
         } else if(supervisor == null){
             throw new IllegalArgumentException(TeamConstants.SUPERVISOR_CANNOT_BE_NULL);
         }
@@ -78,10 +78,10 @@ public class TeamService {
      */
     @Transactional
     public Team createTeam(List<Employee> employees, Supervisor supervisor, List<Task> tasks){
-        if(employees.isEmpty()){
-            throw new IllegalArgumentException(TeamConstants.EMPLOYEE_LIST_IS_EMPTY);
-        } else if(tasks.isEmpty()){
-            throw new IllegalArgumentException(TeamConstants.TASK_LIST_IS_EMPTY);
+        if(employees == null){
+            throw new IllegalArgumentException(TeamConstants.EMPLOYEE_LIST_CANNOT_BE_NULL);
+        } else if(tasks == null){
+            throw new IllegalArgumentException(TeamConstants.TASK_LIST_CANNOT_BE_NULL);
         } else if(supervisor == null){
             throw new IllegalArgumentException(TeamConstants.SUPERVISOR_CANNOT_BE_NULL);
         }
@@ -309,6 +309,7 @@ public class TeamService {
      * @return the Team with the given id, or empty if not found
      */
     public Optional<Team> getTeamById(Long id) {
+        checkTeamId(id);
         return teamRepository.findByTeamId(id);
     }
 
@@ -320,6 +321,7 @@ public class TeamService {
      */
     @Transactional
     public void deleteTeamById(Long id) {
+        checkTeamId(id);
         if(getTeamById(id).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         }
@@ -354,6 +356,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the supervisor with the given id is not found
      */
     public List<Team> getTeamsBySupervisorPersonId(Long supervisorId) {
+        checkSupervisorId(supervisorId);
         supervisorService.findSupervisorById(supervisorId);
         return teamRepository.findBySupervisorPersonId(supervisorId);
     }
@@ -366,6 +369,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the employee with the given id is not found
      */
     public Team getTeamByEmployeesPersonId(Long employeeId) {
+        checkEmployeeId(employeeId);
         employeeService.findEmployeeById(employeeId);
         return teamRepository.findByEmployeesPersonId(employeeId);
     }
@@ -378,6 +382,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the task with the given id is not found
      */
     public Team getTeamByTaskId(Long taskId) {
+        checkTaskId(taskId);
         return teamRepository.findByTasksTaskId(taskId);
     }
 
@@ -389,6 +394,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the team with the given id is not found
      */
     public List<Task> getTasksByTeamId(Long teamId) {
+        checkTeamId(teamId);
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         }
@@ -403,6 +409,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the team with the given id is not found
      */
     public Supervisor getSupervisorByTeamId(Long teamId) {
+        checkTeamId(teamId);
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         }
@@ -417,6 +424,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the team with the given id is not found
      */
     public List<Employee> getEmployeesByTeamId(Long teamId) {
+        checkTeamId(teamId);
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         }
@@ -432,6 +440,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the team with the given id is not found, or if the task state is null
      */
     public List<Task> getTasksInTeamIdByTaskState(Long teamId, TaskState taskState) {
+        checkTeamId(teamId);
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         } else if(taskState == null) {
@@ -449,6 +458,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the team with the given id is not found, or if the salary is negative
      */
     public List<Employee> getEmployeesInTeamIdWithSalaryGreaterThan(Long teamId, double salary) {
+        checkTeamId(teamId);
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         } else if (salary <= 0) {
@@ -466,6 +476,7 @@ public class TeamService {
      * @throws IllegalArgumentException if the team with the given id is not found, or if the salary is negative
      */
     public List<Employee> getEmployeesInTeamIdWithSalaryLessThan(Long teamId, double salary) {
+        checkTeamId(teamId);
         if (getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         } else if (salary <= 0) {
@@ -483,11 +494,56 @@ public class TeamService {
      * @throws IllegalArgumentException if the team with the given id is not found, or if the employee role is null
      */
     public List<Employee> getEmployeesInTeamIdWithEmployeeRole(Long teamId, EmployeeRole employeeRole) {
+        checkTeamId(teamId);
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
         } else if(employeeRole == null) {
             throw new IllegalArgumentException(TeamConstants.EMPLOYEE_ROLE_CANNOT_BE_NULL);
         }
         return teamRepository.findEmployeesInTeamIdWithEmployeeRole(teamId, employeeRole);
+    }
+
+    /**
+     * Check if a given team id is null.
+     *
+     * @param id the team id to check
+     */
+    private void checkTeamId(Long id){
+        if (id == null) {
+            throw new IllegalArgumentException(TeamConstants.TEAM_ID_CANNOT_BE_NULL);
+        }
+    }
+
+    /**
+     * Check if a given supervisor id is null.
+     *
+     * @param id the supervisor id to check
+     */
+    private void checkSupervisorId(Long id){
+        if (id == null) {
+            throw new IllegalArgumentException(TeamConstants.SUPERVISOR_ID_CANNOT_BE_NULL);
+        }
+    }
+
+    /**
+     * Check if a given employee id is null.
+     *
+     * @param id the employee id to check
+     */
+    public void checkEmployeeId(Long id){
+        if (id == null) {
+            throw new IllegalArgumentException(TeamConstants.EMPLOYEE_ID_CANNOT_BE_NULL);
+        }
+    }
+
+    /**
+     * Check if a given task id is null.
+     *
+     * @param id the task id to check
+     */
+    public void checkTaskId(Long id){
+        if (id == null) {
+            throw new IllegalArgumentException(TeamConstants.TASK_ID_CANNOT_BE_NULL);
+        }
     }
 }
