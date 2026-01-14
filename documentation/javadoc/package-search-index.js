@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.unimib.assignment3"},{"l":"com.unimib.assignment3.constants"},{"l":"com.unimib.assignment3.enums"},{"l":"com.unimib.assignment3.facade"},{"l":"com.unimib.assignment3.POJO"},{"l":"com.unimib.assignment3.repository"},{"l":"com.unimib.assignment3.service"}];updateSearchResults();
