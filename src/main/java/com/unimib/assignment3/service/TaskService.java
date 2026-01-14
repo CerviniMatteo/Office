@@ -73,12 +73,11 @@ public class TaskService {
      *
      * @param taskId     the ID of the task
      * @param employeeId the ID of the employee to assign
-     * @return the updated task entity
      * @throws IllegalArgumentException if the task or employee is not found
      * @throws IllegalStateException    if the task is already completed or the employee is already assigned
      */
     @Transactional
-    public Task assignEmployeeToTask(Long taskId, Long employeeId) {
+    public void assignEmployeeToTask(Long taskId, Long employeeId) {
         if (employeeId == null) throw new IllegalArgumentException(TaskConstants.NULL_EMPLOYEE_ID);
 
         Task task = getTaskOrThrow(taskId);
@@ -98,7 +97,6 @@ public class TaskService {
         task.assignEmployee(employee);
 
         employeeService.saveEmployee(employee);
-        return task;
     }
 
 
@@ -107,11 +105,10 @@ public class TaskService {
      *
      * @param taskId     the ID of the task
      * @param employeeId the ID of the employee to remove
-     * @return the updated task entity
      * @throws IllegalArgumentException if the task or employee is not found
      */
     @Transactional
-    public Task removeEmployeeFromTask(Long taskId, Long employeeId) {
+    public void removeEmployeeFromTask(Long taskId, Long employeeId) {
         if (employeeId == null) throw new IllegalArgumentException(TaskConstants.NULL_EMPLOYEE_ID);
 
         Task task = getTaskOrThrow(taskId);
@@ -122,7 +119,6 @@ public class TaskService {
 
 
         employeeService.saveEmployee(employee);
-        return task;
     }
 
 
@@ -183,37 +179,6 @@ public class TaskService {
         task.setEndDate(null);
         task.setStartDate(null);
     }
-
-
-    /**
-     * Associates a task with a team.
-     *
-     * @param task the task entity
-     * @param team the team entity
-     */
-    @Transactional
-    public void setTeamTask(Task task, Team team) {
-        if (task == null) {
-            throw new IllegalArgumentException(TASK_NOT_FOUND);
-        }
-        task.setTeamTask(team);
-    }
-
-
-    /**
-     * Retrieves the team associated with a task.
-     *
-     * @param task the task entity
-     * @return the associated team
-     */
-    public Team getTeamTask(Task task) {
-        if (task == null) {
-            throw new IllegalArgumentException(TASK_NOT_FOUND);
-        }
-        return task.getTeamTask();
-    }
-
-
 
     /**
      * Retrieves tasks filtered by their current state.

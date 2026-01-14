@@ -293,5 +293,22 @@ della Facade nel progetto.
 - Una versione a **interfaccia** sarebbe risultata utile solo nel caso di una **suddivisione della 
 Facade in più Facade specifiche per servizio** (es. EmployeeFacade, SupervisorFacade, TaskFacade e TeamFacade).
 
+## 5. TaskRepository
+La repository TaskRepository gestisce il ciclo di vita delle attività (Task) e la loro persistenza. Oltre alle operazioni CRUD standard di Spring Data JPA, implementa logiche personalizzate tramite query JPQL per monitorare le assegnazioni e la complessità dei task.
+
+Metodi di filtraggio e conteggio
+- findByTaskState: Recupera l'elenco dei task in base a uno specifico stato (es. TO_BE_STARTED, STARTED, DONE).
+- countByTaskState: Restituisce il numero totale di task presenti in un determinato stato.
+- findTasksByStateWithEmployees: Filtra i task che, oltre ad essere in uno specifico stato, hanno almeno un dipendente assegnato (utile per monitorare i task effettivamente presi in carico).
+- findTasksByStateAndEmployeesCount: Permette una ricerca granulare dei task che corrispondono a uno stato specifico e hanno un numero esatto di dipendenti assegnati.
+
+Gestione delle Assegnazioni (Dipendenti e Team)
+- findTasksByEmployee: Query JPQL che esegue una JOIN con la collezione assignedEmployees per trovare tutte le attività in carico a un singolo dipendente.
+- findTasksWithoutEmployee: Identifica i task "non assegnati" verificando tramite la funzione SIZE() che la lista dei dipendenti sia vuota.
+- countEmployeesByTaskId: Restituisce il numero esatto di dipendenti che lavorano su un determinato task identificato dal suo ID.
+- findTasksByTeamId: Recupera tutti i task associati a un team specifico tramite una query di JOIN tra l'entità Team e la sua collezione di Task.
+
+Analisi della Complessità
+- findTasksWithMoreThanNEmployees: Utilizza la funzione JPQL SIZE() per identificare i task definiti "complessi", ovvero quelli che superano una determinata soglia di dipendenti assegnati.
 
 
