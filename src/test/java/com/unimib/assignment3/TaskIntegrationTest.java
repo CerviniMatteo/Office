@@ -15,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -30,6 +29,9 @@ public class TaskIntegrationTest {
     @DisplayName("CRUD and Task State management")
     class TaskCoreTests {
 
+        /**
+         * Tests the creation and saving of a Task entity.
+         */
         @Test
         void testCreateAndSaveTask() {
             Task task = facade.createTask(TaskState.TO_BE_STARTED);
@@ -41,6 +43,9 @@ public class TaskIntegrationTest {
             assertEquals(saved.getTaskId(), found.getTaskId());
         }
 
+        /**
+         * Tests task creation with different initial states and verifies date settings.
+         */
         @Test
         @DisplayName("Verify task creation with different initial states and date setting")
         void testCreateTaskWithInitialState() {
@@ -53,6 +58,10 @@ public class TaskIntegrationTest {
             assertNotNull(tDone.getStartDate());
             assertNotNull(tDone.getEndDate());
         }
+
+        /**
+         * Tests task creation with a null state, expecting default state assignment.
+         */
         @Test
         @DisplayName("Verify that createTask(null) sets the default state")
         void testCreateTaskNullState() {
@@ -61,6 +70,9 @@ public class TaskIntegrationTest {
             assertNull(t.getStartDate());
         }
 
+        /**
+         * Tests the deletion of a Task entity.
+         */
         @Test
         void testDeleteTask() {
             Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
@@ -69,6 +81,9 @@ public class TaskIntegrationTest {
             assertThrows(IllegalArgumentException.class, () -> facade.getTaskById(id));
         }
 
+        /**
+         * Tests changing task states and validates date assignments.
+         */
         @Test
         void testStateChangeAndDateValidation() {
             Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
@@ -85,6 +100,9 @@ public class TaskIntegrationTest {
             assertNotNull(statusDone.getEndDate());
         }
 
+        /**
+         * Tests idempotent state changes, ensuring no errors occur when changing to the current state.
+         */
         @Test
         @DisplayName("Changing to the current state should not produce errors (Idempotency)")
         void testIdempotentStateChange() {
@@ -95,6 +113,9 @@ public class TaskIntegrationTest {
             assertEquals(TaskState.TO_BE_STARTED, facade.getTaskById(id).getTaskState());
         }
 
+        /**
+         * Tests resetting a task to its initial state and clearing dates.
+         */
         @Test
         @DisplayName("Verify task reset to initial state and date clearing")
         void testResetTask() {
@@ -109,6 +130,9 @@ public class TaskIntegrationTest {
             assertNull(reset.getEndDate());
         }
 
+        /**
+         * Tests that invalid state transitions throw exceptions.
+         */
         @Test
         void testStateChangeException() {
             Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
@@ -125,7 +149,9 @@ public class TaskIntegrationTest {
     @Nested
     @DisplayName("Assignments and Relationships Management")
     class TaskAssignmentTests {
-
+        /**
+         * Tests assigning and removing an employee from a task.
+         */
         @Test
         void testEmployeeAssignmentAndRemoval() {
             Employee employee = facade.createEmployee("Mario", "Rossi");
@@ -139,6 +165,9 @@ public class TaskIntegrationTest {
             assertFalse(facade.isEmployeeAssigned(t.getTaskId(), employee.getPersonId()));
         }
 
+        /**
+         * Tests that multiple assignments of the same employee to a task are forbidden.
+         */
         @Test
         void testMultipleAssignmentForbidden() {
             Employee employee = facade.createEmployee("Luca", "Bianchi");
@@ -150,6 +179,9 @@ public class TaskIntegrationTest {
             assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getPersonId()));
         }
 
+        /**
+         * Tests that assignments to COMPLETED tasks are forbidden.
+         */
         @Test
         @DisplayName("Should not be possible to assign employees to already COMPLETED tasks")
         void testAssignmentForbiddenInFinalState() {
@@ -161,6 +193,9 @@ public class TaskIntegrationTest {
             assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getPersonId()));
         }
 
+        /**
+         * Tests that an exception is thrown when assigning an employee to a non-existent task.
+         */
         @Test
         @DisplayName("Throws exception when assigning an employee to a non-existent task")
         void testAssignmentToNonExistentTask() {
@@ -174,6 +209,9 @@ public class TaskIntegrationTest {
     @Nested
     @DisplayName("Bidirectional Mapping Coverage")
     class TaskBidirectionalTests {
+        /**
+         * Tests bidirectional consistency between Task and Employee entities.
+         */
         @Test
         @DisplayName("Verify bidirectional consistency between Task and Employee")
         void testBidirectionalConsistency() {
@@ -194,7 +232,9 @@ public class TaskIntegrationTest {
     @Nested
     @DisplayName("Queries, Filters, and Statistics")
     class TaskQueryTests {
-
+        /**
+         * Tests filtering tasks by state and counting them.
+         */
         @Test
         void testFiltersAndCounts() {
             facade.saveTask(facade.createTask(TaskState.STARTED));
@@ -208,6 +248,9 @@ public class TaskIntegrationTest {
             assertEquals(1, startedTasks.size());
         }
 
+        /**
+         * Tests searching for tasks by employee.
+         */
         @Test
         void testSearchByEmployee() {
             Employee employee = facade.createEmployee("Anna", "Verdi");
@@ -217,9 +260,12 @@ public class TaskIntegrationTest {
 
             List<Task> tasksAnna = facade.getTasksByEmployee(employee);
             assertEquals(1, tasksAnna.size());
-            assertEquals(t.getTaskId(), tasksAnna.get(0).getTaskId());
+            assertEquals(t.getTaskId(), tasksAnna.getFirst().getTaskId());
         }
 
+        /**
+         * Tests retrieving complex tasks and unassigned tasks.
+         */
         @Test
         void testComplexAndUnassignedTasks() {
             Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
@@ -242,7 +288,9 @@ public class TaskIntegrationTest {
     @Nested
     @DisplayName("Advanced Query Extensions")
     class TaskAdvancedQueryTests {
-
+        /**
+         * Tests querying tasks by state that have at least one assigned employee.
+         */
         @Test
         @DisplayName("Test query for state with at least one employee")
         void testFindTasksByStateWithEmployees() {
@@ -255,9 +303,12 @@ public class TaskIntegrationTest {
 
             List<Task> result = facade.findTasksByStateWithEmployee(TaskState.TO_BE_STARTED);
             assertEquals(1, result.size());
-            assertEquals(t1.getTaskId(), result.get(0).getTaskId());
+            assertEquals(t1.getTaskId(), result.getFirst().getTaskId());
         }
 
+        /**
+         * Tests counting employees assigned to a specific Task ID.
+         */
         @Test
         @DisplayName("Test employee count for a specific Task ID")
         void testCountEmployeesByTaskId() {
@@ -274,6 +325,9 @@ public class TaskIntegrationTest {
             assertEquals(2, count);
         }
 
+        /**
+         * Tests searching for tasks by state and exact number of employees.
+         */
         @Test
         @DisplayName("Test search by state and exact number of employees")
         void testFindTasksByStateAndEmployeesCount() {
@@ -287,6 +341,9 @@ public class TaskIntegrationTest {
             assertTrue(result.contains(t1));
         }
 
+        /**
+         * Tests searching for tasks by Team ID.
+         */
         @Test
         @DisplayName("Test task search by Team ID")
         void testFindTasksByTeamId() {
@@ -305,6 +362,9 @@ public class TaskIntegrationTest {
     @Nested
     @DisplayName("Internal Logic Validations (POJO)")
     class TaskPojoTests {
+        /**
+         * Tests that inconsistent date settings throw exceptions.
+         */
         @Test
         @DisplayName("Verify that POJO prevents inconsistent dates")
         void testInconsistentDateValidation() {

@@ -44,6 +44,9 @@ class TeamIntegrationTest {
         return facade.createEmployee("nome", "cognome", monthlySalary, employeeRole);
     }
 
+    /**
+     * Tests creating, saving, and deleting teams, including exception handling.
+     */
     @Test
     void createSaveDeleteTeamTest() {
         System.out.println("----------Create save team test----------");
@@ -122,8 +125,7 @@ class TeamIntegrationTest {
         // Test error messages
         System.out.println("----------Create save delete error team test----------");
         assertThrows(IllegalArgumentException.class, () -> facade.createTeam(null));
-        List<Employee> employeesNull = new ArrayList<>();
-        assertThrows(IllegalArgumentException.class, () -> facade.createTeam(employeesNull, supervisor1));
+        assertThrows(IllegalArgumentException.class, () -> facade.createTeam(null, supervisor1));
         assertThrows(IllegalArgumentException.class, () -> facade.saveTeam(null));
         assertThrows(IllegalArgumentException.class, () -> facade.deleteTeam(null));
         System.out.println("----------Team error test end successfully----------");
@@ -131,6 +133,9 @@ class TeamIntegrationTest {
         System.out.println("----------End create save delete team test----------");
     }
 
+    /**
+     * Tests all the methods related to team employees and exception messages for those methods.
+     */
     @Test
     void teamEmployeesTest() {
         System.out.println("----------Team employees test----------");
@@ -208,6 +213,9 @@ class TeamIntegrationTest {
         System.out.println("----------End team employees test----------");
     }
 
+    /**
+     * Tests all the methods related to team supervisor and exception messages for those methods.
+     */
     @Test
     void teamSupervisorTest(){
         System.out.println("----------Team supervisor test----------");
@@ -244,6 +252,9 @@ class TeamIntegrationTest {
         System.out.println("----------End team supervisor test----------");
     }
 
+    /**
+     * Tests all the methods related to team tasks and exception messages for those methods.
+     */
     @Test
     void teamTasksTest(){
         System.out.println("----------Team tasks test----------");
@@ -330,6 +341,9 @@ class TeamIntegrationTest {
         System.out.println("----------End team tasks test----------");
     }
 
+    /**
+     * Tests all the methods related to getting teams and exception messages for those methods.
+     */
     @Test
     void getTeamTest(){
         System.out.println("----------Get team test----------");
@@ -362,16 +376,12 @@ class TeamIntegrationTest {
             assertEquals(teamEmployeesSupervisorTasks, team);
             System.out.println(team);
         }
-        // Get all teams !!!(trova solo i test di questa transazione, da discutere)!!!!
+        // Get all teams
         System.out.println("----------Get all teams test----------");
         Team teamTest1 = facade.createTeam(supervisor1);
         teamTest1 = facade.saveTeam(teamTest1);
         Team teamTest2 = facade.createTeam(supervisor1);
         teamTest2 = facade.saveTeam(teamTest2);
-        /*
-        teamTasksTest();
-        teamDipendentiTest();
-         */
         List<Team> teams = facade.getAllTeams();
         assertTrue(teams.contains(teamEmployeesSupervisorTasks));
         System.out.println(teams.stream().map(Team::getTeamId).collect(Collectors.toList()));
@@ -397,14 +407,20 @@ class TeamIntegrationTest {
 
         // Test error messages
         System.out.println("----------Get team error test----------");
-        assertFalse(facade.getTeamById(null).isPresent());
+        assertThrows(IllegalArgumentException.class, () -> facade.getTeamById(null));
+        assertFalse(facade.getTeamById(0L).isPresent());
+        assertThrows(IllegalArgumentException.class, () -> facade.getTeamsBySupervisorPersonId(null));
         assertThrows(EntityNotFoundException.class, () -> facade.getTeamsBySupervisorPersonId(0L));
+        assertThrows(IllegalArgumentException.class, () -> facade.getTeamByEmployeePersonId(null));
         assertThrows(EntityNotFoundException.class, () -> facade.getTeamByEmployeePersonId(0L));
         System.out.println("----------Get team error test end successfully----------");
 
         System.out.println("----------End get team test----------");
     }
 
+    /**
+     * Tests complex repository queries related to teams and exception messages for those methods.
+     */
     @Test
     void complexRepositoryQueryTest(){
         System.out.println("----------Complex repository query test----------");

@@ -19,6 +19,7 @@ import org.springframework.lang.NonNull;
  * TeamRepository interface for managing Team entities.
  * <p>
  * Provides methods for CRUD operations and custom queries related to teams, employees, supervisors, and tasks.
+ * </p>
  */
 public interface TeamRepository extends JpaRepository<Team, Long> {
     /**

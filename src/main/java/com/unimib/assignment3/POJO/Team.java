@@ -10,6 +10,7 @@ import java.util.List;
  * <p>
  * Represents a team with a unique identifier, a list of employees,
  * a supervisor, and a list of tasks.
+ * </p>
  */
 @Entity(name="team")
 public class Team {
