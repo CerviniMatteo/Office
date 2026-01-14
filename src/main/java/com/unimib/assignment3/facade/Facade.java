@@ -550,16 +550,6 @@ public class Facade {
     }
 
     /**
-     * Set the supervisor of the given team.
-     *
-     * @param team the team whose supervisor is to be set
-     * @param supervisor the supervisor to be set for the team
-     */
-    public void setTeamSupervisor(Team team, Supervisor supervisor) {
-        teamService.setTeamSupervisor(team, supervisor);
-    }
-
-    /**
      * Get the list of tasks assigned to the given team.
      *
      * @param team the team whose tasks are to be retrieved
@@ -698,7 +688,7 @@ public class Facade {
     }
 
     /**
-     * Get employees in a team with salary greater than the specified amount.
+     * Get employees in a team with the salary greater than the specified amount.
      *
      * @param teamId the team's ID
      * @param salary the salary threshold
@@ -719,7 +709,7 @@ public class Facade {
         return teamService.getEmployeesInTeamIdWithSalaryLessThan(teamId, salary);
     }
     /**
-     * Get employees in team with specific employee role.
+     * Get employees in a team with a specific employee role.
      *
      * @param teamId the team's ID
      * @param employeeRole the role of the employees to filter by

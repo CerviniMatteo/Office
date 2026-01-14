@@ -23,6 +23,7 @@ import java.util.Optional;
  * This class provides methods to create, save, delete, and manage teams,
  * including adding/removing employees and tasks, and setting/getting supervisors.
  * It also includes repository functions to retrieve teams based on various criteria.
+ * </p>
  */
 @Service
 public class TeamService {
@@ -213,23 +214,6 @@ public class TeamService {
             throw new IllegalArgumentException(TeamConstants.TEAM_CANNOT_BE_NULL);
         }
         return team.getSupervisor();
-    }
-
-    /**
-     * Set the supervisor of the given Team.
-     *
-     * @param team the Team whose supervisor will be set
-     * @param supervisor the supervisor to be set
-     * @throws IllegalArgumentException if the Team or supervisor is null
-     */
-    @Transactional
-    public void setTeamSupervisor(Team team, Supervisor supervisor){
-        if(team == null) {
-            throw new IllegalArgumentException(TeamConstants.TEAM_CANNOT_BE_NULL);
-        } else if(supervisor == null) {
-            throw new IllegalArgumentException(TeamConstants.SUPERVISOR_CANNOT_BE_NULL);
-        }
-        team.setSupervisor(supervisor);
     }
 
     /**
