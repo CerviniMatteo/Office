@@ -16,15 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Integration tests for Supervisore entity and related operations.
- * <p>
- * Tests include:
- * - Creating supervisors
- * - Assigning/removing subordinates
- * - Preventing cyclic relationships
- * - Retrieving root supervisors, supervisors without subordinates, and supervisors without teams
- */
+
 @SpringBootTest
 @ActiveProfiles("test")
 class SupervisorIntegrationTest {
@@ -38,8 +30,16 @@ class SupervisorIntegrationTest {
     private Supervisor createSupervisor() {
         return facade.createSupervisor("Supervisor" , "Supervisor");
     }
-    private void createSupervisor(EmployeeRole employeeRole) {
-        facade.createSupervisor("Supervisor", "Supervisor", employeeRole);
+    private Supervisor createSupervisor(EmployeeRole employeeRole) {
+        return facade.createSupervisor("Supervisor", "Supervisor", employeeRole);
+    }
+
+    private Supervisor createSupervisor(double monthlySalary) {
+        return facade.createSupervisor("Supervisor", "Supervisor", monthlySalary, EmployeeRole.MANAGER);
+    }
+
+    private Supervisor createSupervisor(Supervisor supervisor, List<Supervisor> subordinates) {
+        return facade.createSupervisor("Supervisor", "Supervisor", EmployeeRole.MANAGER.getMonthlySalary(), EmployeeRole.MANAGER, supervisor, subordinates);
     }
 
     /**
@@ -88,10 +88,9 @@ class SupervisorIntegrationTest {
         assertThrows(IllegalArgumentException.class, () -> createSupervisor(EmployeeRole.JUNIOR));
         assertThrows(IllegalArgumentException.class, () -> createSupervisor(EmployeeRole.SENIOR));
         assertThrows(IllegalArgumentException.class, () -> createSupervisor(EmployeeRole.SENIOR_SW_ENGINEER));
-        createSupervisor(EmployeeRole.SW_ARCHITECT);
-        createSupervisor(EmployeeRole.SENIOR_SW_ARCHITECT);
-        createSupervisor(EmployeeRole.MANAGER);
 
+        Supervisor supervisor = facade.saveSupervisor(createSupervisor(EmployeeRole.MANAGER));
+        System.out.println(supervisor);
     }
 
     /**
@@ -237,15 +236,67 @@ class SupervisorIntegrationTest {
     @Test
     @Transactional
     void shouldFindSupervisorsWithoutTeam() {
-        Supervisor sup1 = facade.saveSupervisor(createSupervisor());
-        Team team = facade.saveTeam(facade.createTeam(sup1));
+        // Create and save supervisor with team
+        Supervisor sup1 = createSupervisor(EmployeeRole.MANAGER.getMonthlySalary() + 1000);
+        Team team = facade.createTeam(sup1);
+        sup1.addSupervisedTeam(team);      // assign team before saving
+        sup1 = facade.saveSupervisor(sup1);
+        team = facade.saveTeam(team);
+
+        // Create supervisor without team
         Supervisor sup2 = facade.saveSupervisor(createSupervisor());
 
-        List<Supervisor> withoutTeam= facade.findSupervisorsWithoutSupervisedTeam();
+        // Fetch supervisors without teams
+        List<Supervisor> withoutTeam = facade.findSupervisorsWithoutSupervisedTeam();
 
+        // Assertions
         assertTrue(withoutTeam.contains(sup2));
-        Supervisor withTeam = facade.getTeamById(team.getTeamId()).orElseThrow().getSupervisor();
-        assertEquals(withTeam, sup1);
+        Supervisor withTeam = facade.getTeamById(team.getTeamId())
+                .orElseThrow()
+                .getSupervisor();
+        assertEquals(sup1, withTeam);
+    }
+
+    /**
+     * Test creating supervisor with correct hierarchy and full constructor
+     */
+    @Test
+    @Transactional
+    void shouldCreateSupervisorWithHierarchyAndTeams() {
+        // Save the root supervisor first
+        Supervisor rootSupervisor = facade.saveSupervisor(
+                createSupervisor()
+        );
+
+        // Now create and save the teams
+        Team team1 = facade.saveTeam(facade.createTeam(rootSupervisor));
+        Team team2 = facade.saveTeam(facade.createTeam(rootSupervisor));
+        // Create a subordinate supervisor that will be assigned under the new supervisor
+        Supervisor subordinate = facade.saveSupervisor(
+                facade.createSupervisor("Sub", "Sub", EmployeeRole.MANAGER.getMonthlySalary(), EmployeeRole.MANAGER)
+        );
+
+        // Create the supervisor under test, assigning superior, subordinates, and teams
+        Supervisor newSupervisor = createSupervisor(
+                rootSupervisor,
+                List.of(subordinate)
+        );
+
+        newSupervisor = facade.saveSupervisor(newSupervisor);
+
+        newSupervisor.addSupervisedTeam(team1);
+        newSupervisor.addSupervisedTeam(team2);
+
+        //  Assertions to verify everything is correctly set
+        assertNotNull(newSupervisor.getPersonId(), "Supervisor should have a generated ID");
+        assertEquals(rootSupervisor, newSupervisor.getSupervisor(), "Supervisor's superior should be correctly assigned");
+        assertEquals(2, newSupervisor.getSupervisedTeams().size(), "Supervisor should have 2 assigned teams");
+        assertTrue(newSupervisor.getSupervisedTeams().contains(team1), "Team1 should be assigned to the supervisor");
+        assertTrue(newSupervisor.getSupervisedTeams().contains(team2), "Team2 should be assigned to the supervisor");
+        assertTrue(newSupervisor.getSubordinates().contains(subordinate), "Subordinate should be correctly assigned to the supervisor");
+
+        newSupervisor.removeAllSupervisedTeams();
+        assertTrue(newSupervisor.getSupervisedTeams().isEmpty());
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.unimib.assignment3.service;
 
 import com.unimib.assignment3.POJO.Supervisor;
-import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.constants.SupervisorConstants;
 import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.repository.SupervisorRepository;
@@ -103,19 +102,17 @@ public class SupervisorService extends EmployeeService {
      * @param employeeRole     the supervisor's role (must not be null)
      * @param supervisor       the supervisor's supervisor (must not be null)
      * @param subordinates     the list of subordinates (must not be null)
-     * @param supervisedTeams  the list of teams supervised (must not be null)
      * @return a new Supervisor instance
      * @throws IllegalArgumentException if any required argument is null
      */
-    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates, List<Team> supervisedTeams) {
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates) {
         checkRole(employeeRole);
         checkSalary(monthlySalary, employeeRole);
         assertNotNull(name, NULL_NAME);
         assertNotNull(surname, NULL_SURNAME);
         assertNotNull(supervisor.getPersonId(), SUPERVISOR_CANNOT_BE_NULL);
         assertNotNull(subordinates, NULL_SUBORDINATES);
-        assertNotNull(supervisedTeams, TEAM_LIST_CANNOT_BE_NULL);
-        return new Supervisor(name, surname, monthlySalary, employeeRole, supervisor, subordinates, supervisedTeams);
+        return new Supervisor(name, surname, monthlySalary, employeeRole, supervisor, subordinates);
     }
 
     /**

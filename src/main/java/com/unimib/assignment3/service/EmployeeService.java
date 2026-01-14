@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import static com.unimib.assignment3.constants.CommonConstants.*;
 import static com.unimib.assignment3.constants.EmployeeConstants.*;
+import static com.unimib.assignment3.constants.TaskConstants.NULL_DATE;
 import static com.unimib.assignment3.constants.TaskConstants.NULL_TASK_STATE;
 
 /**
@@ -294,7 +296,80 @@ public class EmployeeService {
     public List<Task> findTasksByEmployeeAndTaskState(@NonNull Long employeeId,@NonNull TaskState taskState) {
         assertNotNull(employeeId, NULL_EMPLOYEE_ID);
         assertNotNull(taskState, NULL_TASK_STATE);
-        return employeeRepository.findTasksByEmployeeAndTaskState(employeeId, taskState);
+        return employeeRepository.findTasksByEmployeeByTaskState(employeeId, taskState);
+    }
+
+    /**  Retrieve all tasks assigned to an employee in a specific state, ordered by start date.
+     *
+     * @param employeeId the employee's ID
+     * @param taskState  the state of tasks to filter
+     * @param startDate the start date to filter
+     * @throws IllegalArgumentException if the employeeId or taskState is null and if the startDate is null
+     * @return list of tasks
+     */
+    public List<Task> findTasksByEmployeeByTaskStateByStartDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate startDate) {
+        getEmployeeOrThrow(employeeId);
+        assertNotNull(taskState, NULL_TASK_STATE);
+        assertNotNull(startDate, NULL_DATE);
+        return employeeRepository.findTasksByEmployeeByTaskStateByStartDate(employeeId, taskState, startDate);
+    }
+
+    /**  Retrieve all tasks assigned to an employee in a specific state, ordered by end date.
+     *
+     * @param employeeId the employee's ID
+     * @param taskState  the state of tasks to filter
+     * @param endDate the end date to filter
+     * @throws IllegalArgumentException if the employeeId or taskState is null and if the endDate is null
+     * @return list of tasks
+     */
+    public List<Task> findTasksByEmployeeByTaskStateByEndDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate endDate) {
+        getEmployeeOrThrow(employeeId);
+        assertNotNull(endDate, NULL_DATE);
+        assertNotNull(taskState, NULL_TASK_STATE);
+        return employeeRepository.findTasksByEmployeeByTaskStateByEndDate(employeeId, taskState, endDate);
+    }
+
+    /**  Retrieve all tasks assigned to an employee in a specific state, between start date and end date.
+     *
+     * @param employeeId the employee's ID
+     * @param taskState  the state of tasks to filter
+     * @param startDate the start date to filter
+     * @param endDate the end date to filter
+     * @throws IllegalArgumentException if the employeeId or taskState is null and if the startDate or endDate is null
+     * @return list of tasks
+     */
+    public List<Task> findTasksByEmployeeByTaskStateBetweenStartDateAndEndDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate startDate, @NonNull LocalDate endDate) {
+        getEmployeeOrThrow(employeeId);
+        assertNotNull(startDate, NULL_DATE);
+        assertNotNull(endDate, NULL_DATE);
+        assertNotNull(taskState, NULL_TASK_STATE);
+        return employeeRepository.findTasksByEmployeeByTaskStateBetweenDates(employeeId, taskState, startDate, endDate);
+    }
+
+    /**  Retrieve all tasks assigned to an employee in a specific state, ordered by start date descending.
+     *
+     * @param employeeId the employee's ID
+     * @param taskState  the state of tasks to filter
+     * @throws IllegalArgumentException if the employeeId or taskState is null and if the startDate is null
+     * @return list of tasks
+     */
+    public List<Task> findTasksByEmployeeByTaskStateOrderByStartDateDesc(@NonNull Long employeeId, @NonNull TaskState taskState) {
+        getEmployeeOrThrow(employeeId);
+        assertNotNull(taskState, NULL_TASK_STATE);
+        return employeeRepository.findTasksByEmployeeByTaskStateOrderByStartDateDesc(employeeId, taskState);
+    }
+
+    /**  Retrieve all tasks assigned to an employee in a specific state, ordered by end date descending.
+     *
+     * @param employeeId the employee's ID
+     * @param taskState  the state of tasks to filter
+     * @throws IllegalArgumentException if the employeeId or taskState is null and if the endDate is null
+     * @return list of tasks
+     */
+    public List<Task> findTasksByEmployeeByTaskStateOrderByEndDateDesc(@NonNull Long employeeId, @NonNull TaskState taskState) {
+        getEmployeeOrThrow(employeeId);
+        assertNotNull(taskState, NULL_TASK_STATE);
+        return employeeRepository.findTasksByEmployeeByTaskStateOrderByEndDateDesc(employeeId, taskState);
     }
 
     /**

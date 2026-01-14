@@ -54,13 +54,14 @@ public class Supervisor extends Employee {
             cascade = CascadeType.MERGE,
             orphanRemoval = true
     )
-    private List<Team> supervisedTeams = new ArrayList<>();
+    private List<Team> supervisedTeams;
 
     /**
      * Protected no-argument constructor required by JPA.
      */
     protected Supervisor() {
         super();
+        supervisedTeams = new ArrayList<>();
     }
 
     /**
@@ -71,6 +72,7 @@ public class Supervisor extends Employee {
      */
     public Supervisor(String name, String surname) {
         super(name, surname, EmployeeRole.SW_ARCHITECT);
+        supervisedTeams = new ArrayList<>();
     }
 
     /**
@@ -82,6 +84,7 @@ public class Supervisor extends Employee {
      */
     public Supervisor(String name, String surname, EmployeeRole employeeRole) {
         super(name, surname, employeeRole);
+        supervisedTeams = new ArrayList<>();
     }
 
     /**
@@ -92,13 +95,12 @@ public class Supervisor extends Employee {
      * @param employeeRole    the role of the supervisor
      * @param supervisor      the supervisor of this supervisor
      * @param subordinates    list of subordinates
-     * @param supervisedTeams list of teams supervised
      */
-    public Supervisor(String name, String surname, EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates, List<Team> supervisedTeams) {
+    public Supervisor(String name, String surname, EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates) {
         super(name, surname, employeeRole);
         setSupervisor(supervisor);
         setSubordinates(subordinates);
-        setSupervisedTeams(supervisedTeams);
+        supervisedTeams = new ArrayList<>();
     }
 
     /**
@@ -111,6 +113,7 @@ public class Supervisor extends Employee {
      */
     public Supervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
         super(name, surname, monthlySalary, employeeRole);
+        supervisedTeams = new ArrayList<>();
     }
 
     /**
@@ -122,13 +125,12 @@ public class Supervisor extends Employee {
      * @param employeeRole    the role of the supervisor
      * @param supervisor      the supervisor of this supervisor
      * @param subordinates    list of subordinates
-     * @param supervisedTeams list of teams supervised
      */
-    public Supervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates, List<Team> supervisedTeams) {
+    public Supervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates) {
         super(name, surname, monthlySalary, employeeRole);
         setSupervisor(supervisor);
         setSubordinates(subordinates);
-        setSupervisedTeams(supervisedTeams);
+        supervisedTeams = new ArrayList<>();
     }
 
     @Override
@@ -202,19 +204,6 @@ public class Supervisor extends Employee {
      */
     private void setSupervisedTeams(Team team) {
         this.supervisedTeams.add(team);
-    }
-
-    /**
-     * Replaces all supervised teams with the provided list.
-     *
-     * @param teams the new list of teams
-     */
-    private void setSupervisedTeams(List<Team> teams) {
-        removeAllSupervisedTeams();
-        for(Team team : teams) {
-            team.setSupervisor(this);
-        }
-        this.supervisedTeams = teams;
     }
 
     /**
