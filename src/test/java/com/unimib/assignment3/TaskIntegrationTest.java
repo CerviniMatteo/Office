@@ -15,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -217,7 +216,7 @@ public class TaskIntegrationTest {
 
             List<Task> tasksAnna = facade.getTasksByEmployee(employee);
             assertEquals(1, tasksAnna.size());
-            assertEquals(t.getTaskId(), tasksAnna.get(0).getTaskId());
+            assertEquals(t.getTaskId(), tasksAnna.getFirst().getTaskId());
         }
 
         @Test
@@ -255,7 +254,7 @@ public class TaskIntegrationTest {
 
             List<Task> result = facade.findTasksByStateWithEmployee(TaskState.TO_BE_STARTED);
             assertEquals(1, result.size());
-            assertEquals(t1.getTaskId(), result.get(0).getTaskId());
+            assertEquals(t1.getTaskId(), result.getFirst().getTaskId());
         }
 
         @Test
@@ -309,16 +308,18 @@ public class TaskIntegrationTest {
         @DisplayName("Verify that POJO prevents inconsistent dates")
         void testInconsistentDateValidation() {
             Task t = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-            facade.setTaskEndDate(t.getTaskId(), LocalDate.now());
+            LocalDate today = LocalDate.now();
 
+            assertEquals(today, facade.setTaskEndDate(t.getTaskId(), today).getEndDate());
 
             assertThrows(IllegalArgumentException.class, () ->
-                    facade.setTaskStartDate(t.getTaskId(), LocalDate.now().plusDays(1))
+                    facade.setTaskStartDate(t.getTaskId(), today.plusDays(1))
             );
 
-            facade.setTaskStartDate(t.getTaskId(), LocalDate.now());
+            assertEquals(today, facade.setTaskStartDate(t.getTaskId(), today).getStartDate());
+
             assertThrows(IllegalArgumentException.class, () ->
-                    facade.setTaskEndDate(t.getTaskId(), LocalDate.now().minusDays(1))
+                    facade.setTaskEndDate(t.getTaskId(), today.minusDays(1))
             );
         }
     }
