@@ -2,7 +2,6 @@ package com.unimib.assignment3;
 
 import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.POJO.Supervisor;
-import com.unimib.assignment3.enums.EmployeeRole;
 import com.unimib.assignment3.facade.Facade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,6 @@ public class SupervisorHierarchyIntegrationTest {
     private Supervisor createSupervisor() {
         return facade.createSupervisor("Matteo", "Cervini");
     }
-    private Supervisor createSupervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
-        return facade.createSupervisor(name, surname, monthlySalary, employeeRole);
-    }
 
     @Test
     void supervisoreIsAnEmployee() {
@@ -42,7 +38,6 @@ public class SupervisorHierarchyIntegrationTest {
 
         assertTrue(supervisor.getName().contains("Matteo"));
         assertEquals("Cervini", supervisor.getSurname());
-        assertNotNull(supervisor.getMonthlySalary());
         assertNotNull(supervisor.getEmployeeRole());
     }
 }

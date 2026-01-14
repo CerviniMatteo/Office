@@ -158,6 +158,64 @@ public class Facade {
     }
 
     /**
+     * Finds tasks assigned to a specific employee filtered by task state and start date.
+     *
+     * @param employeeId the employee's ID (must not be null)
+     * @param taskState  the state of tasks to filter (must not be null)
+     * @param startDate  the start date to filter (must not be null)
+     * @return list of tasks assigned to the employee with the given state and start date
+     */
+    public List<Task>  findTasksByEmployeeByTaskStateByStartDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate startDate) {
+        return employeeService.findTasksByEmployeeByTaskStateByStartDate(employeeId, taskState, startDate);
+    }
+
+    /**
+     * Finds tasks assigned to a specific employee filtered by task state and end date.
+     *
+     * @param employeeId the employee's ID (must not be null)
+     * @param taskState  the state of tasks to filter (must not be null)
+     * @param endDate    the end date to filter (must not be null)
+     * @return list of tasks assigned to the employee with the given state and end date
+     */
+    public List<Task>  findTasksByEmployeeByTaskStateByEndDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate endDate) {
+        return employeeService.findTasksByEmployeeByTaskStateByEndDate(employeeId, taskState, endDate);
+    }
+
+    /**
+     * Finds tasks assigned to a specific employee filtered by task state, start date range, and end date range.
+     *
+     * @param employeeId   the employee's ID (must not be null)
+     * @param taskState    the state of tasks to filter (must not be null)
+     * @param startDate   the start date to filter (must not be null)
+     * @param endDate     the end date to filter (must not be null)
+     * @return list of tasks assigned to the employee with the given state and within the specified date ranges
+     */
+    public List<Task>  findTasksByEmployeeByTaskStateByStartDateBetweenAndEndDateBetween(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate startDate, @NonNull LocalDate endDate) {
+        return employeeService.findTasksByEmployeeByTaskStateBetweenStartDateAndEndDate(employeeId, taskState, startDate, endDate);
+    }
+
+    /**
+     * Finds tasks assigned to a specific employee filtered by task state, ordered by starting date descendant
+     *
+     * @param employeeId   the employee's ID (must not be null)
+     * @param taskState    the state of tasks to filter (must not be null)
+     * @return list of tasks assigned to the employee with the given state and within the specified date conditions
+     */
+    public List<Task> findTasksByEmployeeByTaskStateOrderByStartDateDesc(@NonNull Long employeeId, @NonNull TaskState taskState){
+        return employeeService.findTasksByEmployeeByTaskStateOrderByStartDateDesc(employeeId, taskState);
+    }
+
+    /**
+     * Finds tasks assigned to a specific employee filtered by task state, ordered by ending date descendant
+     *
+     * @param employeeId   the employee's ID (must not be null)
+     * @param taskState    the state of tasks to filter (must not be null)
+     * @return list of tasks assigned to the employee with the given state and within the specified date conditions
+     */
+    public List<Task> findTasksByEmployeeByTaskStateOrderByEndDateDesc(@NonNull Long employeeId, @NonNull TaskState taskState) {
+        return employeeService.findTasksByEmployeeByTaskStateOrderByEndDateDesc(employeeId, taskState);
+    }
+    /**
      * Finds employees under a manager filtered by role.
      *
      * @param employeeId   the manager's employee ID (must not be null)
@@ -270,8 +328,8 @@ public class Facade {
      * @param employeeRole  the supervisor's role (must not be null)
      * @return the newly created Supervisor object
      */
-    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole, @NonNull Supervisor supervisor, List<Supervisor> subordinates, List<Team> supervisedTeams) {
-        return supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole, supervisor, subordinates, supervisedTeams);
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole, @NonNull Supervisor supervisor, List<Supervisor> subordinates) {
+        return supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole, supervisor, subordinates);
     }
 
     /**
