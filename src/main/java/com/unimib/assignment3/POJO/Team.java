@@ -38,7 +38,10 @@ public class Team {
      * Mapped by the 'supervisor' field in the Supervisor entity.
      */
     @ManyToOne
-    @JoinColumn(name = "supervisor")
+    @JoinColumn(
+            name = "team_supervisor_id",
+            foreignKey = @ForeignKey(name = "fk_team_supervisor")
+    )
     private Supervisor supervisor;
 
     /**

@@ -40,7 +40,7 @@ public class Employee extends Person {
      * Many-to-one relationship: many employees can belong to a single team.
      */
     @ManyToOne
-    @JoinColumn(name = "employeeTeam")
+    @JoinColumn(name = "teamId")
     private Team employeeTeam;
 
     /**

@@ -53,7 +53,7 @@ public class Task implements Serializable {
     @JoinTable(
             name = "assignedEmployees",
             joinColumns = @JoinColumn(name = "taskId"),
-            inverseJoinColumns = @JoinColumn(name = "employeeId")
+            inverseJoinColumns = @JoinColumn(name = "personId")
     )
     private List<Employee> assignedEmployees = new ArrayList<>();
 
@@ -62,12 +62,12 @@ public class Task implements Serializable {
      * Mapped by the 'teamTask' field.
      */
     @ManyToOne
-    @JoinColumn(name = "teamTask")
+    @JoinColumn(name = "teamId")
     private Team teamTask;
 
     /**
      * Default constructor.
-     * Initializes the task state to STARTED.
+     * Initializes the task state STARTED.
      */
     protected Task() {
         this.taskState = TaskState.STARTED;

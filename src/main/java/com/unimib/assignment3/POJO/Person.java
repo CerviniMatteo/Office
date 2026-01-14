@@ -20,7 +20,6 @@ public abstract class Person {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    // @JoinColumn(name = "personId") // Not needed for @Id, only for relationships
     private Long personId;
 
     /**

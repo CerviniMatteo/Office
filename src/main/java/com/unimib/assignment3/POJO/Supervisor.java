@@ -33,7 +33,7 @@ public class Supervisor extends Employee {
      * The supervisor of this Supervisor.
      */
     @ManyToOne
-    @JoinColumn(name = "supervisor")
+    @JoinColumn(name = "parent_supervisor_id")
     private Supervisor supervisor;
 
     /**
@@ -41,8 +41,7 @@ public class Supervisor extends Employee {
      */
     @OneToMany(
             mappedBy = "supervisor",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            orphanRemoval = true
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     private List<Supervisor> subordinates = new ArrayList<>();
 
@@ -51,8 +50,7 @@ public class Supervisor extends Employee {
      */
     @OneToMany(
             mappedBy = "supervisor",
-            cascade = CascadeType.MERGE,
-            orphanRemoval = true
+            cascade = CascadeType.MERGE
     )
     private List<Team> supervisedTeams;
 
