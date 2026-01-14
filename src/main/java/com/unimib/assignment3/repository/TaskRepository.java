@@ -69,15 +69,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findTasksByStateWithEmployees(@Param("taskState") TaskState taskState);
 
     /**
-     * Counts the number of employees assigned to a specific task.
-     *
-     * @param taskId the ID of the task
-     * @return the count of employees assigned to the task
-     */
-    @Query("SELECT SIZE(t.assignedEmployees) FROM task t WHERE t.taskId = :taskId")
-    int countEmployeesByTaskId(@Param("taskId") Long taskId);
-
-    /**
      * Retrieves tasks in a specific state with an exact number of assigned employees.
      *
      * @param taskState    the state of the tasks
@@ -90,7 +81,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     /**
      * Retrieves all tasks associated with a specific team.
      *
-     /// @param idTeam the ID of the team
+     * @param teamId the ID of the team
      * @return a list of tasks belonging to the team
      */
     @Query("SELECT t FROM team tm JOIN tm.tasks t WHERE tm.teamId = :teamId")
