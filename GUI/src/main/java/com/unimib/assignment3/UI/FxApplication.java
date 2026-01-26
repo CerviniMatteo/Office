@@ -25,7 +25,7 @@ public class FxApplication extends Application {
 
         dashboard.setBorder(new Border(
                 new BorderStroke(
-                        Paint.valueOf("#4d0087"),
+                        Paint.valueOf("#4d067B"),
                         BorderStrokeStyle.SOLID,
                         new CornerRadii(10),
                         new BorderWidths(2)
@@ -33,7 +33,7 @@ public class FxApplication extends Application {
         ));
 
         // tasks
-        TaskLayout tasksLayout = new TaskLayout(5, 5);
+        TaskLayout tasksLayout = new TaskLayout(5, 2);
 
         //  25% / 75%
         dashboard.prefWidthProperty().bind(root.widthProperty().multiply(0.25));

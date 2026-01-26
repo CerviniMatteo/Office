@@ -29,6 +29,9 @@ public class Task {
     }
 
     public void setTaskState(String taskState) {
+        if(taskState.equals("TO_BE_STARTED")) {
+            taskState = "TO BE STARTED";
+        }
         this.taskState = taskState;
     }
 

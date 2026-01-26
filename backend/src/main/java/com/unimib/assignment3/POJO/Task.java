@@ -86,6 +86,7 @@ public class Task implements Serializable {
      */
     public Task(TaskState taskState) {
         this.taskState = taskState != null ? taskState : TaskState.STARTED;
+        this.startDate = LocalDate.now();
     }
 
     /**

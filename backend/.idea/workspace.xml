@@ -5,56 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b64b65da-a75d-4687-85a1-8b126f45490b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../GUI/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/Dashboard.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GUI/src/main/resources/main-view.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/controller/TaskController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/BackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/BackendApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/POJO/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/POJO/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Person.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/POJO/Supervisor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Supervisor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/POJO/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/POJO/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Team.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/constants/CommonConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/CommonConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/constants/EmployeeConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/EmployeeConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/constants/SupervisorConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/SupervisorConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/constants/TaskConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/TaskConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/constants/TeamConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/TeamConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/enums/EmployeeRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/enums/EmployeeRole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/enums/TaskState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/enums/TaskState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/facade/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/facade/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/EmployeeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/repository/SupervisorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/SupervisorRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/repository/TaskRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/TaskRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/repository/TeamRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/TeamRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/service/EmployeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/EmployeeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/service/SupervisorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/SupervisorService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/service/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/TaskService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/com/unimib/assignment3/service/TeamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/TeamService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/com/unimib/assignment3/AllEntitiesCascadeMappingTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/com/unimib/assignment3/BackendApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/com/unimib/assignment3/EmployeeIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/com/unimib/assignment3/SupervisorHierarchyIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/com/unimib/assignment3/SupervisorIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/com/unimib/assignment3/TaskIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/com/unimib/assignment3/TeamIntegrationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/BackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/BackendApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +60,7 @@
     "git-widget-placeholder": "UI",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/teo/Documents/2025_assignment3_gruppo10-bug-busters/backend",
+    "last_opened_file_path": "/home/teo/Documents/2025_assignment3_gruppo10-bug-busters/GUI",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>

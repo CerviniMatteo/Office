@@ -25,12 +25,15 @@ public class BackendApplication {
             task2.setDescription("Implement the user authentication module");
             facade.saveTask(task2);
             Task task3 = facade.createTask(TaskState.TO_BE_STARTED);
+            task3.setTaskState(TaskState.STARTED);
+            task3.setTaskState(TaskState.DONE);
             task3.setDescription("Set up the development environment");
             facade.saveTask(task3);
             Task task4 = facade.createTask(TaskState.TO_BE_STARTED);
             task4.setDescription("Develop the RESTful API endpoints");
             facade.saveTask(task4);
             Task task5 = facade.createTask(TaskState.TO_BE_STARTED);
+            task5.setTaskState(TaskState.STARTED);
             task5.setDescription("Create unit tests for the service layer");
             facade.saveTask(task5);
             Task task6 = facade.createTask(TaskState.TO_BE_STARTED);
