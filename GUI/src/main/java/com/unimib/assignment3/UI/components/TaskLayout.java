@@ -29,15 +29,7 @@ public class TaskLayout {
         tasksLayout.setHgap(2);
         tasksLayout.setVgap(2);
         HBox.setMargin(tasksLayout, new Insets(10));
-        tasksLayout.setBorder(new Border(
-                new BorderStroke(
-                        Paint.valueOf("#4d067B"),
-                        BorderStrokeStyle.SOLID,
-                        new CornerRadii(10),
-                        new BorderWidths(2)
-                )
-        ));
-        setButtons();
+        setTasksButtons();
 
         // Set columns to grow evenly
         setColumnConstraint();
@@ -91,7 +83,7 @@ public class TaskLayout {
     }
 
     // Add buttons dynamically
-    private void setButtons(){
+    private void setTasksButtons(){
         List<Task> tasks = fetchTasksFromBackend();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
@@ -135,6 +127,15 @@ public class TaskLayout {
                 button.setGraphic(borderPane);
                 button.setMaxWidth(Double.MAX_VALUE);
                 button.setMaxHeight(Double.MAX_VALUE);
+
+                button.setBorder(new Border(
+                        new BorderStroke(
+                                Paint.valueOf("#4d067B"),
+                                BorderStrokeStyle.SOLID,
+                                new CornerRadii(10),
+                                new BorderWidths(2)
+                        )
+                ));
 
                 setButtonColor(button, tasks.get(i+j).getTaskState());
 
