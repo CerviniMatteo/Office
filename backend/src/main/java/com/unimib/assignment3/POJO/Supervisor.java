@@ -1,6 +1,6 @@
 package com.unimib.assignment3.POJO;
 
-import com.unimib.assignment3.enums.EmployeeRole;
+import com.unimib.assignment3.enums.WorkerRole;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @see Team
  */
 @Entity(name = "supervisor")
-public class Supervisor extends Employee {
+public class Supervisor extends Worker {
 
     /**
      * The supervisor of this Supervisor.
@@ -63,13 +63,13 @@ public class Supervisor extends Employee {
     }
 
     /**
-     * Creates a Supervisor with default role {@link EmployeeRole#SW_ARCHITECT}.
+     * Creates a Supervisor with default role {@link WorkerRole#SW_ARCHITECT}.
      *
      * @param name    the supervisor's first name
      * @param surname the supervisor's last name
      */
     public Supervisor(String name, String surname) {
-        super(name, surname, EmployeeRole.SW_ARCHITECT);
+        super(name, surname, WorkerRole.SW_ARCHITECT);
         supervisedTeams = new ArrayList<>();
     }
 
@@ -78,10 +78,10 @@ public class Supervisor extends Employee {
      *
      * @param name         the supervisor's first name
      * @param surname      the supervisor's last name
-     * @param employeeRole the role of the supervisor
+     * @param workerRole the role of the supervisor
      */
-    public Supervisor(String name, String surname, EmployeeRole employeeRole) {
-        super(name, surname, employeeRole);
+    public Supervisor(String name, String surname, WorkerRole workerRole) {
+        super(name, surname, workerRole);
         supervisedTeams = new ArrayList<>();
     }
 
@@ -90,12 +90,12 @@ public class Supervisor extends Employee {
      *
      * @param name            the supervisor's first name
      * @param surname         the supervisor's last name
-     * @param employeeRole    the role of the supervisor
+     * @param workerRole    the role of the supervisor
      * @param supervisor      the supervisor of this supervisor
      * @param subordinates    list of subordinates
      */
-    public Supervisor(String name, String surname, EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates) {
-        super(name, surname, employeeRole);
+    public Supervisor(String name, String surname, WorkerRole workerRole, Supervisor supervisor, List<Supervisor> subordinates) {
+        super(name, surname, workerRole);
         setSupervisor(supervisor);
         setSubordinates(subordinates);
         supervisedTeams = new ArrayList<>();
@@ -107,10 +107,10 @@ public class Supervisor extends Employee {
      * @param name          the supervisor's first name
      * @param surname       the supervisor's last name
      * @param monthlySalary the monthly salary of the supervisor
-     * @param employeeRole  the role of the supervisor
+     * @param workerRole  the role of the supervisor
      */
-    public Supervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
-        super(name, surname, monthlySalary, employeeRole);
+    public Supervisor(String name, String surname, double monthlySalary, WorkerRole workerRole) {
+        super(name, surname, monthlySalary, workerRole);
         supervisedTeams = new ArrayList<>();
     }
 
@@ -120,20 +120,20 @@ public class Supervisor extends Employee {
      * @param name            the supervisor's first name
      * @param surname         the supervisor's last name
      * @param monthlySalary   the monthly salary of the supervisor
-     * @param employeeRole    the role of the supervisor
+     * @param workerRole    the role of the supervisor
      * @param supervisor      the supervisor of this supervisor
      * @param subordinates    list of subordinates
      */
-    public Supervisor(String name, String surname, double monthlySalary, EmployeeRole employeeRole, Supervisor supervisor, List<Supervisor> subordinates) {
-        super(name, surname, monthlySalary, employeeRole);
+    public Supervisor(String name, String surname, double monthlySalary, WorkerRole workerRole, Supervisor supervisor, List<Supervisor> subordinates) {
+        super(name, surname, monthlySalary, workerRole);
         setSupervisor(supervisor);
         setSubordinates(subordinates);
         supervisedTeams = new ArrayList<>();
     }
 
     @Override
-    public void setEmployeeRole(EmployeeRole employeeRole) {
-        super.setEmployeeRole(employeeRole);
+    public void setWorkerRole(WorkerRole workerRole) {
+        super.setWorkerRole(workerRole);
     }
 
     @Override

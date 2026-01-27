@@ -1,6 +1,5 @@
 package com.unimib.assignment3.UI.components;
 
-import com.unimib.assignment3.UI.dto.Task;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import java.net.URI;
@@ -9,7 +8,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.unimib.assignment3.UI.dto.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -104,7 +103,8 @@ public class TaskLayout extends GridPane{
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-            return mapper.readValue(response.body(), new TypeReference<List<Task>>(){});
+            return mapper.readValue(response.body(), new TypeReference<>() {
+            });
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return List.of();

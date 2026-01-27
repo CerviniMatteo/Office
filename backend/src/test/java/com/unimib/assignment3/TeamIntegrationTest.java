@@ -6,7 +6,7 @@ import com.unimib.assignment3.POJO.Team;
 import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.enums.TaskState;
-import com.unimib.assignment3.enums.EmployeeRole;
+import com.unimib.assignment3.enums.WorkerRole;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +40,8 @@ class TeamIntegrationTest {
     }
     /**
      * Helper method to create and save an Employee with the salary and employee role via the facade.*/
-    private Employee createEmployee(double monthlySalary, EmployeeRole employeeRole) {
-        return facade.createEmployee("nome", "cognome", monthlySalary, employeeRole);
+    private Employee createEmployee(double monthlySalary, WorkerRole workerRole) {
+        return facade.createEmployee("nome", "cognome", monthlySalary, workerRole);
     }
 
     /**
@@ -98,9 +98,9 @@ class TeamIntegrationTest {
         facade.deleteTeam(teamEmployeesSupervisorTasks);
         for (Employee employee : employees) {
             assertNull(employee.getEmployeeTeam());
-            System.out.println("Employee: " + employee.getPersonId() + ", employeeTeam: null");
+            System.out.println("Employee: " + employee.getWorkerId() + ", employeeTeam: null");
         }
-        System.out.println("Supervisor: " + supervisor.getPersonId() + ", supervisedTeams: " + supervisor.getSupervisedTeams().stream().map(team -> team.getTeamId().toString()).collect(Collectors.joining(", ")));
+        System.out.println("Supervisor: " + supervisor.getWorkerId() + ", supervisedTeams: " + supervisor.getSupervisedTeams().stream().map(team -> team.getTeamId().toString()).collect(Collectors.joining(", ")));
         for (Task task : tasksTeam) {
             assertNull(task.getTeamTask());
             System.out.println("Task: " + task.getTaskId() + ", taskTeam: null");
@@ -116,9 +116,9 @@ class TeamIntegrationTest {
         facade.deleteTeamById(teamId);
         for (Employee employee : employees) {
             assertNull(employee.getEmployeeTeam());
-            System.out.println("Employee: " + employee.getPersonId() + ", employeeTeam: null");
+            System.out.println("Employee: " + employee.getWorkerId() + ", employeeTeam: null");
         }
-        System.out.println("Supervisor: " + supervisor.getPersonId() + ", supervisedTeams: " + supervisor.getSupervisedTeams().stream().map(team -> team.getTeamId().toString()).collect(Collectors.joining(", ")));
+        System.out.println("Supervisor: " + supervisor.getWorkerId() + ", supervisedTeams: " + supervisor.getSupervisedTeams().stream().map(team -> team.getTeamId().toString()).collect(Collectors.joining(", ")));
         assertFalse(facade.getTeamById(teamId).isPresent());
         System.out.println("Team deleted by id successfully");
 
@@ -388,14 +388,14 @@ class TeamIntegrationTest {
 
         // Get teams by supervisor id
         System.out.println("----------Get teams by supervisor id test----------");
-        Long idSupervisor = supervisor1.getPersonId();
+        Long idSupervisor = supervisor1.getWorkerId();
         teams = facade.getTeamsBySupervisorPersonId(idSupervisor);
         assertTrue(teams.contains(teamEmployeesSupervisorTasks));
         System.out.println(teams.stream().map(Team::getTeamId).collect(Collectors.toList()));
 
         // Get team by employee id
         System.out.println("----------Get team by employee id test----------");
-        Team teamByEmployee = facade.getTeamByEmployeePersonId(employee1.getPersonId());
+        Team teamByEmployee = facade.getTeamByEmployeePersonId(employee1.getWorkerId());
         assertEquals(teamEmployeesSupervisorTasks, teamByEmployee);
         System.out.println(teamByEmployee);
 
@@ -428,9 +428,9 @@ class TeamIntegrationTest {
         Supervisor supervisor1 = facade.saveSupervisor(createSupervisor());
 
         // Create employees
-        Employee employee1 = facade.saveEmployee(createEmployee(EmployeeRole.JUNIOR.getMonthlySalary() + 100.0, EmployeeRole.JUNIOR));
-        Employee employee2 = facade.saveEmployee(createEmployee(EmployeeRole.JUNIOR.getMonthlySalary() + 600.0, EmployeeRole.JUNIOR));
-        Employee employee3 = facade.saveEmployee(createEmployee( EmployeeRole.MANAGER.getMonthlySalary(), EmployeeRole.MANAGER));
+        Employee employee1 = facade.saveEmployee(createEmployee(WorkerRole.JUNIOR.getMonthlySalary() + 100.0, WorkerRole.JUNIOR));
+        Employee employee2 = facade.saveEmployee(createEmployee(WorkerRole.JUNIOR.getMonthlySalary() + 600.0, WorkerRole.JUNIOR));
+        Employee employee3 = facade.saveEmployee(createEmployee( WorkerRole.MANAGER.getMonthlySalary(), WorkerRole.MANAGER));
         List<Employee> employees = new ArrayList<>(List.of(employee1, employee2, employee3));
 
         // Create tasks
@@ -475,9 +475,9 @@ class TeamIntegrationTest {
 
         // Get employees with the grado as
         System.out.println("----------Get employees with employee role as JUNIOR test----------");
-        List<Employee> employeesWithEmployeeRole = facade.getEmployeesInTeamIdWithEmployeeRole(teamId, EmployeeRole.JUNIOR);
+        List<Employee> employeesWithEmployeeRole = facade.getEmployeesInTeamIdWithEmployeeRole(teamId, WorkerRole.JUNIOR);
         for(Employee employee : employeesWithEmployeeRole) {
-            assertEquals(0, EmployeeRole.JUNIOR.compareTo(employee.getEmployeeRole()));
+            assertEquals(0, WorkerRole.JUNIOR.compareTo(employee.getWorkerRole()));
         }
         System.out.println(employeesWithEmployeeRole);
 

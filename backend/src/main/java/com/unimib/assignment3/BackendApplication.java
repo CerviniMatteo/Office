@@ -30,24 +30,24 @@ public class BackendApplication {
             facade.saveTask(task2);
 
             Task task3 = facade.createTask(TaskState.TO_BE_STARTED);
-            task3.setTaskState(TaskState.STARTED);
-            task3.setTaskState(TaskState.DONE);
             task3.setDescription("Set up the development environment");
             facade.saveTask(task3);
+            facade.changeTaskState(task3.getTaskId(), TaskState.STARTED);
+            facade.changeTaskState(task3.getTaskId(), TaskState.DONE);
 
             Task task4 = facade.createTask(TaskState.TO_BE_STARTED);
             task4.setDescription("Develop the RESTful API endpoints");
             facade.saveTask(task4);
 
             Task task5 = facade.createTask(TaskState.TO_BE_STARTED);
-            task5.setTaskState(TaskState.STARTED);
             task5.setDescription("Create unit tests for the service layer");
             facade.saveTask(task5);
+            facade.changeTaskState(task5.getTaskId(), TaskState.STARTED);
 
             Task task6 = facade.createTask(TaskState.TO_BE_STARTED);
-            task6.setTaskState(TaskState.STARTED);
             task6.setDescription("Conduct code reviews and optimize performance");
             facade.saveTask(task6);
+            facade.changeTaskState(task6.getTaskId(), TaskState.STARTED);
 
             Task task7 = facade.createTask(TaskState.TO_BE_STARTED);
             task7.setDescription("Integrate third-party services and APIs");
@@ -58,10 +58,10 @@ public class BackendApplication {
             facade.saveTask(task8);
 
             Task task9 = facade.createTask(TaskState.TO_BE_STARTED);
-            task9.setTaskState(TaskState.STARTED);
-            task9.setTaskState(TaskState.DONE);
             task9.setDescription("Perform user acceptance testing (UAT)");
             facade.saveTask(task9);
+            facade.changeTaskState(task9.getTaskId(), TaskState.STARTED);
+            facade.changeTaskState(task9.getTaskId(), TaskState.DONE);
 
             Task task10 = facade.createTask(TaskState.TO_BE_STARTED);
             task10.setDescription("Fix bugs identified during testing");

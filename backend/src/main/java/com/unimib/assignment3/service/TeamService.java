@@ -4,7 +4,7 @@ import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.POJO.Supervisor;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
-import com.unimib.assignment3.enums.EmployeeRole;
+import com.unimib.assignment3.enums.WorkerRole;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.constants.TeamConstants;
 import com.unimib.assignment3.constants.CommonConstants;
@@ -342,7 +342,7 @@ public class TeamService {
     public List<Team> getTeamsBySupervisorPersonId(Long supervisorId) {
         checkSupervisorId(supervisorId);
         supervisorService.findSupervisorById(supervisorId);
-        return teamRepository.findBySupervisorPersonId(supervisorId);
+        return teamRepository.findBySupervisorWorkerId(supervisorId);
     }
 
     /**
@@ -355,7 +355,7 @@ public class TeamService {
     public Team getTeamByEmployeesPersonId(Long employeeId) {
         checkEmployeeId(employeeId);
         employeeService.findEmployeeById(employeeId);
-        return teamRepository.findByEmployeesPersonId(employeeId);
+        return teamRepository.findByEmployeesWorkerId(employeeId);
     }
 
     /**
@@ -473,18 +473,18 @@ public class TeamService {
      * Get employees in a team with a given employee role.
      *
      * @param teamId the id of the team to retrieve employees from
-     * @param employeeRole the role of the employees to retrieve
+     * @param workerRole the role of the employees to retrieve
      * @return a list of employees in the team with the given role
      * @throws IllegalArgumentException if the team with the given id is not found, or if the employee role is null
      */
-    public List<Employee> getEmployeesInTeamIdWithEmployeeRole(Long teamId, EmployeeRole employeeRole) {
+    public List<Employee> getEmployeesInTeamIdWithEmployeeRole(Long teamId, WorkerRole workerRole) {
         checkTeamId(teamId);
         if(getTeamById(teamId).isEmpty()) {
             throw new IllegalArgumentException(TeamConstants.TEAM_NOT_FOUND);
-        } else if(employeeRole == null) {
+        } else if(workerRole == null) {
             throw new IllegalArgumentException(TeamConstants.EMPLOYEE_ROLE_CANNOT_BE_NULL);
         }
-        return teamRepository.findEmployeesInTeamIdWithEmployeeRole(teamId, employeeRole);
+        return teamRepository.findEmployeesInTeamIdWithWorkerRole(teamId, workerRole);
     }
 
     /**

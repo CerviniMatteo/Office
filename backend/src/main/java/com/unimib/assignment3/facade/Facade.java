@@ -55,11 +55,11 @@ public class Facade {
      * @param name          the employee's first name (must not be null)
      * @param surname       the employee's surname (must not be null)
      * @param monthlySalary the employee's monthly salary
-     * @param employeeRole  the employee's role (must not be null)
+     * @param workerRole  the employee's role (must not be null)
      * @return the newly created Employee object
      */
-    public Employee createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
-        return employeeService.createEmployee(name, surname, monthlySalary, employeeRole);
+    public Employee createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull WorkerRole workerRole) {
+        return employeeService.createEmployee(name, surname, monthlySalary, workerRole);
     }
 
     /**
@@ -108,7 +108,7 @@ public class Facade {
      * @param employeeId the employee's ID (must not be null)
      */
     public void fireEmployee(@NonNull Long managerId, @NonNull Long employeeId) {
-        employeeService.fireEmployee(managerId, employeeId);
+        supervisorService.fireWorker(managerId, employeeId);
     }
 
     /**
@@ -118,7 +118,7 @@ public class Facade {
      * @param employees list of employees to fire (must not be null)
      */
     public void fireEmployees(@NonNull Long managerId, @NonNull List<Employee> employees) {
-        employeeService.fireEmployees(managerId, employees);
+        supervisorService.fireWorkers(managerId, employees);
     }
 
     /**
@@ -128,8 +128,8 @@ public class Facade {
      * @param monthlySalary the salary to filter
      * @return list of employees matching the salary criteria
      */
-    public List<Employee> findEmployeesByMonthlySalary(@NonNull Long employeeId, double monthlySalary) {
-        return employeeService.findEmployeesByMonthlySalary(employeeId, monthlySalary);
+    public List<? extends Worker> findWorkersByMonthlySalary(@NonNull Long employeeId, double monthlySalary) {
+        return supervisorService.findWorkersByMonthlySalary(employeeId, monthlySalary);
     }
 
     /**
@@ -139,8 +139,8 @@ public class Facade {
      * @param monthlySalary the salary to filter
      * @return list of employees sorted by role ascending
      */
-    public List<Employee> findEmployeesByMonthlySalaryAscByEmployeeRole(@NonNull Long employeeId, double monthlySalary) {
-        return employeeService.findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(employeeId, monthlySalary);
+    public List<? extends Worker> findWorkersByMonthlySalaryAscByWorkerRole(@NonNull Long employeeId, double monthlySalary) {
+        return supervisorService.findWorkersByMonthlySalaryOrderByWorkerRoleAsc(employeeId, monthlySalary);
     }
 
     /**
@@ -150,8 +150,8 @@ public class Facade {
      * @param monthlySalary the salary to filter
      * @return list of employees sorted by role descending
      */
-    public List<Employee> findEmployeesByMonthlySalaryDescByEmployeeRole(@NonNull Long employeeId, double monthlySalary) {
-        return employeeService.findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(employeeId, monthlySalary);
+    public List<? extends Worker> findWorkersByMonthlySalaryDescByWorkerRole(@NonNull Long employeeId, double monthlySalary) {
+        return supervisorService.findWorkersByMonthlySalaryOrderByWorkerRoleDesc(employeeId, monthlySalary);
     }
 
     /**
@@ -212,73 +212,74 @@ public class Facade {
     public List<Task> findTasksByEmployeeByTaskStateOrderByEndDateDesc(@NonNull Long employeeId, @NonNull TaskState taskState) {
         return employeeService.findTasksByEmployeeByTaskStateOrderByEndDateDesc(employeeId, taskState);
     }
-    /**
-     * Finds employees under a manager filtered by role.
-     *
-     * @param employeeId   the manager's employee ID (must not be null)
-     * @param employeeRole the role to filter (must not be null)
-     * @return list of employees matching the role
-     */
-    public List<Employee> findEmployeesByEmployeeRole(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
-        return employeeService.findEmployeesByEmployeeRole(employeeId, employeeRole);
-    }
-
-    /**
-     * Finds employees under a manager filtered by role, ordered ascending by salary.
-     *
-     * @param employeeId   the manager's employee ID (must not be null)
-     * @param employeeRole the role to filter (must not be null)
-     * @return list of employees sorted by salary ascending
-     */
-    public List<Employee> findEmployeesByEmployeeRoleAscByMonthlySalary(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
-        return employeeService.findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(employeeId, employeeRole);
-    }
-
-    /**
-     * Finds employees under a manager filtered by role, ordered descending by salary.
-     *
-     * @param employeeId   the manager's employee ID (must not be null)
-     * @param employeeRole the role to filter (must not be null)
-     * @return list of employees sorted by salary descending
-     */
-    public List<Employee> findEmployeesByEmployeeRoleDescByMonthlySalary(@NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
-        return employeeService.findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(employeeId, employeeRole);
-    }
-
-    /**
-     * Updates an employee's monthly salary.
-     *
-     * @param managerId     the manager's ID (must not be null)
-     * @param employeeId    the employee's ID (must not be null)
-     * @param monthlySalary the new monthly salary
-     */
-    public void updateMonthlySalaryById(@NonNull Long managerId, @NonNull Long employeeId, double monthlySalary) {
-        employeeService.updateMonthlySalaryById(managerId, employeeId, monthlySalary);
-    }
-
-    /**
-     * Updates an employee's role.
-     *
-     * @param managerId    the manager's ID (must not be null)
-     * @param employeeId   the employee's ID (must not be null)
-     * @param employeeRole the new role (must not be null)
-     */
-    public void updateEmployeeRoleById(@NonNull Long managerId, @NonNull Long employeeId, @NonNull EmployeeRole employeeRole) {
-        employeeService.updateEmployeeRoleById(managerId, employeeId, employeeRole);
-    }
-
-    /**
-     * Finds tasks assigned to a specific employee filtered by task state.
-     *
-     * @param employeeId the employee's ID (must not be null)
-     * @param taskState  the state of tasks to filter (must not be null)
-     * @return list of tasks assigned to the employee with the given state
-     */
-    public List<Task> findTasksByEmployeeAndTaskState(@NonNull Long employeeId, @NonNull TaskState taskState) {
-        return employeeService.findTasksByEmployeeAndTaskState(employeeId, taskState);
-    }
 
     // <---- Supervisor Methods ---->
+
+    /**
+     * Finds workers under a manager filtered by role.
+     *
+     * @param workerId   the manager's workers ID (must not be null)
+     * @param workerRole the role to filter (must not be null)
+     * @return list of workers matching the role
+     */
+    public List<? extends Worker> findWorkersByWorkerRole(@NonNull Long workerId, @NonNull WorkerRole workerRole) {
+        return supervisorService.findWorkersByWorkerRole(workerId, workerRole);
+    }
+
+    /**
+     * Finds workers under a manager filtered by role, ordered ascending by salary.
+     *
+     * @param workerId   the manager's worker ID (must not be null)
+     * @param workerRole the role to filter (must not be null)
+     * @return list of workers sorted by salary ascending
+     */
+    public List<? extends Worker> findWorkersByWorkerRoleAscByMonthlySalary(@NonNull Long workerId, @NonNull WorkerRole workerRole) {
+        return supervisorService.findWorkersByWorkerRoleOrderByMonthlySalaryAsc(workerId, workerRole);
+    }
+
+    /**
+     * Finds workers under a manager filtered by role, ordered descending by salary.
+     *
+     * @param workerId   the manager's worker ID (must not be null)
+     * @param workerRole the role to filter (must not be null)
+     * @return list of workers sorted by salary descending
+     */
+    public List<? extends Worker> findWorkersByWorkerRoleDescByMonthlySalary(@NonNull Long workerId, @NonNull WorkerRole workerRole) {
+        return supervisorService.findWorkersByWorkerRoleOrderByMonthlySalaryDesc(workerId, workerRole);
+    }
+
+    /**
+     * Updates a worker's monthly salary.
+     *
+     * @param managerId     the manager's ID (must not be null)
+     * @param workerId    the worker's ID (must not be null)
+     * @param monthlySalary the new monthly salary
+     */
+    public void updateMonthlySalaryById(@NonNull Long managerId, @NonNull Long workerId, double monthlySalary) {
+        supervisorService.updateMonthlySalaryById(managerId, workerId, monthlySalary);
+    }
+
+    /**
+     * Updates an worker's role.
+     *
+     * @param managerId    the manager's ID (must not be null)
+     * @param workerId   the worker's ID (must not be null)
+     * @param workerRole the new role (must not be null)
+     */
+    public void updateWorkerRoleById(@NonNull Long managerId, @NonNull Long workerId, @NonNull WorkerRole workerRole) {
+        supervisorService.updateWorkerRoleById(managerId, workerId, workerRole);
+    }
+
+    /**
+     * Finds tasks assigned to a specific worker filtered by task state.
+     *
+     * @param workerId the worker's ID (must not be null)
+     * @param taskState  the state of tasks to filter (must not be null)
+     * @return list of tasks assigned to the worker with the given state
+     */
+    public List<Task> findTasksByWorkerAndTaskState(@NonNull Long workerId, @NonNull TaskState taskState) {
+        return employeeService.findTasksByEmployeeAndTaskState(workerId, taskState);
+    }
 
     /**
      * Creates a new supervisor with only name and surname.
@@ -296,11 +297,11 @@ public class Facade {
      *
      * @param name         the supervisor's first name (must not be null)
      * @param surname      the supervisor's surname (must not be null)
-     * @param employeeRole the supervisor's role (must not be null)
+     * @param workerRole the supervisor's role (must not be null)
      * @return the newly created Supervisor object
      */
-    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, @NonNull EmployeeRole employeeRole) {
-        return supervisorService.createSupervisor(name, surname, employeeRole);
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, @NonNull WorkerRole workerRole) {
+        return supervisorService.createSupervisor(name, surname, workerRole);
     }
 
     /**
@@ -309,11 +310,11 @@ public class Facade {
      * @param name          the supervisor's first name (must not be null)
      * @param surname       the supervisor's surname (must not be null)
      * @param monthlySalary the supervisor's monthly salary
-     * @param employeeRole  the supervisor's role (must not be null)
+     * @param workerRole  the supervisor's role (must not be null)
      * @return the newly created Supervisor object
      */
-    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
-        return supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole);
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull WorkerRole workerRole) {
+        return supervisorService.createSupervisor(name, surname, monthlySalary, workerRole);
     }
 
     /**
@@ -322,11 +323,11 @@ public class Facade {
      * @param name          the supervisor's first name (must not be null)
      * @param surname       the supervisor's surname (must not be null)
      * @param monthlySalary the supervisor's monthly salary
-     * @param employeeRole  the supervisor's role (must not be null)
+     * @param workerRole  the supervisor's role (must not be null)
      * @return the newly created Supervisor object
      */
-    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole, @NonNull Supervisor supervisor, List<Supervisor> subordinates) {
-        return supervisorService.createSupervisor(name, surname, monthlySalary, employeeRole, supervisor, subordinates);
+    public Supervisor createSupervisor(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull WorkerRole workerRole, @NonNull Supervisor supervisor, List<Supervisor> subordinates) {
+        return supervisorService.createSupervisor(name, surname, monthlySalary, workerRole, supervisor, subordinates);
     }
 
     /**
@@ -364,7 +365,7 @@ public class Facade {
      * @param supervisorId the supervisor's ID (must not be null)
      */
     public void deleteSupervisorById(@NonNull Long supervisorId) {
-        supervisorService.deleteSupervisorById(supervisorId);
+        supervisorService.deleteWorkerById(supervisorId);
     }
 
     /**
@@ -902,10 +903,10 @@ public class Facade {
      * Get employees in a team with a specific employee role.
      *
      * @param teamId the team's ID
-     * @param employeeRole the role of the employees to filter by
+     * @param workerRole the role of the employees to filter by
      * @return the list of employees in the given team with the specified role
      */
-    public List<Employee> getEmployeesInTeamIdWithEmployeeRole(Long teamId, EmployeeRole employeeRole) {
-        return teamService.getEmployeesInTeamIdWithEmployeeRole(teamId, employeeRole);
+    public List<Employee> getEmployeesInTeamIdWithEmployeeRole(Long teamId, WorkerRole workerRole) {
+        return teamService.getEmployeesInTeamIdWithEmployeeRole(teamId, workerRole);
     }
 }

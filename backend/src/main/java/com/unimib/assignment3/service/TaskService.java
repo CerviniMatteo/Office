@@ -161,6 +161,9 @@ public class TaskService {
         }
 
         task.setTaskState(newState);
+        if(newState == TaskState.DONE){
+            task.setEndDate(LocalDate.now());
+        }
         return task;
     }
 
@@ -200,9 +203,9 @@ public class TaskService {
      */
     public List<Task> getTasksByEmployee(Employee employee) {
         if (employee == null) throw new IllegalArgumentException(TaskConstants.NULL_EMPLOYEE);
-        if (employee.getPersonId() == null) throw new IllegalArgumentException(EmployeeConstants.NULL_EMPLOYEE_ID);
+        if (employee.getWorkerId() == null) throw new IllegalArgumentException(EmployeeConstants.NULL_EMPLOYEE_ID);
 
-        employeeService.findEmployeeById(employee.getPersonId())
+        employeeService.findEmployeeById(employee.getWorkerId())
                 .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
         return taskRepository.findTasksByEmployee(employee);
     }

@@ -2,7 +2,6 @@ package com.unimib.assignment3.controller;
 
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.facade.Facade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +21,7 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
+        System.out.println("Called taks/getAllTasks");
         return ResponseEntity.ok(facade.getAllTasks());
     }
 }

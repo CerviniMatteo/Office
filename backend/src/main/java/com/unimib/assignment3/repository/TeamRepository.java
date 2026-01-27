@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.POJO.Team;
-import com.unimib.assignment3.enums.EmployeeRole;
+import com.unimib.assignment3.enums.WorkerRole;
 import com.unimib.assignment3.enums.TaskState;
 import org.springframework.lang.NonNull;
 
@@ -53,7 +53,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
      * @param supervisorId supervisor's ID
      * @return list of teams
      */
-    List<Team> findBySupervisorPersonId(Long supervisorId);
+    List<Team> findBySupervisorWorkerId(Long supervisorId);
 
     /**
      * Find the team by a specific employee's ID.
@@ -61,7 +61,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
      * @param employeeId the ID of the employee
      * @return the team associated with the employee
      */
-    Team findByEmployeesPersonId(Long employeeId);
+    Team findByEmployeesWorkerId(Long employeeId);
 
     /**
      * Find the team by a specific task's ID.
@@ -131,11 +131,11 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
      * Find employees with a specific employee role in a specific team.
      *
      * @param teamId the ID of the team
-     * @param employeeRole the employee role to filter by
+     * @param workerRole the employee role to filter by
      * @return list of employees in the team with the given role
      */
-    @Query("SELECT d FROM team t JOIN t.employees d WHERE t.teamId = :teamId AND d.employeeRole = :employeeRole")
-    List<Employee> findEmployeesInTeamIdWithEmployeeRole(@Param("teamId") Long teamId, @Param("employeeRole") EmployeeRole employeeRole);
+    @Query("SELECT d FROM team t JOIN t.employees d WHERE t.teamId = :teamId AND d.workerRole = :workerRole")
+    List<Employee> findEmployeesInTeamIdWithWorkerRole(@Param("teamId") Long teamId, @Param("workerRole") WorkerRole workerRole);
 }
 
 

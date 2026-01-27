@@ -3,6 +3,7 @@ package com.unimib.assignment3.repository;
 import com.unimib.assignment3.POJO.Supervisor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -34,4 +35,14 @@ public interface SupervisorRepository extends JpaRepository<Supervisor, Long> {
      */
     @Query("SELECT s FROM supervisor s WHERE s.supervisedTeams IS EMPTY")
     List<Supervisor> findSupervisorWithoutSupervisedTeam();
+
+    /**
+     * Counts the number of workers whose email starts with a given prefix.
+     * The comparison is case-insensitive.
+     *
+     * @param emailPrefix the email prefix to search for.
+     * @return the count of workers with emails starting with the prefix.
+     */
+    @Query("SELECT COUNT(d) FROM worker d WHERE LOWER(d.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
+    int countEmailsStartingWithEmailPrefix(@Param("emailPrefix") String emailPrefix);
 }

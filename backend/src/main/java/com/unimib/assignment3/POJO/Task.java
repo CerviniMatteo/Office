@@ -252,7 +252,7 @@ public class Task implements Serializable {
     public List<Long> getAllEmployeesId() {
         List<Long> idDipendenti = new ArrayList<>();
         for (Employee employee : assignedEmployees) {
-            idDipendenti.add(employee.getPersonId());
+            idDipendenti.add(employee.getWorkerId());
         }
         return idDipendenti;
     }

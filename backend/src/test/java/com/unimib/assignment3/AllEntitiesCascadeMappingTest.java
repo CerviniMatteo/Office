@@ -55,7 +55,7 @@ class AllEntitiesCascadeMappingTest {
 
         parent.addSubordinate(child);
 
-        Long childId = child.getPersonId();
+        Long childId = child.getWorkerId();
         assertNotNull(childId);
         assertNotNull(facade.findSupervisorById(childId));
 
@@ -106,7 +106,7 @@ class AllEntitiesCascadeMappingTest {
         Team team = facade.saveTeam(facade.createTeam(sup));
         team.addEmployee(emp);
 
-        Long empId = emp.getPersonId();
+        Long empId = emp.getWorkerId();
         assertNotNull(empId);
 
         // Retrieve detached team and modify associated employee
@@ -142,10 +142,10 @@ class AllEntitiesCascadeMappingTest {
 
         task.assignEmployee(emp);
 
-        Employee persistedEmp = facade.findEmployeeById(emp.getPersonId())
+        Employee persistedEmp = facade.findEmployeeById(emp.getWorkerId())
                 .orElseThrow();
 
-        Long empId = persistedEmp.getPersonId();
+        Long empId = persistedEmp.getWorkerId();
         assertNotNull(empId);
 
         // Remove relationship

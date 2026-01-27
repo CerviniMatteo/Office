@@ -4,7 +4,7 @@ package com.unimib.assignment3.enums;
   * Enum representing different employee roles within the organization.
   * Each role is associated with a specific monthly salary.
   */
- public enum EmployeeRole {
+ public enum WorkerRole {
      /**
       * Represents a Junior employee with a monthly salary of 2400.00.
       */
@@ -43,7 +43,7 @@ package com.unimib.assignment3.enums;
       *
       * @param monthlySalary The monthly salary associated with the role.
       */
-     EmployeeRole(double monthlySalary) {
+     WorkerRole(double monthlySalary) {
          this.monthlySalary = monthlySalary;
      }
 

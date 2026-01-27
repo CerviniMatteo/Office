@@ -1,6 +1,6 @@
 package com.unimib.assignment3.POJO;
 
-import com.unimib.assignment3.enums.EmployeeRole;
+import com.unimib.assignment3.enums.WorkerRole;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Represents an employee in the system.
  * <p>
- * Extends {@link Person} and adds employee-specific attributes such as:
+ * Extends {@link Worker} and adds employee-specific attributes such as:
  * - monthly salary
  * - employee role
  * - assigned tasks
@@ -19,13 +19,7 @@ import java.util.List;
  * - Many-to-one relationship with {@link Team} (employee's team)
  */
 @Entity(name = "employee")
-public class Employee extends Person {
-
-    /** Monthly salary of the employee. */
-    private double monthlySalary;
-
-    /** Role of the employee. */
-    private EmployeeRole employeeRole;
+public class Employee extends Worker {
 
     /**
      * List of tasks assigned to this employee.
@@ -51,15 +45,15 @@ public class Employee extends Person {
     }
 
     /**
-     * Constructs an employee with default role {@link EmployeeRole#JUNIOR} and its salary.
+     * Constructs an employee with default role {@link WorkerRole#JUNIOR} and its salary.
      *
      * @param name    first name of the employee
      * @param surname last name of the employee
      */
     public Employee(String name, String surname) {
         super(name, surname);
-        setEmployeeRole(EmployeeRole.JUNIOR);
-        setMonthlySalary(EmployeeRole.JUNIOR.getMonthlySalary());
+        setWorkerRole(WorkerRole.JUNIOR);
+        setMonthlySalary(WorkerRole.JUNIOR.getMonthlySalary());
     }
 
     /**
@@ -67,12 +61,10 @@ public class Employee extends Person {
      *
      * @param name         first name of the employee
      * @param surname      last name of the employee
-     * @param employeeRole role of the employee
+     * @param workerRole role of the employee
      */
-    public Employee(String name, String surname, EmployeeRole employeeRole) {
-        super(name, surname);
-        setEmployeeRole(employeeRole);
-        setMonthlySalary(employeeRole.getMonthlySalary());
+    public Employee(String name, String surname, WorkerRole workerRole) {
+        super(name, surname, workerRole);
     }
 
     /**
@@ -81,48 +73,10 @@ public class Employee extends Person {
      * @param name          first name of the employee
      * @param surname       last name of the employee
      * @param monthlySalary monthly salary of the employee
-     * @param employeeRole  role of the employee
+     * @param workerRole  role of the employee
      */
-    public Employee(String name, String surname, double monthlySalary, EmployeeRole employeeRole) {
-        super(name, surname);
-        setMonthlySalary(monthlySalary);
-        setEmployeeRole(employeeRole);
-    }
-
-    /**
-     * Returns the monthly salary of the employee.
-     *
-     * @return monthly salary
-     */
-    public double getMonthlySalary() {
-        return monthlySalary;
-    }
-
-    /**
-     * Sets the monthly salary of the employee.
-     *
-     * @param monthlySalary the new monthly salary
-     */
-    public void setMonthlySalary(double monthlySalary) {
-        this.monthlySalary = monthlySalary;
-    }
-
-    /**
-     * Returns the role of the employee.
-     *
-     * @return employee role
-     */
-    public EmployeeRole getEmployeeRole() {
-        return employeeRole;
-    }
-
-    /**
-     * Sets the role of the employee.
-     *
-     * @param employeeRole the new role
-     */
-    public void setEmployeeRole(EmployeeRole employeeRole) {
-        this.employeeRole = employeeRole;
+    public Employee(String name, String surname, double monthlySalary, WorkerRole workerRole) {
+        super(name, surname, monthlySalary, workerRole);
     }
 
     /**
@@ -188,8 +142,6 @@ public class Employee extends Person {
     public String toString() {
         String teamId = employeeTeam != null ? employeeTeam.getTeamId().toString() : "null";
         return "Employee{" + super.toString() +
-                "salary=" + monthlySalary +
-                ", employee role=" + employeeRole +
                 ", tasks=" + getAllTaskId() +
                 ", team=" + teamId +
                 '}';

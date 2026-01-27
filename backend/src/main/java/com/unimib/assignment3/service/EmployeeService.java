@@ -1,7 +1,6 @@
 package com.unimib.assignment3.service;
 
 import com.unimib.assignment3.POJO.*;
-import com.unimib.assignment3.constants.CommonConstants;
 import com.unimib.assignment3.enums.*;
 import com.unimib.assignment3.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,9 +12,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
+import static com.unimib.assignment3.POJO.Worker.generateEmail;
 import static com.unimib.assignment3.constants.CommonConstants.*;
 import static com.unimib.assignment3.constants.EmployeeConstants.*;
 import static com.unimib.assignment3.constants.TaskConstants.NULL_DATE;
@@ -80,11 +79,11 @@ public class EmployeeService {
      * @param employee the employee whose email needs to be checked
      * @throws IllegalArgumentException if the employee is null
      */
-    protected void checkUniqueEmail(Employee employee) {
+    private void checkUniqueEmail(Employee employee) {
         assertNotNull(employee, NULL_EMPLOYEE);
         int emailCounter = employeeRepository.countEmailsStartingWithEmailPrefix(employee.getName());
         if(emailCounter != 0) {
-            employee.setEmail(Person.generateEmail(employee.getName(), employee.getSurname(), emailCounter));
+            employee.setEmail(generateEmail(employee.getName()+emailCounter, employee.getSurname()));
         }
     }
 
@@ -109,18 +108,18 @@ public class EmployeeService {
      * @param name          the name of the supervisor (must not be null)
      * @param surname       the surname of the supervisor (must not be null)
      * @param monthlySalary the monthly salary of the supervisor
-     * @param employeeRole  the role of the supervisor (must not be null)
+     * @param workerRole  the role of the supervisor (must not be null)
      * @return the created supervisor entity
      * @throws IllegalArgumentException if the name, surname, or employee role is null or if the email is not unique
      */
-    public Employee createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull EmployeeRole employeeRole) {
-        checkSalary(monthlySalary, employeeRole);
+    public Employee createEmployee(@NonNull String name, @NonNull String surname, double monthlySalary, @NonNull WorkerRole workerRole) {
+        checkSalary(monthlySalary, workerRole);
         assertNotNull(name, NULL_NAME);
         assertNotNull(surname, NULL_SURNAME);
-        return new Employee(name, surname, monthlySalary, employeeRole);
+        return new Employee(name, surname, monthlySalary, workerRole);
     }
 
-    protected void checkSalary(double monthlySalary, EmployeeRole employeeRole) {
+    private void checkSalary(double monthlySalary, WorkerRole employeeRole) {
        if(monthlySalary < 0) {
            throw new IllegalArgumentException(SALARY_MUST_BE_POSITIVE);
        }
@@ -158,130 +157,6 @@ public class EmployeeService {
     public void deleteEmployeeById(@NonNull Long employeeId) {
         assertNotNull(employeeId, NULL_EMPLOYEE_ID);
         employeeRepository.deleteById(employeeId);
-    }
-
-    /**
-     * Fire (delete) a single employee.
-     * Only a manager can perform this action.
-     *
-     * @param managerId  the manager's ID
-     * @param employeeId the employee's ID to fire
-     * @throws IllegalArgumentException if the ids are null, if the manager is not authorized
-     * and if the employee does not exist
-     */
-    public void fireEmployee(@NonNull Long managerId,@NonNull Long employeeId) {
-        checkManagerRole(managerId);
-        deleteEmployeeById(employeeId);
-    }
-
-    /**
-     * Fire multiple employees at once.
-     * Only a manager can perform this action.
-     *
-     * @param managerId the manager's ID
-     * @param employees list of employees to fire
-     * @throws IllegalArgumentException if the ids are null, if the manager is not authorized
-     * and if any of the employees do not exist or the employees list is null
-     */
-    public void fireEmployees(@NonNull Long managerId,@NonNull List<Employee> employees) {
-        checkManagerRole(managerId);
-        employees.forEach(employee -> deleteEmployeeById(employee.getPersonId()));
-    }
-
-    /**
-     * Find employees with a specific monthly salary.
-     * Only accessible by managers.
-     *
-     * @param managerId    the manager's ID
-     * @param monthlySalary the target salary
-     * @throws IllegalArgumentException if the managerId is null and if the manager is not authorized
-     * and if the manager does not exist
-     * @return list of employees with that salary
-     */
-    public List<Employee> findEmployeesByMonthlySalary(@NonNull Long managerId, double monthlySalary) {
-        checkManagerRole(managerId);
-        return employeeRepository.findEmployeeByMonthlySalary(monthlySalary);
-    }
-
-    /**
-     * Find employees by salary and sort by role ascending.
-     * Only accessible by managers.
-     *
-     * @param managerId    the manager's ID
-     * @param monthlySalary the target salary
-     * @throws IllegalArgumentException if the managerId is null and if the manager is not authorized
-     * and if the manager does not exist
-     * @return list of employees with that salary ordered by role ascending
-     */
-    public List<Employee> findEmployeesByMonthlySalaryOrderByEmployeeRoleAsc(@NonNull Long managerId, double monthlySalary) {
-        checkManagerRole(managerId);
-        return employeeRepository.findEmployeeByMonthlySalaryOrderByEmployeeRoleAsc(monthlySalary);
-    }
-
-    /**
-     * Find employees by salary and sort by role ascending.
-     * Only accessible by managers.
-     *
-     * @param managerId    the manager's ID
-     * @param monthlySalary the target salary
-     * @throws IllegalArgumentException if the managerId is null and if the manager is not authorized
-     * and if the manager does not exist
-     * @return list of employees with that salary ordered by role descending
-     */
-    public List<Employee> findEmployeesByMonthlySalaryOrderByEmployeeRoleDesc(@NonNull Long managerId, double monthlySalary) {
-        checkManagerRole(managerId);
-        return employeeRepository.findEmployeeByMonthlySalaryOrderByEmployeeRoleDesc(monthlySalary);
-    }
-
-    /**
-     * Find employees by role.
-     * Only accessible by managers.
-     *
-     * @param managerId   the manager's ID
-     * @param employeeRole the target role
-     *
-     * @throws IllegalArgumentException if the managerId is null and if the manager is not authorized
-     * and if the manager does not exist, and if the employeeRole is null
-     * @return list of employees with that role
-     */
-    public List<Employee> findEmployeesByEmployeeRole(@NonNull Long managerId, @NonNull EmployeeRole employeeRole) {
-        checkManagerRole(managerId);
-        Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
-        return employeeRepository.findEmployeeByEmployeeRole(employeeRole);
-    }
-
-    /**
-     * Find employees by role.
-     * Only accessible by managers.
-     *
-     * @param managerId   the manager's ID
-     * @param employeeRole the target role
-     *
-     * @throws IllegalArgumentException if the managerId is null and if the manager is not authorized
-     * and if the manager does not exist, and if the employeeRole is null
-     * @return list of employees with that role ordered by salary ascending
-     */
-    public List<Employee> findEmployeesByEmployeeRoleOrderByMonthlySalaryAsc(@NonNull Long managerId, @NonNull EmployeeRole employeeRole) {
-        checkManagerRole(managerId);
-        Objects.requireNonNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
-        return employeeRepository.findEmployeeByEmployeeRoleOrderByMonthlySalaryAsc(employeeRole);
-    }
-
-    /**
-     * Find employees by role.
-     * Only accessible by managers.
-     *
-     * @param managerId   the manager's ID
-     * @param employeeRole the target role
-     *
-     * @throws IllegalArgumentException if the managerId is null and if the manager is not authorized
-     * and if the manager does not exist, and if the employeeRole is null
-     * @return list of employees with that role ordered by salary descending
-     */
-    public List<Employee> findEmployeesByEmployeeRoleOrderByMonthlySalaryDesc(@NonNull Long managerId, @NonNull EmployeeRole employeeRole) {
-        checkManagerRole(managerId);
-        assertNotNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
-        return employeeRepository.findEmployeeByEmployeeRoleOrderByMonthlySalaryDesc(employeeRole);
     }
 
     /**
@@ -371,37 +246,6 @@ public class EmployeeService {
         return employeeRepository.findTasksByEmployeeByTaskStateOrderByEndDateDesc(employeeId, taskState);
     }
 
-    /**
-     * Update an employee's monthly salary.
-     * Only a manager can perform this operation.
-     *
-     * @param managerId    the manager's ID
-     * @param employeeId   the employee's ID
-     * @param monthlySalary new monthly salary
-     * @throws IllegalArgumentException if the ids are null, if the manager is not authorized and if the employee does not exist
-     */
-    public void updateMonthlySalaryById(@NonNull Long managerId,@NonNull Long employeeId, double monthlySalary) {
-        checkManagerRole(managerId);
-        Employee employee = getEmployeeOrThrow(employeeId);
-        employee.setMonthlySalary(monthlySalary);
-    }
-
-    /**
-     * Update an employee's role.
-     * Only a manager can perform this operation.
-     *
-     * @param managerId    the manager's ID
-     * @param employeeId   the employee's ID
-     * @param employeeRole the new role
-     * @throws IllegalArgumentException if the ids are null, if the manager is not authorized, if the employee does not exist
-     * and if the employeeRole is null, and if the employeeRole is null
-     */
-    public void updateEmployeeRoleById(@NonNull Long managerId,@NonNull Long employeeId,@NonNull EmployeeRole employeeRole) {
-        checkManagerRole(managerId);
-        assertNotNull(employeeRole, CommonConstants.NULL_EMPLOYEE_ROLE);
-        Employee employee = getEmployeeOrThrow(employeeId);
-        employee.setEmployeeRole(employeeRole);
-    }
 
 
     /**
@@ -415,19 +259,7 @@ public class EmployeeService {
         if(obj == null) throw new IllegalArgumentException(message);
     }
 
-    /**
-     * Check that the given employee is a manager.
-     *
-     * @param managerId the employee ID to check
-     * @throws IllegalArgumentException if the employee is not a manager
-     */
-    private void checkManagerRole(Long managerId) {
-        assertNotNull(managerId, NULL_EMPLOYEE_ID);
-        Employee manager = getEmployeeOrThrow(managerId);
-        if (!manager.getEmployeeRole().equals(EmployeeRole.MANAGER)) {
-            throw new IllegalArgumentException(NOT_A_MANAGER);
-        }
-    }
+
 
     /**
      * Check that an employee exists.

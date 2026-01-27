@@ -159,11 +159,11 @@ public class TaskIntegrationTest {
             employee = facade.saveEmployee(employee);
             Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
 
-            facade.assignEmployeeToTask(t.getTaskId(), employee.getPersonId());
-            assertTrue(facade.isEmployeeAssigned(t.getTaskId(), employee.getPersonId()));
+            facade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
+            assertTrue(facade.isEmployeeAssigned(t.getTaskId(), employee.getWorkerId()));
 
-            facade.removeEmployeeToTask(t.getTaskId(), employee.getPersonId());
-            assertFalse(facade.isEmployeeAssigned(t.getTaskId(), employee.getPersonId()));
+            facade.removeEmployeeToTask(t.getTaskId(), employee.getWorkerId());
+            assertFalse(facade.isEmployeeAssigned(t.getTaskId(), employee.getWorkerId()));
         }
 
         /**
@@ -174,10 +174,10 @@ public class TaskIntegrationTest {
             Employee employee = facade.createEmployee("Luca", "Bianchi");
             employee = facade.saveEmployee(employee);
             Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.assignEmployeeToTask(t.getTaskId(), employee.getPersonId());
+            facade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
 
             Employee finalEmployee = employee;
-            assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getPersonId()));
+            assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getWorkerId()));
         }
 
         /**
@@ -191,7 +191,7 @@ public class TaskIntegrationTest {
             employee = facade.saveEmployee(employee);
 
             Employee finalEmployee = employee;
-            assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getPersonId()));
+            assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getWorkerId()));
         }
 
         /**
@@ -203,7 +203,7 @@ public class TaskIntegrationTest {
             Employee employee = facade.createEmployee("Invisibile", "User");
             employee = facade.saveEmployee(employee);
             Employee finalEmployee = employee;
-            assertThrows(IllegalArgumentException.class, () -> facade.assignEmployeeToTask(999L, finalEmployee.getPersonId()));
+            assertThrows(IllegalArgumentException.class, () -> facade.assignEmployeeToTask(999L, finalEmployee.getWorkerId()));
         }
     }
 
@@ -229,8 +229,8 @@ public class TaskIntegrationTest {
             List<Employee> assigned = resultTask.getAssignedEmployees();
 
             assertEquals(2, assigned.size());
-            assertTrue(assigned.stream().anyMatch(e -> e.getPersonId().equals(e1.getPersonId())));
-            assertTrue(assigned.stream().anyMatch(e -> e.getPersonId().equals(e2.getPersonId())));
+            assertTrue(assigned.stream().anyMatch(e -> e.getWorkerId().equals(e1.getWorkerId())));
+            assertTrue(assigned.stream().anyMatch(e -> e.getWorkerId().equals(e2.getWorkerId())));
         }
 
         /**
@@ -241,7 +241,7 @@ public class TaskIntegrationTest {
         void testSetAssignedEmployeesOverwrite() {
             Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
             Employee oldEmp = facade.saveEmployee(facade.createEmployee("Old", "Employee"));
-            facade.assignEmployeeToTask(task.getTaskId(), oldEmp.getPersonId());
+            facade.assignEmployeeToTask(task.getTaskId(), oldEmp.getWorkerId());
 
             Employee newEmp = facade.saveEmployee(facade.createEmployee("New", "Employee"));
             List<Employee> newList = new ArrayList<>(List.of(newEmp));
@@ -252,7 +252,7 @@ public class TaskIntegrationTest {
             assertEquals(1, resultTask.getAssignedEmployees().size());
 
             assertFalse(resultTask.getAssignedEmployees().stream()
-                    .anyMatch(e -> e.getPersonId().equals(oldEmp.getPersonId())));
+                    .anyMatch(e -> e.getWorkerId().equals(oldEmp.getWorkerId())));
         }
 
         /**
@@ -301,12 +301,12 @@ public class TaskIntegrationTest {
             employee = facade.saveEmployee(employee);
             Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
 
-            facade.assignEmployeeToTask(t.getTaskId(), employee.getPersonId());
+            facade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
 
             assertTrue(facade.getTaskById(t.getTaskId()).getAssignedEmployees().contains(employee));
             assertTrue(employee.getTasks().stream().anyMatch(task -> task.getTaskId().equals(t.getTaskId())));
 
-            facade.removeEmployeeToTask(t.getTaskId(), employee.getPersonId());
+            facade.removeEmployeeToTask(t.getTaskId(), employee.getWorkerId());
             assertFalse(facade.getTaskById(t.getTaskId()).getAssignedEmployees().contains(employee));
         }
     }
@@ -338,7 +338,7 @@ public class TaskIntegrationTest {
             Employee employee = facade.createEmployee("Anna", "Verdi");
             employee = facade.saveEmployee(employee);
             Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.assignEmployeeToTask(t.getTaskId(), employee.getPersonId());
+            facade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
 
             List<Task> tasksAnna = facade.getTasksByEmployee(employee);
             assertEquals(1, tasksAnna.size());
@@ -356,8 +356,8 @@ public class TaskIntegrationTest {
             Employee employee2 = facade.createEmployee("D2", "C2");
             employee2 = facade.saveEmployee(employee2);
 
-            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getPersonId());
-            facade.assignEmployeeToTask(t1.getTaskId(), employee2.getPersonId());
+            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
+            facade.assignEmployeeToTask(t1.getTaskId(), employee2.getWorkerId());
 
             List<Task> complexTasks = facade.getComplexTasks(1);
             assertTrue(complexTasks.contains(t1));
@@ -379,7 +379,7 @@ public class TaskIntegrationTest {
             Task t1 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             Employee employee1 = facade.createEmployee("Test", "User");
             employee1 = facade.saveEmployee(employee1);
-            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getPersonId());
+            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
 
             facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
 
@@ -400,8 +400,8 @@ public class TaskIntegrationTest {
             Employee employee2 = facade.createEmployee("D2", "C2");
             employee2 = facade.saveEmployee(employee2);
 
-            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getPersonId());
-            facade.assignEmployeeToTask(t1.getTaskId(), employee2.getPersonId());
+            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
+            facade.assignEmployeeToTask(t1.getTaskId(), employee2.getWorkerId());
 
             Integer count = facade.countEmployeeByTaskId(t1.getTaskId());
             assertEquals(2, count);
@@ -416,7 +416,7 @@ public class TaskIntegrationTest {
             Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
             Employee employee = facade.createEmployee("Solo", "User");
             employee = facade.saveEmployee(employee);
-            facade.assignEmployeeToTask(t1.getTaskId(), employee.getPersonId());
+            facade.assignEmployeeToTask(t1.getTaskId(), employee.getWorkerId());
 
             List<Task> result = facade.findTasksByStateAndCountEmployee(TaskState.STARTED, 1);
             assertEquals(1, result.size());
