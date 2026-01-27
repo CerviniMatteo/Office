@@ -2,33 +2,32 @@ package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.dto.Task;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.scene.control.Label;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import javafx.scene.paint.Paint;
 
 
-public class TaskLayout {
-    private GridPane tasksLayout;
+public class TaskLayout extends GridPane{
     private int columns;
     private int rows;
+    private List<TaskButton> taskButtons;
 
     public TaskLayout(int rows, int columns) {
-        tasksLayout = new GridPane(rows, columns);
+        super(rows, columns);
         setColumns(columns);
         setRows(rows);
-        tasksLayout.setHgap(2);
-        tasksLayout.setVgap(2);
-        HBox.setMargin(tasksLayout, new Insets(10));
+        setHgap(10);
+        setVgap(10);
+        HBox.setMargin(this, new Insets(10));
+
+        taskButtons = new ArrayList<>();
         setTasksButtons();
 
         // Set columns to grow evenly
@@ -37,15 +36,7 @@ public class TaskLayout {
         // Set rows to grow evenly
         setRowsConstraints();
 
-        HBox.setHgrow(getTasksLayout(), Priority.ALWAYS);
-    }
-
-    public GridPane getTasksLayout() {
-        return tasksLayout;
-    }
-
-    public void setTasksLayout(GridPane tasksLayout) {
-        this.tasksLayout = tasksLayout;
+        HBox.setHgrow(this, Priority.ALWAYS);
     }
 
     public int getColumns() {
@@ -69,7 +60,7 @@ public class TaskLayout {
             ColumnConstraints cc = new ColumnConstraints();
             cc.setPercentWidth(100.0 / columns); // percent of total width
             cc.setFillWidth(true);
-            tasksLayout.getColumnConstraints().add(cc);
+            getColumnConstraints().add(cc);
         }
     }
 
@@ -78,71 +69,28 @@ public class TaskLayout {
             RowConstraints rc = new RowConstraints();
             rc.setPercentHeight(100.0 / rows); // percent of total height
             rc.setFillHeight(true);
-            tasksLayout.getRowConstraints().add(rc);
+            getRowConstraints().add(rc);
         }
     }
 
     // Add buttons dynamically
     private void setTasksButtons(){
         List<Task> tasks = fetchTasksFromBackend();
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                Label descriptionLabel = new Label(tasks.get(i+j).getDescription());
-                descriptionLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 24px;");
+        int counter = 0;
 
-                Label stateLabel = new Label(tasks.get(i+j).getTaskState());
-                stateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 20px;");
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
 
-                String startDateStr = "START DATE\n";
-                startDateStr += tasks.get(i+j).getStartDate() != null
-                        ? tasks.get(i+j).getStartDate().toString()
-                        : "N/A";
-                Label startDateLabel = new Label(startDateStr);
-                startDateLabel.setStyle("-fx-text-fill: yellow; -fx-font-size: 18px;");
+                if (counter >= tasks.size()) return;
 
-                String endDateStr = "END DATE\n";
-                endDateStr+=  tasks.get(i+j).getEndDate() != null
-                        ? tasks.get(i+j).getEndDate().toString()
-                        : "N/A";
-                Label endDateLabel = new Label(endDateStr);
-                endDateLabel.setStyle("-fx-text-fill: yellow; -fx-font-size: 18px;");
+                TaskButton taskButton = new TaskButton(tasks.get(counter++));
+                taskButtons.add(taskButton);
 
-                HBox topDates = new HBox();
-                topDates.setPadding(new Insets(2));
-                topDates.setAlignment(Pos.TOP_LEFT);
-                Region spacer = new Region();
-                HBox.setHgrow(spacer, Priority.ALWAYS);
-                topDates.getChildren().addAll(startDateLabel, spacer, endDateLabel);
-
-
-                VBox centerBox = new VBox(2);
-                centerBox.setAlignment(Pos.CENTER);
-                centerBox.getChildren().addAll(descriptionLabel, stateLabel);
-
-                BorderPane borderPane = new BorderPane();
-                borderPane.setTop(topDates);
-                borderPane.setCenter(centerBox);
-
-                Button button = new Button();
-                button.setGraphic(borderPane);
-                button.setMaxWidth(Double.MAX_VALUE);
-                button.setMaxHeight(Double.MAX_VALUE);
-
-                button.setBorder(new Border(
-                        new BorderStroke(
-                                Paint.valueOf("#4d067B"),
-                                BorderStrokeStyle.SOLID,
-                                new CornerRadii(10),
-                                new BorderWidths(2)
-                        )
-                ));
-
-                setButtonColor(button, tasks.get(i+j).getTaskState());
-
-                getTasksLayout().add(button, j, i);
+                add(taskButton, col, row);
             }
         }
     }
+
 
     private List<Task> fetchTasksFromBackend() {
         try {
@@ -162,19 +110,4 @@ public class TaskLayout {
             return List.of();
         }
     }
-
-    private void setButtonColor(Button button, String taskState) {
-        switch (taskState) {
-            case "TO BE STARTED":
-                button.setStyle("-fx-background-color: #2F2139;"); // niente text-fill qui
-                break;
-            case "STARTED":
-                button.setStyle("-fx-background-color: #C38CC3;");
-                break;
-            case "DONE":
-                button.setStyle("-fx-background-color: #086466;");
-                break;
-        }
-    }
-
 }

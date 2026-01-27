@@ -1,25 +1,44 @@
 package com.unimib.assignment3.UI.components;
 
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 
-public class Dashboard {
+public class Dashboard extends VBox{
 
-    private VBox dashboard;
+    private final DashboardButton taskButton;
+    private final DashboardButton profileButton;
+    private final DashboardButton logoutButton;
 
-    public Dashboard(DoubleBinding doubleBinding) {
-        setDashboard(new VBox());
-        getDashboard().prefWidthProperty().bind(doubleBinding);
+    public Dashboard(DoubleBinding dashBoardSize) {
+        super();
+        prefWidthProperty().bind(dashBoardSize);
         toggleBorder(true);
-        HBox.setMargin(dashboard, new Insets(15));
+        HBox.setMargin(this, new Insets(10));
+        taskButton = new DashboardButton("Task");
+        profileButton = new DashboardButton("Profile");
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+        logoutButton = new DashboardButton("Logout");
+        getChildren().addAll(taskButton, profileButton, spacer, logoutButton);
+    }
+
+    public DashboardButton getTaskButton() {
+        return taskButton;
+    }
+
+    public DashboardButton getLogoutButton() {
+        return logoutButton;
+    }
+
+    public DashboardButton getProfileButton() {
+        return profileButton;
     }
 
     public void toggleBorder(boolean toggle){
         if(toggle) {
-            dashboard.setBorder(new Border(
+            setBorder(new Border(
                     new BorderStroke(
                             Paint.valueOf("#4d067B"),
                             BorderStrokeStyle.SOLID,
@@ -28,15 +47,7 @@ public class Dashboard {
                     )
             ));
         }else{
-            dashboard.setBorder(null);
+            setBorder(null);
         }
-    }
-
-    public VBox getDashboard() {
-        return dashboard;
-    }
-
-    public void setDashboard(VBox dashboard) {
-        this.dashboard = dashboard;
     }
 }

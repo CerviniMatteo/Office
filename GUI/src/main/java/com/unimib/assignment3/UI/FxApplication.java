@@ -5,27 +5,35 @@ import com.unimib.assignment3.UI.components.TaskLayout;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class FxApplication extends Application {
 
     @Override
     public void start(Stage stage) {
-        // root
         HBox root = new HBox();
         Scene scene = new Scene(root, 800, 600);
 
-        // tasks
+        DashboardManager dashboardManager =
+                new DashboardManager(root.widthProperty().multiply(0.15));
+
         TaskLayout tasksLayout = new TaskLayout(5, 2);
-        DashboardManager dashboardManager = new DashboardManager(root.widthProperty());
-        tasksLayout.getTasksLayout().prefWidthProperty().bind(root.widthProperty().multiply(0.95));
-        root.getChildren().addAll(dashboardManager.getDashboard().getDashboard(), dashboardManager.getDashboardButton().getButton(), tasksLayout.getTasksLayout());
+        HBox.setHgrow(tasksLayout, Priority.ALWAYS);
+
+        root.getChildren().addAll(
+                dashboardManager.getHbox(),
+                tasksLayout
+        );
 
         stage.setTitle("JavaFX App");
         stage.setScene(scene);
-        stage.setMaximized(true); // maximized with title bar
+        root.setBackground(Background.fill(Paint.valueOf("#E2BD6B")));
+        stage.setMaximized(true);
         stage.show();
+
     }
+
 
     public static void main(String[] args) {
         launch(args);

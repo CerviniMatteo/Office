@@ -1,59 +1,55 @@
 package com.unimib.assignment3.UI.components;
 
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 public class DashboardManager implements EventHandler<ActionEvent> {
+    private final HBox hbox;
     private Dashboard dashboard;
-    private DashboardButton dashboardButton;
+    private DashboardButtonManager dashboardButtonManager;
     List<Dashboard> dashBoardStack;
-    ReadOnlyDoubleProperty dashBoardSize;
 
-    public  DashboardManager(ReadOnlyDoubleProperty widthProperty) {
-        dashBoardSize = widthProperty;
-        dashboard = new Dashboard(widthProperty.multiply(0.25));
+    public DashboardManager(DoubleBinding dashBoardSize) {
+        hbox = new HBox();
+
+        dashboard = new Dashboard(dashBoardSize);
+
+        // Dashboard prende sempre spazio disponibile
+        HBox.setHgrow(dashboard, Priority.ALWAYS);
+
         dashBoardStack = new Stack<>();
         dashBoardStack.add(dashboard);
-        dashboardButton = new DashboardButton();
-        dashboardButton.getButton().addEventHandler(ActionEvent.ACTION, this);
+
+        dashboardButtonManager = new DashboardButtonManager();
+        dashboardButtonManager.addEventHandler(ActionEvent.ACTION, this);
+
+        hbox.getChildren().addAll(dashboard, dashboardButtonManager);
     }
+
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        if(actionEvent.getSource() == dashboardButton.getButton()) {
+        if(actionEvent.getSource() == dashboardButtonManager) {
             if(dashBoardStack.isEmpty()) {
-                getDashboardButton().toggleIcon(false);
+                dashboardButtonManager.toggleIcon(false);
                 dashBoardStack.add(dashboard);
-                dashboard.getDashboard().prefWidthProperty().bind(dashBoardSize.multiply(0.25));
-                dashboard.toggleBorder(true);
+                hbox.getChildren().addFirst(dashboard);
             }else{
                 dashBoardStack.removeFirst();
-                getDashboardButton().toggleIcon(true);
-                dashboard.getDashboard().prefWidthProperty().bind(dashBoardSize.multiply(0));
-                dashboard.toggleBorder(false);
+                dashboardButtonManager.toggleIcon(true);
+                hbox.getChildren().remove(dashboard);
+
             }
         }
     }
 
-    public Dashboard getDashboard() {
-        return dashboard;
-    }
-
-    public void setDashboard(Dashboard dashboard) {
-        this.dashboard = dashboard;
-    }
-
-    public DashboardButton getDashboardButton() {
-        return dashboardButton;
-    }
-
-    public void setDashboardButton(DashboardButton dashboardButton) {
-        this.dashboardButton = dashboardButton;
+    public HBox getHbox() {
+        return hbox;
     }
 }
