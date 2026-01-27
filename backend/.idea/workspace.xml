@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b64b65da-a75d-4687-85a1-8b126f45490b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/AllEntitiesCascadeMappingTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/BackendApplicationTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/EmployeeIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/SupervisorHierarchyIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/SupervisorIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/TaskIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/TeamIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/BackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/BackendApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +25,7 @@
   <component name="CopilotPersistence">
     <persistenceIdMap>
       <entry key="_/home/teo/Documents/2025_assignment3_gruppo10-bug-busters/backend" value="38nsUt0CKWckPcVkzERlybAANLU" />
+      <entry key="_C:/Users/matte/Documents/2025_assignment3_gruppo10-bug-busters/backend" value="38qvgwS1fWzvDR8KobxteQrWJNS" />
     </persistenceIdMap>
   </component>
   <component name="Git.Settings">
@@ -35,12 +41,12 @@
     }
   }
 }</component>
-  <component name="GitLabMergeRequestsSettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;first&quot;: &quot;https://gitlab.com/gruppo10-bug-busters/2025_assignment3_gruppo10-bug-busters.git&quot;,
-    &quot;second&quot;: &quot;cacaaef2-b208-4763-b2f0-9a3ca0f1924a&quot;
+  <component name="GitLabMergeRequestsSettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "first": "https://gitlab.com/gruppo10-bug-busters/2025_assignment3_gruppo10-bug-busters",
+    "second": "6b06a6ad-2b77-4eb3-9ab5-aa6018dcf03a"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -51,20 +57,39 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.TaskIntegrationTest.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "UI",
+    "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/teo/Documents/2025_assignment3_gruppo10-bug-busters/GUI",
+    "last_opened_file_path": "C:/Users/matte/Documents/2025_assignment3_gruppo10-bug-busters/backend",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
   <component name="RunManager">
+    <configuration name="TaskIntegrationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="assignment3" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.unimib.assignment3.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.unimib.assignment3" />
+      <option name="MAIN_CLASS_NAME" value="com.unimib.assignment3.TaskIntegrationTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="backend" />
       <method v="2">
@@ -76,11 +101,16 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.TaskIntegrationTest" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28539.33" />
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
       </set>
     </attachedChunks>
   </component>
