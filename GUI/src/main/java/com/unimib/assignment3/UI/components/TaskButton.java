@@ -1,28 +1,24 @@
 package com.unimib.assignment3.UI.components;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
 import com.unimib.assignment3.UI.dto.TaskDTO;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import static com.unimib.assignment3.UI.rest.TaskRest.fetchTask;
+import static com.unimib.assignment3.UI.rest.TaskRest.postChangeTaskState;
+import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
-public class TaskButton extends Button {
-    private static final String BASE_URL = "http://localhost:8080/api/tasks";
-    private Label descriptionLabel;
-    private Label stateLabel;
-    private Label startDateLabel;
-    private Label endDateLabel;
-    private StyledButton changeStateButton;
+public class TaskButton extends Button {;
+    private final Label descriptionLabel;
+    private final Label stateLabel;
+    private final Label startDateLabel;
+    private final Label endDateLabel;
+    private final StyledButton changeStateButton;
 
     public TaskButton(TaskDTO taskDTO){
         super();
@@ -153,7 +149,7 @@ public class TaskButton extends Button {
                             );
                         }
 
-                        TaskDTO taskDTO = fetchTaskFromBackend(Long.valueOf(getId()));
+                        TaskDTO taskDTO = fetchTask(Long.valueOf(getId()));
 
                         if (taskDTO == null) {
                             throw new RuntimeException("Failed to fetch updated task");
@@ -188,56 +184,4 @@ public class TaskButton extends Button {
             default -> "UNKNOWN_STATE";
         };
     }
-
-
-    private TaskDTO fetchTaskFromBackend(Long taskId) {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/tasks/" + taskId))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response =
-                    client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-
-            return mapper.readValue(response.body(), TaskDTO.class);
-
-        } catch (Exception e) {
-            showAlert("Error", e.getMessage());
-            return null;
-        }
-    }
-    private HttpResponse<String> postChangeTaskState(ChangeTaskStateRequestDTO requestObj) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String payload = mapper.writeValueAsString(requestObj);
-
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/tasks/changeState"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(payload))
-                    .build();
-
-            return client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-
-    // Show an alert dialog in JavaFX
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-
 }

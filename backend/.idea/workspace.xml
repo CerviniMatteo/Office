@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b64b65da-a75d-4687-85a1-8b126f45490b" name="Changes" comment="Added single task get endpoint">
-      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/ChangeTaskStateRequestDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/utils/RestHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GUI/src/main/resources/styles/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/StyledButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/StyledButton.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/rest/TaskRest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/utils/AlertDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskButton.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/TaskDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/controller/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/controller/TaskController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/TaskService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

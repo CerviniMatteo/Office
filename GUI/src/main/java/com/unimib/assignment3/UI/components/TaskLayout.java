@@ -3,15 +3,12 @@ package com.unimib.assignment3.UI.components;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.unimib.assignment3.UI.dto.TaskDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
+
+import static com.unimib.assignment3.UI.rest.TaskRest.fetchTasks;
 
 public class TaskLayout extends ScrollPane{
 
@@ -84,7 +81,7 @@ public class TaskLayout extends ScrollPane{
 
     // Add buttons dynamically
     private void setTasksButtons(){
-        List<TaskDTO> taskDTOS = fetchTasksFromBackend();
+        List<TaskDTO> taskDTOS = fetchTasks();
         int counter = 0;
 
         for (int row = 0; row < rows; row++) {
@@ -105,7 +102,7 @@ public class TaskLayout extends ScrollPane{
     }
 
     private void loadTasks() {
-        List<TaskDTO> taskDTOS = fetchTasksFromBackend();
+        List<TaskDTO> taskDTOS = fetchTasks();
 
         int col = 0;
         int row = 0;
@@ -121,26 +118,6 @@ public class TaskLayout extends ScrollPane{
                 col = 0;
                 row++;
             }
-        }
-    }
-
-    private List<TaskDTO> fetchTasksFromBackend() {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/tasks"))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-            return mapper.readValue(response.body(), new TypeReference<>() {
-            });
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return List.of();
         }
     }
 }
