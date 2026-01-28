@@ -41,14 +41,11 @@ public class TaskService {
         TaskState state = initialState != null ? initialState : TaskState.STARTED;
         Task task = new Task(state);
 
-
         if (state == TaskState.STARTED) {
             task.setStartDate(LocalDate.now());
         } else if (state == TaskState.DONE) {
-            task.setStartDate(LocalDate.now());
             task.setEndDate(LocalDate.now());
         }
-
         return task;
     }
 
@@ -161,9 +158,6 @@ public class TaskService {
         }
 
         task.setTaskState(newState);
-        if(newState == TaskState.DONE){
-            task.setEndDate(LocalDate.now());
-        }
         return task;
     }
 

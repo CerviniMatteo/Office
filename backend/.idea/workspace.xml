@@ -4,37 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b64b65da-a75d-4687-85a1-8b126f45490b" name="Changes" comment="FIXED DOMAIN">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/WorkerConstants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/WorkerRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="b64b65da-a75d-4687-85a1-8b126f45490b" name="Changes" comment="Added single task get endpoint">
+      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/ChangeTaskStateRequestDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/utils/RestHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../GUI/src/main/resources/styles/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/FxApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/StyledButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/StyledButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskButton.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/components/TaskLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/src/main/java/com/unimib/assignment3/UI/dto/TaskDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/BackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/BackendApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Worker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Supervisor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Supervisor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/POJO/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/CommonConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/CommonConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/EmployeeConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/EmployeeConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/SupervisorConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/constants/SupervisorConstants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/controller/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/controller/TaskController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/enums/EmployeeRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/enums/WorkerRole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/facade/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/facade/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/EmployeeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/SupervisorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/SupervisorRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/TeamRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/repository/TeamRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/EmployeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/EmployeeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/SupervisorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/SupervisorService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/TaskService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/TeamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/unimib/assignment3/service/TeamService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/AllEntitiesCascadeMappingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/AllEntitiesCascadeMappingTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/EmployeeIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/EmployeeIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/SupervisorHierarchyIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/SupervisorIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/SupervisorIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/TaskIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/TaskIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/TeamIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/unimib/assignment3/TeamIntegrationTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +34,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="Class" />
+        <option value="package-info" />
       </list>
     </option>
   </component>
@@ -69,8 +54,8 @@
 }</component>
   <component name="GitLabMergeRequestsSettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;first&quot;: &quot;https://gitlab.com/gruppo10-bug-busters/2025_assignment3_gruppo10-bug-busters&quot;,
-    &quot;second&quot;: &quot;6b06a6ad-2b77-4eb3-9ab5-aa6018dcf03a&quot;
+    &quot;first&quot;: &quot;https://gitlab.com/gruppo10-bug-busters/2025_assignment3_gruppo10-bug-busters.git&quot;,
+    &quot;second&quot;: &quot;cacaaef2-b208-4763-b2f0-9a3ca0f1924a&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -81,29 +66,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JUnit.BackendApplicationTests.executor": "Run",
-    "JUnit.EmployeeIntegrationTest.executor": "Run",
-    "JUnit.SupervisorIntegrationTest.executor": "Run",
-    "JUnit.SupervisorIntegrationTest.shouldFireMultipleEmployees.executor": "Run",
-    "JUnit.TaskIntegrationTest.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/matte/Documents/2025_assignment3_gruppo10-bug-busters/backend",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.BackendApplicationTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.EmployeeIntegrationTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SupervisorIntegrationTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SupervisorIntegrationTest.shouldFireMultipleEmployees.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TaskIntegrationTest.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;ui+backend&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/teo/Documents/2025_assignment3_gruppo10-bug-busters/backend&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.unimib.assignment3.constants" />
@@ -211,7 +197,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28539.33" />
       </set>
     </attachedChunks>
   </component>
@@ -231,12 +217,30 @@
       <option name="project" value="LOCAL" />
       <updated>1769540650596</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added task change state endpoint">
+      <option name="closed" value="true" />
+      <created>1769604547693</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1769604547693</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added single task get endpoint">
+      <option name="closed" value="true" />
+      <created>1769605355542</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1769605355542</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="MERGED UI into main" />
-    <option name="LAST_COMMIT_MESSAGE" value="MERGED UI into main" />
+    <MESSAGE value="Added task change state endpoint" />
+    <MESSAGE value="Added single task get endpoint" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added single task get endpoint" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

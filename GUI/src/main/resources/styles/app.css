@@ -1,0 +1,12 @@
+.change-state-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-border-color: "#F8E2D4";
+    -fx-text-fill: "#F8E2D4";
+}
+
+.change-state-btn:pressed {
+    -fx-border-color: orange;
+}

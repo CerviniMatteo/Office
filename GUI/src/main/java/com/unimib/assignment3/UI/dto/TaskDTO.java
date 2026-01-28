@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Task {
+public class TaskDTO {
     private Long taskId;
     private String description;
     private String taskState;
@@ -27,10 +27,7 @@ public class Task {
         return taskState;
     }
 
-    public void setTaskState(String taskState) {
-        if(taskState.equals("TO_BE_STARTED")) {
-            taskState = "TO BE STARTED";
-        }
+    public void setTaskState(String taskState) {;
         this.taskState = taskState;
     }
 

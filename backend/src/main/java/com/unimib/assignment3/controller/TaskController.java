@@ -35,6 +35,7 @@ public class TaskController {
     public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequest request) {
         Long taskId = request.getTaskId();
         TaskState taskState = request.getTaskState();
+        System.out.println("Called tasks/changeState for taskId: " + taskId + " to state: " + taskState);
         try {
             facade.changeTaskState(taskId, taskState);
             return ResponseEntity.ok().build();

@@ -9,11 +9,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-import com.unimib.assignment3.UI.dto.Task;
+import com.unimib.assignment3.UI.dto.TaskDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-
-import javax.swing.*;
 
 public class TaskLayout extends ScrollPane{
 
@@ -86,15 +84,15 @@ public class TaskLayout extends ScrollPane{
 
     // Add buttons dynamically
     private void setTasksButtons(){
-        List<Task> tasks = fetchTasksFromBackend();
+        List<TaskDTO> taskDTOS = fetchTasksFromBackend();
         int counter = 0;
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
 
-                if (counter >= tasks.size()) return;
+                if (counter >= taskDTOS.size()) return;
 
-                TaskButton taskButton = new TaskButton(tasks.get(counter++));
+                TaskButton taskButton = new TaskButton(taskDTOS.get(counter++));
                 taskButtons.add(taskButton);
 
                 GridPane.setHgrow(taskButton, Priority.ALWAYS);
@@ -107,13 +105,13 @@ public class TaskLayout extends ScrollPane{
     }
 
     private void loadTasks() {
-        List<Task> tasks = fetchTasksFromBackend();
+        List<TaskDTO> taskDTOS = fetchTasksFromBackend();
 
         int col = 0;
         int row = 0;
 
-        for (Task task : tasks) {
-            TaskButton btn = new TaskButton(task);
+        for (TaskDTO taskDTO : taskDTOS) {
+            TaskButton btn = new TaskButton(taskDTO);
             taskButtons.add(btn);
 
             grid.add(btn, col, row);
@@ -126,7 +124,7 @@ public class TaskLayout extends ScrollPane{
         }
     }
 
-    private List<Task> fetchTasksFromBackend() {
+    private List<TaskDTO> fetchTasksFromBackend() {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
