@@ -1,11 +1,11 @@
 package com.unimib.assignment3.controller;
 
 import com.unimib.assignment3.POJO.Task;
+import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
+import com.unimib.assignment3.response.request.ChangeTaskStateRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +23,18 @@ public class TaskController {
     public ResponseEntity<List<Task>> getAllTasks() {
         System.out.println("Called taks/getAllTasks");
         return ResponseEntity.ok(facade.getAllTasks());
+    }
+
+    @PostMapping("/changeState")
+    public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequest request) {
+        Long taskId = request.getTaskId();
+        TaskState taskState = request.getTaskState();
+        try {
+            facade.changeTaskState(taskId, taskState);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
 
