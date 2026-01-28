@@ -25,6 +25,12 @@ public class TaskController {
         return ResponseEntity.ok(facade.getAllTasks());
     }
 
+    @GetMapping("/{taskId}")
+    public ResponseEntity<Task> getTask(@PathVariable Long taskId) {
+        System.out.println("Called tasks/getTask");
+        return ResponseEntity.ok(facade.getTaskById(taskId));
+    }
+
     @PostMapping("/changeState")
     public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequest request) {
         Long taskId = request.getTaskId();
