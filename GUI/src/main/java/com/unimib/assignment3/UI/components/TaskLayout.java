@@ -1,6 +1,7 @@
 package com.unimib.assignment3.UI.components;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -12,63 +13,74 @@ import com.unimib.assignment3.UI.dto.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import javax.swing.*;
 
-public class TaskLayout extends GridPane{
-    private int columns;
-    private int rows;
-    private List<TaskButton> taskButtons;
+public class TaskLayout extends ScrollPane{
+
+    private final GridPane grid;
+    private final int rows;
+    private final int columns;
+    private final List<TaskButton> taskButtons = new ArrayList<>();
 
     public TaskLayout(int rows, int columns) {
-        super(rows, columns);
-        setColumns(columns);
-        setRows(rows);
-        setHgap(10);
-        setVgap(10);
-        HBox.setMargin(this, new Insets(10));
+        this.rows = rows;
+        this.columns = columns;
+        setPadding(new Insets(10));
+        setHbarPolicy(ScrollBarPolicy.NEVER);
+        setVbarPolicy(ScrollBarPolicy.NEVER);
+        setFitToWidth(true);
+        setPannable(true);
 
-        taskButtons = new ArrayList<>();
-        setTasksButtons();
+        grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
 
-        // Set columns to grow evenly
-        setColumnConstraint();
+        setContent(grid);
 
-        // Set rows to grow evenly
-        setRowsConstraints();
+        // Scroll behavior
+        setStyle("""
+        -fx-background-color: transparent;
+        -fx-background: transparent;
+        """);
+        grid.setStyle("""
+        -fx-border-radius: 30;
+        -fx-border-width: 2;
+        -fx-border-color: %s;""".formatted("#F8E2D4"));
+
+        setHbarPolicy(ScrollBarPolicy.NEVER);
+        setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
         HBox.setHgrow(this, Priority.ALWAYS);
+
+        setColumnConstraints();
+        setRowConstraints();
+        loadTasks();
     }
+
 
     public int getColumns() {
         return columns;
-    }
-
-    public void setColumns(int columns) {
-        this.columns = columns;
     }
 
     public int getRows() {
         return rows;
     }
 
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    private void setColumnConstraint(){
+    private void setColumnConstraints() {
         for (int i = 0; i < columns; i++) {
             ColumnConstraints cc = new ColumnConstraints();
-            cc.setPercentWidth(100.0 / columns); // percent of total width
-            cc.setFillWidth(true);
-            getColumnConstraints().add(cc);
+            cc.setPercentWidth(100.0 / columns);
+            cc.setHgrow(Priority.ALWAYS);
+            grid.getColumnConstraints().add(cc);
         }
     }
 
-    private void setRowsConstraints(){
+    private void setRowConstraints() {
         for (int i = 0; i < rows; i++) {
             RowConstraints rc = new RowConstraints();
-            rc.setPercentHeight(100.0 / rows); // percent of total height
-            rc.setFillHeight(true);
-            getRowConstraints().add(rc);
+            rc.setVgrow(Priority.ALWAYS);
+            grid.getRowConstraints().add(rc);
         }
     }
 
@@ -85,11 +97,34 @@ public class TaskLayout extends GridPane{
                 TaskButton taskButton = new TaskButton(tasks.get(counter++));
                 taskButtons.add(taskButton);
 
-                add(taskButton, col, row);
+                GridPane.setHgrow(taskButton, Priority.ALWAYS);
+                GridPane.setVgrow(taskButton, Priority.ALWAYS);
+                taskButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+                grid.add(taskButton, col, row);
             }
         }
     }
 
+    private void loadTasks() {
+        List<Task> tasks = fetchTasksFromBackend();
+
+        int col = 0;
+        int row = 0;
+
+        for (Task task : tasks) {
+            TaskButton btn = new TaskButton(task);
+            taskButtons.add(btn);
+
+            grid.add(btn, col, row);
+
+            col++;
+            if (col == columns) {
+                col = 0;
+                row++;
+            }
+        }
+    }
 
     private List<Task> fetchTasksFromBackend() {
         try {

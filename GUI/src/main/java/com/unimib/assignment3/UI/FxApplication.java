@@ -28,7 +28,7 @@ public class FxApplication extends Application {
 
         stage.setTitle("JavaFX App");
         stage.setScene(scene);
-        root.setBackground(Background.fill(Paint.valueOf("#E2BD6B")));
+        root.setBackground(Background.fill(Paint.valueOf("#140D19")));
         stage.setMaximized(true);
         stage.show();
 

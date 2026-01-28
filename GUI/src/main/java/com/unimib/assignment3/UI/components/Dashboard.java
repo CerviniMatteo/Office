@@ -5,34 +5,36 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 
+import java.awt.*;
+
 public class Dashboard extends VBox{
 
-    private final DashboardButton taskButton;
-    private final DashboardButton profileButton;
-    private final DashboardButton logoutButton;
+    private final StyledButton taskButton;
+    private final StyledButton profileButton;
+    private final StyledButton logoutButton;
 
     public Dashboard(DoubleBinding dashBoardSize) {
         super();
         prefWidthProperty().bind(dashBoardSize);
         toggleBorder(true);
         HBox.setMargin(this, new Insets(10));
-        taskButton = new DashboardButton("Task");
-        profileButton = new DashboardButton("Profile");
+        taskButton = new StyledButton("Task", "#F8E2D4", "F8E2D4");
+        profileButton = new StyledButton("Profile", "#F8E2D4", "F8E2D4");
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
-        logoutButton = new DashboardButton("Logout");
+        logoutButton = new StyledButton("Logout", "#F8E2D4", "F8E2D4");
         getChildren().addAll(taskButton, profileButton, spacer, logoutButton);
     }
 
-    public DashboardButton getTaskButton() {
+    public StyledButton getTaskButton() {
         return taskButton;
     }
 
-    public DashboardButton getLogoutButton() {
+    public StyledButton getLogoutButton() {
         return logoutButton;
     }
 
-    public DashboardButton getProfileButton() {
+    public StyledButton getProfileButton() {
         return profileButton;
     }
 
@@ -40,7 +42,7 @@ public class Dashboard extends VBox{
         if(toggle) {
             setBorder(new Border(
                     new BorderStroke(
-                            Paint.valueOf("#4d067B"),
+                            Paint.valueOf("#F8E2D4"),
                             BorderStrokeStyle.SOLID,
                             new CornerRadii(10),
                             new BorderWidths(2)

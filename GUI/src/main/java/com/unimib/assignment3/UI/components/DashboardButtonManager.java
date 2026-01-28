@@ -4,32 +4,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.util.Objects;
 
-public class DashboardButtonManager extends DashboardButton{
+import static com.unimib.assignment3.UI.utils.SVGManager.svgToImageView;
+
+public class DashboardButtonManager extends StyledButton {
     private final ImageView openDashboardIcon;
     private final ImageView closeDashboardIcon;
 
     public DashboardButtonManager() {
-        super("");
+        super("", "4d067B", "4d067B");
         setMaxSize(35,35);
 
-        openDashboardIcon = createImageView("/images/left_panel_open.png", getMaxWidth(), getMaxHeight());
-        closeDashboardIcon = createImageView("/images/left_panel_close.png", getMaxWidth(), getMaxHeight());
+        openDashboardIcon = svgToImageView("/images/left_panel_open.svg", getMaxWidth(), getMaxHeight(), "#F8E2D4");
+        closeDashboardIcon = svgToImageView("/images/left_panel_close.svg", getMaxWidth(), getMaxHeight(), "#F8E2D4");
 
         setGraphic(closeDashboardIcon);
         hideBorder();
-    }
-
-    private ImageView createImageView(String path, double width, double height) {
-        try {
-            Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
-            ImageView iv = new ImageView(img);
-            iv.setFitWidth(width);
-            iv.setFitHeight(height);
-            return iv;
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            return new ImageView();
-        }
     }
 
     public void toggleIcon(boolean open) {

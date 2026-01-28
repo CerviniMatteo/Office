@@ -8,20 +8,27 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
 public class TaskButton extends Button {
+    private static final String BASE_URL = "http://localhost:8080/api/tasks";
+    private Label descriptionLabel;
+    private Label stateLabel;
+    private Label startDateLabel;
+    private Label endDateLabel;
+    private StyledButton changeStateButton;
+
     public TaskButton(Task task){
         super();
         setId("" + task.getTaskId());
-        Label descriptionLabel = new Label(task.getDescription());
+        descriptionLabel = new Label(task.getDescription());
         descriptionLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 24px;");
 
-        Label stateLabel = new Label(task.getTaskState());
+        stateLabel = new Label(task.getTaskState());
         stateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 20px;");
 
         String startDateStr = "START DATE\n";
         startDateStr += task.getStartDate() != null
                 ? task.getStartDate().toString()
                 : "N/A";
-        Label startDateLabel = new Label(startDateStr);
+        startDateLabel = new Label(startDateStr);
         startDateLabel.setStyle("-fx-text-fill: yellow; -fx-font-size: 18px;");
         startDateLabel.setPadding(new Insets(10));
 
@@ -29,7 +36,7 @@ public class TaskButton extends Button {
         endDateStr+=  task.getEndDate() != null
                 ? task.getEndDate().toString()
                 : "N/A";
-        Label endDateLabel = new Label(endDateStr);
+        endDateLabel = new Label(endDateStr);
         endDateLabel.setStyle("-fx-text-fill: yellow; -fx-font-size: 18px;");
         endDateLabel.setPadding(new Insets(10));
 
@@ -56,14 +63,30 @@ public class TaskButton extends Button {
         GridPane.setHgrow(this, Priority.ALWAYS);
         GridPane.setVgrow(this, Priority.ALWAYS);
 
-        setButtonColor(this, task.getTaskState());
+        changeStateButton = new StyledButton(changeStateButton(), "#F8E2D4", "#F8E2D4");
+        HBox bottomBox = new HBox();
+        bottomBox.setPadding(new Insets(10));
+        bottomBox.setAlignment(Pos.BOTTOM_RIGHT);
+        bottomBox.getChildren().add(changeStateButton);
+        borderPane.setBottom(bottomBox);
+
+        setButtonColor(this, task.getTaskState(), "#F8E2D4");
     }
 
-    private void setButtonColor(Button button, String taskState) {
+    private String changeStateButton(){
+        return switch (stateLabel.getText()) {
+            case "TO BE STARTED" -> "START TASK";
+            case "STARTED"      -> "COMPLETE TASK";
+            case "DONE"         -> "TASK COMPLETED";
+            default             -> "UNKNOWN STATE";
+        };
+    }
+
+    private void setButtonColor(Button button, String taskState, String borderColor) {
         String color;
         switch (taskState) {
             case "TO BE STARTED" -> color = "#2F2139";
-            case "STARTED"      -> color = "#C38CC3";
+            case "STARTED"      -> color = "#6A2E3D";
             case "DONE"         -> color = "#086466";
             default             -> color = "#444";
         }
@@ -72,8 +95,9 @@ public class TaskButton extends Button {
         -fx-background-color: %s;
         -fx-background-radius: 30;
         -fx-border-radius: 30;
-        -fx-border-width: 3;
-    """.formatted(color));
+        -fx-border-width: 2;
+        -fx-border-color: %s;
+    """.formatted(color, borderColor));
     }
 
 }

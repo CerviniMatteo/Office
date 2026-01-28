@@ -39,6 +39,17 @@
             <version>2.17.3</version> <!-- usa la stessa versione di jackson-core che stai usando -->
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+            <version>1.17</version>
+        </dependency>
     </dependencies>
 
     <build>
