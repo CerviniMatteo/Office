@@ -43,5 +43,16 @@ public class TaskController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/resetState")
+    public ResponseEntity<String> resetTaskState(@RequestBody Long taskId) {
+        System.out.println("Called tasks/resetState for taskId: " + taskId);
+        try {
+            facade.resetTask(taskId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
 

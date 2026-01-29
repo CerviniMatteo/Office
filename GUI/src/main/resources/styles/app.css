@@ -12,11 +12,18 @@
     -fx-text-fill: #F8E2D4;
     -fx-font-size: 20;
     -fx-font-weight: bold;
-    -fx-padding: 5px;
+    -fx-padding: 5px 10px 5px 10px;
 }
 
 .change-state-btn:pressed {
+    -fx-border-color: #086466;
+    -fx-text-fill: #086466;
+    -fx-border-width: 2;
+}
+
+.change-state-btn:hover {
     -fx-border-color: orange;
+    -fx-text-fill: orange;
     -fx-border-width: 2;
 }
 

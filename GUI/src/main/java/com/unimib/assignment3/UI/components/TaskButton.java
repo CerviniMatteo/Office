@@ -1,24 +1,30 @@
 package com.unimib.assignment3.UI.components;
 
+import com.unimib.assignment3.UI.controller.TaskController;
 import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
 import com.unimib.assignment3.UI.dto.TaskDTO;
 import javafx.concurrent.Task;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import java.net.http.HttpResponse;
-import static com.unimib.assignment3.UI.rest.TaskRest.fetchTask;
-import static com.unimib.assignment3.UI.rest.TaskRest.postChangeTaskState;
 import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
 public class TaskButton extends Button {
+
+    TaskController taskController;
+
     private final Label descriptionLabel;
     private final Label stateLabel;
     private final Label startDateLabel;
     private final Label endDateLabel;
+    private final HBox bottomBox;
     private final StyledButton changeStateButton;
+    private final StyledButton resetTaskButton;
 
     public TaskButton(TaskDTO taskDTO){
+
+        taskController = new TaskController();
+
         this.getStyleClass().add("task-button");
 
         descriptionLabel = new Label(taskDTO.getDescription());
@@ -26,6 +32,8 @@ public class TaskButton extends Button {
         startDateLabel = new Label();
         endDateLabel = new Label();
         changeStateButton = new StyledButton();
+        resetTaskButton = new StyledButton();
+        bottomBox = new HBox();
 
         setUpTaskLabels(taskDTO);
 
@@ -53,12 +61,14 @@ public class TaskButton extends Button {
         GridPane.setHgrow(this, Priority.ALWAYS);
         GridPane.setVgrow(this, Priority.ALWAYS);
 
-        HBox bottomBox = new HBox();
         bottomBox.getStyleClass().add("hbox-bottom-right-task-state");
-        bottomBox.getChildren().add(changeStateButton);
+        Region changeTaskStateSpacer = new Region();
+        HBox.setHgrow(changeTaskStateSpacer, Priority.ALWAYS);
+        bottomBox.getChildren().addAll(changeTaskStateSpacer, changeStateButton);
         borderPane.setBottom(bottomBox);
 
         setUpChangeStateButtonAction();
+        setUpResetStateButtonAction();
     }
 
     private void setUpTaskLabels(TaskDTO taskDTO){
@@ -84,12 +94,10 @@ public class TaskButton extends Button {
         endDateLabel.getStyleClass().add("task-date-lbl");
 
         changeStateButton.setText(changeStateButton(taskDTO.getTaskState()));
-        boolean isDone = "DONE".equals(taskDTO.getTaskState());
-        changeStateButton.setDisable(isDone);
 
+        resetTaskButton.setText("RESET TASK");
 
-        setButtonOnTaskStateChangeStyle(stateLabel.getText());
-        taskDTO.setTaskState(taskDTO.getTaskState().replace("_", " "));
+        setButtonOnTaskStateChangeStyle();
     }
 
     private void replaceUnderscores(TaskDTO taskDTO) {
@@ -105,16 +113,21 @@ public class TaskButton extends Button {
         };
     }
 
-    private void setButtonOnTaskStateChangeStyle(String taskState) {
-
+    private void setButtonOnTaskStateChangeStyle() {
         getStyleClass().setAll("task-button");
-
-        switch (taskState) {
-            case "TO BE STARTED" -> getStyleClass().add("task-to-start");
+        switch (stateLabel.getText()) {
+            case "TO BE STARTED" -> {
+                                        getStyleClass().add("task-to-start");
+                                        if(bottomBox.getChildren().contains(resetTaskButton)) {
+                                            bottomBox.getChildren().removeFirst();
+                                        }
+                                        changeStateButton.setDisable(false);
+                                    }
             case "STARTED"      -> getStyleClass().add("task-started");
-            case "DONE"         -> {
-                                    getStyleClass().add("task-done");
-                                    changeStateButton.setDisable(true);
+            case "DONE"         ->{
+                                        getStyleClass().add("task-done");
+                                        changeStateButton.setDisable(true);
+                                        bottomBox.getChildren().addFirst(resetTaskButton);
                                     }
             default             -> getStyleClass().add("task-unknown");
         }
@@ -130,39 +143,14 @@ public class TaskButton extends Button {
 
     private void setUpChangeStateButtonAction() {
         changeStateButton.setOnAction(e -> {
-
             try {
                 ChangeTaskStateRequestDTO payload =
                         new ChangeTaskStateRequestDTO(
                                 Long.valueOf(getId()),
                                 mapTaskState(stateLabel.getText())
-                        );
+                );
 
-                Task<TaskDTO> task = new Task<>() {
-                    @Override
-                    protected TaskDTO call() {
-
-                        HttpResponse<String> response = postChangeTaskState(payload);
-
-                        if (response == null) {
-                            throw new RuntimeException("No response from server");
-                        }
-
-                        if (response.statusCode() != 200) {
-                            throw new RuntimeException(
-                                    "HTTP error " + response.statusCode()
-                            );
-                        }
-
-                        TaskDTO taskDTO = fetchTask(Long.valueOf(getId()));
-
-                        if (taskDTO == null) {
-                            throw new RuntimeException("Failed to fetch updated task");
-                        }
-
-                        return taskDTO;
-                    }
-                };
+                Task<TaskDTO> task = taskController.changeTaskState(payload);
 
                 task.setOnSucceeded(ev -> setUpTaskLabels(task.getValue()));
 
@@ -170,10 +158,23 @@ public class TaskButton extends Button {
                 task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
 
                 new Thread(task).start();
-
             } catch (Exception ex) {
-                showAlert("Error", "Failed to create request payload");
-            }
+            showAlert("Error", "Failed to create request payload");}
+        });
+    }
+
+    private void setUpResetStateButtonAction() {
+        resetTaskButton.setOnAction(e -> {
+            try {
+                Task<TaskDTO> task = taskController.resetTaskState(Long.valueOf(getId()));
+
+                task.setOnSucceeded(ev -> setUpTaskLabels(task.getValue()));
+
+                task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
+
+                new Thread(task).start();
+            } catch (Exception ex) {
+                showAlert("Error", "Failed to create request payload");}
         });
     }
 }

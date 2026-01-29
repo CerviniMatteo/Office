@@ -75,4 +75,22 @@ public class TaskRest {
             return null;
         }
     }
+
+    public static HttpResponse<String> postResetTaskState(Long taskId) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String payload = mapper.writeValueAsString(taskId);
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI(BASE_ENDPOINT + "/resetState"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(payload))
+                    .build();
+
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
