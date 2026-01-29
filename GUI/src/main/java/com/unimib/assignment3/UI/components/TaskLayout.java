@@ -1,12 +1,12 @@
 package com.unimib.assignment3.UI.components;
 
-import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import java.util.List;
 import com.unimib.assignment3.UI.dto.TaskDTO;
 
 import static com.unimib.assignment3.UI.rest.TaskRest.fetchTasks;
+import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
 public class TaskLayout extends ScrollPane{
 
@@ -17,7 +17,7 @@ public class TaskLayout extends ScrollPane{
     public TaskLayout(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        setPadding(new Insets(10));
+
         setHbarPolicy(ScrollBarPolicy.NEVER);
         setVbarPolicy(ScrollBarPolicy.NEVER);
         setFitToWidth(true);
@@ -26,7 +26,6 @@ public class TaskLayout extends ScrollPane{
         grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(10));
 
         setContent(grid);
 
@@ -64,6 +63,10 @@ public class TaskLayout extends ScrollPane{
         List<TaskDTO> taskDTOS = fetchTasks();
         int col = 0;
         int row = 0;
+        if(taskDTOS == null){
+            showAlert("Error", "Server is currently down");
+            return;
+        }
         for (TaskDTO taskDTO : taskDTOS) {
             TaskButton btn = new TaskButton(taskDTO);
             grid.add(btn, col, row);

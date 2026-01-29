@@ -3,8 +3,6 @@ package com.unimib.assignment3.UI.components;
 import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
 import com.unimib.assignment3.UI.dto.TaskDTO;
 import javafx.concurrent.Task;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -21,7 +19,7 @@ public class TaskButton extends Button {
     private final StyledButton changeStateButton;
 
     public TaskButton(TaskDTO taskDTO){
-        super();
+        this.getStyleClass().add("task-button");
 
         descriptionLabel = new Label(taskDTO.getDescription());
         stateLabel = new Label();
@@ -32,16 +30,17 @@ public class TaskButton extends Button {
         setUpTaskLabels(taskDTO);
 
         HBox topDates = new HBox();
-        topDates.setPadding(new Insets(2));
-        topDates.setAlignment(Pos.TOP_LEFT);
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        topDates.getChildren().addAll(startDateLabel, spacer, endDateLabel);
+        topDates.getStyleClass().add("hbox-top-task-dates");
+        Region datesSpacer = new Region();
+        HBox.setHgrow(datesSpacer, Priority.ALWAYS);
+        topDates.getChildren().addAll(startDateLabel, datesSpacer, endDateLabel);
 
+        VBox centerBox = new VBox();
+        Region descriptionSpacer = new Region();
+        descriptionSpacer.setMinHeight(10);
 
-        VBox centerBox = new VBox(2);
-        centerBox.setAlignment(Pos.CENTER);
-        centerBox.getChildren().addAll(descriptionLabel, stateLabel);
+        centerBox.getStyleClass().add("hbox-center-task-description");
+        centerBox.getChildren().addAll(descriptionLabel, descriptionSpacer, stateLabel);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(topDates);
@@ -55,8 +54,7 @@ public class TaskButton extends Button {
         GridPane.setVgrow(this, Priority.ALWAYS);
 
         HBox bottomBox = new HBox();
-        bottomBox.setPadding(new Insets(10));
-        bottomBox.setAlignment(Pos.BOTTOM_RIGHT);
+        bottomBox.getStyleClass().add("hbox-bottom-right-task-state");
         bottomBox.getChildren().add(changeStateButton);
         borderPane.setBottom(bottomBox);
 
@@ -66,9 +64,9 @@ public class TaskButton extends Button {
     private void setUpTaskLabels(TaskDTO taskDTO){
         replaceUnderscores(taskDTO);
         setId(taskDTO.getTaskId().toString());
-        descriptionLabel.getStyleClass().add("task-lbl");
+        descriptionLabel.getStyleClass().add("task-description-lbl");
 
-        stateLabel.getStyleClass().add("task-lbl");
+        stateLabel.getStyleClass().add("task-state-lbl");
         stateLabel.setText(taskDTO.getTaskState());
 
         String startDateStr = "START DATE\n";
@@ -166,14 +164,10 @@ public class TaskButton extends Button {
                     }
                 };
 
-                task.setOnSucceeded(ev -> {
-                    setUpTaskLabels(task.getValue());
-                });
+                task.setOnSucceeded(ev -> setUpTaskLabels(task.getValue()));
 
 
-                task.setOnFailed(ev -> {
-                    showAlert("Error", task.getException().getMessage());
-                });
+                task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
 
                 new Thread(task).start();
 

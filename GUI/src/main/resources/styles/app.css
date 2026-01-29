@@ -1,3 +1,8 @@
+.root{
+    -fx-padding: 10px;
+    -fx-background-color: #140D19;
+}
+
 .change-state-btn {
     -fx-background-color: transparent;
     -fx-background-radius: 20;
@@ -7,6 +12,7 @@
     -fx-text-fill: #F8E2D4;
     -fx-font-size: 20;
     -fx-font-weight: bold;
+    -fx-padding: 5px;
 }
 
 .change-state-btn:pressed {
@@ -17,25 +23,19 @@
 .change-state-btn:disabled {
         -fx-border-color: #000000;
         -fx-text-fill: #000000;
+        fx-border-width: 2;
     }
 
-    .hide-border{
-        -fx-background-color: transparent;
-        -fx-border-width: 0;
-    }
-    .dashboard{
-        -fx-background-color: transparent;
-        -fx-border-color: #F8E2D4;
-        -fx-border-radius: 30;
-        -fx-border-width: 10;
-    };
+.hide-border{
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
 }
-
-.task-button {
-    -fx-background-radius: 30;
-    -fx-border-radius: 30;
-    -fx-border-width: 2;
+.dashboard{
+    -fx-background-color: transparent;
     -fx-border-color: #F8E2D4;
+    -fx-border-radius: 30;
+    -fx-border-width: 10;
+};
 }
 
 .task-to-start {
@@ -55,10 +55,39 @@
 }
 
 
-.task-lbl{
+.task-description-lbl{
     -fx-font-weight: bold;
      -fx-text-fill: white;
      -fx-font-size: 24px;
+}
+
+.task-state-lbl{
+    -fx-background-color: #F8E2D4;
+    -fx-font-weight: bold;
+    -fx-text-fill: #140D19;
+    -fx-font-size: 20px;
+    -fx-background-radius: 30;
+    -fx-padding: 0px 15px 0px 15px;
+}
+
+.task-button {
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-border-width: 2;
+    -fx-border-color: #F8E2D4;
+    -fx-padding: 7px;
+}
+
+.hbox-top-state-date{
+    -fx-alignment: top-left;
+}
+
+.hbox-center-task-description{
+    -fx-alignment: center;
+}
+
+.hbox-bottom-right-task-state{
+    -fx-alignment: bottom-right;
 }
 
 .task-date-lbl{
@@ -77,6 +106,7 @@
     -fx-border-radius: 30;
     -fx-border-width: 2;
     -fx-border-color: #F8E2D4;
+    -fx-padding: 10px;
 }
 
 .hide-border{
@@ -87,5 +117,5 @@
     -fx-background-color: transparent;
     -fx-border-color: #F8E2D4;
     -fx-border-radius: 30;
-    -border-width: 10;
+    -fx-border-width: 2;
 }

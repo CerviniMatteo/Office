@@ -1,7 +1,6 @@
 package com.unimib.assignment3.UI.components;
 
 import javafx.beans.binding.DoubleBinding;
-import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import java.awt.*;
 
@@ -15,7 +14,6 @@ public class Dashboard extends VBox{
         super();
         prefWidthProperty().bind(dashBoardSize);
         getStyleClass().add("dashboard");
-        HBox.setMargin(this, new Insets(10));
         taskButton = new StyledButton();
         taskButton.setText("Tasks");
         profileButton = new StyledButton();

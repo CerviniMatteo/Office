@@ -5,7 +5,6 @@ import com.unimib.assignment3.UI.components.TaskLayout;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.util.Objects;
@@ -15,6 +14,7 @@ public class FxApplication extends Application {
     @Override
     public void start(Stage stage) {
         HBox root = new HBox();
+        root.getStyleClass().add("root");
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(
                 Objects.requireNonNull(
@@ -36,7 +36,6 @@ public class FxApplication extends Application {
 
         stage.setTitle("JavaFX App");
         stage.setScene(scene);
-        root.setBackground(Background.fill(Paint.valueOf("#140D19")));
         stage.setMaximized(true);
         stage.show();
 

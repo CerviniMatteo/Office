@@ -9,13 +9,9 @@ public class StyledButton extends Button {
     public StyledButton(){
         VBox.setMargin(this, new Insets(10));
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        applyStyle();
+        getStyleClass().add("change-state-btn");
         setFocusTraversable(false);
         setPickOnBounds(true);
-    }
-
-    private void applyStyle() {
-        getStyleClass().add("change-state-btn");
     }
 }
 
