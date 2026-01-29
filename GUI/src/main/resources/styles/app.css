@@ -28,8 +28,7 @@
         -fx-border-color: #F8E2D4;
         -fx-border-radius: 30;
         -fx-border-width: 10;
-    }C;
-    -fx-text-fill: #00695C;
+    };
 }
 
 .task-button {
