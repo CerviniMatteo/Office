@@ -1,8 +1,8 @@
 package com.unimib.assignment3.UI.dto;
 
 public class ChangeTaskStateRequestDTO {
-    private Long taskId;
-    private String taskState;
+    private final Long taskId;
+    private final String taskState;
 
     public ChangeTaskStateRequestDTO(Long taskId, String taskState) {
         this.taskId = taskId;

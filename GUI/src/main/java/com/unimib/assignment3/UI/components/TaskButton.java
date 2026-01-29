@@ -13,7 +13,7 @@ import static com.unimib.assignment3.UI.rest.TaskRest.fetchTask;
 import static com.unimib.assignment3.UI.rest.TaskRest.postChangeTaskState;
 import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
-public class TaskButton extends Button {;
+public class TaskButton extends Button {
     private final Label descriptionLabel;
     private final Label stateLabel;
     private final Label startDateLabel;
@@ -64,36 +64,38 @@ public class TaskButton extends Button {;
     }
 
     private void setUpTaskLabels(TaskDTO taskDTO){
-        setId("" + taskDTO.getTaskId());
-        descriptionLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 24px;");
+        replaceUnderscores(taskDTO);
+        setId(taskDTO.getTaskId().toString());
+        descriptionLabel.getStyleClass().add("task-lbl");
 
-        stateLabel.setText(taskDTO.getTaskState().replace("_", " "));
-        stateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 20px;");
-
+        stateLabel.getStyleClass().add("task-lbl");
+        stateLabel.setText(taskDTO.getTaskState());
 
         String startDateStr = "START DATE\n";
         startDateStr += taskDTO.getStartDate() != null
                 ? taskDTO.getStartDate().toString()
                 : "N/A";
         startDateLabel.setText(startDateStr);
-        startDateLabel.setStyle("-fx-text-fill: yellow; -fx-font-size: 18px;");
-        startDateLabel.setPadding(new Insets(10));
+        startDateLabel.getStyleClass().add("task-date-lbl");
 
         String endDateStr = "END DATE\n";
         endDateStr+=  taskDTO.getEndDate() != null
                 ? taskDTO.getEndDate().toString()
                 : "N/A";
         endDateLabel.setText(endDateStr);
-        endDateLabel.setStyle("-fx-text-fill: yellow; -fx-font-size: 18px;");
-        endDateLabel.setPadding(new Insets(10));
+        endDateLabel.getStyleClass().add("task-date-lbl");
 
-        changeStateButton.setText(changeStateButton(taskDTO.getTaskState().replace("_", " ")));
-
+        changeStateButton.setText(changeStateButton(taskDTO.getTaskState()));
         boolean isDone = "DONE".equals(taskDTO.getTaskState());
         changeStateButton.setDisable(isDone);
 
 
-        setButtonColor(this, stateLabel.getText(), "#F8E2D4");
+        setButtonOnTaskStateChangeStyle(stateLabel.getText());
+        taskDTO.setTaskState(taskDTO.getTaskState().replace("_", " "));
+    }
+
+    private void replaceUnderscores(TaskDTO taskDTO) {
+        taskDTO.setTaskState(taskDTO.getTaskState().replace("_", " "));
     }
 
     private String changeStateButton(String taskState) {
@@ -105,22 +107,27 @@ public class TaskButton extends Button {;
         };
     }
 
-    private void setButtonColor(Button button, String taskState, String borderColor) {
-        String color;
-        switch (taskState) {
-            case "TO BE STARTED" -> color = "#2F2139";
-            case "STARTED"      -> color = "#6A2E3D";
-            case "DONE"         -> color = "#086466";
-            default             -> color = "#444";
-        }
+    private void setButtonOnTaskStateChangeStyle(String taskState) {
 
-        button.setStyle("""
-        -fx-background-color: %s;
-        -fx-background-radius: 30;
-        -fx-border-radius: 30;
-        -fx-border-width: 2;
-        -fx-border-color: %s;
-    """.formatted(color, borderColor));
+        getStyleClass().setAll("task-button");
+
+        switch (taskState) {
+            case "TO BE STARTED" -> getStyleClass().add("task-to-start");
+            case "STARTED"      -> getStyleClass().add("task-started");
+            case "DONE"         -> {
+                                    getStyleClass().add("task-done");
+                                    changeStateButton.setDisable(true);
+                                    }
+            default             -> getStyleClass().add("task-unknown");
+        }
+    }
+
+    private String mapTaskState(String taskState) {
+        return switch (taskState) {
+            case "TO BE STARTED" -> "STARTED";
+            case "STARTED" -> "DONE";
+            default -> "UNKNOWN_STATE";
+        };
     }
 
     private void setUpChangeStateButtonAction() {
@@ -174,14 +181,5 @@ public class TaskButton extends Button {;
                 showAlert("Error", "Failed to create request payload");
             }
         });
-    }
-
-
-    private String mapTaskState(String taskState) {
-        return switch (taskState) {
-            case "TO BE STARTED" -> "STARTED";
-            case "STARTED" -> "DONE";
-            default -> "UNKNOWN_STATE";
-        };
     }
 }

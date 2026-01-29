@@ -3,10 +3,90 @@
     -fx-background-radius: 20;
     -fx-border-radius: 20;
     -fx-border-width: 2;
-    -fx-border-color: "#F8E2D4";
-    -fx-text-fill: "#F8E2D4";
+    -fx-border-color: #F8E2D4;
+    -fx-text-fill: #F8E2D4;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
 }
 
 .change-state-btn:pressed {
     -fx-border-color: orange;
+    -fx-border-width: 2;
+}
+
+.change-state-btn:disabled {
+        -fx-border-color: #000000;
+        -fx-text-fill: #000000;
+    }
+
+    .hide-border{
+        -fx-background-color: transparent;
+        -fx-border-width: 0;
+    }
+    .dashboard{
+        -fx-background-color: transparent;
+        -fx-border-color: #F8E2D4;
+        -fx-border-radius: 30;
+        -fx-border-width: 10;
+    }C;
+    -fx-text-fill: #00695C;
+}
+
+.task-button {
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-border-width: 2;
+    -fx-border-color: #F8E2D4;
+}
+
+.task-to-start {
+    -fx-background-color: #2F2139;
+}
+
+.task-started {
+    -fx-background-color: #6A2E3D;
+}
+
+.task-done {
+    -fx-background-color: #086466;
+}
+
+.task-unknown {
+    -fx-background-color: #444;
+}
+
+
+.task-lbl{
+    -fx-font-weight: bold;
+     -fx-text-fill: white;
+     -fx-font-size: 24px;
+}
+
+.task-date-lbl{
+    -fx-font-weight: bold;
+    -fx-text-fill: yellow;
+    -fx-font-size: 18px;
+    -fx-padding: 10px;
+}
+
+.task-layout {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.task-grid-layout{
+    -fx-border-radius: 30;
+    -fx-border-width: 2;
+    -fx-border-color: #F8E2D4;
+}
+
+.hide-border{
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+.dashboard{
+    -fx-background-color: transparent;
+    -fx-border-color: #F8E2D4;
+    -fx-border-radius: 30;
+    -border-width: 10;
 }

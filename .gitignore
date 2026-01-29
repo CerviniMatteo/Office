@@ -9,6 +9,10 @@ target/
 *.iws
 *.iml
 *.ipr
+workspace.xml
+compiler.xml
+misc.xml
+copilot.data.migration.ask.xml
 
 ### Eclipse ###
 .apt_generated
