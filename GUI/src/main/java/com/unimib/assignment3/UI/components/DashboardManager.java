@@ -3,50 +3,77 @@ package com.unimib.assignment3.UI.components;
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-
-import java.util.List;
-import java.util.Stack;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import java.awt.*;
 
 public class DashboardManager implements EventHandler<ActionEvent> {
     private final HBox hbox;
     private Dashboard dashboard;
     private DashboardButtonManager dashboardButtonManager;
-    List<Dashboard> dashBoardStack;
+    private Label buttonLabel;
+    private static boolean dashboardOpen = true;
+    public static int BUTTON_SIZE = 50;
 
     public DashboardManager(DoubleBinding dashBoardSize) {
         hbox = new HBox();
 
         dashboard = new Dashboard(dashBoardSize);
 
-        // Dashboard prende sempre spazio disponibile
         HBox.setHgrow(dashboard, Priority.ALWAYS);
 
-        dashBoardStack = new Stack<>();
-        dashBoardStack.add(dashboard);
-
         dashboardButtonManager = new DashboardButtonManager();
-        dashboardButtonManager.addEventHandler(ActionEvent.ACTION, this);
+        dashboardButtonManager.setOnAction(this);
+        dashboardButtonManager.setPadding(Insets.EMPTY);
 
-        hbox.getChildren().addAll(dashboard, dashboardButtonManager);
+        Region spacerB = new Region();
+        spacerB.setPrefSize(10 ,10);
+        Region spacerA = new Region();
+        spacerA.setPrefSize(10 ,10);
+
+        buttonLabel = new Label("Hide");
+        buttonLabel.setMinSize(BUTTON_SIZE, BUTTON_SIZE);
+        buttonLabel.setPrefSize(BUTTON_SIZE, BUTTON_SIZE);
+        buttonLabel.setMaxSize(BUTTON_SIZE, BUTTON_SIZE);
+        buttonLabel.setWrapText(true);
+        buttonLabel.setTextAlignment(TextAlignment.CENTER);
+        buttonLabel.setAlignment(Pos.CENTER);
+        buttonLabel.setFont(new Font("Verdana", 18));
+        buttonLabel.setTextFill(Paint.valueOf("#F8E2D4"));
+        buttonLabel.setMouseTransparent(true);
+        buttonLabel.setFocusTraversable(false);
+        buttonLabel.setPadding(Insets.EMPTY);
+
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(dashboardButtonManager, buttonLabel);
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        hbox.getChildren().addAll(dashboard, spacerB, vBox, spacerA);
     }
 
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        if(actionEvent.getSource() == dashboardButtonManager) {
-            if(dashBoardStack.isEmpty()) {
+        if (actionEvent.getSource() == dashboardButtonManager) {
+            dashboardOpen = !dashboardOpen;
+            if (dashboardOpen) {
                 dashboardButtonManager.toggleIcon(false);
-                dashBoardStack.add(dashboard);
-                hbox.getChildren().addFirst(dashboard);
-            }else{
-                dashBoardStack.removeFirst();
+                buttonLabel.setText("Hide");
+                if (!hbox.getChildren().contains(dashboard)) {
+                    hbox.getChildren().addFirst(dashboard);
+                }
+            } else {
                 dashboardButtonManager.toggleIcon(true);
+                buttonLabel.setText("Show");
                 hbox.getChildren().remove(dashboard);
-
             }
         }
+
     }
 
     public HBox getHbox() {

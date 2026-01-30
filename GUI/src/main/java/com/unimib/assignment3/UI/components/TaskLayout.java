@@ -32,8 +32,8 @@ public class TaskLayout extends ScrollPane{
         getStyleClass().add("task-layout");
         grid.getStyleClass().add("task-grid-layout");
 
-        setHbarPolicy(ScrollBarPolicy.NEVER);
-        setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         HBox.setHgrow(this, Priority.ALWAYS);
 
