@@ -4,6 +4,7 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.response.request.ChangeTaskStateRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
 
+    @Autowired
     private final Facade facade;
 
     public TaskController(Facade facade) {

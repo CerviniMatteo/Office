@@ -150,9 +150,9 @@ public class TaskButton extends Button {
                                 mapTaskState(stateLabel.getText())
                 );
 
-                Task<TaskDTO> task = taskController.changeTaskState(payload);
+                Task<String> task = taskController.changeTaskState(payload);
 
-                task.setOnSucceeded(ev -> setUpTaskLabels(task.getValue()));
+                task.setOnSucceeded(ev -> System.out.println("Success"));
 
 
                 task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
@@ -166,9 +166,9 @@ public class TaskButton extends Button {
     private void setUpResetStateButtonAction() {
         resetTaskButton.setOnAction(e -> {
             try {
-                Task<TaskDTO> task = taskController.resetTaskState(Long.valueOf(getId()));
+                Task<String> task = taskController.resetTaskState(Long.valueOf(getId()));
 
-                task.setOnSucceeded(ev -> setUpTaskLabels(task.getValue()));
+                task.setOnSucceeded(ev -> System.out.println("Success"));
 
                 task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
 

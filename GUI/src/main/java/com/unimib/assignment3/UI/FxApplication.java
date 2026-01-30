@@ -2,12 +2,15 @@ package com.unimib.assignment3.UI;
 
 import com.unimib.assignment3.UI.components.DashboardManager;
 import com.unimib.assignment3.UI.components.TaskLayout;
+import com.unimib.assignment3.UI.web_socket_client.TaskWebSocketClientApp;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.Objects;
+
+import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
 public class FxApplication extends Application {
 
@@ -28,7 +31,6 @@ public class FxApplication extends Application {
 
         TaskLayout tasksLayout = new TaskLayout(5, 2);
         HBox.setHgrow(tasksLayout, Priority.ALWAYS);
-
         root.getChildren().addAll(
                 dashboardManager.getHbox(),
                 tasksLayout
@@ -39,8 +41,13 @@ public class FxApplication extends Application {
         stage.setMaximized(true);
         stage.show();
 
+        TaskWebSocketClientApp webSocketClientApp = new TaskWebSocketClientApp(tasksLayout);
+        try {
+            webSocketClientApp.start();
+        } catch (Exception e) {
+            showAlert("Error", e.getMessage());
+        }
     }
-
 
     public static void main(String[] args) {
         launch(args);

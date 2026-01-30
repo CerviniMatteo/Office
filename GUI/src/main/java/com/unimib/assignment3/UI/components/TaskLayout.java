@@ -1,5 +1,6 @@
 package com.unimib.assignment3.UI.components;
 
+import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import java.util.List;
@@ -59,22 +60,32 @@ public class TaskLayout extends ScrollPane{
         }
     }
 
-    private void loadTasks() {
-        List<TaskDTO> taskDTOS = fetchTasks();
-        int col = 0;
-        int row = 0;
-        if(taskDTOS == null){
-            showAlert("Error", "Server is currently down");
-            return;
-        }
-        for (TaskDTO taskDTO : taskDTOS) {
-            TaskButton btn = new TaskButton(taskDTO);
-            grid.add(btn, col, row);
-            col++;
-            if (col == columns) {
-                col = 0;
-                row++;
-            }
-        }
+    public void loadTasks() {
+        new Thread(() -> {
+            List<TaskDTO> taskDTOS = fetchTasks();
+
+            Platform.runLater(() -> {
+                grid.getChildren().clear();
+
+                if (taskDTOS == null) {
+                    showAlert("Error", "Server is currently down");
+                    return;
+                }
+
+                int col = 0;
+                int row = 0;
+                for (TaskDTO taskDTO : taskDTOS) {
+                    TaskButton btn = new TaskButton(taskDTO);
+                    grid.add(btn, col, row);
+
+                    col++;
+                    if (col == columns) {
+                        col = 0;
+                        row++;
+                    }
+                }
+            });
+        }).start();
     }
+
 }

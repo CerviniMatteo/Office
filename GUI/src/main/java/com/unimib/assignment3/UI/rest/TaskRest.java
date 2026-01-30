@@ -19,6 +19,7 @@ public class TaskRest {
 
     public static List<TaskDTO> fetchTasks() {
         try {
+            System.out.println("Fetch tasks called");
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(BASE_ENDPOINT))

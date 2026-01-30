@@ -268,7 +268,7 @@ public class EmployeeService {
      * @return the employee if found
      * @throws IllegalArgumentException if the employee does not exist
      */
-    private Employee getEmployeeOrThrow(Long employeeId) {
+    private Employee     getEmployeeOrThrow(Long employeeId) {
         assertNotNull(employeeId, NULL_EMPLOYEE_ID);
         return employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException(EMPLOYEE_NOT_FOUND));

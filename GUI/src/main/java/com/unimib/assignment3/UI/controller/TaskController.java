@@ -1,17 +1,16 @@
 package com.unimib.assignment3.UI.controller;
 
 import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
-import com.unimib.assignment3.UI.dto.TaskDTO;
 import javafx.concurrent.Task;
 import java.net.http.HttpResponse;
 import static com.unimib.assignment3.UI.rest.TaskRest.*;
 
 public class TaskController {
 
-    public Task<TaskDTO> changeTaskState(ChangeTaskStateRequestDTO payload) {
+    public Task<String> changeTaskState(ChangeTaskStateRequestDTO payload) {
         return new Task<>() {
             @Override
-            protected TaskDTO call() {
+            protected String call() {
 
                 HttpResponse<String> response = postChangeTaskState(payload);
 
@@ -24,22 +23,15 @@ public class TaskController {
                             "HTTP error " + response.statusCode()
                     );
                 }
-
-                TaskDTO taskDTO = fetchTask(payload.getTaskId());
-
-                if (taskDTO == null) {
-                    throw new RuntimeException("Failed to fetch updated task");
-                }
-
-                return taskDTO;
+                return response.body();
             }
         };
     }
 
-    public Task<TaskDTO> resetTaskState(Long taskId) {
+    public Task<String> resetTaskState(Long taskId) {
         return new Task<>() {
             @Override
-            protected TaskDTO call() {
+            protected String call() {
 
                 HttpResponse<String> response = postResetTaskState(taskId);
 
@@ -53,13 +45,7 @@ public class TaskController {
                     );
                 }
 
-                TaskDTO taskDTO = fetchTask(taskId);
-
-                if (taskDTO == null) {
-                    throw new RuntimeException("Failed to fetch updated task");
-                }
-
-                return taskDTO;
+                return response.body();
             }
         };
     }
