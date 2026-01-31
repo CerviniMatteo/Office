@@ -6,7 +6,7 @@
 
 /* ======================= */
 /* Buttons */
-.change-state-btn {
+.styled-btn {
     -fx-background-color: transparent;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
@@ -15,20 +15,41 @@
     -fx-text-fill: #F8E2D4;
     -fx-font-size: 20;
     -fx-font-weight: bold;
+    -fx-fill: #F8E2D4;
     -fx-padding: 5px 10px;
 }
 
-.change-state-btn:hover {
+.styled-btn .dashboard{
+    -fx-border-width : 0px;
+    -fx-text-fill: #F8E2D4;
+    -fx-fill: #F8E2D4;
+}
+
+.styled-btn:hover{
     -fx-border-color: orange;
     -fx-text-fill: orange;
+    -fx-fill: orange;
 }
 
-.change-state-btn:pressed {
+.styled-btn:hover .dashboard{
+    -fx-border-width : 0px;
+    -fx-text-fill: orange;
+    -fx-fill: orange;
+}
+
+.styled-btn:pressed{
     -fx-border-color: #086466;
     -fx-text-fill: #086466;
+    -fx-fill: #086466;
 }
 
-.change-state-btn:disabled {
+.styled-btn:pressed .dashboard{
+    -fx-border-width : 0px;
+    -fx-text-fill: #086466;
+    -fx-fill: #086466;
+}
+
+.styled-btn:disabled{
     -fx-border-color: #000000;
     -fx-text-fill: #000000;
 }
