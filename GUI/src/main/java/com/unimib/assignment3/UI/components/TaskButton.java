@@ -177,4 +177,9 @@ public class TaskButton extends Button {
                 showAlert("Error", "Failed to create request payload");}
         });
     }
+
+    public void updateTask(TaskDTO taskDTO){
+        setUpTaskLabels(taskDTO);
+        setButtonOnTaskStateChangeStyle();
+    }
 }

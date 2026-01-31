@@ -12,9 +12,9 @@ public class TaskObserverNotifier {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void notifyAllTaskObservers() {
+    public void notifyAllTaskObservers(Long taskId) {
         System.out.println("notifyAllObservers called");
-        String message = "FETCH_TASKS";
+        String message = "FETCH_TASKS:" + taskId;
         messagingTemplate.convertAndSend("/topic/tasks", message);
     }
 }

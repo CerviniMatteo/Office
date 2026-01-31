@@ -4,6 +4,7 @@ import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
 import javafx.concurrent.Task;
 import java.net.http.HttpResponse;
 import static com.unimib.assignment3.UI.rest.TaskRest.*;
+import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
 public class TaskController {
 
@@ -15,13 +16,13 @@ public class TaskController {
                 HttpResponse<String> response = postChangeTaskState(payload);
 
                 if (response == null) {
-                    throw new RuntimeException("No response from server");
+                    showAlert("Error", "No response from server");
+                    return null;
                 }
 
                 if (response.statusCode() != 200) {
-                    throw new RuntimeException(
-                            "HTTP error " + response.statusCode()
-                    );
+                    showAlert("Error", response.statusCode() + " - " + response.body());
+                    return null;
                 }
                 return response.body();
             }
@@ -36,13 +37,13 @@ public class TaskController {
                 HttpResponse<String> response = postResetTaskState(taskId);
 
                 if (response == null) {
-                    throw new RuntimeException("No response from server");
+                    showAlert("Error", "No response from server");
+                    return null;
                 }
 
                 if (response.statusCode() != 200) {
-                    throw new RuntimeException(
-                            "HTTP error " + response.statusCode()
-                    );
+                    showAlert("Error", response.statusCode() + " - " + response.body());
+                    return null;
                 }
 
                 return response.body();

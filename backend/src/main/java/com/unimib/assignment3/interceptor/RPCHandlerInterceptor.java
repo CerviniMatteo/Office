@@ -24,6 +24,6 @@ public class RPCHandlerInterceptor implements HandlerInterceptor {
                                 @Nonnull Object handler,
                                 Exception ex) {
         System.out.println("afterCompletion: notifying observers");
-        taskObserverNotifier.notifyAllTaskObservers();
+        taskObserverNotifier.notifyAllTaskObservers((Long) request.getAttribute("taskId"));
     }
 }

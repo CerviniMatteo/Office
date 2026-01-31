@@ -4,10 +4,12 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.response.request.ChangeTaskStateRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpClient;
 import java.util.List;
 
 @RestController
@@ -34,12 +36,13 @@ public class TaskController {
     }
 
     @PostMapping("/changeState")
-    public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequest request) {
+    public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequest request, HttpServletRequest httpServletRequest) {
         Long taskId = request.getTaskId();
         TaskState taskState = request.getTaskState();
         System.out.println("Called tasks/changeState for taskId: " + taskId + " to state: " + taskState);
         try {
             facade.changeTaskState(taskId, taskState);
+            httpServletRequest.setAttribute("taskId", taskId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -47,10 +50,11 @@ public class TaskController {
     }
 
     @PostMapping("/resetState")
-    public ResponseEntity<String> resetTaskState(@RequestBody Long taskId) {
+    public ResponseEntity<String> resetTaskState(@RequestBody Long taskId, HttpServletRequest httpServletRequest) {
         System.out.println("Called tasks/resetState for taskId: " + taskId);
         try {
             facade.resetTask(taskId);
+            httpServletRequest.setAttribute("taskId", taskId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

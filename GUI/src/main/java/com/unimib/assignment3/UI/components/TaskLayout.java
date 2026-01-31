@@ -3,9 +3,11 @@ package com.unimib.assignment3.UI.components;
 import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import com.unimib.assignment3.UI.dto.TaskDTO;
-
+import static com.unimib.assignment3.UI.rest.TaskRest.fetchTask;
 import static com.unimib.assignment3.UI.rest.TaskRest.fetchTasks;
 import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
@@ -14,6 +16,7 @@ public class TaskLayout extends ScrollPane{
     private final GridPane grid;
     private final int rows;
     private final int columns;
+    private Map<Long, TaskButton> taskButtons;
 
     public TaskLayout(int rows, int columns) {
         this.rows = rows;
@@ -60,9 +63,32 @@ public class TaskLayout extends ScrollPane{
         }
     }
 
-    public void loadTasks() {
+    public void updateTaskButton(Long taskId) {
+        new Thread(() -> {
+            TaskDTO taskDTO = fetchTask(taskId);
+
+            Platform.runLater(() -> {
+                if (taskDTO == null) {
+                    showAlert("Error", "Server is currently down");
+                    return;
+                }
+                TaskButton oldButton = taskButtons.get(taskId);
+                if (oldButton == null) return;
+                int row = GridPane.getRowIndex(oldButton) == null ? 0 : GridPane.getRowIndex(oldButton);
+                int col = GridPane.getColumnIndex(oldButton) == null ? 0 : GridPane.getColumnIndex(oldButton);
+                grid.getChildren().remove(oldButton);
+                TaskButton newButton = new TaskButton(taskDTO);
+                grid.add(newButton, col, row);
+                taskButtons.put(taskId, newButton);
+            });
+        }).start();
+    }
+
+
+    private void loadTasks() {
         new Thread(() -> {
             List<TaskDTO> taskDTOS = fetchTasks();
+            taskButtons = new HashMap<>();
 
             Platform.runLater(() -> {
                 grid.getChildren().clear();
@@ -77,7 +103,7 @@ public class TaskLayout extends ScrollPane{
                 for (TaskDTO taskDTO : taskDTOS) {
                     TaskButton btn = new TaskButton(taskDTO);
                     grid.add(btn, col, row);
-
+                    taskButtons.put(Long.valueOf(btn.getId()), btn);
                     col++;
                     if (col == columns) {
                         col = 0;
