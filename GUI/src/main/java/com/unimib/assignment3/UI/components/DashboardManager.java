@@ -18,11 +18,12 @@ public class DashboardManager implements EventHandler<ActionEvent> {
     private Label buttonLabel;
     private static boolean dashboardOpen = true;
     public static int BUTTON_SIZE = 50;
+    public static int ICON_SIZE = 24;
 
     public DashboardManager(DoubleBinding dashBoardSize) {
         dashboardContainer = new HBox();
 
-        dashboard = new Dashboard(dashBoardSize);
+        dashboard = new Dashboard(dashBoardSize, ICON_SIZE, BUTTON_SIZE) ;
 
         HBox.setHgrow(dashboard, Priority.ALWAYS);
 

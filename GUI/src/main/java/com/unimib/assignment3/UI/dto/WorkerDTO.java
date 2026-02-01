@@ -8,13 +8,10 @@ public class WorkerDTO {
     private String name;
     private String surname;
     private String email;
+    private String encodedImage;
 
     public Long getWorkerId() {
         return workerId;
-    }
-
-    public void setWorkerId(Long workerId) {
-        this.workerId = workerId;
     }
 
     public String getEmail() {
@@ -39,5 +36,13 @@ public class WorkerDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEncodedImage() {
+        return encodedImage;
+    }
+
+    public void setEncodedImage(String encodedImage) {
+        this.encodedImage = encodedImage;
     }
 }

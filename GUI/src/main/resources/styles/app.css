@@ -178,13 +178,13 @@
     -fx-background-radius: 25;
     -fx-border-radius: 25;
 
-    -fx-border-color: white;
+    -fx-border-color: F8E2D4;
     -fx-border-width: 2;
 
     -fx-background-insets: 0;
     -fx-border-insets: 0;
 
-    -fx-text-fill: #140D19;
+    -fx-text-fill: #F8E2D4;
     -fx-prompt-text-fill: rgba(20, 13, 25, 0.6);
 
     -fx-font-size: 18px;
@@ -203,15 +203,16 @@
 /* ======================= */
 /* Insert email label */
 .insert-email-lbl {
-    -fx-text-fill: orange;
+    -fx-text-fill: #F8E2D4;
     -fx-font-size: 40px;
     -fx-font-weight: bold;
     -fx-padding: 5px 10px;
     -fx-border-width: 2px;
-    -fx-border-color: orange;
+    -fx-border-color: #F8E2D4;
     -fx-border-radius: 2px;
     -fx-background-radius: 25;
     -fx-border-radius: 25;
+    -fx-background-color: orange;
 }
 
 .success-banner {

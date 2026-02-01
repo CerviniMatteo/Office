@@ -2,6 +2,7 @@ package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.dto.WorkerDTO;
 import com.unimib.assignment3.UI.rest.WorkerRest;
+import com.unimib.assignment3.UI.utils.ImageHelper;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
 import jakarta.annotation.Nonnull;
 import javafx.concurrent.Task;
@@ -9,10 +10,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
 
 import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
@@ -20,12 +26,14 @@ public class ProfileDashboardButton extends StyledButton {
 
     private final HBox topContent; // container for icon + name+surname
     private final VBox mainLayout;  // container for topContent + email
+    private final int buttonSize;
 
-    public ProfileDashboardButton() {
+    public ProfileDashboardButton(int iconSize, int buttonSize) {
         super();
+        this.buttonSize = buttonSize;
 
         // --- Top StyledButton with icon (reused) ---
-        StyledButton iconButton = getStyledButton();
+        StyledButton iconButton = getStyledButton(iconSize);
 
         // --- Container for top content: icon + name/surname ---
         topContent = new HBox(8);
@@ -44,12 +52,12 @@ public class ProfileDashboardButton extends StyledButton {
     }
 
     @Nonnull
-    private static StyledButton getStyledButton() {
+    private static StyledButton getStyledButton(int iconSize) {
         StyledButton iconButton = new StyledButton();
         iconButton.createDashboardStyledButtonContent(
                 "Profile",
-                "M200-246q54-53 125.5-83.5T480-360q83 0 154.5 30.5T760-246v-514H200v514Zm280-194q58 0 99-41t41-99q0-58-41-99t-99-41q-58 0-99 41t-41 99q0 58 41 99t99 41ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm69-80h422q-44-39-99.5-59.5T480-280q-56 0-112.5 20.5T269-200Zm211-320q-25 0-42.5-17.5T420-580q0-25 17.5-42.5T480-640q25 0 42.5 17.5T540-580q0 25-17.5 42.5T480-520Zm0 17Z"
-        );
+                "M200-246q54-53 125.5-83.5T480-360q83 0 154.5 30.5T760-246v-514H200v514Zm280-194q58 0 99-41t41-99q0-58-41-99t-99-41q-58 0-99 41t-41 99q0 58 41 99t99 41ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm69-80h422q-44-39-99.5-59.5T480-280q-56 0-112.5 20.5T269-200Zm211-320q-25 0-42.5-17.5T420-580q0-25 17.5-42.5T480-640q25 0 42.5 17.5T540-580q0 25-17.5 42.5T480-520Zm0 17Z",
+                iconSize);
         return iconButton;
     }
 
@@ -81,10 +89,23 @@ public class ProfileDashboardButton extends StyledButton {
             Region spacer1 = new Region();
             HBox.setHgrow(spacer1, Priority.ALWAYS);
             Region spacer2 = new Region();
-            spacer2.setPrefWidth(8);
+            spacer2.setPrefWidth(2);
             Label profileInfoLabel = new Label(workerDTO.getName() + "\n" + workerDTO.getSurname());
             profileInfoLabel.getStyleClass().add("dashboard");
-            topContent.getChildren().addAll(spacer1,profileInfoLabel, spacer2);
+
+            String base64 = workerDTO.getEncodedImage();
+            byte[] imageBytes = Base64.getDecoder().decode(base64);
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            Image image = new Image(bis);
+
+            ImageHelper imageHelper = new ImageHelper();
+
+            ImageView iconView = imageHelper.createCircularImageView(image, buttonSize);
+
+            Region spacer3 = new Region();
+            spacer2.setPrefWidth(8);
+
+            topContent.getChildren().addAll(spacer1, profileInfoLabel, spacer2, iconView, spacer3);
 
             Label emailLabel = new Label(workerDTO.getEmail());
             emailLabel.getStyleClass().add("dashboard");

@@ -1,6 +1,6 @@
 package com.unimib.assignment3.UI.components;
 
-import com.unimib.assignment3.UI.utils.SVGHelper;
+import com.unimib.assignment3.UI.utils.ImageHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,14 +20,14 @@ public class StyledButton extends Button {
         setPickOnBounds(true);
     }
 
-    public void createDashboardStyledButtonContent(String text, String svgPath) {
-        SVGHelper svgHelper = new SVGHelper();
-        Node icon = svgHelper.createIcon(svgPath, ICON_SIZE,"dashboard");
+    public void createDashboardStyledButtonContent(String text, String svgPath, int iconSize) {
+        ImageHelper imageHelper = new ImageHelper();
+        Node icon = imageHelper.createIcon(svgPath, ICON_SIZE,"dashboard");
 
         StackPane iconWrapper = new StackPane(icon);
-        iconWrapper.setPrefSize(24, 24);
-        iconWrapper.setMinSize(24, 24);
-        iconWrapper.setMaxSize(24, 24);
+        iconWrapper.setPrefSize(iconSize, iconSize);
+        iconWrapper.setMinSize(iconSize, iconSize);
+        iconWrapper.setMaxSize(iconSize, iconSize);
 
         Label label = new Label(text);
         label.getStyleClass().add("dashboard");
