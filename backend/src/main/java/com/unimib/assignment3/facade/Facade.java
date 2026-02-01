@@ -93,6 +93,16 @@ public class Facade {
     }
 
     /**
+     * Finds an employeeId by their email.
+     *
+     * @param email the employee's email (must not be null)
+     * @return an Optional containing the Employee if found
+     */
+    public Optional<Long> findEmployeeIdByEmail(@NonNull String email) {
+        return employeeService.findEmployeeIdByEmail(email);
+    }
+
+    /**
      * Retrieves all employees.
      *
      * @return list of all Employee objects

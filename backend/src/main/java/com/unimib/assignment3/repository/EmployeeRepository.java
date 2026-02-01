@@ -9,13 +9,13 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for managing {@link Employee} entities.
  * Extends JpaRepository to provide CRUD operations and custom queries.
  */
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-
     /**
      * Retrieves all tasks of a specific employee that are in a given state.
      *

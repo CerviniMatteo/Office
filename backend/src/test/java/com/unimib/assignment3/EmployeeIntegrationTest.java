@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,6 +54,18 @@ class EmployeeIntegrationTest {
         d = facade.saveEmployee(d);
 
         assertTrue(facade.findEmployeeById(d.getWorkerId()).isPresent());
+    }
+
+    /**
+     * Test finding an employee by email after creation.
+     */
+    @Transactional
+    @Test
+    void shouldFindEmployeeByEmail() {
+        Employee d = createEmployee(WorkerRole.JUNIOR);
+        d = facade.saveEmployee(d);
+
+        assertEquals(facade.findEmployeeIdByEmail(d.getEmail()), Optional.of(d.getWorkerId()));
     }
 
     /**

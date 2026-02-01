@@ -44,6 +44,7 @@ public class TaskService {
         if (state == TaskState.STARTED) {
             task.setStartDate(LocalDate.now());
         } else if (state == TaskState.DONE) {
+            task.setStartDate(LocalDate.now());
             task.setEndDate(LocalDate.now());
         }
         return task;

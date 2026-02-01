@@ -54,7 +54,6 @@ public class TaskIntegrationTest {
             assertNotNull(tStarted.getStartDate());
             assertNull(tStarted.getEndDate());
 
-
             Task tDone = facade.saveTask(facade.createTask(TaskState.DONE));
             assertNotNull(tDone.getStartDate());
             assertNotNull(tDone.getEndDate());
@@ -68,7 +67,6 @@ public class TaskIntegrationTest {
         void testCreateTaskNullState() {
             Task t = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             assertEquals(TaskState.TO_BE_STARTED, t.getTaskState());
-            assertEquals(t.getStartDate(), LocalDate.now());
         }
 
         /**

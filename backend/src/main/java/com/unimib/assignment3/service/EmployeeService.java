@@ -3,6 +3,7 @@ package com.unimib.assignment3.service;
 import com.unimib.assignment3.POJO.*;
 import com.unimib.assignment3.enums.*;
 import com.unimib.assignment3.repository.EmployeeRepository;
+import com.unimib.assignment3.repository.WorkerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +31,8 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private WorkerRepository workerRepository;
 
     /**
      * Save a single employee to the database and handles email uniqueness.
@@ -137,6 +140,18 @@ public class EmployeeService {
     public Optional<Employee> findEmployeeById(@NonNull Long employeeId) {
         return Optional.of(getEmployeeOrThrow(employeeId));
 
+    }
+    /**
+     * Find an employee by their email.
+     *
+     * @param email the email of the employee
+     * @throws IllegalArgumentException if the email is null
+     * @return Optional containing the employee if found
+     */
+    public Optional<Long> findEmployeeIdByEmail(String email) {
+        assertNotNull(email, NULL_EMPLOYEE_ID);
+        return Optional.of(workerRepository.findWorkerIdByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(EMPLOYEE_NOT_FOUND)));
     }
 
     /**
@@ -268,7 +283,7 @@ public class EmployeeService {
      * @return the employee if found
      * @throws IllegalArgumentException if the employee does not exist
      */
-    private Employee     getEmployeeOrThrow(Long employeeId) {
+    private Employee  getEmployeeOrThrow(Long employeeId) {
         assertNotNull(employeeId, NULL_EMPLOYEE_ID);
         return employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException(EMPLOYEE_NOT_FOUND));
