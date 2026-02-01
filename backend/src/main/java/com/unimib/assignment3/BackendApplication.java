@@ -1,5 +1,6 @@
 package com.unimib.assignment3;
 
+import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
@@ -66,6 +67,9 @@ public class BackendApplication {
             Task task10 = facade.createTask(TaskState.TO_BE_STARTED);
             task10.setDescription("Fix bugs identified during testing");
             facade.saveTask(task10);
+
+            Employee employee = facade.createEmployee("Matteo", "Cervini");
+            facade.saveEmployee(employee);
         };
     }
 }

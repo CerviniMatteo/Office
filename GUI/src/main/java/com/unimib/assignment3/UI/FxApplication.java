@@ -1,23 +1,26 @@
 package com.unimib.assignment3.UI;
 
-import com.unimib.assignment3.UI.components.DashboardManager;
-import com.unimib.assignment3.UI.components.TaskLayout;
-import com.unimib.assignment3.UI.web_socket_client.TaskWebSocketClientApp;
+import com.unimib.assignment3.UI.components.Home;
+import com.unimib.assignment3.UI.components.Login;
 import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
+import java.util.List;
 import java.util.Objects;
-
-import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
+import java.util.Stack;
 
 public class FxApplication extends Application {
 
+    private HBox root;
+    private List<Node> windowsStack;
+
     @Override
     public void start(Stage stage) {
-        HBox root = new HBox();
+        root = new HBox();
         root.getStyleClass().add("root");
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(
@@ -26,22 +29,12 @@ public class FxApplication extends Application {
                 ).toExternalForm()
         );
 
+        Login login = new Login(this);
+        root.getChildren().add(login);
+        root.setAlignment(Pos.CENTER);
 
-        DashboardManager dashboardManager =
-                new DashboardManager(root.widthProperty().multiply(0.15));
-
-        TaskLayout tasksLayout = new TaskLayout(5, 2);
-        TaskWebSocketClientApp webSocketClientApp = new TaskWebSocketClientApp(tasksLayout);
-        try {
-            webSocketClientApp.start();
-        } catch (Exception e) {
-            showAlert("Error", e.getMessage());
-        }
-        HBox.setHgrow(tasksLayout, Priority.ALWAYS);
-        root.getChildren().addAll(
-                dashboardManager.getHbox(),
-                tasksLayout
-        );
+        windowsStack = new Stack<>();
+        windowsStack.add(login);
 
         stage.setTitle("JavaFX App");
         stage.setScene(scene);
@@ -50,6 +43,27 @@ public class FxApplication extends Application {
 
         Image icon = new Image(Objects.requireNonNull(getClass().getResource("/icon.png")).toExternalForm());
         stage.getIcons().add(icon);
+    }
+
+    public void afterLogin(){
+        Home home = new Home(root.widthProperty());
+        pushWindow(home);
+        HBox.setHgrow(home, Priority.ALWAYS);
+        home.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+    }
+
+    private void pushWindow(Node newWindow) {
+        root.getChildren().clear();
+        root.getChildren().add(newWindow);
+        windowsStack.add(newWindow);
+    }
+    private void popWindow() {
+        if (windowsStack.size() > 1) {
+            windowsStack.removeLast();
+            Node previousWindow = windowsStack.getLast();
+            root.getChildren().clear();
+            root.getChildren().add(previousWindow);
+        }
     }
 
     public static void main(String[] args) {

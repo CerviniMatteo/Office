@@ -10,10 +10,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import java.awt.*;
 
 public class DashboardManager implements EventHandler<ActionEvent> {
-    private final HBox hbox;
+    private final HBox dashboardContainer;
     private Dashboard dashboard;
     private DashboardButtonManager dashboardButtonManager;
     private Label buttonLabel;
@@ -21,7 +20,7 @@ public class DashboardManager implements EventHandler<ActionEvent> {
     public static int BUTTON_SIZE = 50;
 
     public DashboardManager(DoubleBinding dashBoardSize) {
-        hbox = new HBox();
+        dashboardContainer = new HBox();
 
         dashboard = new Dashboard(dashBoardSize);
 
@@ -53,7 +52,7 @@ public class DashboardManager implements EventHandler<ActionEvent> {
         vBox.getChildren().addAll(dashboardButtonManager, buttonLabel);
         vBox.setAlignment(Pos.TOP_CENTER);
 
-        hbox.getChildren().addAll(dashboard, spacerB, vBox, spacerA);
+        dashboardContainer.getChildren().addAll(dashboard, spacerB, vBox, spacerA);
     }
 
 
@@ -64,19 +63,19 @@ public class DashboardManager implements EventHandler<ActionEvent> {
             if (dashboardOpen) {
                 dashboardButtonManager.toggleIcon(false);
                 buttonLabel.setText("Hide");
-                if (!hbox.getChildren().contains(dashboard)) {
-                    hbox.getChildren().addFirst(dashboard);
+                if (!dashboardContainer.getChildren().contains(dashboard)) {
+                    dashboardContainer.getChildren().addFirst(dashboard);
                 }
             } else {
                 dashboardButtonManager.toggleIcon(true);
                 buttonLabel.setText("Show");
-                hbox.getChildren().remove(dashboard);
+                dashboardContainer.getChildren().remove(dashboard);
             }
         }
 
     }
 
-    public HBox getHbox() {
-        return hbox;
+    public HBox getDashboardContainer() {
+        return dashboardContainer;
     }
 }
