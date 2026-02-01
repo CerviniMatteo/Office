@@ -20,7 +20,7 @@ public class Login extends VBox {
     public Login(FxApplication fxApplication) {
         super(8);
         this.fxApplication = fxApplication;
-        Label instertEmailLabel = new Label("Insert your email to login:");
+        Label instertEmailLabel = new Label("Insert your email to login");
         instertEmailLabel.getStyleClass().add("insert-email-lbl");
         instertEmailLabel.setMaxWidth(Double.MAX_VALUE);
         instertEmailLabel.setAlignment(Pos.CENTER);

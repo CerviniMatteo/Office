@@ -1,8 +1,10 @@
 package com.unimib.assignment3.controller;
 
+import com.unimib.assignment3.DTO.TaskDTO;
 import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
+import com.unimib.assignment3.mappers.TaskDtoMapper;
 import com.unimib.assignment3.response.request.ChangeTaskStateRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +20,26 @@ public class TaskController {
 
     @Autowired
     private final Facade facade;
+    @Autowired
+    private final TaskDtoMapper taskDtoMapper;
 
-    public TaskController(Facade facade) {
+    public TaskController(Facade facade, TaskDtoMapper taskDtoMapper) {
         this.facade = facade;
+        this.taskDtoMapper = taskDtoMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
+    public ResponseEntity<List<TaskDTO>> getAllTasks() {
         System.out.println("Called taks/getAllTasks");
-        return ResponseEntity.ok(facade.getAllTasks());
+        return ResponseEntity.ok(facade.getAllTasks().stream()
+                .map(taskDtoMapper::mapToDto)
+                .toList());
     }
 
     @GetMapping("/{taskId}")
-    public ResponseEntity<Task> getTask(@PathVariable Long taskId) {
+    public ResponseEntity<TaskDTO> getTask(@PathVariable Long taskId) {
         System.out.println("Called tasks/getTask");
-        return ResponseEntity.ok(facade.getTaskById(taskId));
+        return ResponseEntity.ok(taskDtoMapper.mapToDto(facade.getTaskById(taskId)));
     }
 
     @PostMapping("/changeState")

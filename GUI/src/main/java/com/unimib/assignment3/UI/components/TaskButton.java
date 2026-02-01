@@ -3,14 +3,20 @@ package com.unimib.assignment3.UI.components;
 import com.unimib.assignment3.UI.controller.TaskController;
 import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
 import com.unimib.assignment3.UI.dto.TaskDTO;
+import com.unimib.assignment3.UI.utils.ImageHelper;
 import javafx.concurrent.Task;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.image.ImageView;
+
 import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
 public class TaskButton extends Button {
 
+    public static final int SIZE = 40;
     TaskController taskController;
 
     private final Label descriptionLabel;
@@ -20,6 +26,7 @@ public class TaskButton extends Button {
     private final HBox bottomBox;
     private final StyledButton changeStateButton;
     private final StyledButton resetTaskButton;
+    private final GridPane workersGrid;
 
     public TaskButton(TaskDTO taskDTO){
 
@@ -33,6 +40,7 @@ public class TaskButton extends Button {
         endDateLabel = new Label();
         changeStateButton = new StyledButton();
         resetTaskButton = new StyledButton();
+        workersGrid = new GridPane();
         bottomBox = new HBox();
 
         setUpTaskLabels(taskDTO);
@@ -63,10 +71,21 @@ public class TaskButton extends Button {
 
         bottomBox.getStyleClass().add("hbox-bottom-right-task-state");
         Region changeTaskStateSpacer = new Region();
+        VBox vBox = new VBox();
+        HBox workersBox = new HBox();
+        Region workersSpacer = new Region();
+        HBox.setHgrow(workersSpacer, Priority.ALWAYS);
+        HBox.setMargin(workersBox, new Insets(10, 10, 0, 10));
+        workersBox.getChildren().addAll(workersSpacer, workersGrid);
+        workersGrid.setHgap(10);
+        workersGrid.setVgap(10);
+        workersGrid.setPadding(new Insets(5));
+        workersBox.setAlignment(Pos.CENTER_RIGHT);
+        workersBox.setPadding(new Insets(10, 10, 0, 10));
         HBox.setHgrow(changeTaskStateSpacer, Priority.ALWAYS);
         bottomBox.getChildren().addAll(changeTaskStateSpacer, changeStateButton);
-        borderPane.setBottom(bottomBox);
-
+        vBox.getChildren().addAll(workersBox, bottomBox);
+        borderPane.setBottom(vBox);
         setUpChangeStateButtonAction();
         setUpResetStateButtonAction();
     }
@@ -92,6 +111,27 @@ public class TaskButton extends Button {
                 : "N/A";
         endDateLabel.setText(endDateStr);
         endDateLabel.getStyleClass().add("task-date-lbl");
+
+        ImageHelper imageHelper = new ImageHelper();
+
+        int col = 0;
+        int row = 0;
+        int maxCols = 3;
+
+        for (String base64 : taskDTO.getAssignedWorkers().values()) {
+            ImageView imageView = imageHelper.createCircularImageView(
+                    imageHelper.createImageFromBase64(base64),
+                    SIZE
+            );
+
+            workersGrid.add(imageView, col, row);
+
+            col++;
+            if (col == maxCols) {
+                col = 0;
+                row++;
+            }
+        }
 
         changeStateButton.setText(changeStateButton(taskDTO.getTaskState()));
 

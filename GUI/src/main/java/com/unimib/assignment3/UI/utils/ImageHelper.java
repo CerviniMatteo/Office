@@ -10,6 +10,20 @@ import javafx.scene.shape.SVGPath;
 public class ImageHelper {
 
     /**
+     * Crea un'immagine da una stringa Base64.
+     *
+     * @param base64String La stringa Base64 che rappresenta l'immagine.
+     * @return L'oggetto Image creato dalla stringa Base64.
+     */
+    public Image createImageFromBase64(String base64String) {
+        if (base64String == null || base64String.isEmpty()) {
+            return null;
+        }
+        String imageDataUrl = "data:image/png;base64," + base64String;
+        return new Image(imageDataUrl);
+    }
+
+    /**
      * Crea un ImageView rotondo da un'immagine.
      *
      * @param image L'immagine da mostrare.
@@ -28,6 +42,14 @@ public class ImageHelper {
         return imageView;
     }
 
+    /**
+     * Crea un'icona SVG con dimensioni e stile specificati.
+     *
+     * @param path      Il percorso SVG dell'icona.
+     * @param iconeSize La dimensione dell'icona.
+     * @param styleClass La classe di stile da applicare all'icona.
+     * @return Un nodo contenente l'icona SVG.
+     */
     public Node createIcon(String path, double iconeSize, String styleClass) {
         SVGPath svg = new SVGPath();
         svg.setContent(path);

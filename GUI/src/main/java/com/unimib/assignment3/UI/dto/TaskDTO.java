@@ -2,6 +2,7 @@ package com.unimib.assignment3.UI.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TaskDTO {
@@ -10,6 +11,7 @@ public class TaskDTO {
     private String taskState;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Map<Long, String> assignedWorkers;
 
     public Long getTaskId() {
         return taskId;
@@ -27,7 +29,7 @@ public class TaskDTO {
         return taskState;
     }
 
-    public void setTaskState(String taskState) {;
+    public void setTaskState(String taskState) {
         this.taskState = taskState;
     }
 
@@ -45,5 +47,13 @@ public class TaskDTO {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public Map<Long, String> getAssignedWorkers() {
+        return assignedWorkers;
+    }
+
+    public void setAssignedWorkers(Map<Long, String> assignedWorkers) {
+        this.assignedWorkers = assignedWorkers;
     }
 }

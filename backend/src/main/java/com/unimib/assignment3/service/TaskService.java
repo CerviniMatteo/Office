@@ -93,8 +93,6 @@ public class TaskService {
         }
 
         task.assignEmployee(employee);
-
-        employeeService.saveEmployee(employee);
     }
 
 
@@ -114,9 +112,6 @@ public class TaskService {
         Employee employee = employeeService.findEmployeeById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
         task.removeEmployee(employee);
-
-
-        employeeService.saveEmployee(employee);
     }
 
 
@@ -340,7 +335,6 @@ public class TaskService {
 
         Task task = getTaskOrThrow(taskId);
         task.setAssignedEmployees(employees);
-        taskRepository.saveAndFlush(task);
     }
 
     /**

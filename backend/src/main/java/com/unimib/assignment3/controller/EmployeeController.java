@@ -1,6 +1,9 @@
 package com.unimib.assignment3.controller;
+import com.unimib.assignment3.DTO.EmployeeDTO;
 import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.facade.Facade;
+import com.unimib.assignment3.mappers.EmployeeDtoMapper;
+import com.unimib.assignment3.mappers.TaskDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +18,21 @@ import java.util.Optional;
 public class EmployeeController {
     @Autowired
     private final Facade facade;
+    @Autowired
+    private final EmployeeDtoMapper employeeDtoMapper;
 
-    public EmployeeController(Facade facade) {
+    public EmployeeController(Facade facade, EmployeeDtoMapper employeeDtoMapper) {
         this.facade = facade;
+        this.employeeDtoMapper = employeeDtoMapper;
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable Long employeeId) {
+    public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long employeeId) {
         System.out.println("fetch employee by employeeId: " + employeeId);
-        Optional<Employee> employee = facade.findEmployeeById(employeeId);
-        return employee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
+        return facade.findEmployeeById(employeeId)
+                .map(employeeDtoMapper::mapToDto)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

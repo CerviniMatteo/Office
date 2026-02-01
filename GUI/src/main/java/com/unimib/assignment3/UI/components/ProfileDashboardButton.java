@@ -17,9 +17,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import java.io.ByteArrayInputStream;
-import java.util.Base64;
-
 import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
 public class ProfileDashboardButton extends StyledButton {
@@ -93,12 +90,9 @@ public class ProfileDashboardButton extends StyledButton {
             Label profileInfoLabel = new Label(workerDTO.getName() + "\n" + workerDTO.getSurname());
             profileInfoLabel.getStyleClass().add("dashboard");
 
-            String base64 = workerDTO.getEncodedImage();
-            byte[] imageBytes = Base64.getDecoder().decode(base64);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
-            Image image = new Image(bis);
-
             ImageHelper imageHelper = new ImageHelper();
+
+            Image image = imageHelper.createImageFromBase64(workerDTO.getEncodedImage());
 
             ImageView iconView = imageHelper.createCircularImageView(image, buttonSize);
 
