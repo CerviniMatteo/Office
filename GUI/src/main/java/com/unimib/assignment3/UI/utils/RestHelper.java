@@ -1,6 +1,7 @@
 package com.unimib.assignment3.UI.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;;import java.net.URI;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

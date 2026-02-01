@@ -2,7 +2,6 @@ package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.web_socket_client.TaskWebSocketClientApp;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
@@ -14,7 +13,7 @@ public class Home extends HBox {
 
         TaskLayout tasksLayout = new TaskLayout(5, 2);
         DashboardManager dashboardManager =
-                new DashboardManager(widthProperty.multiply(0.15));
+                new DashboardManager(widthProperty.multiply(0.20));
         HBox dashboardManagerContainer = dashboardManager.getDashboardContainer();
         TaskWebSocketClientApp webSocketClientApp = new TaskWebSocketClientApp(tasksLayout);
         try {

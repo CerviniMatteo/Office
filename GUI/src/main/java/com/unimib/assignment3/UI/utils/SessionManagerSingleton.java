@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentMap;
 public final class SessionManagerSingleton {
 
     private static volatile SessionManagerSingleton INSTANCE;
-    private static ConcurrentMap <String, Object> sessionAttributes;
+    private static final ConcurrentMap <String, Object> sessionAttributes = new ConcurrentHashMap<>();
 
     private SessionManagerSingleton() {}
 
@@ -15,7 +15,6 @@ public final class SessionManagerSingleton {
             synchronized (SessionManagerSingleton.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new SessionManagerSingleton();
-                    sessionAttributes = new ConcurrentHashMap<>();
                 }
             }
         }

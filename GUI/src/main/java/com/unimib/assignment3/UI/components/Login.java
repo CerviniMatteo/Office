@@ -22,6 +22,7 @@ public class Login extends VBox {
         this.fxApplication = fxApplication;
         Label instertEmailLabel = new Label("Insert your email to login:");
         instertEmailLabel.getStyleClass().add("insert-email-lbl");
+        instertEmailLabel.setMaxWidth(Double.MAX_VALUE);
         inputForm = new TextArea();
         inputForm.getStyleClass().add("input-form");
         submitButton = new StyledButton();
@@ -38,12 +39,11 @@ public class Login extends VBox {
             try {
                 Task<String> loginTask = LoginRest.login(email);
                 loginTask.setOnSucceeded(ev->{
-                    String response = loginTask.getValue();
-                    SessionManagerSingleton.getInstance().setAttribute("worker", response);
-                    showAlert("Success", "Login successful! Your Worker ID is: " + response);
-                    fxApplication.afterLogin();
+                    Long response = Long.parseLong(loginTask.getValue());
+                    SessionManagerSingleton.getInstance().setAttribute("workerId", response);
+                    fxApplication.afterLogin("Login successful");
                 });
-                loginTask.setOnFailed(ev-> showAlert("Error", "Login failed due to an unexpected error."));
+                loginTask.setOnFailed(ev-> fxApplication.failedLogin("Login failed\nEmail not found"));
 
                 new Thread(loginTask).start();
             }catch (Exception e){

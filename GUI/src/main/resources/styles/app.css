@@ -213,3 +213,21 @@
     -fx-background-radius: 25;
     -fx-border-radius: 25;
 }
+
+.success-banner {
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-opacity: 0.9;
+}
+
+.failure-banner {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-opacity: 0.9;
+}
