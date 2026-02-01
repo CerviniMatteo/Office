@@ -6,10 +6,8 @@ public class ChangeTaskStateRequest {
     private Long taskId;
     private TaskState taskState;
 
-    // Default constructor (needed by Spring/Jackson)
     public ChangeTaskStateRequest() {}
 
-    // Constructor with fields (optional)
     public ChangeTaskStateRequest(Long taskId, TaskState taskState) {
         this.taskId = taskId;
         this.taskState = taskState;

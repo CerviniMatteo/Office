@@ -103,7 +103,7 @@ public class TaskLayout extends ScrollPane{
                 for (TaskDTO taskDTO : taskDTOS) {
                     TaskButton btn = new TaskButton(taskDTO);
                     grid.add(btn, col, row);
-                    taskButtons.put(Long.valueOf(btn.getId()), btn);
+                    taskButtons.put(btn.getTaskId(), btn);
                     col++;
                     if (col == columns) {
                         col = 0;

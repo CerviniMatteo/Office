@@ -5,6 +5,7 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.mappers.TaskDtoMapper;
+import com.unimib.assignment3.response.request.AcceptTaskRequest;
 import com.unimib.assignment3.response.request.ChangeTaskStateRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,20 @@ public class TaskController {
         System.out.println("Called tasks/resetState for taskId: " + taskId);
         try {
             facade.resetTask(taskId);
+            httpServletRequest.setAttribute("taskId", taskId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/acceptTask")
+    public ResponseEntity<String> acceptTask(@RequestBody AcceptTaskRequest request, HttpServletRequest httpServletRequest) {
+        Long taskId = request.getTaskId();
+        Long employeeId = request.getEmployeeId();
+        System.out.println("Called tasks/acceptTask for taskId: " + taskId + " and employeeId: " + employeeId);
+        try {
+            facade.assignEmployeeToTask(taskId, employeeId);
             httpServletRequest.setAttribute("taskId", taskId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {

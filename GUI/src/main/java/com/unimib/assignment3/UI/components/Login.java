@@ -40,7 +40,7 @@ public class Login extends VBox {
             try {
                 Task<String> loginTask = LoginRest.login(email);
                 loginTask.setOnSucceeded(ev->{
-                    Long response = Long.parseLong(loginTask.getValue());
+                    Long response = Long.parseLong(loginTask.getValue().replaceAll("\n", "").replaceAll(" ", "").trim());
                     SessionManagerSingleton.getInstance().setAttribute("workerId", response);
                     fxApplication.afterLogin("Login successful");
                 });
