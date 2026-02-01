@@ -2,6 +2,7 @@ package com.unimib.assignment3.POJO;
 
 import com.unimib.assignment3.enums.WorkerRole;
 import jakarta.persistence.*;
+
 import java.util.Locale;
 import static com.unimib.assignment3.constants.CommonConstants.EMAIL_SUFFIX;
 
@@ -40,6 +41,10 @@ public abstract class Worker {
     @Column(unique = true)
     private String email;
 
+    /** Encoded image of the worker in Base64 format. */
+    @Column(name = "encoded_image", columnDefinition = "CLOB")
+    private String encodedImage;
+
 
     /** Monthly salary of the employee. */
     private double monthlySalary;
@@ -62,6 +67,21 @@ public abstract class Worker {
     public Worker(String name, String surname) {
         setName(name);
         setSurname(surname);
+        setEmail(generateEmail(name, surname));
+    }
+
+    /**
+     * Constructs a person with a name and surname.
+     * The email is automatically generated.
+     *
+     * @param name    the first name of the person
+     * @param surname the surname of the person
+     * @param encodedImage the encoded image of the worker
+     */
+    public Worker(String name, String surname, String encodedImage) {
+        setName(name);
+        setSurname(surname);
+        setEncodedImage(encodedImage);
         setEmail(generateEmail(name, surname));
     }
 
@@ -97,10 +117,6 @@ public abstract class Worker {
         return workerId;
     }
 
-    public void setWorkerId(Long workerId) {
-        this.workerId = workerId;
-    }
-
     public String getSurname() {
         return surname;
     }
@@ -123,6 +139,24 @@ public abstract class Worker {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Returns the encoded image of the worker.
+     *
+     * @return encoded image
+     */
+    public String getEncodedImage() {
+        return encodedImage;
+    }
+
+    /**
+     * Sets the encoded image of the worker.
+     *
+     * @param encodedImage the new encoded image
+     */
+    public void setEncodedImage(String encodedImage) {
+        this.encodedImage = encodedImage;
     }
 
     /**

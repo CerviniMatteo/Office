@@ -50,6 +50,18 @@ public class Facade {
     }
 
     /**
+     * Creates a new employee with only name and surname.
+     *
+     * @param name    the employee's first name (must not be null)
+     * @param surname the employee's surname (must not be null)
+     * @param image  the employee's photo in Base64 format (must not be null)
+     * @return the newly created Employee object
+     */
+    public Employee createEmployee(@NonNull String name, @NonNull String surname, @NonNull String image) {
+        return employeeService.createEmployee(name, surname, image);
+    }
+
+    /**
      * Creates a new employee with name, surname, role, and monthly salary.
      *
      * @param name          the employee's first name (must not be null)

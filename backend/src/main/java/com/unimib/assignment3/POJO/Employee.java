@@ -57,6 +57,19 @@ public class Employee extends Worker {
     }
 
     /**
+     * Constructs an employee with default role {@link WorkerRole#JUNIOR} and its salary.
+     *
+     * @param name    first name of the employee
+     * @param surname last name of the employee
+     * @param encodedImage the encoded image of the employee
+     */
+    public Employee(String name, String surname, String encodedImage) {
+        super(name, surname, encodedImage);
+        setWorkerRole(WorkerRole.JUNIOR);
+        setMonthlySalary(WorkerRole.JUNIOR.getMonthlySalary());
+    }
+
+    /**
      * Constructs an employee with a specific role and its default salary.
      *
      * @param name         first name of the employee

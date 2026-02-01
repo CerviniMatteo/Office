@@ -106,6 +106,22 @@ public class EmployeeService {
     }
 
     /**
+     * Create a new employee with the given name and surname.
+     *
+     * @param name    the name of the employee (must not be null)
+     * @param surname the surname of the employee (must not be null)
+     * @param encodedImage the encoded image of the employee
+     * @return the created supervisor entity
+     * @throws IllegalArgumentException if the name or surname is null
+     */
+    public Employee createEmployee(@NonNull String name, @NonNull String surname, String encodedImage) {
+        assertNotNull(name, NULL_NAME);
+        assertNotNull(surname, NULL_SURNAME);
+        assertNotNull(encodedImage, NULL_ENCODED_IMAGE);
+        return new Employee(name, surname, encodedImage);
+    }
+
+    /**
      * Create a new employee with the given name, surname, monthly salary, and employee role.
      *
      * @param name          the name of the supervisor (must not be null)
