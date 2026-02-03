@@ -38,12 +38,20 @@ public class TaskController {
 
     @GetMapping("/{taskId}")
     public ResponseEntity<TaskDTO> getTask(@PathVariable Long taskId) {
+        if(taskId == null) {
+            return ResponseEntity.badRequest().build();
+        }
         System.out.println("Called tasks/getTask");
         return ResponseEntity.ok(taskDtoMapper.mapToDto(facade.getTaskById(taskId)));
     }
 
     @PostMapping("/changeState")
-    public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequestDTO request, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequestDTO request, HttpServletRequest httpServletRequest) throws IllegalArgumentException{
+        try {
+            request.validate();
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         Long taskId = request.taskId();
         TaskState taskState = request.taskState();
         System.out.println("Called tasks/changeState for taskId: " + taskId + " to state: " + taskState);
@@ -58,7 +66,12 @@ public class TaskController {
 
 
     @PostMapping("/startTask")
-    public ResponseEntity<String> startTask(@RequestBody StartTaskRequestDTO request, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<String> startTask(@RequestBody StartTaskRequestDTO request, HttpServletRequest httpServletRequest) throws IllegalArgumentException{
+            try {
+                request.validate();
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
             Long taskId = request.taskId();
             Long employeeId = request.employeeId();
             System.out.println("Called tasks/startTask for taskId: " + taskId + " and employeeId: " + employeeId);
@@ -74,6 +87,9 @@ public class TaskController {
 
     @PostMapping("/resetState")
     public ResponseEntity<String> resetTaskState(@RequestBody Long taskId, HttpServletRequest httpServletRequest) {
+        if(taskId == null) {
+            return ResponseEntity.badRequest().body("Task ID cannot be null");
+        }
         System.out.println("Called tasks/resetState for taskId: " + taskId);
         try {
             facade.resetTask(taskId);
@@ -86,6 +102,11 @@ public class TaskController {
 
         @PostMapping("/acceptTask")
         public ResponseEntity<String> acceptTask(@RequestBody AcceptTaskRequestDTO request, HttpServletRequest httpServletRequest) {
+            try {
+                request.validate();
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
             Long taskId = request.taskId();
             Long employeeId = request.employeeId();
             System.out.println("Called tasks/acceptTask for taskId: " + taskId + " and employeeId: " + employeeId);

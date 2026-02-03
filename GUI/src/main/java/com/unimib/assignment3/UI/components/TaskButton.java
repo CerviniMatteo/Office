@@ -218,6 +218,7 @@ public class TaskButton extends Button {
                 Task<String> task;
                 if(taskState.equals(TaskState.TO_BE_STARTED)) {
                     StartTaskRequestDTO payload = startTaskRequest();
+                    payload.validate();
                     task = taskController.startTask(payload);
                 }
                 else {
@@ -226,7 +227,7 @@ public class TaskButton extends Button {
                                     getTaskId(),
                                     taskState
                             );
-
+                    payload.validate();
                     task = taskController.changeTaskState(payload);
                 }
 
@@ -274,10 +275,10 @@ public class TaskButton extends Button {
             Long currentWorkerId = (Long) session.getAttribute("employeeId");
             if (!workerIds.contains(currentWorkerId)) {
                 try {
-                    Task<String> task = taskController.acceptTask(new AcceptTaskRequestDTO(
-                            getTaskId(),
-                            currentWorkerId
-                    ));
+                    AcceptTaskRequestDTO payload = new AcceptTaskRequestDTO(getTaskId(),
+                            currentWorkerId);
+                    payload.validate();
+                    Task<String> task = taskController.acceptTask(payload);
                     task.setOnSucceeded(ev -> acceptTaskButton.setDisable(false));
                     task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
                     new Thread(task).start();
