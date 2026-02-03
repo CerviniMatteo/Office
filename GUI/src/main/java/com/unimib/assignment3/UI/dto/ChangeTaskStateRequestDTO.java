@@ -1,4 +1,8 @@
 package com.unimib.assignment3.UI.dto;
 
-public record ChangeTaskStateRequestDTO(Long taskId, String taskState) {
-}
+import com.unimib.assignment3.UI.enums.TaskState;
+
+public record ChangeTaskStateRequestDTO(
+        Long taskId,
+        TaskState taskState
+){}

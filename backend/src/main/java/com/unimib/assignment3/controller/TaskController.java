@@ -1,18 +1,17 @@
 package com.unimib.assignment3.controller;
 
 import com.unimib.assignment3.DTO.TaskDTO;
-import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.mappers.TaskDtoMapper;
-import com.unimib.assignment3.response.request.AcceptTaskRequest;
-import com.unimib.assignment3.response.request.ChangeTaskStateRequest;
+import com.unimib.assignment3.DTO.AcceptTaskRequestDTO;
+import com.unimib.assignment3.DTO.StartTaskRequestDTO;
+import com.unimib.assignment3.DTO.ChangeTaskStateRequestDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpClient;
 import java.util.List;
 
 @RestController
@@ -44,9 +43,9 @@ public class TaskController {
     }
 
     @PostMapping("/changeState")
-    public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequest request, HttpServletRequest httpServletRequest) {
-        Long taskId = request.getTaskId();
-        TaskState taskState = request.getTaskState();
+    public ResponseEntity<String> changeTaskState(@RequestBody ChangeTaskStateRequestDTO request, HttpServletRequest httpServletRequest) {
+        Long taskId = request.taskId();
+        TaskState taskState = request.taskState();
         System.out.println("Called tasks/changeState for taskId: " + taskId + " to state: " + taskState);
         try {
             facade.changeTaskState(taskId, taskState);
@@ -55,6 +54,22 @@ public class TaskController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+
+    @PostMapping("/startTask")
+    public ResponseEntity<String> startTask(@RequestBody StartTaskRequestDTO request, HttpServletRequest httpServletRequest) {
+            Long taskId = request.taskId();
+            Long employeeId = request.employeeId();
+            System.out.println("Called tasks/startTask for taskId: " + taskId + " and employeeId: " + employeeId);
+            try {
+                facade.changeTaskState(taskId, TaskState.TO_BE_STARTED);
+                facade.assignEmployeeToTask(taskId, employeeId);
+                httpServletRequest.setAttribute("taskId", taskId);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
     }
 
     @PostMapping("/resetState")
@@ -69,18 +84,18 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/acceptTask")
-    public ResponseEntity<String> acceptTask(@RequestBody AcceptTaskRequest request, HttpServletRequest httpServletRequest) {
-        Long taskId = request.getTaskId();
-        Long employeeId = request.getEmployeeId();
-        System.out.println("Called tasks/acceptTask for taskId: " + taskId + " and employeeId: " + employeeId);
-        try {
-            facade.assignEmployeeToTask(taskId, employeeId);
-            httpServletRequest.setAttribute("taskId", taskId);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        @PostMapping("/acceptTask")
+        public ResponseEntity<String> acceptTask(@RequestBody AcceptTaskRequestDTO request, HttpServletRequest httpServletRequest) {
+            Long taskId = request.taskId();
+            Long employeeId = request.employeeId();
+            System.out.println("Called tasks/acceptTask for taskId: " + taskId + " and employeeId: " + employeeId);
+            try {
+                facade.assignEmployeeToTask(taskId, employeeId);
+                httpServletRequest.setAttribute("taskId", taskId);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
-    }
 }
 

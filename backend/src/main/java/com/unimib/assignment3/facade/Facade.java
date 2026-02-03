@@ -482,11 +482,11 @@ public class Facade {
      * Transitions a task to a new state and updates relevant dates.
      *
      * @param taskId       the ID of the task to update
-     * @param newTaskState the target state
+     * @param currentTaskState the target state
      * @return the updated task entity
      */
-    public Task changeTaskState(Long taskId, TaskState newTaskState) {
-        return taskService.changeTaskState(taskId, newTaskState);
+    public Task changeTaskState(Long taskId, TaskState currentTaskState) {
+        return taskService.changeTaskState(taskId, currentTaskState);
     }
 
     /**
@@ -584,6 +584,9 @@ public class Facade {
      */
     public void resetTask(Long taskId) {
         taskService.resetTask(taskId);
+        List<Employee> assignedEmployees = taskService.getTaskById(taskId).getAssignedEmployees();
+        assignedEmployees.forEach(employee -> {taskService.removeEmployeeFromTask(taskId, employee.getWorkerId());});
+
     }
 
     /**

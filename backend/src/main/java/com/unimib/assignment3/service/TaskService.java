@@ -13,6 +13,7 @@ import java.util.List;
 
 import static com.unimib.assignment3.constants.TaskConstants.TASK_NOT_FOUND;
 import static com.unimib.assignment3.constants.EmployeeConstants.EMPLOYEE_NOT_FOUND;
+import static com.unimib.assignment3.enums.TaskState.DONE;
 
 
 /**
@@ -43,7 +44,7 @@ public class TaskService {
 
         if (state == TaskState.STARTED) {
             task.setStartDate(LocalDate.now());
-        } else if (state == TaskState.DONE) {
+        } else if (state == DONE) {
             task.setStartDate(LocalDate.now());
             task.setEndDate(LocalDate.now());
         }
@@ -83,7 +84,7 @@ public class TaskService {
         Employee employee = employeeService.findEmployeeById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
 
-        if (task.getTaskState() == TaskState.DONE) {
+        if (task.getTaskState() == DONE) {
             throw new IllegalStateException(TaskConstants.CANNOT_ASSIGN_DONE_TASK);
 
         }
@@ -119,41 +120,30 @@ public class TaskService {
      * Transitions a task to a new state and updates dates accordingly.
      *
      * @param taskId   the ID of the task to update
-     * @param newState the target state
+     * @param currentTaskState the target state
      * @return the updated task entity
      * @throws IllegalStateException if the transition is logically invalid
      */
     @Transactional
-    public Task changeTaskState(Long taskId, TaskState newState) {
+    public Task changeTaskState(Long taskId, TaskState currentTaskState) {
 
-        if (newState == null) throw new IllegalArgumentException(TaskConstants.NULL_TASK_STATE);
+        if (currentTaskState == null) throw new IllegalArgumentException(TaskConstants.NULL_TASK_STATE);
 
         Task task = getTaskOrThrow(taskId);
 
-        TaskState currentState = task.getTaskState();
-
-        if (currentState == newState) return task;
-
-        switch (currentState) {
+        switch (currentTaskState) {
             case TO_BE_STARTED:
-                if (newState != TaskState.STARTED) {
-                    throw new IllegalStateException(TaskConstants.ONLY_STARTED_FROM_TO_BE_STARTED);
-                }
+                task.setTaskState(TaskState.STARTED);
                 task.setStartDate(LocalDate.now());
                 break;
 
             case STARTED:
-                if (newState != TaskState.DONE) {
-                    throw new IllegalStateException(TaskConstants.ONLY_DONE_FROM_STARTED);
-                }
+                task.setTaskState(DONE);
                 task.setEndDate(LocalDate.now());
                 break;
-
             case DONE:
                 throw new IllegalStateException(TaskConstants.TASK_ALREADY_FINISHED);
         }
-
-        task.setTaskState(newState);
         return task;
     }
 

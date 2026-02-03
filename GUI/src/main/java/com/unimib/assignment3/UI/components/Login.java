@@ -29,6 +29,7 @@ public class Login extends VBox {
         submitButton = new StyledButton();
         submitButton.setText("SUBMIT");
         setupLoginAction();
+        inputForm.setText("matteo.cervini@example.com");
 
         getChildren().addAll(instertEmailLabel, inputForm, submitButton);
         setAlignment(Pos.CENTER);
@@ -41,7 +42,7 @@ public class Login extends VBox {
                 Task<String> loginTask = LoginRest.login(email);
                 loginTask.setOnSucceeded(ev->{
                     Long response = Long.parseLong(loginTask.getValue().replaceAll("\n", "").replaceAll(" ", "").trim());
-                    SessionManagerSingleton.getInstance().setAttribute("workerId", response);
+                    SessionManagerSingleton.getInstance().setAttribute("employeeId", response);
                     fxApplication.afterLogin("Login successful");
                 });
                 loginTask.setOnFailed(ev-> fxApplication.failedLogin("Login failed\nEmail not found"));

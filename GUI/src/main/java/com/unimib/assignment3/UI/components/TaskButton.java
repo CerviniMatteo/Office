@@ -2,10 +2,13 @@ package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.controller.TaskController;
 import com.unimib.assignment3.UI.dto.AcceptTaskRequestDTO;
+import com.unimib.assignment3.UI.dto.StartTaskRequestDTO;
 import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
 import com.unimib.assignment3.UI.dto.TaskDTO;
+import com.unimib.assignment3.UI.enums.TaskState;
 import com.unimib.assignment3.UI.utils.ImageHelper;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
+import jakarta.annotation.Nonnull;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,12 +17,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
 
-import java.util.Set;
+import java.util.*;
 
 import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
 public class TaskButton extends Button {
 
+    public static final int STROKE_WIDTH = 3;
     private final Long taskId;
 
     public static final int SIZE = 40;
@@ -33,6 +37,8 @@ public class TaskButton extends Button {
     private final StyledButton resetTaskButton;
     private final GridPane workersGrid;
     private final StyledButton acceptTaskButton;
+    private final List<Long> acceptedBy;
+    private TaskState taskState;
     private int row = 0;
     private int col = 0;
 
@@ -42,7 +48,7 @@ public class TaskButton extends Button {
 
         this.getStyleClass().add("task-button");
 
-        descriptionLabel = new Label(taskDTO.getDescription());
+        descriptionLabel = new Label(taskDTO.description());
         stateLabel = new Label();
         startDateLabel = new Label();
         endDateLabel = new Label();
@@ -50,9 +56,10 @@ public class TaskButton extends Button {
         resetTaskButton = new StyledButton();
         workersGrid = new GridPane();
         acceptTaskButton = new StyledButton();
+        acceptedBy = new ArrayList<>();
         HBox bottomBox = new HBox();
 
-        taskId = taskDTO.getTaskId();
+        taskId = taskDTO.taskId();
 
         setUpTaskLabels(taskDTO);
 
@@ -107,34 +114,41 @@ public class TaskButton extends Button {
     }
 
     private void setUpTaskLabels(TaskDTO taskDTO) {
-        replaceUnderscores(taskDTO);
         descriptionLabel.getStyleClass().add("task-description-lbl");
 
         stateLabel.getStyleClass().add("task-state-lbl");
-        stateLabel.setText(taskDTO.getTaskState());
+        taskState = taskDTO.taskState();
+        stateLabel.setText(replaceUnderscores(taskState));
 
         String startDateStr = "START DATE\n";
-        startDateStr += taskDTO.getStartDate() != null
-                ? taskDTO.getStartDate().toString()
+        startDateStr += taskDTO.startDate() != null
+                ? taskDTO.startDate().toString()
                 : "N/A";
         startDateLabel.setText(startDateStr);
         startDateLabel.getStyleClass().add("task-date-lbl");
 
         String endDateStr = "END DATE\n";
-        endDateStr += taskDTO.getEndDate() != null
-                ? taskDTO.getEndDate().toString()
+        endDateStr += taskDTO.endDate() != null
+                ? taskDTO.endDate().toString()
                 : "N/A";
         endDateLabel.setText(endDateStr);
         endDateLabel.getStyleClass().add("task-date-lbl");
 
 
-        setButtonOnAcceptTask(taskDTO.getAssignedWorkers().keySet());
-
-        for (String base64 : taskDTO.getAssignedWorkers().values()) {
-            addWorkerImageToGrid(base64);
+        acceptedBy.addAll(taskDTO.assignedWorkers().keySet());
+        setButtonOnAcceptTask(taskDTO.assignedWorkers().keySet());
+        Long currentWorkerId =
+                (Long) SessionManagerSingleton.getInstance().getAttribute("employeeId");
+        ImageHelper imageHelper = new ImageHelper();
+        for (Map.Entry<Long, String> entry : taskDTO.assignedWorkers().entrySet()) {
+            if (entry.getKey().equals(currentWorkerId)) {
+                String updatedImage = imageHelper.addGoldStrokeAndReturnBase64(entry.getValue(), SIZE, STROKE_WIDTH);
+                entry.setValue(updatedImage);
+            }
+            addWorkerImageToGrid(entry.getValue());
         }
 
-        changeStateButton.setText(changeStateButton(taskDTO.getTaskState()));
+        changeStateButton.setText(getChangeStateButtonText(taskDTO.taskState()));
 
         resetTaskButton.setText("RESET TASK");
 
@@ -158,56 +172,63 @@ public class TaskButton extends Button {
         }
     }
 
-    private void replaceUnderscores(TaskDTO taskDTO) {
-        taskDTO.setTaskState(taskDTO.getTaskState().replace("_", " "));
+    private String replaceUnderscores(TaskState taskState) {
+       return taskState.toString().trim()
+                .replace("_", " ")
+                .replaceAll("\\s+", " ")
+                .toUpperCase();
     }
 
-    private String changeStateButton(String taskState) {
-        return switch (taskState) {
-            case "TO BE STARTED" -> "START TASK";
-            case "STARTED" -> "COMPLETE TASK";
-            case "DONE" -> "TASK COMPLETED";
-            default -> "UNKNOWN STATE";
+    private String getChangeStateButtonText(TaskState state) {
+        return switch (state) {
+            case TO_BE_STARTED -> "START TASK";
+            case STARTED -> "COMPLETE TASK";
+            case DONE -> "TASK COMPLETED";
         };
     }
 
     private void setButtonOnTaskStateChangeStyle() {
         getStyleClass().setAll("task-button");
-        switch (stateLabel.getText()) {
-            case "TO BE STARTED" -> {
+        switch (taskState) {
+            case TO_BE_STARTED -> {
                 getStyleClass().add("task-to-start");
                 resetTaskButton.setDisable(true);
                 changeStateButton.setDisable(false);
+                acceptTaskButton.setDisable(true);
             }
-            case "STARTED" -> getStyleClass().add("task-started");
-            case "DONE" -> {
+            case STARTED -> {
+                getStyleClass().add("task-started");
+                Long currentWorkerId =
+                        (Long) SessionManagerSingleton.getInstance().getAttribute("employeeId");
+                acceptTaskButton.setDisable(acceptedBy.contains(currentWorkerId));
+                resetTaskButton.setDisable(true);
+            }
+            case DONE -> {
                 getStyleClass().add("task-done");
                 changeStateButton.setDisable(true);
                 resetTaskButton.setDisable(false);
                 acceptTaskButton.setDisable(true);
             }
-            default -> getStyleClass().add("task-unknown");
         }
-    }
-
-    private String mapTaskState(String taskState) {
-        return switch (taskState) {
-            case "TO BE STARTED" -> "STARTED";
-            case "STARTED" -> "DONE";
-            default -> "UNKNOWN_STATE";
-        };
     }
 
     private void setUpChangeStateButtonAction() {
         changeStateButton.setOnAction(e -> {
-            try {
-                ChangeTaskStateRequestDTO payload =
-                        new ChangeTaskStateRequestDTO(
-                                getTaskId(),
-                                mapTaskState(stateLabel.getText())
-                        );
+            try{
+                Task<String> task;
+                if(taskState.equals(TaskState.TO_BE_STARTED)) {
+                    StartTaskRequestDTO payload = startTaskRequest();
+                    task = taskController.startTask(payload);
+                }
+                else {
+                    ChangeTaskStateRequestDTO payload =
+                            new ChangeTaskStateRequestDTO(
+                                    getTaskId(),
+                                    taskState
+                            );
 
-                Task<String> task = taskController.changeTaskState(payload);
+                    task = taskController.changeTaskState(payload);
+                }
 
                 task.setOnSucceeded(ev -> System.out.println("Success"));
 
@@ -219,6 +240,16 @@ public class TaskButton extends Button {
                 showAlert("Error", "Failed to create request payload");
             }
         });
+    }
+
+    @Nonnull
+    private StartTaskRequestDTO startTaskRequest() {
+        SessionManagerSingleton sessionManagerSingleton = SessionManagerSingleton.getInstance();
+        Long workerId =  (Long) sessionManagerSingleton.getAttribute("employeeId");
+        return new StartTaskRequestDTO(
+                getTaskId(),
+                workerId
+        );
     }
 
     private void setUpResetStateButtonAction() {
@@ -240,16 +271,14 @@ public class TaskButton extends Button {
     private void setButtonOnAcceptTask(Set<Long> workerIds) {
         acceptTaskButton.setOnAction(e -> {
             SessionManagerSingleton session = SessionManagerSingleton.getInstance();
-            Long currentWorkerId = (Long) session.getAttribute("workerId");
+            Long currentWorkerId = (Long) session.getAttribute("employeeId");
             if (!workerIds.contains(currentWorkerId)) {
                 try {
                     Task<String> task = taskController.acceptTask(new AcceptTaskRequestDTO(
                             getTaskId(),
                             currentWorkerId
                     ));
-                    task.setOnSucceeded(ev -> {
-                        acceptTaskButton.setDisable(false);
-                    });
+                    task.setOnSucceeded(ev -> acceptTaskButton.setDisable(false));
                     task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
                     new Thread(task).start();
                 } catch (Exception ex) {

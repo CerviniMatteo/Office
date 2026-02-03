@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unimib.assignment3.UI.dto.AcceptTaskRequestDTO;
+import com.unimib.assignment3.UI.dto.StartTaskRequestDTO;
 import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
 import com.unimib.assignment3.UI.dto.TaskDTO;
 import com.unimib.assignment3.UI.utils.RestHelper;
@@ -38,6 +39,10 @@ public class TaskRest {
 
     public static HttpResponse<String> postChangeTaskState(ChangeTaskStateRequestDTO dto) {
         return RestHelper.createPostRequest(BASE_ENDPOINT + "/changeState", dto);
+    }
+
+    public static HttpResponse<String> postStartTask(StartTaskRequestDTO dto) {
+        return RestHelper.createPostRequest(BASE_ENDPOINT + "/startTask", dto);
     }
 
     public static HttpResponse<String> postResetTaskState(Long taskId) {

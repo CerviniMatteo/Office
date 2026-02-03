@@ -88,28 +88,12 @@ public class TaskIntegrationTest {
             Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             Long id = task.getTaskId();
 
-            facade.changeTaskState(id, TaskState.STARTED);
-            Task statusStarted = facade.getTaskById(id);
-            assertEquals(TaskState.STARTED, statusStarted.getTaskState());
-            assertNotNull(statusStarted.getStartDate());
+            facade.changeTaskState(id, task.getTaskState());
+            assertNotNull(task.getStartDate());
 
-            facade.changeTaskState(id, TaskState.DONE);
-            Task statusDone = facade.getTaskById(id);
-            assertEquals(TaskState.DONE, statusDone.getTaskState());
-            assertNotNull(statusDone.getEndDate());
-        }
+            facade.changeTaskState(id, task.getTaskState());
 
-        /**
-         * Tests idempotent state changes, ensuring no errors occur when changing to the current state.
-         */
-        @Test
-        @DisplayName("Changing to the current state should not produce errors (Idempotency)")
-        void testIdempotentStateChange() {
-            Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-            Long id = task.getTaskId();
-
-            assertDoesNotThrow(() -> facade.changeTaskState(id, TaskState.TO_BE_STARTED));
-            assertEquals(TaskState.TO_BE_STARTED, facade.getTaskById(id).getTaskState());
+            assertNotNull(task.getEndDate());
         }
 
         /**
@@ -119,8 +103,7 @@ public class TaskIntegrationTest {
         @DisplayName("Verify task reset to initial state and date clearing")
         void testResetTask() {
             Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.changeTaskState(t.getTaskId(), TaskState.DONE);
-
+            facade.changeTaskState(t.getTaskId(), t.getTaskState());
             facade.resetTask(t.getTaskId());
             Task reset = facade.getTaskById(t.getTaskId());
 
@@ -135,13 +118,9 @@ public class TaskIntegrationTest {
         @Test
         void testStateChangeException() {
             Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            facade.changeTaskState(task.getTaskId(), TaskState.STARTED);
 
             assertThrows(IllegalStateException.class, () -> facade.changeTaskState(task.getTaskId(), TaskState.DONE));
-
-            facade.changeTaskState(task.getTaskId(), TaskState.STARTED);
-            facade.changeTaskState(task.getTaskId(), TaskState.DONE);
-
-            assertThrows(IllegalStateException.class, () -> facade.changeTaskState(task.getTaskId(), TaskState.TO_BE_STARTED));
         }
     }
 

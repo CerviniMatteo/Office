@@ -60,7 +60,7 @@ public class ProfileDashboardButton extends StyledButton {
 
     private void fetchProfileInformation() {
         SessionManagerSingleton session = SessionManagerSingleton.getInstance();
-        Long workerId = (Long) session.getAttribute("workerId");
+        Long workerId = (Long) session.getAttribute("employeeId");
 
         if (workerId == null) {
             showAlert("Error", "No worker is logged in.");
@@ -80,19 +80,19 @@ public class ProfileDashboardButton extends StyledButton {
 
         workerDTOTask.setOnSucceeded(ev -> {
             WorkerDTO workerDTO = workerDTOTask.getValue();
-            this.setId(String.valueOf(workerDTO.getWorkerId()));
+            this.setId(String.valueOf(workerDTO.workerId()));
 
             // Name + Surname label inside topContent
             Region spacer1 = new Region();
             HBox.setHgrow(spacer1, Priority.ALWAYS);
             Region spacer2 = new Region();
             spacer2.setPrefWidth(2);
-            Label profileInfoLabel = new Label(workerDTO.getName() + "\n" + workerDTO.getSurname());
+            Label profileInfoLabel = new Label(workerDTO.name() + "\n" + workerDTO.surname());
             profileInfoLabel.getStyleClass().add("dashboard");
 
             ImageHelper imageHelper = new ImageHelper();
 
-            Image image = imageHelper.createImageFromBase64(workerDTO.getEncodedImage());
+            Image image = imageHelper.createImageFromBase64(workerDTO.encodedImage());
 
             ImageView iconView = imageHelper.createCircularImageView(image, buttonSize);
 
@@ -101,7 +101,7 @@ public class ProfileDashboardButton extends StyledButton {
 
             topContent.getChildren().addAll(spacer1, profileInfoLabel, spacer2, iconView, spacer3);
 
-            Label emailLabel = new Label(workerDTO.getEmail());
+            Label emailLabel = new Label(workerDTO.email());
             emailLabel.getStyleClass().add("dashboard");
 
             VBox.setMargin(emailLabel, new Insets(2, 0, 0, 0));
