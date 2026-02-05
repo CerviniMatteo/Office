@@ -15,6 +15,6 @@ public class TaskObserverNotifier {
     public void notifyAllTaskObservers(Long taskId) {
         System.out.println("notifyAllObservers called");
         String message = "FETCH_TASKS:" + taskId;
-        messagingTemplate.convertAndSend("/topic/tasks", message);
+        messagingTemplate.convertAndSend("/topic/task   ", message);
     }
 }

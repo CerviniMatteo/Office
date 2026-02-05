@@ -1,7 +1,7 @@
 package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.dto.WorkerDTO;
-import com.unimib.assignment3.UI.rest.WorkerRest;
+import com.unimib.assignment3.UI.controller.WorkerController;
 import com.unimib.assignment3.UI.utils.ImageHelper;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
 import jakarta.annotation.Nonnull;
@@ -76,7 +76,7 @@ public class ProfileDashboardButton extends StyledButton {
     }
 
     private Task<WorkerDTO> getWorkerDTOTask(Long workerId) {
-        Task<WorkerDTO> workerDTOTask = WorkerRest.fetchWorker(workerId);
+        Task<WorkerDTO> workerDTOTask = WorkerController.fetchWorker(workerId);
 
         workerDTOTask.setOnSucceeded(ev -> {
             WorkerDTO workerDTO = workerDTOTask.getValue();

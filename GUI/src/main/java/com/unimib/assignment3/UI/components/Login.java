@@ -1,7 +1,7 @@
 package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.FxApplication;
-import com.unimib.assignment3.UI.rest.LoginRest;
+import com.unimib.assignment3.UI.controller.LoginController;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
@@ -39,7 +39,7 @@ public class Login extends VBox {
         submitButton.setOnAction(event -> {
             String email = inputForm.getText();
             try {
-                Task<String> loginTask = LoginRest.login(email);
+                Task<String> loginTask = LoginController.login(email);
                 loginTask.setOnSucceeded(ev->{
                     Long response = Long.parseLong(loginTask.getValue().replaceAll("\n", "").replaceAll(" ", "").trim());
                     SessionManagerSingleton.getInstance().setAttribute("employeeId", response);

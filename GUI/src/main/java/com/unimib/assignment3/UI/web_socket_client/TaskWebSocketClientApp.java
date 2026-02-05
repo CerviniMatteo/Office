@@ -29,7 +29,7 @@ public class TaskWebSocketClientApp {
             public void afterConnected(StompSession session, @Nonnull StompHeaders connectedHeaders) {
                 System.out.println("Connesso al WebSocket server!");
 
-                session.subscribe("/topic/tasks", new StompFrameHandler() {
+                session.subscribe("/topic/task", new StompFrameHandler() {
                     @Override
                     public Type getPayloadType(@Nonnull StompHeaders headers) {
                         return String.class;
@@ -51,7 +51,7 @@ public class TaskWebSocketClientApp {
             }
         };
 
-        StompSession session = stompClient.connect("ws://localhost:8080/ws", sessionHandler).get();
+        StompSession session = stompClient.connectAsync("ws://localhost:8080/ws", sessionHandler).get();
         System.out.println("Session ID: " + session.getSessionId() + "\nLayout ID:" + System.identityHashCode(taskLayout));
     }
 }

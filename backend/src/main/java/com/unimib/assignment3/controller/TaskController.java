@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/task")
 public class TaskController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class TaskController {
         this.taskDtoMapper = taskDtoMapper;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<TaskDTO>> getAllTasks() {
         System.out.println("Called taks/getAllTasks");
         return ResponseEntity.ok(facade.getAllTasks().stream()

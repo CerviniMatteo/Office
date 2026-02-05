@@ -1,5 +1,6 @@
 package com.unimib.assignment3.UI.components;
 
+import com.unimib.assignment3.UI.controller.TaskController;
 import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
@@ -7,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.unimib.assignment3.UI.dto.TaskDTO;
-import static com.unimib.assignment3.UI.rest.TaskRest.fetchTask;
-import static com.unimib.assignment3.UI.rest.TaskRest.fetchTasks;
 import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
 
 public class TaskLayout extends ScrollPane{
@@ -65,7 +64,8 @@ public class TaskLayout extends ScrollPane{
 
     public void updateTaskButton(Long taskId) {
         new Thread(() -> {
-            TaskDTO taskDTO = fetchTask(taskId);
+            TaskController controller = new TaskController();
+            TaskDTO taskDTO = controller.fetchTask(taskId);
 
             Platform.runLater(() -> {
                 if (taskDTO == null) {
@@ -87,7 +87,8 @@ public class TaskLayout extends ScrollPane{
 
     private void loadTasks() {
         new Thread(() -> {
-            List<TaskDTO> taskDTOS = fetchTasks();
+            TaskController controller = new TaskController();
+            List<TaskDTO> taskDTOS = controller.fetchTasks();
             taskButtons = new HashMap<>();
 
             Platform.runLater(() -> {
