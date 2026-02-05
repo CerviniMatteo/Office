@@ -5,8 +5,6 @@ public class TaskConstants {
     public static final String TASK_NOT_FOUND = "Task not found";
     public static final String CANNOT_ASSIGN_DONE_TASK = "Isn't allowed to assign employees to tasks in DONE state";
 
-    public static final String ONLY_STARTED_FROM_TO_BE_STARTED = "Is allowed only from TO BE STARTED to STARTED.";
-    public static final String ONLY_DONE_FROM_STARTED = "Is allowed only from TO BE STARTED to STARTED. Use reset() to reset the task.";
     public static final String TASK_ALREADY_FINISHED = "The task is DONE, not allowed to change state. Use reset() to reset the task.";
 
     public static final String START_DATE_AFTER_END = "The start date cannot be after the end date.";

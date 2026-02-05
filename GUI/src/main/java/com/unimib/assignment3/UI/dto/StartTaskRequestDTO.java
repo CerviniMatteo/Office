@@ -1,6 +1,6 @@
 package com.unimib.assignment3.UI.dto;
 
-import com.unimib.assignment3.UI.request.TaskValidator;
+import com.unimib.assignment3.UI.validator.TaskValidator;
 
 public record StartTaskRequestDTO(
         Long taskId,
