@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 
-import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
 
 public class Login extends VBox {
 

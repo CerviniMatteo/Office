@@ -232,3 +232,31 @@
     -fx-background-radius: 10;
     -fx-opacity: 0.9;
 }
+
+.dialog {
+    -fx-background-color: #140D19;
+    -fx-padding: 20px;
+}
+
+.dialog-title {
+    -fx-text-fill: orange;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.dialog-message {
+    -fx-text-fill: #F8E2D4;
+    -fx-font-size: 18px;
+}
+
+.dialog-pane {
+    -fx-background-color: #140D19;
+}
+
+.dialog-pane .content {
+    -fx-background-color: transparent;
+}
+
+.dialog-pane .button-bar {
+    -fx-background-color: transparent;
+}

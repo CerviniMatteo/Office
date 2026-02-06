@@ -12,7 +12,7 @@ import javafx.concurrent.Task;
 import java.net.http.HttpResponse;
 import java.util.List;
 import static com.unimib.assignment3.UI.constants.Rest.BASE_ENDPOINT;
-import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
 import static com.unimib.assignment3.UI.utils.RestHelper.createPostRequest;
 
 public class TaskController {

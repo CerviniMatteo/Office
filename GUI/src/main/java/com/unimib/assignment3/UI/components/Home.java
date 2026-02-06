@@ -5,7 +5,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
-import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
 
 public class Home extends HBox {
 

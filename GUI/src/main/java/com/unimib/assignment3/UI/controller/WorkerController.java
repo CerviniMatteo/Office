@@ -8,7 +8,7 @@ import javafx.concurrent.Task;
 
 import java.net.http.HttpResponse;
 
-import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
 
 public class WorkerController {
     private static final String BASE_ENDPOINT = "http://localhost:8080/employee";

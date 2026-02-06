@@ -19,7 +19,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.*;
 
-import static com.unimib.assignment3.UI.utils.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
 
 public class TaskButton extends Button {
 
