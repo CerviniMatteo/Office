@@ -1,6 +1,6 @@
 package com.unimib.assignment3.UI.components;
 
-import com.unimib.assignment3.UI.controller.TaskController;
+import com.unimib.assignment3.UI.controller.rest.TaskController;
 import com.unimib.assignment3.UI.dto.AcceptTaskRequestDTO;
 import com.unimib.assignment3.UI.dto.StartTaskRequestDTO;
 import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;

@@ -1,4 +1,4 @@
-package com.unimib.assignment3.UI.controller;
+package com.unimib.assignment3.UI.controller.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

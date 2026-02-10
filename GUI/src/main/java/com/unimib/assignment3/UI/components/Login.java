@@ -1,7 +1,7 @@
 package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.FxApplication;
-import com.unimib.assignment3.UI.controller.LoginController;
+import com.unimib.assignment3.UI.controller.rest.LoginController;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;

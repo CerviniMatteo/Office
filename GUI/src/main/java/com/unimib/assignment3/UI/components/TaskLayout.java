@@ -1,6 +1,6 @@
 package com.unimib.assignment3.UI.components;
 
-import com.unimib.assignment3.UI.controller.TaskController;
+import com.unimib.assignment3.UI.controller.rest.TaskController;
 import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;

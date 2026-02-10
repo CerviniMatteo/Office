@@ -1,7 +1,7 @@
 package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.dto.WorkerDTO;
-import com.unimib.assignment3.UI.controller.WorkerController;
+import com.unimib.assignment3.UI.controller.rest.WorkerController;
 import com.unimib.assignment3.UI.utils.ImageHelper;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
 import jakarta.annotation.Nonnull;
