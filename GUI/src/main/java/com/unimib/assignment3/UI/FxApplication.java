@@ -71,7 +71,7 @@ public class FxApplication extends Application {
     }
 
     public void afterLogin(String message){
-        Home home = new Home(root.widthProperty());
+        Home home = new Home();
         pushWindow(home);
         HBox.setHgrow(home, Priority.ALWAYS);
         home.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);

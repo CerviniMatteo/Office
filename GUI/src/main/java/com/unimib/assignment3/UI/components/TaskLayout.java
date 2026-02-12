@@ -1,7 +1,9 @@
 package com.unimib.assignment3.UI.components;
 
 import com.unimib.assignment3.UI.controller.rest.TaskController;
+import com.unimib.assignment3.UI.enums.TaskState;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import java.util.HashMap;
@@ -10,59 +12,39 @@ import java.util.Map;
 import com.unimib.assignment3.UI.dto.TaskDTO;
 import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
 
-public class TaskLayout extends ScrollPane{
+public class TaskLayout extends ScrollPane {
 
-    private final GridPane grid;
-    private final int rows;
-    private final int columns;
-    private Map<Long, TaskButton> taskButtons;
+    private final VBox toBeStartedColumn;
+    private final VBox startedColumn;
+    private final VBox doneColumn;
+    private Map<Long, TaskDetailsWindow> taskDetails;
 
-    public TaskLayout(int rows, int columns) {
-        this.rows = rows;
-        this.columns = columns;
+    public TaskLayout() {
+        this.getStyleClass().add("task-layout");
 
         setHbarPolicy(ScrollBarPolicy.NEVER);
         setVbarPolicy(ScrollBarPolicy.NEVER);
         setFitToWidth(true);
         setPannable(true);
 
-        grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
+        toBeStartedColumn = new VBox(20);
+        startedColumn = new VBox(20);
+        doneColumn = new VBox(20);
 
-        setContent(grid);
+        HBox mainLayout = new HBox(20, toBeStartedColumn, startedColumn, doneColumn);
+        mainLayout.setPadding(new Insets(10, 10, 10, 10));
+        setContent(mainLayout);
 
-        getStyleClass().add("task-layout");
-        grid.getStyleClass().add("task-grid-layout");
+        setContent(mainLayout);
 
-        setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        HBox.setHgrow(toBeStartedColumn, Priority.ALWAYS);
+        HBox.setHgrow(startedColumn, Priority.ALWAYS);
+        HBox.setHgrow(doneColumn, Priority.ALWAYS);
 
-        HBox.setHgrow(this, Priority.ALWAYS);
-
-        setColumnConstraints();
-        setRowConstraints();
         loadTasks();
     }
 
-    private void setColumnConstraints() {
-        for (int i = 0; i < columns; i++) {
-            ColumnConstraints cc = new ColumnConstraints();
-            cc.setPercentWidth(100.0 / columns);
-            cc.setHgrow(Priority.ALWAYS);
-            grid.getColumnConstraints().add(cc);
-        }
-    }
-
-    private void setRowConstraints() {
-        for (int i = 0; i < rows; i++) {
-            RowConstraints rc = new RowConstraints();
-            rc.setVgrow(Priority.ALWAYS);
-            grid.getRowConstraints().add(rc);
-        }
-    }
-
-    public void updateTaskButton(Long taskId) {
+    public void updateTaskDetails(Long taskId) {
         new Thread(() -> {
             TaskController controller = new TaskController();
             TaskDTO taskDTO = controller.fetchTask(taskId);
@@ -72,47 +54,60 @@ public class TaskLayout extends ScrollPane{
                     showAlert("Error", "Server is currently down");
                     return;
                 }
-                TaskButton oldButton = taskButtons.get(taskId);
-                if (oldButton == null) return;
-                int row = GridPane.getRowIndex(oldButton) == null ? 0 : GridPane.getRowIndex(oldButton);
-                int col = GridPane.getColumnIndex(oldButton) == null ? 0 : GridPane.getColumnIndex(oldButton);
-                grid.getChildren().remove(oldButton);
-                TaskButton newButton = new TaskButton(taskDTO);
-                grid.add(newButton, col, row);
-                taskButtons.put(taskId, newButton);
+
+                TaskDetailsWindow oldNode = taskDetails.get(taskId);
+                if (oldNode != null) {
+                    removeTaskFromColumns(oldNode);
+                }
+
+                TaskDetailsWindow newNode = new TaskDetailsWindow();
+                newNode.setTask(taskDTO);
+                addTaskToColumn(taskDTO, newNode);
+                taskDetails.put(taskId, newNode);
             });
         }).start();
     }
-
 
     private void loadTasks() {
         new Thread(() -> {
             TaskController controller = new TaskController();
             List<TaskDTO> taskDTOS = controller.fetchTasks();
-            taskButtons = new HashMap<>();
+            taskDetails = new HashMap<>();
 
             Platform.runLater(() -> {
-                grid.getChildren().clear();
+                toBeStartedColumn.getChildren().clear();
+                startedColumn.getChildren().clear();
+                doneColumn.getChildren().clear();
 
                 if (taskDTOS == null) {
                     showAlert("Error", "Server is currently down");
                     return;
                 }
 
-                int col = 0;
-                int row = 0;
                 for (TaskDTO taskDTO : taskDTOS) {
-                    TaskButton btn = new TaskButton(taskDTO);
-                    grid.add(btn, col, row);
-                    taskButtons.put(btn.getTaskId(), btn);
-                    col++;
-                    if (col == columns) {
-                        col = 0;
-                        row++;
-                    }
+                    TaskDetailsWindow node = new TaskDetailsWindow();
+                    node.setTask(taskDTO);
+                    addTaskToColumn(taskDTO, node);
+                    taskDetails.put(taskDTO.taskId(), node);
                 }
             });
         }).start();
     }
 
+    private void addTaskToColumn(TaskDTO taskDTO, TaskDetailsWindow node) {
+        TaskState state = taskDTO.taskState();
+        if (state == null) return;
+
+        switch (state) {
+            case TaskState.TO_BE_STARTED -> toBeStartedColumn.getChildren().add(node);
+            case TaskState.STARTED -> startedColumn.getChildren().add(node);
+            case TaskState.DONE -> doneColumn.getChildren().add(node);
+        }
+    }
+
+    private void removeTaskFromColumns(TaskDetailsWindow node) {
+        toBeStartedColumn.getChildren().remove(node);
+        startedColumn.getChildren().remove(node);
+        doneColumn.getChildren().remove(node);
+    }
 }

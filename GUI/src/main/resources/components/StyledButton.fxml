@@ -19,7 +19,7 @@
     <graphic>
         <HBox fx:id="content" spacing="8" alignment="CENTER">
             <StackPane fx:id="iconWrapper"/>
-            <Label fx:id="label" styleClass="dashboard" alignment="CENTER">
+            <Label fx:id="label" alignment="CENTER">
                 <HBox.hgrow>ALWAYS</HBox.hgrow>
             </Label>
             <Region>
@@ -29,4 +29,3 @@
     </graphic>
 
 </fx:root>
-

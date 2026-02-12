@@ -1,191 +1,189 @@
-/* Root container */
+/* ===================================================== */
+/* ROOT BACKGROUND                                       */
+/* ===================================================== */
+
 .root {
     -fx-padding: 10px;
-    -fx-background-color: #140D19;
-}
-
-/* ======================= */
-/* Buttons */
-.styled-btn {
     -fx-background-color: transparent;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-border-width: 2;
-    -fx-border-color: #F8E2D4;
-    -fx-text-fill: #F8E2D4;
-    -fx-font-size: 20;
-    -fx-font-weight: bold;
-    -fx-fill: #F8E2D4;
-    -fx-padding: 5px 10px;
+    -fx-background-image: url("/images/root.png");
+    -fx-background-position: center center;
+    -fx-background-size: cover;
 }
 
-.styled-btn .dashboard{
-    -fx-border-width : 0px;
-    -fx-text-fill: #F8E2D4;
-    -fx-fill: #F8E2D4;
-}
 
-.styled-btn:hover{
-    -fx-border-color: orange;
-    -fx-text-fill: orange;
-    -fx-fill: orange;
-}
+/* ===================================================== */
+/* GLOBAL BUTTON RESET                                   */
+/* ===================================================== */
 
-.styled-btn:hover .dashboard{
-    -fx-border-width : 0px;
-    -fx-text-fill: orange;
-    -fx-fill: orange;
-}
-
-.styled-btn:pressed{
-    -fx-border-color: #086466;
-    -fx-text-fill: #086466;
-    -fx-fill: #086466;
-}
-
-.styled-btn:pressed .dashboard{
-    -fx-border-width : 0px;
-    -fx-text-fill: #086466;
-    -fx-fill: #086466;
-}
-
-.styled-btn:disabled{
-    -fx-border-color: #000000;
-    -fx-text-fill: #000000;
-}
-
-/* Hide-border buttons (icon-only or invisible) */
-.hide-border {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-border-color: transparent;
-    -fx-border-width: 0;
+.button {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
-    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
 }
 
-.hide-border .icon {
-    -fx-fill: #F8E2D4;
-    -fx-stroke: transparent;
-    -fx-stroke-width: 0;
+.button:focused {
+    -fx-focus-color: transparent;
 }
 
-.hide-border:hover .icon {
-    -fx-fill: orange;
+.button:pressed {
+    -fx-opacity: 1;
 }
 
-.hide-border:pressed .icon {
-    -fx-fill: #086466;
-}
 
-/* ======================= */
-/* Dashboard */
-.dashboard {
-    -fx-background-color: transparent;
-    -fx-border-color: #F8E2D4;
-    -fx-border-radius: 30;
-    -fx-border-width: 2;
-}
-
-/* ======================= */
-/* Task states */
-.task-to-start {
-    -fx-background-color: #2F2139;
-}
-
-.task-started {
-    -fx-background-color: #6A2E3D;
-}
-
-.task-done {
-    -fx-background-color: #086466;
-}
-
-.task-unknown {
-    -fx-background-color: #444;
-}
-
-/* ======================= */
-/* Task labels */
-.task-description-lbl {
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-font-size: 24px;
-}
-
-.task-state-lbl {
-    -fx-background-color: #F8E2D4;
-    -fx-font-weight: bold;
-    -fx-text-fill: #140D19;
-    -fx-font-size: 20px;
-    -fx-background-radius: 30;
-    -fx-padding: 0px 15px;
-}
-
-.task-date-lbl {
-    -fx-font-weight: bold;
-    -fx-text-fill: yellow;
-    -fx-font-size: 18px;
-    -fx-padding: 10px;
-}
-
-/* ======================= */
-/* Task buttons */
-.task-button {
-    -fx-background-radius: 30;
-    -fx-border-radius: 30;
-    -fx-border-width: 2;
-    -fx-border-color: #F8E2D4;
-    -fx-padding: 7px;
-}
-
-/* ======================= */
-/* Layouts */
-.hbox-top-state-date {
-    -fx-alignment: top-left;
-    -fx-padding: 10px
-}
-
-.hbox-center-task-description {
-    -fx-alignment: center;
-    -fx-padding: 10px
-}
-
-.hbox-bottom-right-task-state {
-    -fx-alignment: bottom-right;
-    -fx-padding: 10px
-}
+/* ===================================================== */
+/* TASK LAYOUT (ScrollPane + Columns)                   */
+/* ===================================================== */
 
 .task-layout {
     -fx-background-color: transparent;
     -fx-background: transparent;
-}
-
-.task-grid-layout{
-    -fx-border-radius: 30;
-    -fx-border-width: 2;
-    -fx-border-color: #F8E2D4;
+    -fx-background-insets: 0;
     -fx-padding: 10px;
 }
 
-/* ======================= */
-/* Rounded orange input */
-.input-form {
-    -fx-background-color: orange;
-    -fx-control-inner-background: orange;
+/* ScrollPane viewport */
+.task-layout > .viewport {
+    -fx-background-color: transparent;
+}
 
-    -fx-background-radius: 25;
+/* ScrollPane content */
+.task-layout .content {
+    -fx-background-color: transparent;
+}
+
+/* Columns (VBox) */
+.task-layout VBox {
+    -fx-background-color: transparent;
+}
+
+/* Main HBox container */
+.task-layout HBox {
+    -fx-background-color: transparent;
+}
+
+
+/* ===================================================== */
+/* TASK CARD (WHITE CARD)                                */
+/* ===================================================== */
+
+.task-card {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-padding: 12px;
+}
+
+
+/* ===================================================== */
+/* TASK LABELS                                           */
+/* ===================================================== */
+
+.task-description-lbl {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+}
+
+.task-date-lbl {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-padding: 10px;
+}
+
+.task-state-lbl {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-background-radius: 30;
+}
+
+
+/* ===================================================== */
+/* TASK STATE COLORS                                     */
+/* ===================================================== */
+
+.task-to-start {
+    -fx-background-color: #DD3162;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-border-radius: 30;
+    -fx-padding: 10px 10px 10px 10px;
+}
+
+.task-started {
+    -fx-background-color: #00838F;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-border-radius: 30;
+    -fx-padding: 10px 10px 10px 10px;
+}
+
+.task-done {
+    -fx-background-color: #B3476B;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-border-radius: 30;
+    -fx-padding: 10px 10px 10px 10px;
+}
+
+
+/* ===================================================== */
+/* PRIMARY STYLED BUTTON                                 */
+/* ===================================================== */
+
+.styled-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 16px;
+    -fx-border-width: 2px;
+    -fx-padding: 8px 14px;
+    -fx-font-weight: bold;
+}
+
+.styled-btn:hover {
+    -fx-border-color: #f58f00;
+    -fx-text-fill: #f58f00;
+    -fx-background-color: transparent;
+}
+
+.styled-btn:pressed {
+    -fx-border-color: #f58f00;
+    -fx-text-fill: #f58f00;
+    -fx-background-color: transparent;
+}
+
+.styled-btn:disabled {
+    -fx-border-color: #ffffff;
+    -fx-text-fill: #ffffff;
+}
+
+/* ===================================================== */
+/* INPUT FIELDS                                          */
+/* ===================================================== */
+
+.input-form {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+
+    -fx-background-radius: 0; /* Nessun angolo arrotondato */
     -fx-border-radius: 25;
 
-    -fx-border-color: F8E2D4;
+    -fx-border-color: white;
     -fx-border-width: 2;
 
-    -fx-background-insets: 0;
+    -fx-background-insets: 0; /* Nessun margine interno dello sfondo */
     -fx-border-insets: 0;
 
-    -fx-text-fill: #F8E2D4;
-    -fx-prompt-text-fill: rgba(20, 13, 25, 0.6);
+    -fx-text-fill: white;
 
     -fx-font-size: 18px;
     -fx-font-weight: bold;
@@ -195,62 +193,48 @@
     -fx-faint-focus-color: transparent;
 }
 
-.input-form:focused {
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+.input-form .scroll-pane {
+    -fx-background-color: transparent;
 }
 
-/* ======================= */
-/* Insert email label */
-.insert-email-lbl {
-    -fx-text-fill: #F8E2D4;
-    -fx-font-size: 40px;
-    -fx-font-weight: bold;
-    -fx-padding: 5px 10px;
-    -fx-border-width: 2px;
-    -fx-border-color: #F8E2D4;
-    -fx-border-radius: 2px;
-    -fx-background-radius: 25;
-    -fx-border-radius: 25;
-    -fx-background-color: orange;
+.input-form .scroll-pane .viewport{
+    -fx-background-color: transparent;
 }
 
-.success-banner {
-    -fx-background-color: green;
+
+.input-form .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.insert-email-lbl{
+    -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 10;
-    -fx-opacity: 0.9;
+    -fx-font-size: 28px;
 }
 
-.failure-banner {
-    -fx-background-color: red;
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 10;
-    -fx-opacity: 0.9;
-}
+
+/* ===================================================== */
+/* DIALOGS                                               */
+/* ===================================================== */
 
 .dialog {
-    -fx-background-color: #140D19;
+    -fx-background-color: white;
     -fx-padding: 20px;
 }
 
 .dialog-title {
-    -fx-text-fill: orange;
+    -fx-text-fill: #0B3D91;
     -fx-font-size: 28px;
     -fx-font-weight: bold;
 }
 
 .dialog-message {
-    -fx-text-fill: #F8E2D4;
+    -fx-text-fill: #333333;
     -fx-font-size: 18px;
 }
 
 .dialog-pane {
-    -fx-background-color: #140D19;
+    -fx-background-color: white;
 }
 
 .dialog-pane .content {
@@ -259,4 +243,27 @@
 
 .dialog-pane .button-bar {
     -fx-background-color: transparent;
+}
+
+
+/* ===================================================== */
+/* SUCCESS / FAILURE BANNERS                             */
+/* ===================================================== */
+
+.success-banner {
+    -fx-background-color: #228B22;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-opacity: 0.9;
+}
+
+.failure-banner {
+    -fx-background-color: #B22222;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-opacity: 0.9;
 }

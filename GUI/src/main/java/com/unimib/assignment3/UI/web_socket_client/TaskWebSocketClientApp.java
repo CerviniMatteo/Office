@@ -44,7 +44,7 @@ public class TaskWebSocketClientApp {
                             String substring = message.substring(message.indexOf(":") + 1);
                             Long taskId = Long.valueOf(substring);
 
-                            Platform.runLater(() -> taskLayout.updateTaskButton(taskId));
+                            Platform.runLater(() -> taskLayout.updateTaskDetails(taskId));
                         }
                     }
                 });
