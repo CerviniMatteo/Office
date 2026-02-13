@@ -221,6 +221,44 @@
     -fx-font-weight: bold;
 }
 
+/* ===================================================== */
+/* ADD TASK BUTTON (CIRCULAR)                            */
+/* ===================================================== */
+.add-task-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #7FD8BE;
+    -fx-border-width: 4px;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+    -fx-min-width: 80px;
+    -fx-min-height: 80px;
+    -fx-max-width: 80px;
+    -fx-max-height: 80px;
+    -fx-cursor: hand;
+    -fx-padding: 0; /* no extra padding */
+}
+
+.add-task-btn .add-icon {
+    -fx-fill: #7FD8BE;
+    -fx-scale-x: 0.07; /* scale down the huge SVG */
+    -fx-scale-y: 0.07;
+}
+
+.add-task-btn:hover {
+    -fx-border-color: #f58f00;
+}
+
+.add-task-btn:hover .add-icon {
+    -fx-fill: #f58f00;
+}
+
+.add-task-btn:pressed {
+    -fx-border-color: #f58f00;
+}
+
+.add-task-btn:pressed .add-icon {
+    -fx-fill: #f58f00;
+}
 
 /* ===================================================== */
 /* DIALOGS                                               */
