@@ -1,34 +1,31 @@
 package com.unimib.assignment3.UI.components;
 
-import com.unimib.assignment3.UI.FxApplication;
-import com.unimib.assignment3.UI.controller.UI.LoginViewController;
+import com.unimib.assignment3.UI.controller.UI.TaskCreationFormController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class Login extends VBox {
+public class TaskCreationForm extends VBox {
 
-    FxApplication fxApplication;
+    private final TaskCreationFormController controller;
 
-    public Login(FxApplication fxApplication) {
+    public TaskCreationForm() {
         super(8);
-        this.fxApplication = fxApplication;
 
-        // Load FXML and controller
-        LoginViewController controller = new LoginViewController();
-        controller.setFxApplication(fxApplication);
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/Login.fxml"));
-        loader.setRoot(this);
-        loader.setController(controller);
+        Node root;
         try {
-            loader.load();
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/components/TaskCreationForm.fxml")));
+            root = loader.load();
+            controller = loader.getController();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load Login.fxml", e);
+            throw new RuntimeException("Failed to load TaskCreationForm.fxml", e);
         }
+
+        this.getChildren().add(root);
 
         setAlignment(Pos.CENTER);
 
@@ -41,5 +38,9 @@ public class Login extends VBox {
                 }
             }
         });
+    }
+
+    public void setOnSuccess(Runnable onSuccess) {
+        if (controller != null) controller.setOnSuccess(onSuccess);
     }
 }

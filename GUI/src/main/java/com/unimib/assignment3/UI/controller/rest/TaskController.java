@@ -39,6 +39,26 @@ public class TaskController {
         }
     }
 
+    public Task<String> createTask(TaskDTO payload) {
+        return new Task<>() {
+            @Override
+            protected String call() {
+                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/createTask", payload);
+
+                if (response == null) {
+                    showAlert("Error", "No response from server");
+                    return null;
+                }
+
+                if (response.statusCode() != 200) {
+                    showAlert("Error", response.statusCode() + " - " + response.body());
+                    return null;
+                }
+                return response.body();
+            }
+        };
+    }
+
     public Task<String> changeTaskState(ChangeTaskStateRequestDTO payload) {
         return new Task<>() {
             @Override

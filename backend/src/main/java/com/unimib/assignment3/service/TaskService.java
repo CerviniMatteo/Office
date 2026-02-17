@@ -1,6 +1,7 @@
 package com.unimib.assignment3.service;
 
 
+import com.unimib.assignment3.DTO.TaskDTO;
 import com.unimib.assignment3.POJO.*;
 import com.unimib.assignment3.constants.*;
 import com.unimib.assignment3.enums.TaskState;
@@ -47,6 +48,21 @@ public class TaskService {
         } else if (state == DONE) {
             task.setStartDate(LocalDate.now());
             task.setEndDate(LocalDate.now());
+        }
+        return task;
+    }
+
+    /**
+     * Creates a new task based on the provided TaskDTO.
+     *
+     * @param taskDTO the data transfer object containing task details
+     * @return the newly created task entity
+     */
+    @Transactional
+    public Task createTask(TaskDTO taskDTO) {
+        Task task = new Task(TaskState.TO_BE_STARTED);
+        if(taskDTO.description() != null) {
+            task.setDescription(taskDTO.description());
         }
         return task;
     }

@@ -11,13 +11,16 @@ import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
 
 public class Home extends StackPane {
 
+    private final TaskLayout tasksLayout;
+    private final Button addTaskButton;
+
+
     public Home() {
 
-        TaskLayout tasksLayout = new TaskLayout();
-        getChildren().add(tasksLayout);
+        tasksLayout = new TaskLayout();
 
         // Create Add Task button
-        Button addTaskButton = new Button();
+        addTaskButton = new Button();
         addTaskButton.getStyleClass().add("add-task-btn");
 
         // Create the SVG icon
@@ -32,17 +35,40 @@ public class Home extends StackPane {
         addTaskButton.setGraphic(iconWrapper);
 
         // Position the button at bottom-right
-        getChildren().add(addTaskButton);
-        StackPane.setAlignment(addTaskButton, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(addTaskButton, new Insets(20));
-        addTaskButton.toFront();
+        setUpDefaultHomeWindow();
 
         // Initialize WebSocket client
         TaskWebSocketClientApp webSocketClientApp = new TaskWebSocketClientApp(tasksLayout);
+
         try {
             webSocketClientApp.start();
         } catch (Exception e) {
             showAlert("Error", e.getMessage());
         }
+
+        addTaskButton.setOnAction(e ->{
+            TaskCreationForm taskCreationForm = new TaskCreationForm();
+            this.getChildren().clear();
+            this.getChildren().add(taskCreationForm);
+
+
+            // Register callback to restore the tasks layout after successful creation
+            taskCreationForm.setOnSuccess(() -> {
+                System.out.println("[Home] onSuccess invoked - restoring tasks layout");
+                // Switch back to the tasks layout on the JavaFX Application Thread
+                javafx.application.Platform.runLater(() -> {
+                    this.getChildren().clear();
+                    setUpDefaultHomeWindow();
+                });
+            });
+        });
+
+
+    }
+
+    public void setUpDefaultHomeWindow() {
+        StackPane.setAlignment(addTaskButton, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(addTaskButton, new Insets(16));
+        this.getChildren().addAll(tasksLayout, addTaskButton);
     }
 }

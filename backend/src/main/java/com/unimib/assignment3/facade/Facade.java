@@ -1,5 +1,6 @@
 package com.unimib.assignment3.facade;
 
+import com.unimib.assignment3.DTO.TaskDTO;
 import com.unimib.assignment3.POJO.*;
 import com.unimib.assignment3.enums.*;
 import com.unimib.assignment3.service.*;
@@ -446,6 +447,16 @@ public class Facade {
      */
     public Task createTask(TaskState initialState) {
         return taskService.createTask(initialState);
+    }
+
+        /**
+        * Creates a new task based on the provided TaskDTO.
+        *
+        * @param taskDTO the data transfer object containing task details
+        * @return the newly created task entity
+        */
+    public Task createTask(TaskDTO taskDTO) {
+        return taskService.createTask(taskDTO);
     }
 
     /**

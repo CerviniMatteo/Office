@@ -1,6 +1,7 @@
 package com.unimib.assignment3.controller;
 
 import com.unimib.assignment3.DTO.TaskDTO;
+import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import com.unimib.assignment3.mappers.TaskDtoMapper;
@@ -43,6 +44,21 @@ public class TaskController {
         }
         System.out.println("Called tasks/getTask");
         return ResponseEntity.ok(taskDtoMapper.mapToDto(facade.getTaskById(taskId)));
+    }
+
+    @PostMapping("/createTask")
+    public ResponseEntity<String> createTask(@RequestBody TaskDTO taskDTO, HttpServletRequest httpServletRequest) {
+        if(taskDTO == null) {
+            return ResponseEntity.badRequest().body("Task data cannot be null");
+        }
+        System.out.println("Called tasks/createTask for task: " + taskDTO);
+        try {
+            Task task = facade.saveTask(facade.createTask(taskDTO));
+            httpServletRequest.setAttribute("taskId", task.getTaskId());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/changeState")
