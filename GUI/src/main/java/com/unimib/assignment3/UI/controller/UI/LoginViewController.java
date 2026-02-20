@@ -19,6 +19,11 @@ import javafx.geometry.Pos;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Ellipse;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.application.Platform;
 
 import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
 import static com.unimib.assignment3.UI.components.InformationBanner.timeInSeconds;
@@ -34,31 +39,87 @@ public class LoginViewController {
     @FXML
     private Button submitButton;
 
+    @FXML
+    private StackPane rootStack;
+
+    @FXML
+    private Rectangle designRectangle;
+
+    @FXML
+    private Ellipse designOval;
+
     private FxApplication application;
 
     public void setFxApplication(FxApplication fxApplication){
         this.application = fxApplication;
     }
 
-    /**
-     * FXML initialize: will run when FXMLLoader injects fields.
-     * If injection fails for some reason, call attachHandlers(root) from the caller.
-     */
     @FXML
-    private void initialize(){
-        if(inputForm != null) inputForm.setText("matteo.cervini@example.com");
+    private void initialize() {
+        // Default email text
+        if(inputForm != null)
+            inputForm.setText("matteo.cervini@example.com");
 
-        if(submitButton != null) submitButton.setOnAction(event -> handleSubmit(inputForm));
+        if(submitButton != null)
+            submitButton.setOnAction(event -> handleSubmit(inputForm));
+
+        // Clip solo l'ovale, non tutto lo StackPane
+        applyClipToOval();
     }
 
-    /**
-     * Attach handlers using lookup on the provided root node. This guarantees the visible
-     * controls receive handlers even if field injection didn't happen.
-     */
+    private void applyClipToOval() {
+        if (designRectangle == null || designOval == null) return;
+
+        // create a clip rectangle and attach it to the oval
+        final Rectangle clip = new Rectangle();
+        clip.setArcWidth(designRectangle.getArcWidth());
+        clip.setArcHeight(designRectangle.getArcHeight());
+        designOval.setClip(clip);
+
+        // updater computes the rectangle bounds (in parent's coordinates) and maps them to the oval's local coordinates
+        final Runnable updateClip = () -> {
+            try {
+                // bounds of the rectangle in the parent (StackPane) coordinate space
+                Bounds rectBounds = designRectangle.getBoundsInParent();
+
+                // convert rectangle corners into the oval's local coordinate space
+                Point2D topLeft = designOval.parentToLocal(rectBounds.getMinX(), rectBounds.getMinY());
+                Point2D bottomRight = designOval.parentToLocal(rectBounds.getMaxX(), rectBounds.getMaxY());
+
+                final double x = topLeft.getX();
+                final double y = topLeft.getY();
+                final double w = bottomRight.getX() - x;
+                final double h = bottomRight.getY() - y;
+                final double wClamped = w < 0 ? 0 : w;
+                final double hClamped = h < 0 ? 0 : h;
+
+                // update clip on JavaFX application thread
+                Platform.runLater(() -> {
+                    clip.setX(x);
+                    clip.setY(y);
+                    clip.setWidth(wClamped);
+                    clip.setHeight(hClamped);
+                    clip.setArcWidth(designRectangle.getArcWidth());
+                    clip.setArcHeight(designRectangle.getArcHeight());
+                });
+            } catch (Exception ignored) {
+                // best-effort; ignore if layout not ready yet
+            }
+        };
+
+        // listen for layout changes so clip stays correct when window resizes or nodes move
+        designRectangle.boundsInParentProperty().addListener((obs, oldV, newV) -> updateClip.run());
+        designOval.boundsInParentProperty().addListener((obs, oldV, newV) -> updateClip.run());
+        designOval.sceneProperty().addListener((obs, oldV, newV) -> Platform.runLater(updateClip));
+
+        // initial run after layout pass
+        Platform.runLater(updateClip);
+    }
+
     public void attachHandlers(Parent root) {
         try {
-            TextField input = (TextField) root.lookup("#inputForm");
-            Button submit = (Button) root.lookup("#submitButton");
+            final TextField input = (TextField) root.lookup("#inputForm");
+            final Button submit = (Button) root.lookup("#submitButton");
 
             if (input != null) input.setText("matteo.cervini@example.com");
             if (submit != null) submit.setOnAction(event -> handleSubmit(input));
@@ -67,9 +128,6 @@ public class LoginViewController {
         }
     }
 
-    /**
-     * Shared submit logic extracted so we can call it from either initialize() or attachHandlers().
-     */
     private void handleSubmit(TextField input) {
         if (input == null) {
             showAlert("Error", "Input field not found");
@@ -79,21 +137,17 @@ public class LoginViewController {
         String email = input.getText();
         try {
             Task<String> loginTask = LoginController.login(email);
-            loginTask.setOnSucceeded(ev->{
-                try{
+
+            loginTask.setOnSucceeded(ev -> {
+                try {
                     Long response = Long.parseLong(loginTask.getValue().replaceAll("\\n", "").replaceAll(" ", "").trim());
                     SessionManagerSingleton.getInstance().setAttribute("employeeId", response);
 
-                    // Post-login UI changes: use ApplicationStateManager to swap to Home and show banner
                     if(application != null) {
                         ApplicationStateManager stateManager = ApplicationStateManager.getInstance(application);
-
-                        // Construct Home with the application so it can interact with state manager
                         Home home = new Home(application);
-                        // Ensure the content is displayed
                         stateManager.replaceWindow(home);
 
-                        // create banner (compact container)
                         InformationBanner banner = new InformationBanner(BannerType.SUCCESS, "Login successful");
                         banner.setPrefHeight(60);
                         banner.setPrefWidth(240);
@@ -102,7 +156,6 @@ public class LoginViewController {
                         HBox bannerBox = new HBox(banner);
                         bannerBox.setPickOnBounds(false);
 
-                        // anchor banner flush to the right edge of the overlay, vertically centered
                         StackPane.setAlignment(bannerBox, Pos.CENTER_RIGHT);
                         StackPane.setMargin(bannerBox, new Insets(0, 0, 0, 0));
                         stateManager.addWindow(bannerBox);
@@ -111,12 +164,12 @@ public class LoginViewController {
                         pause.setOnFinished(p -> stateManager.removeWindow(bannerBox));
                         pause.play();
                     }
-                }catch (Exception ex){
+                } catch (Exception ex){
                     showAlert("Error", ex.getMessage());
                 }
             });
-            loginTask.setOnFailed(ev-> {
-                // show failure banner via state manager
+
+            loginTask.setOnFailed(ev -> {
                 if(application != null) {
                     ApplicationStateManager stateManager = ApplicationStateManager.getInstance(application);
 
@@ -139,7 +192,7 @@ public class LoginViewController {
             });
 
             new Thread(loginTask).start();
-        }catch (Exception e){
+        } catch (Exception e){
             showAlert("Error", e.getMessage());
         }
     }

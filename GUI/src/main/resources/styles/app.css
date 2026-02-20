@@ -5,7 +5,7 @@
 .root {
     -fx-padding: 10px;
     -fx-background-color: transparent;
-    -fx-background-image: url("/images/root.png");
+    -fx-background-image: url("/images/root.jpg");
     -fx-background-position: center center;
     -fx-background-size: cover;
 }
@@ -63,6 +63,28 @@
     -fx-background-color: transparent;
 }
 
+/* ==================================================== */
+/* LOGIN SCREEN (ADJUSTED FOR PHOTO LOOK)              */
+/* ==================================================== */
+/* slightly stronger stroke so the card stands out over the busy background */
+#rootStack .design-rectangle {
+    -fx-fill: rgba(53, 94, 59, 0.5);   /* rectangle fill */
+    -fx-stroke: rgba(255,255,255,0.3);  /* visible border */
+    -fx-stroke-width: 3;      /* thickness of border */
+}
+
+.design-oval {
+    /* make the oval less transparent (more visible) and use colors that blend with purple/blue background */
+    -fx-fill: linear-gradient(
+        from 0% 0% to 100% 100%,
+        rgba(140, 50, 200, 0.22) 0%,
+        rgba(40, 120, 200, 0.18) 100%);
+    -fx-opacity: 0.95; /* reduce transparency so it's more visible */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 12, 0.4, 0, 4);
+
+    -fx-stroke: rgba(255,255,255,0.1);  /* visible border */
+    -fx-stroke-width: 2;      /* thickness of border */
+}
 
 /* ===================================================== */
 /* TASK CARD (WHITE CARD)                                */
@@ -146,32 +168,20 @@
 
 .styled-btn {
     -fx-background-color: transparent;
-    -fx-border-color: white;
+    -fx-border-color: rgba(255,255,255,0.95);
     -fx-text-fill: white;
-    -fx-font-size: 20;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 16px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-width: 2px;
-    -fx-padding: 8px 14px;
-    -fx-font-weight: bold;
+    -fx-padding: 6px 12px;
 }
 
 .styled-btn:hover {
-    -fx-border-color: #f58f00;
-    -fx-text-fill: #f58f00;
-    -fx-background-color: transparent;
-}
-
-.styled-btn:pressed {
-    -fx-border-color: #f58f00;
-    -fx-text-fill: #f58f00;
-    -fx-background-color: transparent;
-}
-
-.styled-btn:disabled {
-    -fx-border-color: #ffffff;
-    -fx-text-fill: #ffffff;
+    -fx-border-color: #f00070;
+    -fx-text-fill: #f00070;
+    -fx-font-weight: bold;
 }
 
 /* ===================================================== */
@@ -179,25 +189,25 @@
 /* ===================================================== */
 
 .input-form {
-    -fx-background-color: transparent;
+    -fx-background-color: rgba(255,255,255,0.03);
     -fx-control-inner-background: transparent;
 
-    -fx-background-radius: 0; /* Nessun angolo arrotondato */
-    -fx-border-radius: 25;
+    -fx-background-radius: 22;
+    -fx-border-radius: 22;
 
-    -fx-border-color: white;
-    -fx-border-width: 2;
+    -fx-border-color: rgba(255,255,255,0.9);
+    -fx-border-width: 1.8;
 
-    -fx-background-insets: 0; /* Nessun margine interno dello sfondo */
+    -fx-background-insets: 0;
     -fx-border-insets: 0;
 
     -fx-text-fill: white;
 
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-padding: 10px 14px;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-padding: 8px 14px;
 
-    -fx-focus-color: transparent;
+    -fx-focus-color: rgba(245,143,0,0.85);
     -fx-faint-focus-color: transparent;
 }
 
@@ -214,17 +224,18 @@
     -fx-background-color: transparent;
 }
 
+/* Ensure the insert label matches photo (centered, smaller lines) */
 .insert-email-lbl{
     -fx-background-color: transparent;
     -fx-text-fill: white;
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-alignment: center;
 }
 
 /* ===================================================== */
 /* ADD TASK BUTTON (CIRCULAR)                            */
 /* ===================================================== */
-
 
 .add-task-btn {
     -fx-background-color: transparent;
@@ -352,3 +363,5 @@
     -fx-background-radius: 0 10 10 0; /* top-left, top-right, bottom-right, bottom-left */
     -fx-opacity: 0.9;
 }
+
+
