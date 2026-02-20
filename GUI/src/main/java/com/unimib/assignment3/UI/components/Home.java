@@ -1,9 +1,13 @@
 package com.unimib.assignment3.UI.components;
 
+import com.unimib.assignment3.UI.FxApplication;
+import com.unimib.assignment3.UI.state.ApplicationStateManager;
 import com.unimib.assignment3.UI.web_socket_client.TaskWebSocketClientApp;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
 
@@ -14,8 +18,13 @@ public class Home extends StackPane {
     private final TaskLayout tasksLayout;
     private final Button addTaskButton;
 
+    private final ApplicationStateManager applicationStateManager;
 
-    public Home() {
+    public Home(FxApplication fxApplication) {
+        this.applicationStateManager = ApplicationStateManager.getInstance(fxApplication);
+
+        HBox.setHgrow(this, Priority.ALWAYS);
+        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         tasksLayout = new TaskLayout();
 
@@ -34,7 +43,10 @@ public class Home extends StackPane {
         iconWrapper.setPrefSize(24, 24); // Size of the SVG icon
         addTaskButton.setGraphic(iconWrapper);
 
-        // Position the button at bottom-right
+        // Add the main content and the add button to this pane
+        this.getChildren().addAll(tasksLayout, addTaskButton);
+
+        // Ensure initial layout and register this view with the state manager
         setUpDefaultHomeWindow();
 
         // Initialize WebSocket client
@@ -45,21 +57,16 @@ public class Home extends StackPane {
         } catch (Exception e) {
             showAlert("Error", e.getMessage());
         }
-
         addTaskButton.setOnAction(e ->{
             TaskCreationForm taskCreationForm = new TaskCreationForm();
-            this.getChildren().clear();
-            this.getChildren().add(taskCreationForm);
-
+            // show the task creation form as an overlay
+            applicationStateManager.replaceWindow(taskCreationForm);
 
             // Register callback to restore the tasks layout after successful creation
             taskCreationForm.setOnSuccess(() -> {
                 System.out.println("[Home] onSuccess invoked - restoring tasks layout");
                 // Switch back to the tasks layout on the JavaFX Application Thread
-                javafx.application.Platform.runLater(() -> {
-                    this.getChildren().clear();
-                    setUpDefaultHomeWindow();
-                });
+                javafx.application.Platform.runLater(this::setUpDefaultHomeWindow);
             });
         });
 
@@ -69,6 +76,6 @@ public class Home extends StackPane {
     public void setUpDefaultHomeWindow() {
         StackPane.setAlignment(addTaskButton, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(addTaskButton, new Insets(16));
-        this.getChildren().addAll(tasksLayout, addTaskButton);
+        applicationStateManager.replaceWindow(this);
     }
 }

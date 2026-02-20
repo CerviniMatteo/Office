@@ -61,8 +61,7 @@
 
             <!-- ===== BOTTOM SECTION ===== -->
             <VBox alignment="CENTER" spacing="25">
-
-                <HBox alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_RIGHT">
                     <GridPane fx:id="workersGrid"
                               hgap="15"
                               vgap="15"

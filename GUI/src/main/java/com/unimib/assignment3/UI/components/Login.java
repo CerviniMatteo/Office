@@ -26,6 +26,8 @@ public class Login extends VBox {
         loader.setController(controller);
         try {
             loader.load();
+            // Attach handlers using lookup in case @FXML injection didn't occur
+            controller.attachHandlers(this);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load Login.fxml", e);
         }

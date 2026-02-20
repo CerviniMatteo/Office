@@ -224,6 +224,8 @@
 /* ===================================================== */
 /* ADD TASK BUTTON (CIRCULAR)                            */
 /* ===================================================== */
+
+
 .add-task-btn {
     -fx-background-color: transparent;
     -fx-border-color: #7FD8BE;
@@ -338,7 +340,7 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-background-radius: 10;
+    -fx-background-radius: 0 10 10 0; /* top-left, top-right, bottom-right, bottom-left */
     -fx-opacity: 0.9;
 }
 
@@ -347,6 +349,6 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-background-radius: 10;
+    -fx-background-radius: 0 10 10 0; /* top-left, top-right, bottom-right, bottom-left */
     -fx-opacity: 0.9;
 }

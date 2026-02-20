@@ -1,35 +1,43 @@
 package com.unimib.assignment3.UI;
 
-import com.unimib.assignment3.UI.components.Home;
-import com.unimib.assignment3.UI.components.InformationBanner;
 import com.unimib.assignment3.UI.components.Login;
-import com.unimib.assignment3.UI.enums.BannerType;
-import javafx.animation.PauseTransition;
+import com.unimib.assignment3.UI.state.ApplicationStateManager;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.Stack;
-
-import static com.unimib.assignment3.UI.components.InformationBanner.timeInSeconds;
 
 public class FxApplication extends Application {
 
-    private HBox root;
-    private List<Node> windowsStack;
+    private StackPane root;
+    private StackPane contentRoot; // holds main app views
+    private StackPane overlayRoot; // holds overlays like banners
 
     @Override
     public void start(Stage stage) {
-        root = new HBox();
+        root = new StackPane();
+        root.setAlignment(Pos.CENTER);
         root.getStyleClass().add("root");
+
+        contentRoot = new StackPane();
+        contentRoot.setPickOnBounds(true);
+        contentRoot.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        contentRoot.prefWidthProperty().bind(root.widthProperty());
+        contentRoot.prefHeightProperty().bind(root.heightProperty());
+        overlayRoot = new StackPane();
+        overlayRoot.setPickOnBounds(false);
+        overlayRoot.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        overlayRoot.setStyle("-fx-background-color: transparent;");
+        overlayRoot.prefWidthProperty().bind(root.widthProperty());
+        overlayRoot.prefHeightProperty().bind(root.heightProperty());
+        overlayRoot.setMouseTransparent(true);
+
+        root.getChildren().addAll(contentRoot, overlayRoot);
+
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(
                 Objects.requireNonNull(
@@ -37,12 +45,8 @@ public class FxApplication extends Application {
                 ).toExternalForm()
         );
 
-        Login login = new Login(this);
-        root.getChildren().add(login);
-        root.setAlignment(Pos.CENTER);
-
-        windowsStack = new Stack<>();
-        windowsStack.add(login);
+        ApplicationStateManager stateManager = ApplicationStateManager.getInstance(this);
+        stateManager.replaceWindow(new Login(this));
 
         stage.setTitle("JavaFX App");
         stage.setScene(scene);
@@ -53,57 +57,25 @@ public class FxApplication extends Application {
         stage.getIcons().add(icon);
     }
 
-    private VBox createBannerBox(BannerType type, String message) {
-        InformationBanner banner = new InformationBanner(type, message);
-        banner.setPrefHeight(60);
-        banner.setMaxWidth(100);
-        banner.setPrefWidth(240);
-        banner.setAlignment(Pos.CENTER);
-        banner.setMaxWidth(Double.MAX_VALUE);
-        VBox.setMargin(banner, new Insets(10, 10, 20, 20));
-
-        Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS);
-
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(banner, spacer);
-        return vBox;
+    /**
+     * Root StackPane (content + overlay)
+     */
+    public StackPane getRoot() {
+        return root;
     }
 
-    public void afterLogin(String message){
-        Home home = new Home();
-        pushWindow(home);
-        HBox.setHgrow(home, Priority.ALWAYS);
-        home.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-        VBox bannerBox = createBannerBox(BannerType.SUCCESS, message);
-        root.getChildren().add(bannerBox);
-        PauseTransition pause = new PauseTransition(Duration.seconds(timeInSeconds));
-        pause.setOnFinished(event -> root.getChildren().remove(bannerBox));
-        pause.play();
+    /**
+     * Pane that holds main application content (Login, Home, etc.)
+     */
+    public StackPane getContentRoot() {
+        return contentRoot;
     }
 
-    public void failedLogin(String message){
-        VBox bannerBox = createBannerBox(BannerType.FAILURE, message);
-        root.getChildren().add(bannerBox);
-        PauseTransition pause = new PauseTransition(Duration.seconds(timeInSeconds));
-        pause.setOnFinished(event -> root.getChildren().remove(bannerBox));
-        pause.play();
-    }
-
-
-    private void pushWindow(Node newWindow) {
-        root.getChildren().clear();
-        root.getChildren().add(newWindow);
-        windowsStack.add(newWindow);
-    }
-    private void popWindow() {
-        if (windowsStack.size() > 1) {
-            windowsStack.removeLast();
-            Node previousWindow = windowsStack.getLast();
-            root.getChildren().clear();
-            root.getChildren().add(previousWindow);
-        }
+    /**
+     * Pane that holds overlays (banners, modals, etc.) on top of contentRoot
+     */
+    public StackPane getOverlayRoot() {
+        return overlayRoot;
     }
 
     public static void main(String[] args) {
