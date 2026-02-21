@@ -19,7 +19,7 @@
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-background-insets: 0;
-    -fx-background-radius: 6;
+    -fx-background-radius: 8;
     -fx-cursor: hand;
 }
 
@@ -28,75 +28,66 @@
 }
 
 .button:pressed {
-    -fx-opacity: 1;
+    -fx-opacity: 0.9;
 }
 
 
 /* ===================================================== */
-/* TASK LAYOUT (ScrollPane + Columns)                   */
+/* TASK LAYOUT                                           */
 /* ===================================================== */
 
 .task-layout {
     -fx-background-color: transparent;
-    -fx-background: transparent;
-    -fx-background-insets: 0;
     -fx-padding: 10px;
 }
 
-/* ScrollPane viewport */
 .task-layout > .viewport {
     -fx-background-color: transparent;
 }
 
-/* ScrollPane content */
 .task-layout .content {
     -fx-background-color: transparent;
 }
 
-/* Columns (VBox) */
-.task-layout VBox {
-    -fx-background-color: transparent;
-}
-
-/* Main HBox container */
+.task-layout VBox,
 .task-layout HBox {
     -fx-background-color: transparent;
 }
 
-/* ==================================================== */
-/* LOGIN SCREEN (ADJUSTED FOR PHOTO LOOK)              */
-/* ==================================================== */
-/* slightly stronger stroke so the card stands out over the busy background */
+
+/* ===================================================== */
+/* LOGIN SCREEN                                          */
+/* ===================================================== */
+
 #rootStack .design-rectangle {
-    -fx-fill: rgba(53, 94, 59, 0.5);   /* rectangle fill */
-    -fx-stroke: rgba(255,255,255,0.3);  /* visible border */
-    -fx-stroke-width: 3;      /* thickness of border */
+    -fx-fill: rgba(30, 27, 75, 0.75);   /* deep violet glass */
+    -fx-stroke: rgba(255,255,255,0.25);
+    -fx-stroke-width: 2;
 }
 
 .design-oval {
-    /* make the oval less transparent (more visible) and use colors that blend with purple/blue background */
     -fx-fill: linear-gradient(
         from 0% 0% to 100% 100%,
-        rgba(140, 50, 200, 0.22) 0%,
-        rgba(40, 120, 200, 0.18) 100%);
-    -fx-opacity: 0.95; /* reduce transparency so it's more visible */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 12, 0.4, 0, 4);
-
-    -fx-stroke: rgba(255,255,255,0.1);  /* visible border */
-    -fx-stroke-width: 2;      /* thickness of border */
+        rgba(124,77,255,0.25) 0%,
+        rgba(0,229,255,0.18) 100%
+    );
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.3, 0, 6);
+    -fx-stroke: rgba(255,255,255,0.12);
+    -fx-stroke-width: 1.5;
 }
 
+
 /* ===================================================== */
-/* TASK CARD (WHITE CARD)                                */
+/* TASK CARD (GLASS STYLE)                               */
 /* ===================================================== */
 
 .task-card {
-    -fx-background-color: transparent;
-    -fx-border-color: white;
-    -fx-border-width: 2px;
-    -fx-background-radius: 15px;
-    -fx-border-radius: 15px;
-    -fx-padding: 12px;
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-border-color: rgba(255,255,255,0.15);
+    -fx-border-width: 1.5px;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-padding: 16px;
 }
 
 
@@ -107,26 +98,24 @@
 .task-description-lbl {
     -fx-font-weight: bold;
     -fx-text-fill: white;
-    -fx-font-size: 28px;
+    -fx-font-size: 26px;
 }
 
 .task-date-lbl {
     -fx-font-weight: bold;
-    -fx-text-fill: #7FD8BE;
-    -fx-font-size: 18px;
-    -fx-padding: 10px;
-    -fx-border-color: #7FD8BE;
-    -fx-border-width: 2px;
-    -fx-border-radius: 15px;
+    -fx-text-fill: #00E5FF;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 14px;
+    -fx-border-color: rgba(0,229,255,0.6);
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 20px;
 }
 
 .task-state-lbl {
     -fx-font-weight: bold;
     -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-padding: 8px 12px;
-    -fx-border-color: white;
-    -fx-border-width: 2px;
+    -fx-font-size: 18px;
+    -fx-padding: 8px 16px;
     -fx-border-radius: 30;
     -fx-background-radius: 30;
     -fx-alignment: center;
@@ -138,94 +127,70 @@
 /* ===================================================== */
 
 .task-state-lbl.task-to-start {
-    -fx-background-color: #DD3162;
-    -fx-text-fill: white;
-    -fx-border-color: white;
-    -fx-border-radius: 30;
-    -fx-padding: 10px;
+    -fx-background-color: #FF4DA6; /* pink accent */
 }
 
 .task-state-lbl.task-started {
-    -fx-background-color: #00838F;
-    -fx-text-fill: white;
-    -fx-border-color: white;
-    -fx-border-radius: 30;
-    -fx-padding: 10px;
+    -fx-background-color: #00BCD4; /* cyan */
 }
 
 .task-state-lbl.task-done {
-    -fx-background-color: #B3476B;
-    -fx-text-fill: white;
-    -fx-border-color: white;
-    -fx-border-radius: 30;
-    -fx-padding: 10px;
+    -fx-background-color: #7C4DFF; /* violet accent */
 }
 
 
 /* ===================================================== */
-/* PRIMARY STYLED BUTTON                                 */
+/* PRIMARY BUTTON                                        */
 /* ===================================================== */
 
 .styled-btn {
-    -fx-background-color: transparent;
-    -fx-border-color: rgba(255,255,255,0.95);
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-border-color: rgba(255,255,255,0.4);
     -fx-text-fill: white;
     -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-    -fx-border-width: 2px;
-    -fx-padding: 6px 12px;
+    -fx-font-weight: 600;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-border-width: 1.5px;
+    -fx-padding: 8px 14px;
 }
 
 .styled-btn:hover {
-    -fx-border-color: #f00070;
-    -fx-text-fill: #f00070;
-    -fx-font-weight: bold;
+    -fx-border-color: #00E5FF;
+    -fx-text-fill: #00E5FF;
+    -fx-background-color: rgba(0,229,255,0.08);
 }
 
+.styled-btn:pressed {
+    -fx-background-color: rgba(0,229,255,0.15);
+}
+
+
 /* ===================================================== */
-/* INPUT FIELDS                                          */
+/* INPUT FIELDS (GLASS INPUT)                            */
 /* ===================================================== */
 
 .input-form {
-    -fx-background-color: rgba(255,255,255,0.03);
+    -fx-background-color: rgba(255,255,255,0.05);
     -fx-control-inner-background: transparent;
 
     -fx-background-radius: 22;
     -fx-border-radius: 22;
 
-    -fx-border-color: rgba(255,255,255,0.9);
-    -fx-border-width: 1.8;
-
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
+    -fx-border-color: rgba(255,255,255,0.4);
+    -fx-border-width: 1.5;
 
     -fx-text-fill: white;
 
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-font-weight: 600;
-    -fx-padding: 8px 14px;
+    -fx-padding: 10px 16px;
 
-    -fx-focus-color: rgba(245,143,0,0.85);
+    -fx-focus-color: #00E5FF;
     -fx-faint-focus-color: transparent;
 }
 
-.input-form .scroll-pane {
-    -fx-background-color: transparent;
-}
-
-.input-form .scroll-pane .viewport{
-    -fx-background-color: transparent;
-}
-
-
-.input-form .scroll-pane .content{
-    -fx-background-color: transparent;
-}
-
-/* Ensure the insert label matches photo (centered, smaller lines) */
-.insert-email-lbl{
+.insert-email-lbl {
     -fx-background-color: transparent;
     -fx-text-fill: white;
     -fx-font-size: 20px;
@@ -233,13 +198,14 @@
     -fx-alignment: center;
 }
 
+
 /* ===================================================== */
-/* ADD TASK BUTTON (CIRCULAR)                            */
+/* ADD TASK BUTTON                                       */
 /* ===================================================== */
 
 .add-task-btn {
     -fx-background-color: transparent;
-    -fx-border-color: #7FD8BE;
+    -fx-border-color: #00E5FF;
     -fx-border-width: 4px;
     -fx-border-radius: 50px;
     -fx-background-radius: 50px;
@@ -247,65 +213,46 @@
     -fx-min-height: 80px;
     -fx-max-width: 80px;
     -fx-max-height: 80px;
-    -fx-cursor: hand;
-    -fx-padding: 0; /* no extra padding */
+    -fx-padding: 0;
 }
 
 .add-task-btn .add-icon {
-    -fx-fill: #7FD8BE;
-    -fx-scale-x: 0.07; /* scale down the huge SVG */
+    -fx-fill: #00E5FF;
+    -fx-scale-x: 0.07;
     -fx-scale-y: 0.07;
 }
 
 .add-task-btn:hover {
-    -fx-border-color: #f58f00;
+    -fx-border-color: #FF4DA6;
 }
 
 .add-task-btn:hover .add-icon {
-    -fx-fill: #f58f00;
+    -fx-fill: #FF4DA6;
 }
 
 .add-task-btn:pressed {
-    -fx-border-color: #f58f00;
+    -fx-border-color: #7C4DFF;
 }
 
 .add-task-btn:pressed .add-icon {
-    -fx-fill: #f58f00;
+    -fx-fill: #7C4DFF;
 }
 
+
 /* ===================================================== */
-/* TASKS CREATION FORM                                   */
+/* TASK CREATION FORM                                    */
 /* ===================================================== */
 
 .task-creation-form {
-    -fx-background-color: rgba(255,255,255,0.06); /* translucent panel so background image shows through */
-    -fx-padding: 20px;
-    -fx-background-radius: 12px;
-    -fx-border-radius: 12px;
-    -fx-border-color: rgba(255,255,255,0.12);
-    -fx-border-width: 1px;
-    -fx-background-insets: 0;
-
-    /* Apply a subtle blur to the panel itself to achieve a frosted-glass look. Note: this blurs the panel's contents as well. */
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.06), 6, 0, 0, 0);
+    -fx-background-color: rgba(30,27,75,0.9);
+    -fx-padding: 24px;
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-border-color: rgba(255,255,255,0.1);
 }
 
-/* Full-window overlay to dim the app and give a blurred backdrop effect.
-   Usage: add this node above the main content (covering the whole window) and toggle its visibility when showing the creation form.
-   If you prefer to blur the underlying root, add this overlay and programmatically set the root's -fx-effect or a style class. */
 .task-creation-overlay {
-    -fx-background-color: rgba(0,0,0,0.35); /* semi-transparent dark dim */
-    -fx-position-shape: true;
-    -fx-background-insets: 0;
-    -fx-padding: 0;
-    -fx-min-width: 100%;
-    -fx-min-height: 100%;
-}
-
-/* Optional utility class to blur an arbitrary node (e.g., the application root) when the overlay is active.*/
-.node-blurred {
-    /* use dropshadow with gaussian blur to mimic node blur */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 0);
+    -fx-background-color: rgba(0,0,0,0.45);
 }
 
 
@@ -313,32 +260,19 @@
 /* DIALOGS                                               */
 /* ===================================================== */
 
-.dialog {
-    -fx-background-color: white;
-    -fx-padding: 20px;
+.dialog-pane {
+    -fx-background-color: #1E1B4B;
 }
 
 .dialog-title {
     -fx-text-fill: white;
-    -fx-font-size: 28px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
 }
 
 .dialog-message {
-    -fx-text-fill: white;
-    -fx-font-size: 18px;
-}
-
-.dialog-pane {
-    -fx-background-color: white;
-}
-
-.dialog-pane .content {
-    -fx-background-color: transparent;
-}
-
-.dialog-pane .button-bar {
-    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 16px;
 }
 
 
@@ -347,21 +281,19 @@
 /* ===================================================== */
 
 .success-banner {
-    -fx-background-color: #228B22;
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 20px;
+    -fx-background-color: #00C853;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-radius: 0 10 10 0; /* top-left, top-right, bottom-right, bottom-left */
-    -fx-opacity: 0.9;
+    -fx-background-radius: 0 12 12 0;
+    -fx-opacity: 0.95;
 }
 
 .failure-banner {
-    -fx-background-color: #B22222;
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 20px;
+    -fx-background-color: #FF1744;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-radius: 0 10 10 0; /* top-left, top-right, bottom-right, bottom-left */
-    -fx-opacity: 0.9;
+    -fx-background-radius: 0 12 12 0;
+    -fx-opacity: 0.95;
 }
-
-

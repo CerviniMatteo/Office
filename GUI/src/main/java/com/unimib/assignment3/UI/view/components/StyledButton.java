@@ -1,6 +1,6 @@
-package com.unimib.assignment3.UI.components;
+package com.unimib.assignment3.UI.view.components;
 
-import com.unimib.assignment3.UI.controller.UI.StyledButtonController;
+import com.unimib.assignment3.UI.view.controller.StyledButtonController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import java.io.IOException;

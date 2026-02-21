@@ -1,4 +1,4 @@
-package com.unimib.assignment3.UI.components;
+package com.unimib.assignment3.UI.view.components;
 
 import com.unimib.assignment3.UI.FxApplication;
 import javafx.scene.control.*;

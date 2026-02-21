@@ -1,13 +1,13 @@
-package com.unimib.assignment3.UI.controller.UI;
+package com.unimib.assignment3.UI.view.controller;
 
-import com.unimib.assignment3.UI.controller.rest.TaskController;
-import com.unimib.assignment3.UI.dto.TaskDTO;
+import com.unimib.assignment3.UI.model.controller.TaskController;
+import com.unimib.assignment3.UI.model.dto.TaskDTO;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
 
 public class TaskCreationFormController {
 

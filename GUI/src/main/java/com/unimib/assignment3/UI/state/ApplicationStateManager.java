@@ -10,11 +10,13 @@ import java.util.ArrayDeque;
 public class ApplicationStateManager {
 
     private final Deque<Node> windowsStack;
+    private final Deque<Node> forwardStack;
     private final FxApplication application;
     private static volatile ApplicationStateManager INSTANCE;
 
     private ApplicationStateManager(FxApplication application) {
         windowsStack = new ArrayDeque<>();
+        forwardStack = new ArrayDeque<>();
         this.application = application;
     }
 
@@ -32,6 +34,8 @@ public class ApplicationStateManager {
 
     private void pushWindow(Node newWindow) {
         windowsStack.addLast(newWindow);
+        // when navigating to a new window, clear forward history (browser-like behavior)
+        forwardStack.clear();
     }
 
     private void popWindow() {
@@ -105,5 +109,49 @@ public class ApplicationStateManager {
         } else {
             Platform.runLater(doRemove);
         }
+    }
+
+    /**
+     * Navigate back in the content history (if available).
+     */
+    public void goBack() {
+        Runnable r = () -> {
+            if (windowsStack.size() > 1) {
+                // move current to forward stack
+                Node current = windowsStack.removeLast();
+                forwardStack.addLast(current);
+
+                Node previous = windowsStack.peekLast();
+                if (previous != null) {
+                    application.getContentRoot().getChildren().clear();
+                    application.getContentRoot().getChildren().add(previous);
+                    application.getOverlayRoot().toFront();
+                    previous.toFront();
+                    updateOverlayMouseTransparency();
+                }
+            }
+        };
+
+        if (Platform.isFxApplicationThread()) r.run(); else Platform.runLater(r);
+    }
+
+    /**
+     * Navigate forward in the content history (if available).
+     */
+    public void goForward() {
+        Runnable r = () -> {
+            if (!forwardStack.isEmpty()) {
+                Node next = forwardStack.removeLast();
+                windowsStack.addLast(next);
+
+                application.getContentRoot().getChildren().clear();
+                application.getContentRoot().getChildren().add(next);
+                application.getOverlayRoot().toFront();
+                next.toFront();
+                updateOverlayMouseTransparency();
+            }
+        };
+
+        if (Platform.isFxApplicationThread()) r.run(); else Platform.runLater(r);
     }
 }

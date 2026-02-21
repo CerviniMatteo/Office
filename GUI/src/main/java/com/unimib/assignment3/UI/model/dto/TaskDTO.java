@@ -1,7 +1,7 @@
-package com.unimib.assignment3.UI.dto;
+package com.unimib.assignment3.UI.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.unimib.assignment3.UI.enums.TaskState;
+import com.unimib.assignment3.UI.model.enums.TaskState;
 
 import java.time.LocalDate;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.unimib.assignment3.UI.validator;
+package com.unimib.assignment3.UI.model.validator;
 
 public interface TaskValidator {
     void validate();

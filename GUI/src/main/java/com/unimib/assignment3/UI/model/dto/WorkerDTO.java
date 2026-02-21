@@ -1,4 +1,4 @@
-package com.unimib.assignment3.UI.dto;
+package com.unimib.assignment3.UI.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

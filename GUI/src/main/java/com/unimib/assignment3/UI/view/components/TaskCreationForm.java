@@ -1,6 +1,6 @@
-package com.unimib.assignment3.UI.components;
+package com.unimib.assignment3.UI.view.components;
 
-import com.unimib.assignment3.UI.controller.UI.TaskCreationFormController;
+import com.unimib.assignment3.UI.view.controller.TaskCreationFormController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

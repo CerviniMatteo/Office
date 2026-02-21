@@ -1,18 +1,18 @@
-package com.unimib.assignment3.UI.controller.rest;
+package com.unimib.assignment3.UI.model.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.unimib.assignment3.UI.dto.AcceptTaskRequestDTO;
-import com.unimib.assignment3.UI.dto.StartTaskRequestDTO;
-import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
-import com.unimib.assignment3.UI.dto.TaskDTO;
+import com.unimib.assignment3.UI.model.dto.AcceptTaskRequestDTO;
+import com.unimib.assignment3.UI.model.dto.StartTaskRequestDTO;
+import com.unimib.assignment3.UI.model.dto.ChangeTaskStateRequestDTO;
+import com.unimib.assignment3.UI.model.dto.TaskDTO;
 import com.unimib.assignment3.UI.utils.RestHelper;
 import javafx.concurrent.Task;
 import java.net.http.HttpResponse;
 import java.util.List;
 import static com.unimib.assignment3.UI.constants.Rest.BASE_ENDPOINT;
-import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
 import static com.unimib.assignment3.UI.utils.RestHelper.createPostRequest;
 
 public class TaskController {

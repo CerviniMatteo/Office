@@ -1,11 +1,11 @@
-package com.unimib.assignment3.UI.controller.UI;
+package com.unimib.assignment3.UI.view.controller;
 
-import com.unimib.assignment3.UI.controller.rest.TaskController;
-import com.unimib.assignment3.UI.dto.AcceptTaskRequestDTO;
-import com.unimib.assignment3.UI.dto.ChangeTaskStateRequestDTO;
-import com.unimib.assignment3.UI.dto.StartTaskRequestDTO;
-import com.unimib.assignment3.UI.dto.TaskDTO;
-import com.unimib.assignment3.UI.enums.TaskState;
+import com.unimib.assignment3.UI.model.controller.TaskController;
+import com.unimib.assignment3.UI.model.dto.AcceptTaskRequestDTO;
+import com.unimib.assignment3.UI.model.dto.ChangeTaskStateRequestDTO;
+import com.unimib.assignment3.UI.model.dto.StartTaskRequestDTO;
+import com.unimib.assignment3.UI.model.dto.TaskDTO;
+import com.unimib.assignment3.UI.model.enums.TaskState;
 import com.unimib.assignment3.UI.utils.ImageHelper;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
 import javafx.concurrent.Task;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
 
 @SuppressWarnings("unused")
 public class TaskDetailsController {

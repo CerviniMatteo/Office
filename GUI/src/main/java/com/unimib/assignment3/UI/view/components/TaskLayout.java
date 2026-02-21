@@ -1,7 +1,7 @@
-package com.unimib.assignment3.UI.components;
+package com.unimib.assignment3.UI.view.components;
 
-import com.unimib.assignment3.UI.controller.rest.TaskController;
-import com.unimib.assignment3.UI.enums.TaskState;
+import com.unimib.assignment3.UI.model.controller.TaskController;
+import com.unimib.assignment3.UI.model.enums.TaskState;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
@@ -9,8 +9,8 @@ import javafx.scene.layout.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.unimib.assignment3.UI.dto.TaskDTO;
-import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
+import com.unimib.assignment3.UI.model.dto.TaskDTO;
+import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
 
 public class TaskLayout extends ScrollPane {
 

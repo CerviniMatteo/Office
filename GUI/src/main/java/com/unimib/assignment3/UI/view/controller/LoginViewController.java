@@ -1,12 +1,12 @@
-package com.unimib.assignment3.UI.controller.UI;
+package com.unimib.assignment3.UI.view.controller;
 
 import com.unimib.assignment3.UI.FxApplication;
-import com.unimib.assignment3.UI.components.Home;
-import com.unimib.assignment3.UI.components.InformationBanner;
-import com.unimib.assignment3.UI.controller.rest.LoginController;
+import com.unimib.assignment3.UI.view.components.Home;
+import com.unimib.assignment3.UI.view.components.InformationBanner;
+import com.unimib.assignment3.UI.model.controller.LoginController;
 import com.unimib.assignment3.UI.state.ApplicationStateManager;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
-import com.unimib.assignment3.UI.enums.BannerType;
+import com.unimib.assignment3.UI.model.enums.BannerType;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -25,8 +25,8 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.application.Platform;
 
-import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
-import static com.unimib.assignment3.UI.components.InformationBanner.timeInSeconds;
+import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.InformationBanner.timeInSeconds;
 
 public class LoginViewController {
 

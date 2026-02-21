@@ -1,11 +1,13 @@
 package com.unimib.assignment3.UI;
 
-import com.unimib.assignment3.UI.components.Login;
+import com.unimib.assignment3.UI.view.components.Login;
 import com.unimib.assignment3.UI.state.ApplicationStateManager;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -47,6 +49,17 @@ public class FxApplication extends Application {
 
         ApplicationStateManager stateManager = ApplicationStateManager.getInstance(this);
         stateManager.replaceWindow(new Login(this));
+
+        // Add mouse back/forward buttons handler: map mouse BACK/FORWARD to app navigation
+        scene.addEventHandler(MouseEvent.MOUSE_PRESSED, ev -> {
+            if (ev.getButton() == MouseButton.BACK) {
+                stateManager.goBack();
+                ev.consume();
+            } else if (ev.getButton() == MouseButton.FORWARD) {
+                stateManager.goForward();
+                ev.consume();
+            }
+        });
 
         stage.setTitle("JavaFX App");
         stage.setScene(scene);

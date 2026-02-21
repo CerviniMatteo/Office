@@ -1,7 +1,7 @@
-package com.unimib.assignment3.UI.components;
+package com.unimib.assignment3.UI.view.components;
 
-import com.unimib.assignment3.UI.controller.UI.TaskDetailsController;
-import com.unimib.assignment3.UI.dto.TaskDTO;
+import com.unimib.assignment3.UI.view.controller.TaskDetailsController;
+import com.unimib.assignment3.UI.model.dto.TaskDTO;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 

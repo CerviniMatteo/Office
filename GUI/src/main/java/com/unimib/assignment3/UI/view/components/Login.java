@@ -1,7 +1,7 @@
-package com.unimib.assignment3.UI.components;
+package com.unimib.assignment3.UI.view.components;
 
 import com.unimib.assignment3.UI.FxApplication;
-import com.unimib.assignment3.UI.controller.UI.LoginViewController;
+import com.unimib.assignment3.UI.view.controller.LoginViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;

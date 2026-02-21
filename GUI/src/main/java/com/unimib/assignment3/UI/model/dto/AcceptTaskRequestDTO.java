@@ -1,8 +1,8 @@
-package com.unimib.assignment3.UI.dto;
+package com.unimib.assignment3.UI.model.dto;
 
-import com.unimib.assignment3.UI.validator.TaskValidator;
+import com.unimib.assignment3.UI.model.validator.TaskValidator;
 
-public record StartTaskRequestDTO(
+public record AcceptTaskRequestDTO(
         Long taskId,
         Long employeeId
 )implements TaskValidator {

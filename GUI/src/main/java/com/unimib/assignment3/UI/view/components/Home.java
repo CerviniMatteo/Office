@@ -1,4 +1,4 @@
-package com.unimib.assignment3.UI.components;
+package com.unimib.assignment3.UI.view.components;
 
 import com.unimib.assignment3.UI.FxApplication;
 import com.unimib.assignment3.UI.state.ApplicationStateManager;
@@ -11,7 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
 
-import static com.unimib.assignment3.UI.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
 
 public class Home extends StackPane {
 

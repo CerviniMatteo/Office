@@ -1,6 +1,6 @@
-package com.unimib.assignment3.UI.controller.UI;
+package com.unimib.assignment3.UI.view.controller;
 
-import com.unimib.assignment3.UI.components.StyledButton;
+import com.unimib.assignment3.UI.view.components.StyledButton;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

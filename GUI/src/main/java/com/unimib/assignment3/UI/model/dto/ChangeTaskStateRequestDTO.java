@@ -1,7 +1,7 @@
-package com.unimib.assignment3.UI.dto;
+package com.unimib.assignment3.UI.model.dto;
 
-import com.unimib.assignment3.UI.enums.TaskState;
-import com.unimib.assignment3.UI.validator.TaskValidator;
+import com.unimib.assignment3.UI.model.enums.TaskState;
+import com.unimib.assignment3.UI.model.validator.TaskValidator;
 
 public record ChangeTaskStateRequestDTO(
         Long taskId,

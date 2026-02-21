@@ -1,6 +1,6 @@
-package com.unimib.assignment3.UI.components;
+package com.unimib.assignment3.UI.view.components;
 
-import com.unimib.assignment3.UI.enums.BannerType;
+import com.unimib.assignment3.UI.model.enums.BannerType;
 import javafx.scene.control.Label;
 public class InformationBanner extends Label {
 
