@@ -4,6 +4,7 @@ import com.unimib.assignment3.UI.view.controller.TaskCreationFormController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -29,7 +30,13 @@ public class TaskCreationForm extends VBox {
 
         setAlignment(Pos.CENTER);
 
-        // ensure css is available on scene
+        // Make this component expand to fill the available overlay/content area so
+        // the inner StackPane (loaded FXML) gets full width/height and the background
+        // Rectangle bound to it will cover the whole screen.
+        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        this.setFillWidth(true);
+        VBox.setVgrow(root, Priority.ALWAYS);
+
         sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 String css = Objects.requireNonNull(getClass().getResource("/styles/app.css")).toExternalForm();

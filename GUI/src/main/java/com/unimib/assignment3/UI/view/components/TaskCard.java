@@ -1,6 +1,6 @@
 package com.unimib.assignment3.UI.view.components;
 
-import com.unimib.assignment3.UI.view.controller.TaskDetailsController;
+import com.unimib.assignment3.UI.view.controller.TaskCardController;
 import com.unimib.assignment3.UI.model.dto.TaskDTO;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
@@ -8,20 +8,20 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 import java.util.Objects;
 
-public class TaskDetailsWindow extends BorderPane {
+public class TaskCard extends BorderPane {
 
-    private final TaskDetailsController controller;
+    private final TaskCardController controller;
 
-    public TaskDetailsWindow() {
-        controller = new TaskDetailsController();
+    public TaskCard() {
+        controller = new TaskCardController();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/TaskDetails.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/components/TaskCard.fxml"));
         loader.setRoot(this);
         loader.setController(controller);
         try {
             loader.load();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load TaskDetails.fxml", e);
+            throw new RuntimeException("Failed to load TaskCard.fxml", e);
         }
 
         this.getStyleClass().addAll("task-card");

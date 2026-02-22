@@ -1,7 +1,7 @@
 package com.unimib.assignment3.UI.view.components;
 
 import com.unimib.assignment3.UI.FxApplication;
-import com.unimib.assignment3.UI.state.ApplicationStateManager;
+import com.unimib.assignment3.UI.view.state.ApplicationStateManager;
 import com.unimib.assignment3.UI.web_socket_client.TaskWebSocketClientApp;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -59,16 +59,16 @@ public class Home extends StackPane {
         }
         addTaskButton.setOnAction(e ->{
             TaskCreationForm taskCreationForm = new TaskCreationForm();
-            // show the task creation form as an overlay
+            // show the task creation form as an overlay on top of current content
             applicationStateManager.replaceWindow(taskCreationForm);
 
-            // Register callback to restore the tasks layout after successful creation
-            taskCreationForm.setOnSuccess(() -> {
-                System.out.println("[Home] onSuccess invoked - restoring tasks layout");
-                // Switch back to the tasks layout on the JavaFX Application Thread
-                javafx.application.Platform.runLater(this::setUpDefaultHomeWindow);
-            });
-        });
+             // Register callback to restore the tasks layout after successful creation
+             taskCreationForm.setOnSuccess(() -> {
+                 System.out.println("[Home] onSuccess invoked - restoring tasks layout");
+                 // Switch back to the tasks layout on the JavaFX Application Thread
+                 javafx.application.Platform.runLater(this::setUpDefaultHomeWindow);
+             });
+         });
 
 
     }

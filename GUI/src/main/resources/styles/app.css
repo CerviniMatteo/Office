@@ -1,9 +1,56 @@
+/**
+ * app.css
+ *
+ * Global stylesheet for the GUI module of the 2025_assignment3_gruppo10-bug-busters project.
+ *
+ * Purpose:
+ *   Provides the primary visual theme for the JavaFX application. Styles cover the
+ *   root background, button and input resets, task cards and labels, task-creation
+ *   components, dialogs, and banners. The theme uses a violet/dark palette and
+ *   glass-like translucency for UI depth.
+ *
+ * Usage:
+ *   - Loaded by the JavaFX application via FXMLLoader or Scene.getStylesheets(),
+ *     typically referenced as "/styles/app.css" in resource paths.
+ *   - Use the documented class selectors (e.g. .task-card, .styled-btn, .dialog-pane)
+ *     to style custom components or FXML nodes.
+ *
+ * Conventions & Notes:
+ *   - Class selectors are hyphen-separated (e.g. .task-creation-form).
+ *   - Colors use hex and rgba forms; translucency values are intentionally low
+ *     (0.05-0.25) to create a subtle glass effect and preserve contrast.
+ *   - Dialogs intentionally separate header and content styles. Header uses a
+ *     darker violet for the top bar; content uses a mid-violet background to be
+ *     visually distinct while remaining cohesive with the app palette.
+ *   - Keep accessibility in mind: maintain sufficient contrast for text and
+ *     interactive elements (buttons, inputs) against their backgrounds.
+ *
+ * Major sections in this file:
+ *   - ROOT BACKGROUND
+ *   - GLOBAL BUTTON RESET
+ *   - TASK LAYOUT
+ *   - LOGIN SCREEN
+ *   - TASK CARD (GLASS STYLE)
+ *   - TASK LABELS
+ *   - TASK STATE COLORS
+ *   - PRIMARY BUTTON
+ *   - INPUT FIELDS (GLASS INPUT)
+ *   - ADD TASK BUTTON
+ *   - TASK CREATION FORM
+ *   - DIALOGS (THEMED)
+ *   - SUCCESS / FAILURE BANNERS
+ *
+ * Metadata:
+ *   Author: Bug Busters (project team)
+ *   Since: 2025
+ *   Last-Modified: 2026-02-22
+ */
+
 /* ===================================================== */
 /* ROOT BACKGROUND                                       */
 /* ===================================================== */
 
 .root {
-    -fx-padding: 10px;
     -fx-background-color: transparent;
     -fx-background-image: url("/images/root.jpg");
     -fx-background-position: center center;
@@ -54,26 +101,15 @@
     -fx-background-color: transparent;
 }
 
-
 /* ===================================================== */
 /* LOGIN SCREEN                                          */
 /* ===================================================== */
 
-#rootStack .design-rectangle {
-    -fx-fill: rgba(30, 27, 75, 0.75);   /* deep violet glass */
-    -fx-stroke: rgba(255,255,255,0.25);
+.design-rectangle {
+    -fx-fill: rgba(30, 27, 75, 0.75);
+    -fx-stroke: rgba(255, 255, 255, 0.5);
     -fx-stroke-width: 2;
-}
-
-.design-oval {
-    -fx-fill: linear-gradient(
-        from 0% 0% to 100% 100%,
-        rgba(124,77,255,0.25) 0%,
-        rgba(0,229,255,0.18) 100%
-    );
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.3, 0, 6);
-    -fx-stroke: rgba(255,255,255,0.12);
-    -fx-stroke-width: 1.5;
+    -fx-stroke-type: centered;   /* ← ensures stroke is fully visible on all 4 sides */
 }
 
 
@@ -242,40 +278,50 @@
 /* ===================================================== */
 /* TASK CREATION FORM                                    */
 /* ===================================================== */
-
-.task-creation-form {
-    -fx-background-color: rgba(30,27,75,0.9);
-    -fx-padding: 24px;
-    -fx-background-radius: 16px;
-    -fx-border-radius: 16px;
-    -fx-border-color: rgba(255,255,255,0.1);
-}
-
 .task-creation-overlay {
     -fx-background-color: rgba(0,0,0,0.45);
 }
 
+.task-creation-form {
+    -fx-background-color: rgba(30,27,75,0.85);
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-border-color: rgba(255,255,255,0.15);
+}
 
 /* ===================================================== */
 /* DIALOGS                                               */
 /* ===================================================== */
-
 .dialog-pane {
-    -fx-background-color: #1E1B4B;
+    -fx-background-color: #1e1b4b;
+    -fx-padding: 0;
+}
+
+.dialog-pane > .header-panel {
+    -fx-background-color: #1e1b4b;
+}
+
+.dialog-pane > .content {
+    -fx-background-color: #1e1b4b;
+    -fx-padding: 20;
+}
+
+.dialog-pane > .button-bar {
+    -fx-background-color: #1e1b4b;
+    -fx-padding: 15;
 }
 
 .dialog-title {
     -fx-text-fill: white;
-    -fx-font-size: 24px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
+    -fx-background-color: #523ca0;
 }
 
 .dialog-message {
-    -fx-text-fill: rgba(255,255,255,0.85);
-    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
 }
-
-
 /* ===================================================== */
 /* SUCCESS / FAILURE BANNERS                             */
 /* ===================================================== */
@@ -285,7 +331,7 @@
     -fx-text-fill: white;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-radius: 0 12 12 0;
+    -fx-background-radius: 12 0 0 12;
     -fx-opacity: 0.95;
 }
 
@@ -294,6 +340,6 @@
     -fx-text-fill: white;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-radius: 0 12 12 0;
+    -fx-background-radius: 12 0 0 12;
     -fx-opacity: 0.95;
 }

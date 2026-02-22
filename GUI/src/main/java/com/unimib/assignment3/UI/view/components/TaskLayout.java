@@ -17,7 +17,7 @@ public class TaskLayout extends ScrollPane {
     private final VBox toBeStartedColumn;
     private final VBox startedColumn;
     private final VBox doneColumn;
-    private Map<Long, TaskDetailsWindow> taskDetails;
+    private Map<Long, TaskCard> taskDetails;
 
     public TaskLayout() {
         this.getStyleClass().add("task-layout");
@@ -55,12 +55,12 @@ public class TaskLayout extends ScrollPane {
                     return;
                 }
 
-                TaskDetailsWindow oldNode = taskDetails.get(taskId);
+                TaskCard oldNode = taskDetails.get(taskId);
                 if (oldNode != null) {
                     removeTaskFromColumns(oldNode);
                 }
 
-                TaskDetailsWindow newNode = new TaskDetailsWindow();
+                TaskCard newNode = new TaskCard();
                 newNode.setTask(taskDTO);
                 addTaskToColumn(taskDTO, newNode);
                 taskDetails.put(taskId, newNode);
@@ -85,7 +85,7 @@ public class TaskLayout extends ScrollPane {
                 }
 
                 for (TaskDTO taskDTO : taskDTOS) {
-                    TaskDetailsWindow node = new TaskDetailsWindow();
+                    TaskCard node = new TaskCard();
                     node.setTask(taskDTO);
                     addTaskToColumn(taskDTO, node);
                     taskDetails.put(taskDTO.taskId(), node);
@@ -94,7 +94,7 @@ public class TaskLayout extends ScrollPane {
         }).start();
     }
 
-    private void addTaskToColumn(TaskDTO taskDTO, TaskDetailsWindow node) {
+    private void addTaskToColumn(TaskDTO taskDTO, TaskCard node) {
         TaskState state = taskDTO.taskState();
         if (state == null) return;
 
@@ -105,7 +105,7 @@ public class TaskLayout extends ScrollPane {
         }
     }
 
-    private void removeTaskFromColumns(TaskDetailsWindow node) {
+    private void removeTaskFromColumns(TaskCard node) {
         toBeStartedColumn.getChildren().remove(node);
         startedColumn.getChildren().remove(node);
         doneColumn.getChildren().remove(node);

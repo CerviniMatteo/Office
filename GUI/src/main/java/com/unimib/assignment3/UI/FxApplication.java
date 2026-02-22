@@ -1,7 +1,7 @@
 package com.unimib.assignment3.UI;
 
 import com.unimib.assignment3.UI.view.components.Login;
-import com.unimib.assignment3.UI.state.ApplicationStateManager;
+import com.unimib.assignment3.UI.view.state.ApplicationStateManager;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

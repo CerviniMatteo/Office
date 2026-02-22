@@ -8,4 +8,8 @@ public class StringHelper {
                 .replaceAll("\\s+", " ")
                 .toUpperCase();
     }
+
+    public static String replaceSpaces(String string) {
+        return string.replaceAll("\\n", "").replaceAll(" ", "").trim();
+    }
 }

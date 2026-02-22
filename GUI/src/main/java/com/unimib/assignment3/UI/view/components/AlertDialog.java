@@ -3,7 +3,6 @@ package com.unimib.assignment3.UI.view.components;
 import com.unimib.assignment3.UI.FxApplication;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-
 import java.util.Objects;
 
 public class AlertDialog{
@@ -19,23 +18,25 @@ public class AlertDialog{
                     ).toExternalForm()
             );
 
-            dialogPane.getStyleClass().add("dialog");
+            dialogPane.getStyleClass().add("dialog-pane");
 
             Label titleLbl = new Label(title);
-            titleLbl.getStyleClass().add("dialog-title");
+            titleLbl.getStyleClass().addAll("dialog-title");
 
             Label messageLbl = new Label(message);
             messageLbl.setWrapText(true);
-            messageLbl.getStyleClass().add("dialog-message");
+            messageLbl.getStyleClass().addAll("dialog-message");
 
-            VBox content = new VBox(15, titleLbl, messageLbl);
+            VBox content = new VBox(titleLbl, messageLbl);
             dialogPane.setContent(content);
 
             ButtonType okType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
             dialogPane.getButtonTypes().add(okType);
 
             Button okBtn = (Button) dialogPane.lookupButton(okType);
-            okBtn.getStyleClass().add("styled-btn");
+            if (okBtn != null) {
+                okBtn.getStyleClass().add("styled-btn");
+            }
 
             dialog.showAndWait();
         };

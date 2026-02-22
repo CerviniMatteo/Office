@@ -18,27 +18,24 @@
 
     <StackPane fx:id="rootStack" prefWidth="800" prefHeight="600">
 
-        <!-- Decorative rectangle -->
         <Rectangle fx:id="designRectangle"
-                   width="420"
-                   height="230"
-                   arcWidth="28"
+                   width="470"
+                   height="290"
+                   arcWidth="20"
                    arcHeight="28"
                    translateY="-20"
                    styleClass="design-rectangle"/>
 
-        <!-- Decorative oval (will be clipped) -->
-        <Ellipse fx:id="designOval"
-                 radiusX="240"
-                 radiusY="140"
-                 translateY="145"
-                 styleClass="design-oval"/>
 
-        <!-- FORM -->
-        <VBox spacing="18"
+        <!-- FORM: same width as rectangle, centered -->
+        <VBox spacing="0"
               alignment="CENTER"
-              maxWidth="380"
-              translateY="-10">
+              prefWidth="426"
+              maxWidth="426"
+              translateY="-20">
+
+            <!-- Top spacer (equal to bottom spacer) -->
+            <Region VBox.vgrow="ALWAYS"/>
 
             <Label fx:id="insertEmailLabel"
                    text="INSERT YOUR EMAIL TO LOGIN"
@@ -46,11 +43,9 @@
                    wrapText="true"
                    alignment="CENTER"
                    maxWidth="Infinity"
-                   prefWidth="Infinity">
-                <VBox.margin>
-                    <Insets top="0" right="0" bottom="0" left="0"/>
-                </VBox.margin>
-            </Label>
+                   prefWidth="Infinity"/>
+
+            <Region prefHeight="20"/>
 
             <TextField fx:id="inputForm"
                        promptText="Enter your email"
@@ -58,11 +53,11 @@
                        maxWidth="Infinity"
                        prefWidth="Infinity">
                 <VBox.margin>
-                    <Insets top="0" right="10" bottom="0" left="10"/>
+                    <Insets left="10" right="10"/>
                 </VBox.margin>
             </TextField>
 
-            <Region fx:id="spacer" prefHeight="5"/>
+            <Region prefHeight="30"/>
 
             <Button fx:id="submitButton"
                     text="SUBMIT"
@@ -70,7 +65,9 @@
                     prefWidth="110"
                     prefHeight="36"/>
 
-            <Region fx:id="spacer" prefHeight="5"/>
+            <!-- Bottom spacer (mirrors top spacer) -->
+            <Region VBox.vgrow="ALWAYS"/>
+
         </VBox>
 
     </StackPane>

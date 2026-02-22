@@ -8,20 +8,22 @@ import com.unimib.assignment3.UI.model.dto.TaskDTO;
 import com.unimib.assignment3.UI.model.enums.TaskState;
 import com.unimib.assignment3.UI.utils.ImageHelper;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
+import com.unimib.assignment3.UI.view.utils.GridHelper;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.unimib.assignment3.UI.utils.StringHelper.replaceUnderscores;
 import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.utils.ComponentVisibilityUtils.*;
 
 @SuppressWarnings("unused")
-public class TaskDetailsController {
+public class TaskCardController {
 
     private static final int SIZE = 50;
     public static final double STROKE_WIDTH = 3;
@@ -49,7 +51,7 @@ public class TaskDetailsController {
         taskState = currentTask.taskState();
 
         titleLabel.setText(task.description());
-        stateLabel.setText(replaceUnderscores(taskState));
+        stateLabel.setText(replaceUnderscores(taskState.toString()));
 
         acceptedBy.clear();
         if (task.assignedWorkers() != null) {
@@ -60,13 +62,6 @@ public class TaskDetailsController {
         setupButtons();
         setWorkersPictures();
         setDateLabel();
-    }
-
-    private String replaceUnderscores(TaskState taskState) {
-        return taskState.toString().trim()
-                .replace("_", " ")
-                .replaceAll("\\s+", " ")
-                .toUpperCase();
     }
 
     private void setStateLabelStyle() {
@@ -83,24 +78,22 @@ public class TaskDetailsController {
     }
 
     private void setupAcceptButton() {
-        acceptButton.setOnAction(null); // rimuove handler precedente
+        acceptButton.setOnAction(null);
         Long currentWorkerId = (Long) SessionManagerSingleton.getInstance().getAttribute("employeeId");
 
         switch (taskState) {
-            case TO_BE_STARTED -> acceptButton.setVisible(false);
+            case TO_BE_STARTED -> setVisible(false, acceptButton);
             case STARTED -> {
-                if (!acceptedBy.contains(currentWorkerId)) {
-                    acceptButton.setVisible(true);
-                    acceptButton.setDisable(false);
+                if (acceptedBy.contains(currentWorkerId)) {
+                    setVisible(false, acceptButton);
                     acceptButton.setText("ACCEPT TASK");
                     acceptButton.setOnAction(e -> acceptCurrentTask(currentWorkerId));
                 } else {
-                    acceptButton.setVisible(false);
+                    setEnabled(acceptButton);
                 }
             }
             case DONE -> {
-                acceptButton.setVisible(true);
-                acceptButton.setDisable(false);
+                setEnabled(acceptButton);
                 acceptButton.setText("RESET TASK");
                 acceptButton.setOnAction(e -> resetTask());
             }
@@ -109,21 +102,18 @@ public class TaskDetailsController {
 
     private void setupChangeStateButton() {
         changeStateButton.setOnAction(null);
-
         switch (taskState) {
             case TO_BE_STARTED -> {
-                changeStateButton.setVisible(true);
-                changeStateButton.setDisable(false);
+                setEnabled(changeStateButton);
                 changeStateButton.setText("START TASK");
                 changeStateButton.setOnAction(e -> startTask());
             }
             case STARTED -> {
-                changeStateButton.setVisible(true);
-                changeStateButton.setDisable(false);
+                setEnabled(changeStateButton);
                 changeStateButton.setText("COMPLETE TASK");
                 changeStateButton.setOnAction(e -> completeTask());
             }
-            case DONE -> changeStateButton.setVisible(false);
+            case DONE -> setVisible(false, changeStateButton);
         }
     }
 
@@ -149,7 +139,7 @@ public class TaskDetailsController {
             payload.validate();
             Task<String> task = taskController.acceptTask(payload);
             task.setOnSucceeded(ev -> {
-                acceptButton.setDisable(true);
+                setDisabled(acceptButton);
                 acceptedBy.add(workerId);
             });
             task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
@@ -175,7 +165,7 @@ public class TaskDetailsController {
     private void resetTask() {
         try {
             Task<String> task = taskController.resetTaskState(currentTask.taskId());
-            task.setOnSucceeded(ev -> acceptButton.setDisable(true));
+            task.setOnSucceeded(ev -> setDisabled(acceptButton));
             task.setOnFailed(ev -> showAlert("Error", task.getException().getMessage()));
             new Thread(task).start();
         } catch (Exception ex) {
@@ -185,11 +175,10 @@ public class TaskDetailsController {
 
     public void setWorkersPictures() {
         if (currentTask.assignedWorkers() == null || currentTask.assignedWorkers().isEmpty()) {
-            workersGrid.setVisible(false);
-            workersGrid.setManaged(false);
+            GridHelper.clearGrid(workersGrid);
             return;
         }
-        workersGrid.setVisible(true);
+        GridHelper.ensureVisible(workersGrid, true);
         Long currentWorkerId = (Long) SessionManagerSingleton.getInstance().getAttribute("employeeId");
         ImageHelper imageHelper = new ImageHelper();
         for (Map.Entry<Long, String> entry : currentTask.assignedWorkers().entrySet()) {
@@ -197,32 +186,17 @@ public class TaskDetailsController {
                 String updatedImage = imageHelper.addGoldStrokeAndReturnBase64(entry.getValue(), SIZE, STROKE_WIDTH);
                 entry.setValue(updatedImage);
             }
-            addWorkerImageToGrid(entry.getValue());
+            GridHelper.addImageBase64(workersGrid, entry.getValue(), imageHelper, SIZE, 3);
         }
     }
 
-    private void addWorkerImageToGrid(String base64Image) {
-        ImageHelper imageHelper = new ImageHelper();
-        ImageView imageView = imageHelper.createCircularImageView(
-                imageHelper.createImageFromBase64(base64Image),
-                SIZE
-        );
-        int cols = 3;
-        int col = workersGrid.getChildren().size() % cols;
-        int row = workersGrid.getChildren().size() / cols;
-        workersGrid.add(imageView, col, row);
-    }
-
     private void setDateLabel() {
-        dateLabel.setVisible(false);
-        dateLabel.setManaged(false);
+        setVisible(false, dateLabel);
         if (taskState == TaskState.STARTED && currentTask.startDate() != null) {
-            dateLabel.setVisible(true);
-            dateLabel.setManaged(true);
+            setVisible(true, dateLabel);
             dateLabel.setText("TASK STARTED ON: " + currentTask.startDate());
         } else if (taskState == TaskState.DONE && currentTask.endDate() != null) {
-            dateLabel.setVisible(true);
-            dateLabel.setManaged(true);
+            setVisible(true, dateLabel);
             dateLabel.setText("TASK COMPLETED ON: " + currentTask.endDate());
         }
     }

@@ -9,6 +9,9 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 import java.lang.reflect.Type;
 
+/**
+ * WebSocket client helper that subscribes to task-related topics and updates the TaskLayout.
+ */
 public class TaskWebSocketClientApp {
 
     private final TaskLayout taskLayout;
@@ -17,6 +20,10 @@ public class TaskWebSocketClientApp {
         this.taskLayout = taskLayout;
     }
 
+    /**
+     * Start the WebSocket STOMP client and subscribe to task updates.
+     * @throws Exception if the connection fails
+     */
     public void start() throws Exception {
         WebSocketStompClient stompClient =
                 new WebSocketStompClient(new StandardWebSocketClient());
@@ -27,7 +34,7 @@ public class TaskWebSocketClientApp {
         StompSessionHandler sessionHandler = new StompSessionHandlerAdapter() {
             @Override
             public void afterConnected(StompSession session, @Nonnull StompHeaders connectedHeaders) {
-                System.out.println("Connesso al WebSocket server!");
+                System.out.println("Connected to WebSocket server");
 
                 session.subscribe("/topic/task", new StompFrameHandler() {
                     @Override
@@ -38,7 +45,7 @@ public class TaskWebSocketClientApp {
                     @Override
                     public void handleFrame(@Nonnull StompHeaders headers, Object payload) {
                         String message = (String) payload;
-                        System.out.println("Messaggio ricevuto: " + message);
+                        System.out.println("Received message: " + message);
 
                         if (message.contains("FETCH_TASKS:")) {
                             String substring = message.substring(message.indexOf(":") + 1);

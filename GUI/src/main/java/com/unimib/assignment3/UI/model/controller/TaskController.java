@@ -3,10 +3,7 @@ package com.unimib.assignment3.UI.model.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.unimib.assignment3.UI.model.dto.AcceptTaskRequestDTO;
-import com.unimib.assignment3.UI.model.dto.StartTaskRequestDTO;
-import com.unimib.assignment3.UI.model.dto.ChangeTaskStateRequestDTO;
-import com.unimib.assignment3.UI.model.dto.TaskDTO;
+import com.unimib.assignment3.UI.model.dto.*;
 import com.unimib.assignment3.UI.utils.RestHelper;
 import javafx.concurrent.Task;
 import java.net.http.HttpResponse;
@@ -39,7 +36,7 @@ public class TaskController {
         }
     }
 
-    public Task<String> createTask(TaskDTO payload) {
+    public Task<String> createTask(DescriptionTaskDTO payload) {
         return new Task<>() {
             @Override
             protected String call() {
