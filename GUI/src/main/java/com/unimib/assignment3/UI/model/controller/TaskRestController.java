@@ -9,10 +9,10 @@ import javafx.concurrent.Task;
 import java.net.http.HttpResponse;
 import java.util.List;
 import static com.unimib.assignment3.UI.constants.Rest.BASE_ENDPOINT;
-import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 import static com.unimib.assignment3.UI.utils.RestHelper.createPostRequest;
 
-public class TaskController {
+public class TaskRestController {
     private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
 

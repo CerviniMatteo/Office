@@ -1,7 +1,9 @@
-package com.unimib.assignment3.UI.view.components;
+package com.unimib.assignment3.UI.view.components.impl.layout;
 
-import com.unimib.assignment3.UI.model.controller.TaskController;
+import com.unimib.assignment3.UI.model.controller.TaskRestController;
 import com.unimib.assignment3.UI.model.enums.TaskState;
+import com.unimib.assignment3.UI.view.components.abstr.TaskCardBase;
+import com.unimib.assignment3.UI.view.factory.TaskCardFactory;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
@@ -10,14 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.unimib.assignment3.UI.model.dto.TaskDTO;
-import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 
 public class TaskLayout extends ScrollPane {
 
     private final VBox toBeStartedColumn;
     private final VBox startedColumn;
     private final VBox doneColumn;
-    private Map<Long, TaskCard> taskDetails;
+    private Map<Long, TaskCardBase> taskDetails;
 
     public TaskLayout() {
         this.getStyleClass().add("task-layout");
@@ -46,7 +48,7 @@ public class TaskLayout extends ScrollPane {
 
     public void updateTaskDetails(Long taskId) {
         new Thread(() -> {
-            TaskController controller = new TaskController();
+            TaskRestController controller = new TaskRestController();
             TaskDTO taskDTO = controller.fetchTask(taskId);
 
             Platform.runLater(() -> {
@@ -55,13 +57,12 @@ public class TaskLayout extends ScrollPane {
                     return;
                 }
 
-                TaskCard oldNode = taskDetails.get(taskId);
+                TaskCardBase oldNode = taskDetails.get(taskId);
                 if (oldNode != null) {
                     removeTaskFromColumns(oldNode);
                 }
 
-                TaskCard newNode = new TaskCard();
-                newNode.setTask(taskDTO);
+                TaskCardBase newNode = TaskCardFactory.create(taskDTO);
                 addTaskToColumn(taskDTO, newNode);
                 taskDetails.put(taskId, newNode);
             });
@@ -70,7 +71,7 @@ public class TaskLayout extends ScrollPane {
 
     private void loadTasks() {
         new Thread(() -> {
-            TaskController controller = new TaskController();
+            TaskRestController controller = new TaskRestController();
             List<TaskDTO> taskDTOS = controller.fetchTasks();
             taskDetails = new HashMap<>();
 
@@ -85,8 +86,7 @@ public class TaskLayout extends ScrollPane {
                 }
 
                 for (TaskDTO taskDTO : taskDTOS) {
-                    TaskCard node = new TaskCard();
-                    node.setTask(taskDTO);
+                    TaskCardBase node = TaskCardFactory.create(taskDTO);
                     addTaskToColumn(taskDTO, node);
                     taskDetails.put(taskDTO.taskId(), node);
                 }
@@ -94,7 +94,7 @@ public class TaskLayout extends ScrollPane {
         }).start();
     }
 
-    private void addTaskToColumn(TaskDTO taskDTO, TaskCard node) {
+    private void addTaskToColumn(TaskDTO taskDTO, TaskCardBase node) {
         TaskState state = taskDTO.taskState();
         if (state == null) return;
 
@@ -105,7 +105,7 @@ public class TaskLayout extends ScrollPane {
         }
     }
 
-    private void removeTaskFromColumns(TaskCard node) {
+    private void removeTaskFromColumns(TaskCardBase node) {
         toBeStartedColumn.getChildren().remove(node);
         startedColumn.getChildren().remove(node);
         doneColumn.getChildren().remove(node);

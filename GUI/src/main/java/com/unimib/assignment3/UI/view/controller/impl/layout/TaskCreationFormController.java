@@ -1,24 +1,15 @@
-package com.unimib.assignment3.UI.view.controller;
+package com.unimib.assignment3.UI.view.controller.impl.layout;
 
-import com.unimib.assignment3.UI.model.controller.TaskController;
+import com.unimib.assignment3.UI.model.controller.TaskRestController;
 import com.unimib.assignment3.UI.model.dto.DescriptionTaskDTO;
+import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
-import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
-import static com.unimib.assignment3.UI.view.utils.BlurHelper.applyBlur;
-import static com.unimib.assignment3.UI.view.utils.BlurHelper.removeBlur;
+import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 
-public class TaskCreationFormController {
-
-    @FXML
-    private StackPane root;
-
-    @FXML
-    private Rectangle backgroundLayer;
+public class TaskCreationFormController implements DefaultController{
 
     @FXML
     private TextField descriptionField;
@@ -26,18 +17,13 @@ public class TaskCreationFormController {
     @FXML
     private Button submitButton;
 
-    private final TaskController taskController = new TaskController();
+    private final TaskRestController taskRestController = new TaskRestController();
 
     // Callback invoked on successful creation
     private Runnable onSuccess;
 
     @FXML
     private void initialize() {
-        backgroundLayer.widthProperty().bind(root.widthProperty());
-        backgroundLayer.heightProperty().bind(root.heightProperty());
-
-        applyBlur(backgroundLayer, 5);
-
         submitButton.setOnAction(e -> handleSubmit());
     }
 
@@ -51,11 +37,10 @@ public class TaskCreationFormController {
 
         DescriptionTaskDTO payload = new DescriptionTaskDTO(description.trim());
 
-        Task<String> pushTask = taskController.createTask(payload);
+        Task<String> pushTask = taskRestController.createTask(payload);
 
         pushTask.setOnSucceeded(ev -> {
             showAlert("Success", "Task created");
-            removeBlur(backgroundLayer);
             if (onSuccess != null) {
                 onSuccess.run();
             }

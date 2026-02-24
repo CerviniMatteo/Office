@@ -6,9 +6,9 @@ import com.unimib.assignment3.UI.utils.RestHelper;
 import javafx.concurrent.Task;
 
 import java.net.http.HttpResponse;
-import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 
-public class LoginController {
+public class LoginRestController {
     private static final String BASE_ENDPOINT = "http://localhost:8080/login";
     private static final ObjectMapper mapper = new ObjectMapper();
 

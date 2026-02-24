@@ -1,9 +1,10 @@
-package com.unimib.assignment3.UI.view.controller;
+package com.unimib.assignment3.UI.view.controller.impl.layout;
 
 import com.unimib.assignment3.UI.FxApplication;
-import com.unimib.assignment3.UI.view.components.Home;
-import com.unimib.assignment3.UI.view.components.InformationBanner;
-import com.unimib.assignment3.UI.model.controller.LoginController;
+import com.unimib.assignment3.UI.view.components.impl.container.Home;
+import com.unimib.assignment3.UI.view.components.impl.custom.InformationBanner;
+import com.unimib.assignment3.UI.model.controller.LoginRestController;
+import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.state.ApplicationStateManager;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
 import com.unimib.assignment3.UI.model.enums.BannerType;
@@ -17,13 +18,13 @@ import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 
 import static com.unimib.assignment3.UI.utils.StringHelper.replaceSpaces;
-import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
-import static com.unimib.assignment3.UI.view.components.InformationBanner.timeInSeconds;
+import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.impl.custom.InformationBanner.timeInSeconds;
 
 /**
  * Controller for the Login view. Handles UI initialization, layout clipping and login submission.
  */
-public class LoginViewController {
+public class LoginViewController implements DefaultController {
 
     @FXML
     private Label insertEmailLabel;
@@ -87,7 +88,7 @@ public class LoginViewController {
 
         String email = input.getText();
         try {
-            Task<String> loginTask = LoginController.login(email);
+            Task<String> loginTask = LoginRestController.login(email);
 
             loginTask.setOnSucceeded(ev -> {
                 try {

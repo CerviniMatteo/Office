@@ -1,6 +1,6 @@
 package com.unimib.assignment3.UI.web_socket_client;
 
-import com.unimib.assignment3.UI.view.components.TaskLayout;
+import com.unimib.assignment3.UI.view.components.impl.layout.TaskLayout;
 import jakarta.annotation.Nonnull;
 import javafx.application.Platform;
 import org.springframework.messaging.converter.StringMessageConverter;

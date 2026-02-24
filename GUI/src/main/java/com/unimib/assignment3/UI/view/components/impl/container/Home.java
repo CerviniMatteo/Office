@@ -1,6 +1,8 @@
-package com.unimib.assignment3.UI.view.components;
+package com.unimib.assignment3.UI.view.components.impl.container;
 
 import com.unimib.assignment3.UI.FxApplication;
+import com.unimib.assignment3.UI.view.components.impl.layout.TaskCreationForm;
+import com.unimib.assignment3.UI.view.components.impl.layout.TaskLayout;
 import com.unimib.assignment3.UI.view.state.ApplicationStateManager;
 import com.unimib.assignment3.UI.web_socket_client.TaskWebSocketClientApp;
 import javafx.geometry.Insets;
@@ -11,7 +13,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
 
-import static com.unimib.assignment3.UI.view.components.AlertDialog.showAlert;
+import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 
 public class Home extends StackPane {
 

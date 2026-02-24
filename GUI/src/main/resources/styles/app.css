@@ -282,7 +282,7 @@
     -fx-background-color: rgba(0,0,0,0.45);
 }
 
-.task-creation-form {
+#rootStack .task-creation-form {
     -fx-background-color: rgba(30,27,75,0.85);
     -fx-background-radius: 16px;
     -fx-border-radius: 16px;
@@ -295,10 +295,6 @@
 .dialog-pane {
     -fx-background-color: #1e1b4b;
     -fx-padding: 0;
-}
-
-.dialog-pane > .header-panel {
-    -fx-background-color: #1e1b4b;
 }
 
 .dialog-pane > .content {
@@ -315,7 +311,6 @@
     -fx-text-fill: white;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-color: #523ca0;
 }
 
 .dialog-message {

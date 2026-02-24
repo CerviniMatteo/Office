@@ -1,6 +1,7 @@
-package com.unimib.assignment3.UI.view.controller;
+package com.unimib.assignment3.UI.view.controller.impl.base;
 
-import com.unimib.assignment3.UI.view.components.StyledButton;
+import com.unimib.assignment3.UI.view.components.impl.custom.StyledButton;
+import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -12,7 +13,7 @@ import javafx.scene.layout.VBox;
  * Controller class that contains the UI logic for the StyledButton FXML.
  * The controller is instantiated programmatically and attached to the StyledButton instance.
  */
-public class StyledButtonController {
+public class StyledButtonController implements DefaultController {
 
     @FXML
     private HBox content;
