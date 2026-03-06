@@ -10,7 +10,7 @@ public class StyledButton extends Button {
 
     public StyledButton() {
         controller = new StyledButtonController(this);
-        FXMLUtilLoader.load(this, controller, "/components/StyledButton.fxml", "styled-button");
+            FXMLUtilLoader.load(this, controller, "/components/StyledButton.fxml", "styled-btn");
     }
 
     public StyledButtonController getController() {

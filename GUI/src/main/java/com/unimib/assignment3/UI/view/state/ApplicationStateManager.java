@@ -42,6 +42,14 @@ public class ApplicationStateManager {
         return INSTANCE;
     }
 
+    public static ApplicationStateManager getInstance() {
+        if (INSTANCE == null) {
+            throw new IllegalStateException("ApplicationStateManager not initialized. Call getInstance(FxApplication) first.");
+        }
+
+        return INSTANCE;
+    }
+
     /**
      * Adds a new window to the overlay. Caller can specify whether the overlay
      * should block mouse input to the underlying content. Non-blocking overlays
@@ -51,6 +59,22 @@ public class ApplicationStateManager {
      */
     public void addWindow(Node newWindow) {
         runOnFxThread(() -> {
+            application.getOverlayRoot().getChildren().add(newWindow);
+            bringToFront(newWindow);
+            updateOverlayMouseTransparency();
+        });
+    }
+
+    /**
+     * Adds a new window to the overlay. Caller can specify whether the overlay
+     * should block mouse input to the underlying content. Non-blocking overlays
+     * (e.g. transient banners) should pass blocksInput=false.
+     *
+     * @param newWindow the window to add
+     */
+    public void addPopUp(Node newWindow) {
+        runOnFxThread(() -> {
+            newWindow.getProperties().put("blocksInput", true);
             application.getOverlayRoot().getChildren().add(newWindow);
             bringToFront(newWindow);
             updateOverlayMouseTransparency();

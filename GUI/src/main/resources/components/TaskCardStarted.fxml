@@ -14,11 +14,19 @@
 
     <!-- DATE -->
     <top>
-        <Label fx:id="dateLabel" alignment="CENTER" maxWidth="550" styleClass="task-date-lbl" textAlignment="CENTER" wrapText="true" />
+        <Label
+                fx:id="dateLabel"
+                alignment="CENTER"
+                maxWidth="1000"
+                prefWidth="1000"
+                minWidth="1000"
+                styleClass="task-date-lbl"
+                textAlignment="CENTER"
+                wrapText="true" />
     </top>
 
     <center>
-        <VBox alignment="TOP_CENTER" maxWidth="600" prefWidth="600" spacing="20" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_CENTER" maxWidth="700" prefWidth="1000" spacing="20" BorderPane.alignment="CENTER">
 
             <padding>
                 <Insets bottom="20" left="20" right="20" top="20" />
@@ -60,7 +68,9 @@
                     <Button fx:id="changeStateButton" styleClass="styled-btn" text="COMPLETE TASK" />
 
                 </HBox>
-
+                <Button fx:id="closeButton"
+                        text="CLOSE CARD"
+                        styleClass="styled-btn-black"/>
             </VBox>
 
         </VBox>

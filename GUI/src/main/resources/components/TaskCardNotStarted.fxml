@@ -19,8 +19,9 @@
     <center>
         <VBox alignment="TOP_CENTER"
               spacing="20"
-              maxWidth="600"
-              prefWidth="600"
+              maxWidth="1000"
+              prefWidth="1000"
+              minWidth="1000"
               BorderPane.alignment="CENTER">
 
             <padding>
@@ -51,6 +52,9 @@
                         styleClass="styled-btn"
                         text="START TASK"/>
                 <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="closeButton"
+                        text="CLOSE CARD"
+                        styleClass="styled-btn-black"/>
             </HBox>
 
         </VBox>

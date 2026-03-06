@@ -4,6 +4,7 @@ import com.unimib.assignment3.enums.TaskState;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.unimib.assignment3.constants.*;
@@ -42,13 +43,13 @@ public class Task implements Serializable {
      * Start date of the task.
      */
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     /**
      * End date of the task.
      */
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     /**
      * List of employees assigned to this task.
@@ -96,7 +97,7 @@ public class Task implements Serializable {
      * @param startDate the start date
      * @param endDate the end date
      */
-    public Task(List<Employee> assignedEmployees, TaskState taskState, LocalDate startDate, LocalDate endDate) {
+    public Task(List<Employee> assignedEmployees, TaskState taskState, LocalDateTime startDate, LocalDateTime endDate) {
         this.assignedEmployees = assignedEmployees != null ? assignedEmployees : new ArrayList<>();
         this.taskState = taskState != null ? taskState : TaskState.STARTED;
         this.startDate = startDate;
@@ -201,7 +202,7 @@ public class Task implements Serializable {
      *
      * @return the start date
      */
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
@@ -212,7 +213,7 @@ public class Task implements Serializable {
      * @param startDate the start date to set
      * @throws IllegalArgumentException if start date is after end date
      */
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         if (startDate != null && this.endDate != null && startDate.isAfter(this.endDate)) {
             throw new IllegalArgumentException(TaskConstants.START_DATE_AFTER_END);
         }
@@ -224,7 +225,7 @@ public class Task implements Serializable {
      *
      * @return the end date
      */
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
@@ -236,7 +237,7 @@ public class Task implements Serializable {
      * @param endDate the end date to set
      * @throws IllegalArgumentException if end date is before start date
      */
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         if (endDate != null && this.startDate != null && endDate.isBefore(this.startDate)) {
             throw new IllegalArgumentException(TaskConstants.END_DATE_BEFORE_START);
         }

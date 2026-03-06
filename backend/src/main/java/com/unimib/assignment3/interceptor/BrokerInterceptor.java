@@ -9,12 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class RPCHandlerInterceptor implements HandlerInterceptor {
+public class BrokerInterceptor implements HandlerInterceptor {
 
     @Autowired
     private final TaskObserverNotifier taskObserverNotifier;
 
-    public RPCHandlerInterceptor(TaskObserverNotifier taskObserverNotifier) {
+    public BrokerInterceptor(TaskObserverNotifier taskObserverNotifier) {
         this.taskObserverNotifier = taskObserverNotifier;
     }
 

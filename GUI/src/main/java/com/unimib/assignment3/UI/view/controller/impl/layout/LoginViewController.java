@@ -1,9 +1,8 @@
 package com.unimib.assignment3.UI.view.controller.impl.layout;
 
-import com.unimib.assignment3.UI.FxApplication;
-import com.unimib.assignment3.UI.view.components.impl.container.Home;
 import com.unimib.assignment3.UI.view.components.impl.custom.InformationBanner;
 import com.unimib.assignment3.UI.model.controller.LoginRestController;
+import com.unimib.assignment3.UI.view.components.impl.layout.GanttCalendar;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.state.ApplicationStateManager;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
@@ -35,18 +34,6 @@ public class LoginViewController implements DefaultController {
     @FXML
     private Button submitButton;
 
-    private FxApplication application;
-
-    private ApplicationStateManager stateManager;
-
-    /**
-     * Sets the application instance for the controller.
-     * @param fxApplication the main application instance
-     */
-    public void setFxApplication(FxApplication fxApplication){
-        this.application = fxApplication;
-    }
-
     /**
      * Initialize UI components and event handlers.
      */
@@ -57,8 +44,6 @@ public class LoginViewController implements DefaultController {
 
         if(submitButton != null)
             submitButton.setOnAction(event -> handleSubmit(inputForm));
-
-        stateManager = ApplicationStateManager.getInstance(application);
     }
 
     /**
@@ -89,27 +74,21 @@ public class LoginViewController implements DefaultController {
         String email = input.getText();
         try {
             Task<String> loginTask = LoginRestController.login(email);
-
+            ApplicationStateManager stateManager = ApplicationStateManager.getInstance();
             loginTask.setOnSucceeded(ev -> {
                 try {
                     Long response = Long.parseLong(replaceSpaces(loginTask.getValue()));
                     SessionManagerSingleton.getInstance().setAttribute("employeeId", response);
+                    stateManager.replaceWindow(new GanttCalendar());
 
-                    if(application != null) {
-                        stateManager.replaceWindow(new Home(application));
-
-                        showBanner(BannerType.SUCCESS, "Login successful");
-
-                    }
+                    showBanner(BannerType.SUCCESS, "Login successful");
                 } catch (Exception ex){
                     showAlert("Error", ex.getMessage());
                 }
             });
 
             loginTask.setOnFailed(ev -> {
-                if(application != null) {
                     showBanner(BannerType.FAILURE, "Login failed\nEmail not found");
-                }
             });
 
             new Thread(loginTask).start();
@@ -120,7 +99,7 @@ public class LoginViewController implements DefaultController {
 
     private void showBanner(BannerType type, String message) {
         InformationBanner banner = new InformationBanner(type, message);
-
+        ApplicationStateManager stateManager = ApplicationStateManager.getInstance();
         stateManager.addWindow(banner);
         PauseTransition pause = new PauseTransition(Duration.seconds(timeInSeconds));
         pause.setOnFinished(p -> stateManager.removeWindow(banner));

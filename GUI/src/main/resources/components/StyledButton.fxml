@@ -11,7 +11,6 @@
          xmlns:fx="http://javafx.com/fxml/1"
          styleClass="styled-btn"
          focusTraversable="false"
-         pickOnBounds="true"
          maxWidth="Infinity"
          maxHeight="Infinity">
 

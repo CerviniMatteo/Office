@@ -1,6 +1,6 @@
 package com.unimib.assignment3.UI.web_socket_client;
 
-import com.unimib.assignment3.UI.view.components.impl.layout.TaskLayout;
+import com.unimib.assignment3.UI.view.components.impl.layout.GanttCalendar;
 import jakarta.annotation.Nonnull;
 import javafx.application.Platform;
 import org.springframework.messaging.converter.StringMessageConverter;
@@ -14,10 +14,10 @@ import java.lang.reflect.Type;
  */
 public class TaskWebSocketClientApp {
 
-    private final TaskLayout taskLayout;
+    private final GanttCalendar ganttCalendar;
 
-    public TaskWebSocketClientApp(TaskLayout taskLayout) {
-        this.taskLayout = taskLayout;
+    public TaskWebSocketClientApp(GanttCalendar ganttCalendar) {
+        this.ganttCalendar = ganttCalendar;
     }
 
     /**
@@ -47,11 +47,11 @@ public class TaskWebSocketClientApp {
                         String message = (String) payload;
                         System.out.println("Received message: " + message);
 
-                        if (message.contains("FETCH_TASKS:")) {
+                        if (message.contains("FETCH_TASK:")) {
                             String substring = message.substring(message.indexOf(":") + 1);
                             Long taskId = Long.valueOf(substring);
-
-                            Platform.runLater(() -> taskLayout.updateTaskDetails(taskId));
+                            System.out.println(taskId);
+                            Platform.runLater(() -> ganttCalendar.getController().updateEntry(taskId));
                         }
                     }
                 });
@@ -59,6 +59,6 @@ public class TaskWebSocketClientApp {
         };
 
         StompSession session = stompClient.connectAsync("ws://localhost:8080/ws", sessionHandler).get();
-        System.out.println("Session ID: " + session.getSessionId() + "\nLayout ID:" + System.identityHashCode(taskLayout));
+        System.out.println("Session ID: " + session.getSessionId() + "\nLayout ID:" + System.identityHashCode(ganttCalendar));
     }
 }

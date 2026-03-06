@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.shape.Ellipse?>
 <?import javafx.scene.layout.Region?>
 
 <fx:root type="javafx.scene.layout.VBox"
@@ -28,8 +27,8 @@
 
 
         <!-- FORM: same width as rectangle, centered -->
-        <VBox spacing="0"
-              alignment="CENTER"
+        <VBox
+                alignment="CENTER"
               prefWidth="426"
               maxWidth="426"
               translateY="-20">
@@ -62,7 +61,7 @@
             <Button fx:id="submitButton"
                     text="SUBMIT"
                     styleClass="styled-btn"
-                    prefWidth="110"
+                    prefWidth="200"
                     prefHeight="36"/>
 
             <!-- Bottom spacer (mirrors top spacer) -->

@@ -2,8 +2,10 @@ package com.unimib.assignment3.UI.view.controller.impl.base;
 
 import com.unimib.assignment3.UI.view.components.impl.custom.StyledButton;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -35,10 +37,20 @@ public class StyledButtonController implements DefaultController {
     @FXML
     private void initialize() {
         VBox.setMargin(root, new Insets(10));
+
+        // Debug: print style classes and scene stylesheets once the node is attached to a scene
+        Platform.runLater(() -> {
+            System.out.println("[DEBUG] StyledButton styleClasses: " + root.getStyleClass());
+            Scene s = root.getScene();
+            if (s != null) {
+                System.out.println("[DEBUG] StyledButton scene stylesheets: " + s.getStylesheets());
+            } else {
+                System.out.println("[DEBUG] StyledButton has no scene yet");
+            }
+        });
     }
 
     public HBox getContent() {
         return content;
     }
 }
-

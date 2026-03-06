@@ -41,14 +41,15 @@ public class FxApplication extends Application {
         root.getChildren().addAll(contentRoot, overlayRoot);
 
         Scene scene = new Scene(root, 800, 600);
-        scene.getStylesheets().add(
-                Objects.requireNonNull(
-                        getClass().getResource("/styles/app.css")
-                ).toExternalForm()
-        );
+        String sheetUrl = Objects.requireNonNull(getClass().getResource("/styles/app.css")).toExternalForm();
+        scene.getStylesheets().add(sheetUrl);
+
+        // Debug: print resolved stylesheet and current stylesheets
+        System.out.println("[DEBUG] Loaded stylesheet URL: " + sheetUrl);
+        System.out.println("[DEBUG] Scene stylesheets: " + scene.getStylesheets());
 
         ApplicationStateManager stateManager = ApplicationStateManager.getInstance(this);
-        stateManager.replaceWindow(new Login(this));
+        stateManager.replaceWindow(new Login());
 
         // Add mouse back/forward buttons handler: map mouse BACK/FORWARD to app navigation
         scene.addEventHandler(MouseEvent.MOUSE_PRESSED, ev -> {
@@ -66,7 +67,7 @@ public class FxApplication extends Application {
         stage.setMaximized(true);
         stage.show();
 
-        Image icon = new Image(Objects.requireNonNull(getClass().getResource("/icon.png")).toExternalForm());
+        Image icon = new Image(Objects.requireNonNull(getClass().getResource("/images/icon.png")).toExternalForm());
         stage.getIcons().add(icon);
     }
 
