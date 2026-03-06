@@ -47,10 +47,15 @@
 
             </VBox>
 
+
+            <Button fx:id="changeStateButton"
+                    styleClass="styled-btn"
+                    text="START TASK"/>
+
             <HBox  spacing="20">
-                <Button fx:id="changeStateButton"
-                        styleClass="styled-btn"
-                        text="START TASK"/>
+                <Button fx:id="deleteButton"
+                        styleClass="styled-btn-red"
+                        text="DELETE TASK"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button fx:id="closeButton"
                         text="CLOSE CARD"

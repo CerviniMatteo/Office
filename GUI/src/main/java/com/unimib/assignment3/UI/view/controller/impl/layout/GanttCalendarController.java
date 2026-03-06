@@ -14,9 +14,11 @@ import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.factory.CalendarEntryStylingFactory;
 import com.unimib.assignment3.UI.view.factory.TaskCardFactory;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 
@@ -33,6 +35,9 @@ public class GanttCalendarController implements DefaultController {
 
     @FXML
     private DetailedWeekView detailedWeekView;
+
+    @FXML
+    private VBox activeTaskContainer;
 
     private Map<Long, Pair<CalendarEntry<TaskDTO>, TaskCardBase>> entries;
     private TaskRestController taskRestController;
@@ -52,7 +57,7 @@ public class GanttCalendarController implements DefaultController {
         detailedWeekView.setDate(monday);
 
         detailedWeekView.getWeekView().setStartTime(LocalTime.of(7, 0));
-        detailedWeekView.getWeekView().setEndTime(LocalTime.of(19, 0));
+        detailedWeekView.getWeekView().setEndTime(LocalTime.of(19, 30));
         detailedWeekView.getWeekView().setEarlyLateHoursStrategy(DayViewBase.EarlyLateHoursStrategy.HIDE);
 
         detailedWeekView.setShowToday(true);
@@ -94,7 +99,7 @@ public class GanttCalendarController implements DefaultController {
 
         List<TaskDTO> tasks = taskRestController.fetchTasks();
         if (tasks != null) {
-            tasks.forEach(this::addTaskToCalendar);
+            tasks.forEach(this::addTaskToComponents);
         }
     }
 
@@ -106,6 +111,11 @@ public class GanttCalendarController implements DefaultController {
             case STARTED -> startedCalendar;
             case DONE -> doneCalendar;
         };
+    }
+
+    private void addTaskToComponents(TaskDTO taskDTO) {
+        addTaskToCalendar(taskDTO);
+        addActiveTaskToDashboard(taskDTO);
     }
 
     private void addTaskToCalendar(TaskDTO taskDTO) {
@@ -128,36 +138,20 @@ public class GanttCalendarController implements DefaultController {
 
         task.setOnSucceeded(event -> {
             TaskDTO updatedTask = task.getValue();
-            Pair<CalendarEntry<TaskDTO>, TaskCardBase> pair = entries.get(taskId);
-            if (pair == null || updatedTask == null) return;
-
-            CalendarEntry<TaskDTO> entry = pair.getKey();
-
-            // 4. Remove from current calendar
-            if (entry.getCalendar() != null) {
-                entry.getCalendar().removeEntry(entry);
-            }
-
-            // Update entry details
-            entry.setUserObject(updatedTask);
-            entry.setTitle(updatedTask.description());
-            entry.setInterval(
-                    updatedTask.startDate() != null ? updatedTask.startDate() : LocalDateTime.now(),
-                    updatedTask.endDate() != null ? updatedTask.endDate() : LocalDateTime.now().plusHours(1)
-            );
-
-            // 5. Add back to the appropriate calendar so CalendarFX handles the new style naturally
-            getCalendarForState(updatedTask.taskState()).addEntry(entry);
-
-            // Re-create the pop-up card
-            TaskCardBase oldCard = pair.getValue();
-            if (oldCard != null) oldCard.removeTaskPopup();
-
-            TaskCardBase newCard = TaskCardFactory.create(updatedTask);
-            entries.put(taskId, new Pair<>(entry, newCard));
-            newCard.showTaskPopup(detailedWeekView);
+            activeTaskContainer.getChildren().add(new Label(updatedTask.description()));
         });
 
         new Thread(task).start();
     }
+
+    private void addActiveTaskToDashboard(TaskDTO taskDTO) {
+        if (taskDTO.taskState() == TaskState.STARTED) {
+            Label taskLabel = new Label(taskDTO.description());
+            taskLabel.getStyleClass().add("active-task-entry-lbl");
+            taskLabel.setMaxWidth(Double.MAX_VALUE); // Make it fill the width
+
+            activeTaskContainer.getChildren().add(taskLabel);
+        }
+    }
+
 }

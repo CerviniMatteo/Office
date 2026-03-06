@@ -199,6 +199,66 @@
 }
 
 /* ===================================================== */
+/* SIDEBAR ELEMENTS                                      */
+/* ===================================================== */
+
+.legend-header-lbl {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-width: 2px;
+    -fx-padding: 10;
+}
+
+.legend-item-lbl {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}
+
+.legend-rect-tostart { -fx-fill: #FF4DA6; }
+.legend-rect-started { -fx-fill: #00BCD4; }
+.legend-rect-done    { -fx-fill: #b300ff; }
+
+.legend-separator {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+.transparent-spacer {
+    -fx-background-color: transparent;
+}
+
+/* ===================================================== */
+/* ACTIVE TASKS CONTAINER                                */
+/* ===================================================== */
+
+.transparent-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent; /* Targets the viewport */
+    -fx-border-color: transparent;
+    -fx-hbar-policy: never;
+}
+
+.transparent-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-vbox {
+    -fx-background-color: transparent;
+}
+
+/* Style for the labels you add dynamically */
+.active-task-entry-lbl {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 5 10;
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5;
+}
+
+
+/* ===================================================== */
 /* INPUT FIELDS                                          */
 /* ===================================================== */
 
