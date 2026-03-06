@@ -68,13 +68,13 @@ public class BackendApplication {
 
                     createAndSaveTask(facade, "Perform user acceptance testing (UAT)",
                             TaskState.STARTED,
-                            LocalDateTime.of(2026, 3, 5, 10, 0),
-                            LocalDateTime.of(2026, 3, 5, 16, 0)),
+                            LocalDateTime.of(2026, 3, 6, 10, 0),
+                            LocalDateTime.of(2026, 3, 6, 16, 0)),
 
                     createAndSaveTask(facade, "Fix bugs identified during testing",
                             TaskState.TO_BE_STARTED,
-                            LocalDateTime.of(2026, 3, 5, 16, 0),
-                            LocalDateTime.of(2026, 3, 5, 18, 0))
+                            LocalDateTime.of(2026, 3, 6, 19, 0),
+                            LocalDateTime.of(2026, 3, 6, 22, 0))
             );
 
             // ---- EMPLOYEES ----
