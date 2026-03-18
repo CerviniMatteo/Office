@@ -9,11 +9,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository interface for managing {@link Employee} entities.
- * Extends JpaRepository to provide CRUD operations and custom queries.
  */
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     /**
@@ -32,10 +30,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      *
      * @param employeeId the ID of the employee.
      * @param taskState  the state of the tasks to filter by.
-     * @param startDate the start date to order the tasks by.
+     * @param startDate  the start date to order the tasks by.
      * @return a list of tasks assigned to the employee in a given startDate.
      */
-    @Query("SELECT t FROM employee d JOIN d.tasks t WHERE d.workerId = :employeeId AND t.taskState = :taskState AND t.startDate = :startDate")
+    @Query("SELECT t FROM employee d JOIN d.tasks t WHERE d.workerId = :employeeId AND t.taskState = :taskState AND CAST(t.startDate AS date) = :startDate")
     List<Task> findTasksByEmployeeByTaskStateByStartDate(@Param("employeeId") Long employeeId,
                                                          @Param("taskState") TaskState taskState,
                                                          @Param("startDate") LocalDate startDate);
@@ -45,24 +43,24 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      *
      * @param employeeId the ID of the employee.
      * @param taskState  the state of the tasks to filter by.
-     * @param endDate the start date to order the tasks by.
+     * @param endDate    the end date to order the tasks by.
      * @return a list of tasks assigned to the employee in a given startDate.
      */
-    @Query("SELECT t FROM employee d JOIN d.tasks t WHERE d.workerId = :employeeId AND t.taskState = :taskState AND t.endDate = :endDate")
+    @Query("SELECT t FROM employee d JOIN d.tasks t WHERE d.workerId = :employeeId AND t.taskState = :taskState AND t.endDate IS NOT NULL AND CAST(t.endDate AS date) = :endDate")
     List<Task> findTasksByEmployeeByTaskStateByEndDate(@Param("employeeId") Long employeeId,
-                                                         @Param("taskState") TaskState taskState,
-                                                         @Param("endDate") LocalDate endDate);
+                                                       @Param("taskState") TaskState taskState,
+                                                       @Param("endDate") LocalDate endDate);
 
     /**
      * Retrieves all tasks of a specific employee that are in a given state, between dates.
      *
      * @param employeeId the ID of the employee.
      * @param taskState  the state of the tasks to filter by.
-     * @param startDate the start date to order the tasks by.
-     * @param endDate the start date to order the tasks by.
+     * @param startDate  the start date to order the tasks by.
+     * @param endDate    the end date to order the tasks by.
      * @return a list of tasks assigned to the employee in a given startDate.
      */
-    @Query("SELECT t FROM employee d JOIN d.tasks t WHERE d.workerId = :employeeId AND t.taskState = :taskState AND t.startDate <= :endDate AND t.endDate >= :startDate")
+    @Query("SELECT t FROM employee d JOIN d.tasks t WHERE d.workerId = :employeeId AND t.taskState = :taskState AND t.startDate IS NOT NULL AND t.endDate IS NOT NULL AND CAST(t.startDate AS date) <= :endDate AND CAST(t.endDate AS date) >= :startDate")
     List<Task> findTasksByEmployeeByTaskStateBetweenDates(@Param("employeeId") Long employeeId,
                                                           @Param("taskState") TaskState taskState,
                                                           @Param("startDate") LocalDate startDate,
@@ -89,7 +87,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      */
     @Query("SELECT t FROM employee d JOIN d.tasks t WHERE d.workerId = :employeeId AND t.taskState = :taskState ORDER BY t.endDate DESC")
     List<Task> findTasksByEmployeeByTaskStateOrderByEndDateDesc(@Param("employeeId") Long employeeId,
-                                                              @Param("taskState") TaskState taskState);
+                                                                 @Param("taskState") TaskState taskState);
     /**
      * Counts the number of employees whose email starts with a given prefix.
      * The comparison is case-insensitive.

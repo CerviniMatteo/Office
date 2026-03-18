@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -53,9 +54,9 @@ public class TaskController {
         }
         System.out.println("Called tasks/createTask for task: " + taskDTO);
         try {
-            Task task = facade.saveTask(facade.createTask(taskDTO));
+            Task task = facade.saveTask(facade.createAndSaveTask(taskDTO));
             httpServletRequest.setAttribute("taskId", task.getTaskId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.created(URI.create(taskDTO.taskId() + "")).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

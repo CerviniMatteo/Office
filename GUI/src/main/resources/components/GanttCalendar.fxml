@@ -61,11 +61,18 @@
                        alignment="CENTER"
                        styleClass="legend-header-lbl" />
 
-                <ScrollPane fitToWidth="true" styleClass="transparent-scroll" VBox.vgrow="ALWAYS">
-                    <VBox fx:id="activeTaskContainer" spacing="8" styleClass="transparent-vbox"/>
+                <ScrollPane fitToWidth="true"
+                            VBox.vgrow="ALWAYS"
+                            styleClass="transparent-scroll">
+
+                    <VBox fx:id="activeTaskContainer"
+                          spacing="8"
+                          styleClass="transparent-vbox"/>
                 </ScrollPane>
 
-                <Region prefHeight="2" maxWidth="Infinity" styleClass="legend-separator"/>
+                <Region prefHeight="2"
+                        maxWidth="Infinity"
+                        styleClass="legend-separator"/>
 
                 <Button fx:id="logOutButton"
                         text="LOG OUT"

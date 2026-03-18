@@ -16,11 +16,8 @@
     <top>
         <Label
                 fx:id="dateLabel"
-                alignment="CENTER"
-                maxWidth="1000"
-                prefWidth="1000"
-                minWidth="1000"
                 styleClass="task-date-lbl"
+                BorderPane.alignment="CENTER"
                 textAlignment="CENTER"
                 wrapText="true" />
     </top>

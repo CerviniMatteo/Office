@@ -20,8 +20,8 @@
         <Rectangle fx:id="designRectangle"
                    width="470"
                    height="290"
-                   arcWidth="20"
-                   arcHeight="28"
+                   arcWidth="40"
+                   arcHeight="40"
                    translateY="-20"
                    styleClass="design-rectangle"/>
 
@@ -38,7 +38,7 @@
 
             <Label fx:id="insertEmailLabel"
                    text="INSERT YOUR EMAIL TO LOGIN"
-                   styleClass="insert-email-lbl"
+                   styleClass="insert-text-lbl"
                    wrapText="true"
                    alignment="CENTER"
                    maxWidth="Infinity"

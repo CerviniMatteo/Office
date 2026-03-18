@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -352,16 +353,18 @@ public class TaskIntegrationTest {
          */
         @Test
         @DisplayName("Test query for state with at least one employee")
-        void testFindTasksByStateWithEmployees() {
+        void testFindTasksByStateWithEMVNmployees() {
             Task t1 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
             Employee employee1 = facade.createEmployee("Test", "User");
             employee1 = facade.saveEmployee(employee1);
             facade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
 
-            facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            Task t2 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            facade.assignEmployeeToTask(t2.getTaskId(), employee1.getWorkerId());
 
             List<Task> result = facade.findTasksByStateWithEmployee(TaskState.TO_BE_STARTED);
-            assertEquals(1, result.size());
+
+            assertEquals(2, result.size());
             assertEquals(t1.getTaskId(), result.getFirst().getTaskId());
         }
 
@@ -428,7 +431,7 @@ public class TaskIntegrationTest {
         @DisplayName("Verify that POJO prevents inconsistent dates")
         void testInconsistentDateValidation() {
             Task t = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-            LocalDate today = LocalDate.now();
+            LocalDateTime today = LocalDateTime.now();
 
             assertEquals(today, facade.setTaskEndDate(t.getTaskId(), today).getEndDate());
 

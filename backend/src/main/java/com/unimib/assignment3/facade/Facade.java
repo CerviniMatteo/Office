@@ -7,7 +7,7 @@ import com.unimib.assignment3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -185,7 +185,7 @@ public class Facade {
      * @param startDate  the start date to filter (must not be null)
      * @return list of tasks assigned to the employee with the given state and start date
      */
-    public List<Task>  findTasksByEmployeeByTaskStateByStartDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate startDate) {
+    public List<Task>  findTasksByEmployeeByTaskStateByStartDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull java.time.LocalDate startDate) {
         return employeeService.findTasksByEmployeeByTaskStateByStartDate(employeeId, taskState, startDate);
     }
 
@@ -197,7 +197,7 @@ public class Facade {
      * @param endDate    the end date to filter (must not be null)
      * @return list of tasks assigned to the employee with the given state and end date
      */
-    public List<Task>  findTasksByEmployeeByTaskStateByEndDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate endDate) {
+    public List<Task>  findTasksByEmployeeByTaskStateByEndDate(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull java.time.LocalDate endDate) {
         return employeeService.findTasksByEmployeeByTaskStateByEndDate(employeeId, taskState, endDate);
     }
 
@@ -210,7 +210,7 @@ public class Facade {
      * @param endDate     the end date to filter (must not be null)
      * @return list of tasks assigned to the employee with the given state and within the specified date ranges
      */
-    public List<Task>  findTasksByEmployeeByTaskStateByStartDateBetweenAndEndDateBetween(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull LocalDate startDate, @NonNull LocalDate endDate) {
+    public List<Task>  findTasksByEmployeeByTaskStateByStartDateBetweenAndEndDateBetween(@NonNull Long employeeId, @NonNull TaskState taskState, @NonNull java.time.LocalDate startDate, @NonNull java.time.LocalDate endDate) {
         return employeeService.findTasksByEmployeeByTaskStateBetweenStartDateAndEndDate(employeeId, taskState, startDate, endDate);
     }
 
@@ -460,6 +460,16 @@ public class Facade {
     }
 
     /**
+     * Creates a new task based on the provided TaskDTO and saves it to the database.
+     *
+     * @param taskDTO the data transfer object containing task details
+     * @return the newly created and saved task entity
+     */
+    public Task createAndSaveTask(TaskDTO taskDTO) {
+       return taskService.createAndSaveTask(taskDTO);
+    }
+
+    /**
      * Saves or updates a task in the database.
      *
      * @param task the task entity to save
@@ -658,7 +668,7 @@ public class Facade {
      * @param startDate the new start date
      * @return the updated task entity
      */
-    public Task setTaskStartDate(Long taskId, LocalDate startDate) {
+    public Task setTaskStartDate(Long taskId, LocalDateTime startDate) {
         return taskService.setTaskStartDate(taskId, startDate);
     }
 
@@ -669,7 +679,7 @@ public class Facade {
      * @param endDate the new end date
      * @return the updated task entity
      */
-    public Task setTaskEndDate(Long taskId, LocalDate endDate) {
+    public Task setTaskEndDate(Long taskId, LocalDateTime endDate) {
         return taskService.setTaskEndDate(taskId, endDate);
     }
 

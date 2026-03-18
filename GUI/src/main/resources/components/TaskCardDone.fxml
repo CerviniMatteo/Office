@@ -24,19 +24,13 @@
         <Label fx:id="dateLabel"
                styleClass="task-date-lbl"
                wrapText="true"
-               alignment="CENTER"
-               textAlignment="CENTER"
-               maxWidth="1000"
-               prefWidth="1000"
-               minWidth="1000"/>
+               BorderPane.alignment="CENTER"
+               textAlignment="CENTER"/>
     </top>
 
     <center>
         <VBox alignment="TOP_CENTER"
               spacing="20"
-              maxWidth="1000"
-              prefWidth="1000"
-              minWidth="1000"
               BorderPane.alignment="CENTER">
 
             <padding>

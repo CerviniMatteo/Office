@@ -3,6 +3,7 @@ package com.unimib.assignment3.UI.view.state;
 import com.unimib.assignment3.UI.FxApplication;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -61,6 +62,32 @@ public class ApplicationStateManager {
         runOnFxThread(() -> {
             application.getOverlayRoot().getChildren().add(newWindow);
             bringToFront(newWindow);
+            updateOverlayMouseTransparency();
+        });
+    }
+
+    /**
+     * Displays any Node as a centered popup.
+     *
+     * @param popupNode The node to display
+     * @param parent    The parent node to inherit styles from
+     * @param maxWidth  Maximum width of the popup
+     * @param maxHeight Maximum height of the popup
+     */
+    public void showAsPopup(Node popupNode, Parent parent, double maxWidth, double maxHeight) {
+        runOnFxThread(() -> {
+            // Set dimensions if node is a Region (which most UI components are)
+            if (popupNode instanceof javafx.scene.layout.Region region) {
+                region.setMaxSize(maxWidth, maxHeight);
+                region.setPrefSize(maxWidth, maxHeight);
+            }
+
+            // Mark as blocking and add to overlay
+            popupNode.getProperties().put("blocksInput", true);
+
+            // Center the popup in the overlay (Assuming StackPane or similar for overlayRoot)
+            application.getOverlayRoot().getChildren().add(popupNode);
+            bringToFront(popupNode);
             updateOverlayMouseTransparency();
         });
     }

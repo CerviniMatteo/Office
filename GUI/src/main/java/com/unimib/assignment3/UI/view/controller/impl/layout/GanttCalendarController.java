@@ -10,14 +10,14 @@ import com.unimib.assignment3.UI.model.custom_entity.CalendarEntry;
 import com.unimib.assignment3.UI.model.dto.TaskDTO;
 import com.unimib.assignment3.UI.model.enums.TaskState;
 import com.unimib.assignment3.UI.view.components.abstr.TaskCardBase;
+import com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog;
+import com.unimib.assignment3.UI.view.components.impl.layout.TaskCreationForm;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.factory.CalendarEntryStylingFactory;
 import com.unimib.assignment3.UI.view.factory.TaskCardFactory;
-
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,36 @@ public class GanttCalendarController implements DefaultController {
             detailedWeekView.getWeekView().setClip(clip);
         });
 
+        detailedWeekView.setEntryFactory(param -> {
+
+            TaskCreationForm form = new TaskCreationForm(new TaskCreationFormController());
+            LocalDateTime clickedTime = param.getZonedDateTime().toLocalDateTime();
+
+            Entry<TaskDTO> tempEntry = new Entry<>("");
+            tempEntry.setUserObject(null);
+            tempEntry.setInterval(clickedTime, clickedTime.plusHours(3));
+            param.getCalendar().setStyle(CalendarEntryStylingFactory.styleCalendarEntry(TaskState.TO_BE_STARTED));
+            form.setOnClose(() -> tempEntry.getCalendar().removeEntry(tempEntry));
+            // Show the form asynchronously
+            form.setOnSuccess(newTask -> {
+                    Task<String> task = taskRestController.createTask(newTask);
+                    task.setOnSucceeded(workerStateEvent ->{
+                            AlertDialog.showAlert("Success", "Task correctly create");
+                            form.removeTaskPopup();
+                            tempEntry.getCalendar().removeEntry(tempEntry);
+                    });
+                    task.setOnFailed(workerStateEvent ->
+                            AlertDialog.showAlert("Error", task.getException().getMessage()));
+
+                    new Thread(task).start();
+            });
+
+            form.showTaskPopup(detailedWeekView);
+
+            // Return the temporary entry to avoid NPE
+            return tempEntry;
+        });
+
         entries = new HashMap<>();
         taskRestController = new TaskRestController();
 
@@ -83,13 +114,10 @@ public class GanttCalendarController implements DefaultController {
             return null;
         });
 
-        // 2. Initialize Calendars with Base Styles
-        toStartCalendar = new Calendar<>("To Start");
+        toStartCalendar = new Calendar<>("To Be Started");
         toStartCalendar.setStyle(CalendarEntryStylingFactory.styleCalendarEntry(TaskState.TO_BE_STARTED));
-
         startedCalendar = new Calendar<>("Started");
         startedCalendar.setStyle(CalendarEntryStylingFactory.styleCalendarEntry(TaskState.STARTED));
-
         doneCalendar = new Calendar<>("Done");
         doneCalendar.setStyle(CalendarEntryStylingFactory.styleCalendarEntry(TaskState.DONE));
 
@@ -99,7 +127,12 @@ public class GanttCalendarController implements DefaultController {
 
         List<TaskDTO> tasks = taskRestController.fetchTasks();
         if (tasks != null) {
-            tasks.forEach(this::addTaskToComponents);
+            tasks.forEach(taskDTO -> {
+                addTaskToCalendar(taskDTO);
+                if(taskDTO.taskState() == TaskState.STARTED){
+                    addActiveTaskToDashboard(taskDTO);
+                }
+            });
         }
     }
 
@@ -113,22 +146,52 @@ public class GanttCalendarController implements DefaultController {
         };
     }
 
-    private void addTaskToComponents(TaskDTO taskDTO) {
-        addTaskToCalendar(taskDTO);
-        addActiveTaskToDashboard(taskDTO);
-    }
-
     private void addTaskToCalendar(TaskDTO taskDTO) {
-        LocalDateTime start = taskDTO.startDate() != null ? taskDTO.startDate() : LocalDateTime.now();
-        LocalDateTime end = taskDTO.endDate() != null ? taskDTO.endDate() : start.plusHours(1);
 
         CalendarEntry<TaskDTO> entry = new CalendarEntry<>(taskDTO, taskDTO.description(), taskDTO.taskId().toString());
-        entry.setInterval(start, end);
+        entry.setInterval(taskDTO.startDate(), taskDTO.endDate()    );
 
-        // 3. Add to the specific calendar based on state
         getCalendarForState(taskDTO.taskState()).addEntry(entry);
 
         entries.put(taskDTO.taskId(), new Pair<>(entry, TaskCardFactory.create(taskDTO)));
+
+    }
+
+    private void removeTaskFromCalendar(TaskDTO taskDTO) {
+
+        Entry<?> entry = null;
+
+        switch (taskDTO.taskState()) {
+            case TO_BE_STARTED -> {
+                Collection<Entry<?>> foundEntries = doneCalendar.findEntries(taskDTO.description());
+
+                if (!foundEntries.isEmpty()) {
+                    entry = foundEntries.iterator().next();
+                    toStartCalendar.removeEntry(entry);
+                }
+            }
+            case STARTED -> {
+                Collection<Entry<?>> foundEntries = toStartCalendar.findEntries(taskDTO.description());
+
+                if (!foundEntries.isEmpty()) {
+                    entry = foundEntries.iterator().next();
+                    startedCalendar.removeEntry(entry);
+                }
+            }
+            case DONE -> {
+                Collection<Entry<?>> foundEntries = startedCalendar.findEntries(taskDTO.description());
+
+                if (!foundEntries.isEmpty()) {
+                    entry = foundEntries.iterator().next();
+                    doneCalendar.removeEntry(entry);
+                }
+            }
+        }
+
+        if (entry != null) {
+            entries.remove(taskDTO.taskId());
+            activeTaskContainer.getChildren().removeIf(node -> node instanceof Label label && label.getText().equals(taskDTO.description()));
+        }
     }
 
     public void updateEntry(Long taskId) {
@@ -138,7 +201,16 @@ public class GanttCalendarController implements DefaultController {
 
         task.setOnSucceeded(event -> {
             TaskDTO updatedTask = task.getValue();
-            activeTaskContainer.getChildren().add(new Label(updatedTask.description()));
+            if(!entries.containsKey(taskId)){
+                addTaskToCalendar(updatedTask);
+            }else{
+                entries.get(taskId).getValue().removeTaskPopup();
+                removeTaskFromCalendar(updatedTask);
+                addTaskToCalendar(updatedTask);
+                addActiveTaskToDashboard(updatedTask);
+
+                entries.get(taskId).getValue().showTaskPopup(detailedWeekView);
+            }
         });
 
         new Thread(task).start();
@@ -148,7 +220,8 @@ public class GanttCalendarController implements DefaultController {
         if (taskDTO.taskState() == TaskState.STARTED) {
             Label taskLabel = new Label(taskDTO.description());
             taskLabel.getStyleClass().add("active-task-entry-lbl");
-            taskLabel.setMaxWidth(Double.MAX_VALUE); // Make it fill the width
+            taskLabel.setMaxWidth(Double.MAX_VALUE);
+            taskLabel.setWrapText(true);
 
             activeTaskContainer.getChildren().add(taskLabel);
         }

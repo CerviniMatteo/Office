@@ -5,7 +5,6 @@
 /* ===================================================== */
 /* ROOT BACKGROUND                                       */
 /* ===================================================== */
-
 .root {
     -fx-background-color: transparent;
     -fx-background-image: url("/images/root.jpg");
@@ -25,7 +24,6 @@
 /* ===================================================== */
 /* GLOBAL BUTTON RESET                                   */
 /* ===================================================== */
-
 .button {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
@@ -45,21 +43,21 @@
 /* ===================================================== */
 /* LOGIN SCREEN                                          */
 /* ===================================================== */
-
 .design-rectangle {
     -fx-fill: rgba(30, 27, 75, 0.75);
     -fx-stroke: rgba(255, 255, 255, 0.5);
     -fx-stroke-width: 2;
     -fx-stroke-type: centered;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
 }
 
 /* ===================================================== */
 /* TASK CARD (GLASS STYLE)                               */
 /* ===================================================== */
-
-.task-card {
+.task-card, BorderPane.task-card {
+    -fx-background-image: null;
+    -fx-background-insets: 0;
     -fx-background-color: #1e1b4b;
     -fx-border-width: 2px;
     -fx-background-radius: 8px;
@@ -70,7 +68,6 @@
 /* ===================================================== */
 /* TASK LABELS                                           */
 /* ===================================================== */
-
 .task-description-lbl {
     -fx-font-weight: bold;
     -fx-text-fill: white;
@@ -98,27 +95,15 @@
     -fx-alignment: center;
 }
 
-/* ===================================================== */
-/* TASK STATE LABEL COLORS                               */
-/* ===================================================== */
-
-.task-state-lbl.task-to-start {
-    -fx-text-fill: #FF4DA6;
-}
-
-.task-state-lbl.task-started {
-    -fx-text-fill: #00BCD4;
-}
-
-.task-state-lbl.task-done {
-    -fx-text-fill: #b300ff;
-}
+/* TASK STATE LABEL COLORS */
+.task-state-lbl.task-to-start { -fx-text-fill: #FF4DA6; }
+.task-state-lbl.task-started { -fx-text-fill: #00BCD4; }
+.task-state-lbl.task-done { -fx-text-fill: #b300ff; }
 
 /* ===================================================== */
 /* BASE BUTTON STYLE                                     */
 /* ===================================================== */
-
-.styled-btn, .styled-btn-black, .styled-btn-red {
+.styled-btn, .styled-btn-black, .styled-btn-red, .styled-btn-white {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-border-radius: 30px;
@@ -141,66 +126,67 @@
 
 .styled-btn-red {
     -fx-text-fill: rgba(255, 50, 14, 0.9);
-    -fx-background-color: rgba(255,50,14, 0.08);
+    -fx-background-color: rgba(255,50,14,0.08);
     -fx-border-color: rgba(232,50,14,0.9);
 }
 
+.styled-btn-white {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1.5px;
+    -fx-border-color: rgba(255,255,255,0.4);
+}
+
+
 .styled-btn:hover,
 .styled-btn-black:hover,
-.styled-btn-red:hover {
+.styled-btn-red:hover,
+.styled-btn-white:hover{
     -fx-border-color: #00E5FF;
     -fx-text-fill: #00E5FF;
     -fx-background-color: rgba(0,229,255,0.08);
 }
 
+/* ICON STYLING */
+.styled-btn .btn-icon,
+.styled-btn-black .btn-icon,
+.styled-btn-red .btn-icon,
+.styled-btn-white .btn-icon {
+    -fx-fill: white;
+}
+
+.styled-btn-black .btn-icon { -fx-fill: black; }
+.styled-btn-white .btn-icon { -fx-fill: white; }
+.styled-btn-red .btn-icon { -fx-fill: rgba(255,50,14,0.9); }
+
+.styled-btn:hover .btn-icon,
+.styled-btn-black:hover .btn-icon,
+.styled-btn-red:hover .btn-icon,
+.styled-btn-white:hover .btn-icon{ -fx-fill: #00E5FF; }
+
+.styled-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
+
+/* ICON-ONLY BUTTON */
+.icon-btn {
+    -fx-padding: 4px;
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
+    -fx-pref-width: 28px;
+    -fx-pref-height: 28px;
+    -fx-max-width: 28px;
+    -fx-max-height: 28px;
+    -fx-alignment: center;
+    -fx-content-display: graphic-only;
+}
+
+.icon-btn .stack-pane { -fx-alignment: center; }
+.icon-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
+
 /* ===================================================== */
 /* SIDEBAR & LEGEND STYLES                               */
 /* ===================================================== */
-
-/* General spacer used for margins */
-.transparent-spacer {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-/* Reusable header for sidebar titles */
-.legend-header-lbl {
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-border-radius: 8px;
-    -fx-border-color: rgba(255, 255, 255, 0.6);
-    -fx-border-width: 2px;
-    -fx-padding: 10;
-}
-
-/* Style for text next to color boxes */
-.legend-item-lbl {
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-}
-
-/* Because these are JavaFX Shapes (Rectangles), we use -fx-fill instead of background-color */
-.legend-rect-tostart {
-    -fx-fill: #FF4DA6;
-}
-
-.legend-rect-started {
-    -fx-fill: #00BCD4;
-}
-
-.legend-rect-done {
-    -fx-fill: #b300ff;
-}
-
-/* Horizontal line separator */
-.legend-separator {
-    -fx-background-color: rgba(255, 255, 255, 0.5);
-}
-
-/* ===================================================== */
-/* SIDEBAR ELEMENTS                                      */
-/* ===================================================== */
+.transparent-spacer { -fx-background-color: transparent; -fx-border-color: transparent; }
 
 .legend-header-lbl {
     -fx-text-fill: white;
@@ -212,43 +198,27 @@
     -fx-padding: 10;
 }
 
-.legend-item-lbl {
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-}
+.legend-item-lbl { -fx-text-fill: white; -fx-font-size: 20px; }
 
 .legend-rect-tostart { -fx-fill: #FF4DA6; }
 .legend-rect-started { -fx-fill: #00BCD4; }
 .legend-rect-done    { -fx-fill: #b300ff; }
 
-.legend-separator {
-    -fx-background-color: rgba(255, 255, 255, 0.5);
-}
-
-.transparent-spacer {
-    -fx-background-color: transparent;
-}
+.legend-separator { -fx-background-color: rgba(255, 255, 255, 0.5); }
 
 /* ===================================================== */
 /* ACTIVE TASKS CONTAINER                                */
 /* ===================================================== */
-
 .transparent-scroll {
     -fx-background-color: transparent;
-    -fx-background: transparent; /* Targets the viewport */
+    -fx-background: transparent;
     -fx-border-color: transparent;
     -fx-hbar-policy: never;
 }
 
-.transparent-scroll > .viewport {
-    -fx-background-color: transparent;
-}
+.transparent-scroll > .viewport { -fx-background-color: transparent; }
+.transparent-vbox { -fx-background-color: transparent; }
 
-.transparent-vbox {
-    -fx-background-color: transparent;
-}
-
-/* Style for the labels you add dynamically */
 .active-task-entry-lbl {
     -fx-text-fill: white;
     -fx-font-size: 16px;
@@ -257,17 +227,17 @@
     -fx-background-radius: 5;
 }
 
-
 /* ===================================================== */
-/* INPUT FIELDS                                          */
+/* INPUT FIELDS & TEXTAREAS (GLOBAL)                     */
 /* ===================================================== */
-
-.input-form {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
+.input-form,
+.text-field,
+.text-area {
+    -fx-background-color: rgba(255,255,255,0.05);
     -fx-control-inner-background: transparent;
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
-    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-border-color: rgba(255,255,255,0.4);
     -fx-border-width: 1.5;
     -fx-text-fill: white;
     -fx-font-size: 15px;
@@ -276,26 +246,70 @@
     -fx-focus-color: #00E5FF;
     -fx-faint-focus-color: transparent;
 }
-
-.insert-email-lbl {
-    -fx-background-color: transparent;
+.insert-text-lbl {
     -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: 700;
-    -fx-alignment: center;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 12px;
 }
+
+.info-text-lbl {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* ===================================================== */
+/* DATE PICKER & CALENDAR POPUP                          */
+/* ===================================================== */
+.date-picker,
+.date-picker .text-field,
+.date-picker .text-area {
+    -fx-background-color: rgba(30,27,75,0.85);
+    -fx-control-inner-background: transparent;
+}
+
+.date-picker-popup {
+    -fx-background-color: #1e1b4b;
+    -fx-border-color: rgba(255,255,255,0.2);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 4);
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #1e1b4b;
+    -fx-padding: 10px;
+}
+
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.date-picker-popup .left-arrow,
+.date-picker-popup .right-arrow { -fx-background-color: white; }
+.date-picker-popup .left-arrow-button:hover,
+.date-picker-popup .right-arrow-button:hover { -fx-background-color: rgba(255,255,255,0.1); }
+
+.date-picker-popup .day-name-cell { -fx-background-color: #1e1b4b; -fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 11px; -fx-font-weight: bold; }
+.date-picker-popup .day-cell { -fx-background-color: #1e1b4b; -fx-padding: 8px; }
+.date-picker-popup .day-cell:filled { -fx-text-fill: white; }
+.date-picker-popup .day-cell:filled:hover { -fx-background-color: rgba(30, 27, 75, 0.75); -fx-text-fill: #00E5FF; }
+.date-picker-popup .day-cell:filled:selected { -fx-background-color: #00E5FF; -fx-text-fill: #1e1b4b; -fx-font-weight: bold; }
+.date-picker-popup .day-cell:filled.today { -fx-text-fill: #00E5FF; -fx-border-color: #00E5FF; -fx-border-width: 1px; -fx-border-radius: 3px; }
+.date-picker-popup .day-cell:disabled { -fx-opacity: 0.4; }
+.date-picker-popup .day-cell.previous-month,
+.date-picker-popup .day-cell.next-month { -fx-text-fill: rgba(255,255,255,0.35); }
 
 /* ===================================================== */
 /* CALENDAR — GLOBAL OVERRIDES                           */
 /* ===================================================== */
-
 .calendar-view,
 .detailed-week-view,
 .week-view,
 .day-view,
-.week-day-view {
-    -fx-background-color: transparent;
-}
+.week-day-view { -fx-background-color: transparent; }
 
 .week-day-view .day-background,
 .day-view .day-background {
@@ -304,25 +318,13 @@
     -fx-border-width: 0 1 0 0;
 }
 
-.hour-line {
-    -fx-stroke: rgba(255, 255, 255, 0.10);
-    -fx-stroke-width: 1;
-}
-
-.half-hour-line {
-    -fx-stroke: rgba(255, 255, 255, 0.05);
-    -fx-stroke-width: 1;
-}
-
-.now-line {
-    -fx-stroke: #00E5FF;
-    -fx-stroke-width: 2;
-}
+.hour-line { -fx-stroke: rgba(255, 255, 255, 0.10); -fx-stroke-width: 1; }
+.half-hour-line { -fx-stroke: rgba(255, 255, 255, 0.05); -fx-stroke-width: 1; }
+.now-line { -fx-stroke: #00E5FF; -fx-stroke-width: 2; }
 
 /* ===================================================== */
 /* TIME SCALE                                            */
 /* ===================================================== */
-
 .time-scale,
 .calendar .time-scale,
 .detailed-week-view .time-scale,
@@ -345,7 +347,6 @@
 /* ===================================================== */
 /* WEEK DAY HEADER                                       */
 /* ===================================================== */
-
 .week-day-header-view,
 .day-name-label,
 .date-label {
@@ -356,16 +357,12 @@
 }
 
 .week-day-header-view.today .day-name-label,
-.week-day-header-view.today .date-label {
-    -fx-text-fill: #00E5FF;
-}
+.week-day-header-view.today .date-label { -fx-text-fill: #00E5FF; }
 
 /* ===================================================== */
 /* TASK CREATION FORM                                    */
 /* ===================================================== */
-.task-creation-overlay {
-    -fx-background-color: rgba(0,0,0,0.45);
-}
+.task-creation-overlay { -fx-background-color: rgba(0,0,0,0.45); }
 
 #rootStack .task-creation-form {
     -fx-background-color: rgba(30,27,75,0.85);
@@ -377,35 +374,17 @@
 /* ===================================================== */
 /* DIALOGS                                               */
 /* ===================================================== */
-.dialog-pane {
-    -fx-background-color: #1e1b4b;
-    -fx-padding: 0;
-}
+.dialog-pane { -fx-background-color: #1e1b4b; -fx-padding: 0; }
 
-.dialog-pane > .content {
-    -fx-background-color: #1e1b4b;
-    -fx-padding: 20;
-}
+.dialog-pane > .content { -fx-background-color: #1e1b4b; -fx-padding: 20; }
+.dialog-pane > .button-bar { -fx-background-color: #1e1b4b; -fx-padding: 15; }
 
-.dialog-pane > .button-bar {
-    -fx-background-color: #1e1b4b;
-    -fx-padding: 15;
-}
+.dialog-title { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; }
+.dialog-message { -fx-text-fill: white; -fx-font-size: 14px; }
 
-.dialog-title {
-    -fx-text-fill: white;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
-.dialog-message {
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-}
 /* ===================================================== */
 /* SUCCESS / FAILURE BANNERS                             */
 /* ===================================================== */
-
 .success-banner {
     -fx-background-color: #00C853;
     -fx-text-fill: white;
@@ -423,3 +402,4 @@
     -fx-background-radius: 12 0 0 12;
     -fx-opacity: 0.95;
 }
+

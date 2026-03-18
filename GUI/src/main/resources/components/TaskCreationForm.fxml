@@ -1,50 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.layout.Region?>
-
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
-<fx:root type="VBox"
+<?import javafx.scene.shape.SVGPath?>
+
+<?import javafx.scene.layout.Pane?>
+<fx:root type="BorderPane"
          xmlns="http://javafx.com/javafx/21"
-         xmlns:fx="http://javafx.com/fxml/1"
-         styleClass="task-creation-overlay">
+         xmlns:fx="http://javafx.com/fxml/1">
 
-    <StackPane prefWidth="800" prefHeight="600">
+    <center>
+        <StackPane prefWidth="500" prefHeight="500">
+            <!-- Background Rectangle -->
+            <Rectangle fx:id="designRectangle"
+                       width="480"
+                       height="440"
+                       arcWidth="40"
+                       arcHeight="40"
+                       styleClass="design-rectangle"/>
 
-        <Rectangle fx:id="designRectangle"
-                   width="470"
-                   height="290"
-                   arcWidth="20"
-                   arcHeight="28"
-                   translateY="-20"
-                   styleClass="design-rectangle"/>
+            <!-- Form overlaid on top of the rectangle -->
+            <VBox   alignment="CENTER_LEFT"
+                    maxWidth="440">
+                <!-- Header: close button on right -->
+                <HBox alignment="CENTER_RIGHT">
+                    <Button fx:id="closeButton"
+                            styleClass="styled-btn-red"
+                            prefWidth="30" prefHeight="30"
+                            minWidth="30" minHeight="30"
+                            maxWidth="30" maxHeight="30">
+                        <graphic>
+                            <SVGPath fx:id="closeIcon"
+                                     content="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+                                     scaleX="0.02" scaleY="0.02"
+                                     styleClass="btn-icon"/>
+                        </graphic>
+                    </Button>
+                </HBox>
 
-        <!-- CENTERED FORM -->
-        <VBox spacing="15"
-              alignment="CENTER"
-              styleClass="task-creation-form"
-              maxHeight="300"
-              maxWidth="400">
+                <!-- Centered title -->
+                <Label styleClass="insert-text-lbl"
+                       alignment="CENTER">
+                    FILL IN TASK DETAILS
+                </Label>
 
-            <Label text="Fill in the details to create a new task"
-                   styleClass="insert-email-lbl"
-                   alignment="CENTER"/>
+                <!-- Task Description -->
+                <TextField fx:id="descriptionField"
+                           promptText="Enter the task description"
+                           styleClass="input-form"
+                           prefWidth="440"
+                           maxWidth="440"
+                           prefHeight="45"
+                />
 
-            <TextField fx:id="descriptionField"
-                       promptText="Enter the task description"
-                       styleClass="input-form"
-                       prefHeight="45"
-                       maxWidth="300"/>
+                <Region prefHeight="20"/>
 
-            <Region prefHeight="10"/>
+                <!-- Start Date -->
+                <HBox minWidth="212" prefWidth="212" maxWidth="462">
+                    <!-- DATE field + calendar icon pushed far right -->
+                    <VBox minWidth="212" prefWidth="212" maxWidth="462" alignment="CENTER">
+                        <Label text="START DATE" alignment="CENTER" styleClass="info-text-lbl"/>
+                        <Region prefHeight="10"/>
 
-            <Button fx:id="submitButton"
-                    text="SUBMIT"
-                    styleClass="styled-btn"/>
+                        <HBox fx:id="startDateContainer" minWidth="212" prefWidth="212" maxWidth="462">
+                            <TextField fx:id="startDateField"
+                                       promptText="dd/MM/yyyy"
+                                       styleClass="input-form"
+                                       minWidth="150" prefWidth="150" maxWidth="150"/>
+                            <Region minWidth="20"/>
+                            <Button fx:id="startCalendarButton"
+                                    styleClass="styled-btn-white"
+                                    prefWidth="42" prefHeight="42"
+                                    minWidth="42" minHeight="42"
+                                    maxWidth="42" maxHeight="42">
+                                <graphic>
+                                    <SVGPath fx:id="startCalendarButtonIcon"
+                                             content="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"
+                                             scaleX="0.03" scaleY="0.03"
+                                             styleClass="btn-icon"/>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                        <Pane fx:id="startPickerContainer" minWidth="0" prefWidth="250" maxWidth="250"/>
+                    </VBox>
 
-        </VBox>
-    </StackPane>
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <!-- HOUR : MINUTE with spacing around the colon -->
+                    <VBox fx:id="startTimeBox">
+                        <HBox>
+                            <VBox alignment="CENTER">
+                                <Label text="HOUR" styleClass="info-text-lbl"/>
+                                <Region prefHeight="10"/>
+                                <TextField fx:id="startHourField"
+                                           promptText="HH"
+                                           styleClass="input-form"
+                                           minWidth="75" prefWidth="75"
+                                           alignment="CENTER"/>
+                            </VBox>
+
+                            <Region minWidth="15"/>
+
+                            <Label text=":" styleClass="info-text-lbl" alignment="CENTER"/>
+
+                            <Region minWidth="15"/>
+
+                            <VBox alignment="CENTER">
+                                <Label text="MINUTE" styleClass="info-text-lbl"/>
+                                <Region prefHeight="10"/>
+                                <TextField fx:id="startMinuteField"
+                                           promptText="mm"
+                                           styleClass="input-form"
+                                           minWidth="75" prefWidth="75"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <Region prefHeight="20"/>
+
+                <!-- End Date -->
+                <HBox fx:id="endDateBox" >
+                    <!-- DATE field + calendar icon pushed far right -->
+                    <VBox minWidth="212" prefWidth="212" maxWidth="212" alignment="CENTER">
+                        <Label text="END DATE" alignment="CENTER" styleClass="info-text-lbl"/>
+                        <Region prefHeight="10" prefWidth="0"/>
+                        <HBox fx:id="endDateContainer" minWidth="212" prefWidth="212" maxWidth="212">
+                            <TextField fx:id="endDateField"
+                                       promptText="dd/MM/yyyy"
+                                       styleClass="input-form"
+                                       minWidth="150" prefWidth="150" maxWidth="150"/>
+                            <Region minWidth="20"/>
+                            <Button fx:id="endCalendarButton"
+                                    styleClass="styled-btn-white"
+                                    prefWidth="42" prefHeight="42"
+                                    minWidth="42" minHeight="42"
+                                    maxWidth="42" maxHeight="42">
+                                <graphic>
+                                    <SVGPath fx:id="endCalendarButtonIcon"
+                                             content="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"
+                                             scaleX="0.03" scaleY="0.03"
+                                             styleClass="btn-icon"/>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                        <Pane fx:id="endPickerContainer"/>
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <!-- HOUR : MINUTE with spacing around the colon -->
+                    <VBox>
+                        <HBox>
+                            <VBox alignment="CENTER">
+                                <Label text="HOUR" styleClass="info-text-lbl"/>
+                                <Region prefHeight="10"/>
+                                <TextField fx:id="endHourField"
+                                           promptText="HH"
+                                           styleClass="input-form"
+                                           minWidth="75" prefWidth="75"
+                                           alignment="CENTER"/>
+                            </VBox>
+
+                            <Region minWidth="15"/>
+
+                            <Label text=":" styleClass="info-text-lbl" alignment="CENTER"/>
+
+                            <Region minWidth="15"/>
+
+                            <VBox alignment="CENTER">
+                                <Label text="MINUTE" styleClass="info-text-lbl"/>
+                                <Region prefHeight="10"/>
+                                <TextField fx:id="endMinuteField"
+                                           promptText="mm"
+                                           styleClass="input-form"
+                                           minWidth="75" prefWidth="75"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <Region prefHeight="20"/>
+
+                <!-- Submit Button — centered -->
+                <HBox alignment="CENTER">
+                    <Button fx:id="submitButton"
+                            text="SUBMIT"
+                            styleClass="styled-btn"
+                            prefWidth="200"
+                            prefHeight="45"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
 </fx:root>

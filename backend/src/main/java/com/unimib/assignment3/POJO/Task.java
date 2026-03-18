@@ -91,14 +91,14 @@ public class Task implements Serializable {
 
     /**
      * Constructor with employees, state, and dates.
-     *
-     * @param assignedEmployees the list of employees to assign
+     * @param description the task description
      * @param taskState the state of the task
      * @param startDate the start date
      * @param endDate the end date
      */
-    public Task(List<Employee> assignedEmployees, TaskState taskState, LocalDateTime startDate, LocalDateTime endDate) {
-        this.assignedEmployees = assignedEmployees != null ? assignedEmployees : new ArrayList<>();
+    public Task(String description, TaskState taskState, LocalDateTime startDate, LocalDateTime endDate) {
+        this.assignedEmployees = new ArrayList<>();
+        this.description = description;
         this.taskState = taskState != null ? taskState : TaskState.STARTED;
         this.startDate = startDate;
         this.endDate = endDate;

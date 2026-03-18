@@ -1,6 +1,9 @@
 package com.unimib.assignment3.UI.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -21,7 +24,14 @@ public class RestHelper {
     public static HttpResponse<String> createPostRequest(String endpoint, Object bodyArgument) {
         try {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO format
+
             String payload = mapper.writeValueAsString(bodyArgument);
+
+            System.out.println("Sending POST to " + endpoint);
+            System.out.println("Payload: " + payload);
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(endpoint))
                     .header("Content-Type", "application/json")
@@ -29,7 +39,9 @@ public class RestHelper {
                     .build();
 
             return client.send(request, HttpResponse.BodyHandlers.ofString());
+
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

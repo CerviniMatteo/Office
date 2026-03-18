@@ -6,6 +6,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unimib.assignment3.UI.model.dto.*;
 import com.unimib.assignment3.UI.utils.RestHelper;
 import javafx.concurrent.Task;
+import org.springframework.lang.Nullable;
+
 import java.net.http.HttpResponse;
 import java.util.List;
 import static com.unimib.assignment3.UI.constants.Rest.BASE_ENDPOINT;
@@ -36,43 +38,12 @@ public class TaskRestController {
         }
     }
 
-    public Task<String> createTask(DescriptionTaskDTO payload) {
-        return new Task<>() {
-            @Override
-            protected String call() {
-                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/createTask", payload);
-
-                if (response == null) {
-                    showAlert("Error", "No response from server");
-                    return null;
-                }
-
-                if (response.statusCode() != 200) {
-                    showAlert("Error", response.statusCode() + " - " + response.body());
-                    return null;
-                }
-                return response.body();
-            }
-        };
-    }
-
     public Task<String> changeTaskState(ChangeTaskStateRequestDTO payload) {
         return new Task<>() {
             @Override
             protected String call() {
-
                 HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/changeState", payload);
-
-                if (response == null) {
-                    showAlert("Error", "No response from server");
-                    return null;
-                }
-
-                if (response.statusCode() != 200) {
-                    showAlert("Error", response.statusCode() + " - " + response.body());
-                    return null;
-                }
-                return response.body();
+                return checkResponse(response);
             }
         };
     }
@@ -81,19 +52,8 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call() {
-
                 HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/startTask", payload);
-
-                if (response == null) {
-                    showAlert("Error", "No response from server");
-                    return null;
-                }
-
-                if (response.statusCode() != 200) {
-                    showAlert("Error", response.statusCode() + " - " + response.body());
-                    return null;
-                }
-                return response.body();
+                return checkResponse(response);
             }
         };
     }
@@ -102,20 +62,8 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call() {
-
                 HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/resetState", taskId);
-
-                if (response == null) {
-                    showAlert("Error", "No response from server");
-                    return null;
-                }
-
-                if (response.statusCode() != 200) {
-                    showAlert("Error", response.statusCode() + " - " + response.body());
-                    return null;
-                }
-
-                return response.body();
+                return checkResponse(response);
             }
         };
     }
@@ -124,20 +72,38 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call(){
-
                 HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/acceptTask", payload);
-                if (response == null) {
-                    showAlert("Error", "No response from server");
-                    return null;
-                }
-
-                if (response.statusCode() != 200) {
-                    showAlert("Error", response.statusCode() + " - " + response.body());
-                    return null;
-                }
-
-                return response.body();
+                return checkResponse(response);
             }
         };
+    }
+
+    public Task<String> createTask(TaskDTO payload) {
+        return new Task<>() {
+            @Override
+            protected String call(){
+                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/createTask", payload);
+                return checkResponse(response);
+            }
+        };
+    }
+
+    @Nullable
+    private String checkResponse(HttpResponse<String> response) {
+        if (response == null) {
+            showAlert("Error", "No response from server");
+            return null;
+        }
+
+        int status = response.statusCode();
+
+        // Check if status is not 2xx
+        if (status < 200 || status >= 300) {
+            showAlert("Error", status + " - " + response.body());
+            return null;
+        }
+
+        // Success
+        return response.body();
     }
 }

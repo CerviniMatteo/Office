@@ -1,27 +1,27 @@
 package com.unimib.assignment3.UI.view.components.impl.layout;
 
+import com.unimib.assignment3.UI.model.dto.TaskDTO;
+import com.unimib.assignment3.UI.view.components.abstr.BasePopUpCard;
 import com.unimib.assignment3.UI.view.controller.impl.layout.TaskCreationFormController;
-import com.unimib.assignment3.UI.view.utils.FXMLUtilLoader;
-import javafx.geometry.Pos;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import com.unimib.assignment3.UI.view.state.ApplicationStateManager;
 
-public class TaskCreationForm extends VBox {
+import java.util.function.Consumer;
 
-    private final TaskCreationFormController controller;
+public class TaskCreationForm extends BasePopUpCard{
 
-    public TaskCreationForm() {
-        super(8);
-        controller = new TaskCreationFormController();
-        FXMLUtilLoader.load(this, controller, "/components/TaskCreationForm.fxml", "");
-
-        setAlignment(Pos.CENTER);
-        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        this.setFillWidth(true);
-        VBox.setVgrow(this, Priority.ALWAYS);
+    public TaskCreationForm(TaskCreationFormController controller) {
+        super("/components/TaskCreationForm.fxml", controller, "task-creation-overlay", Double.MAX_VALUE, Double.MAX_VALUE);
+        controller.getCloseButton().setOnAction(event -> {
+            ApplicationStateManager.getInstance().removeWindow(this);
+        });
     }
 
-    public void setOnSuccess(Runnable onSuccess) {
-        if (controller != null) controller.setOnSuccess(onSuccess);
+    public void setOnSuccess(Consumer<TaskDTO> onSuccess) {
+        if (controller != null) ((TaskCreationFormController) controller).setOnSuccess(onSuccess);
+    }
+
+    public void setOnClose(Runnable onClose) {
+
+        if (controller != null) ((TaskCreationFormController) controller).setOnClose(onClose);
     }
 }

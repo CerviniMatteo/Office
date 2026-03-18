@@ -6,6 +6,7 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.constants.EmployeeConstants;
 import com.unimib.assignment3.constants.TaskConstants;
 import com.unimib.assignment3.enums.TaskState;
+import com.unimib.assignment3.mappers.TaskDtoMapper;
 import com.unimib.assignment3.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 import static com.unimib.assignment3.constants.EmployeeConstants.EMPLOYEE_NOT_FOUND;
 import static com.unimib.assignment3.constants.TaskConstants.TASK_NOT_FOUND;
 import static com.unimib.assignment3.enums.TaskState.DONE;
+import static com.unimib.assignment3.enums.TaskState.TO_BE_STARTED;
 
 @Service
 public class TaskService {
@@ -52,11 +54,19 @@ public class TaskService {
      */
     @Transactional
     public Task createTask(TaskDTO taskDTO) {
-        Task task = new Task(TaskState.TO_BE_STARTED);
-        if (taskDTO.description() != null) {
-            task.setDescription(taskDTO.description());
-        }
-        return task;
+
+        return new Task(
+                taskDTO.description(),
+                taskDTO.taskState(),
+                taskDTO.startDate(),
+                taskDTO.endDate()
+        );
+    }
+
+    @Transactional
+    public Task createAndSaveTask(TaskDTO taskDTO) {
+        Task task = createTask(taskDTO);
+        return saveTask(task);
     }
 
     /**
@@ -65,6 +75,10 @@ public class TaskService {
     @Transactional
     public Task saveTask(Task task) {
         if (task == null) throw new IllegalArgumentException(TaskConstants.NULL_TASK);
+        // Ensure TO_BE_STARTED tasks have a start date to make date-based queries and ordering robust
+        if (task.getTaskState() == TO_BE_STARTED && task.getStartDate() == null) {
+            task.setStartDate(LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0)));
+        }
         return taskRepository.saveAndFlush(task);
     }
 
@@ -80,6 +94,7 @@ public class TaskService {
         Employee employee = employeeService.findEmployeeById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
 
+        // Do not allow assignments to DONE tasks
         if (task.getTaskState() == DONE) {
             throw new IllegalStateException(TaskConstants.CANNOT_ASSIGN_DONE_TASK);
         }
@@ -121,12 +136,12 @@ public class TaskService {
 
         switch (newState) {
             case TO_BE_STARTED -> {
+                // Transition to STARTED: set state and initialize startDate
                 task.setTaskState(TaskState.STARTED);
-                task.setStartDate(LocalDateTime.now());
             }
             case STARTED -> {
                 task.setTaskState(DONE);
-                task.setEndDate(LocalDateTime.now());
+                task.setEndDate(LocalDateTime.now().plusMinutes(10));
             }
             case DONE -> throw new IllegalStateException(TaskConstants.TASK_ALREADY_FINISHED);
         }
@@ -140,8 +155,8 @@ public class TaskService {
     public void resetTask(Long taskId) {
         Task task = getTaskOrThrow(taskId);
         task.setTaskState(TaskState.TO_BE_STARTED);
-        task.setStartDate(null);
-        task.setEndDate(null);
+        task.setStartDate(LocalDateTime.now());
+        task.setEndDate(LocalDateTime.now().plusMinutes(10));
     }
 
     @Transactional(readOnly = true)
@@ -244,18 +259,18 @@ public class TaskService {
     }
 
     @Transactional
-    public Task setTaskStartDate(Long taskId, LocalDate startDate) {
+    public Task setTaskStartDate(Long taskId, LocalDateTime startDate) {
         if (startDate == null) throw new IllegalArgumentException(TaskConstants.NULL_DATE);
         Task task = getTaskOrThrow(taskId);
-        task.setStartDate(startDate.atStartOfDay());
+        task.setStartDate(startDate);
         return task;
     }
 
     @Transactional
-    public Task setTaskEndDate(Long taskId, LocalDate endDate) {
+    public Task setTaskEndDate(Long taskId, LocalDateTime endDate) {
         if (endDate == null) throw new IllegalArgumentException(TaskConstants.NULL_DATE);
         Task task = getTaskOrThrow(taskId);
-        task.setEndDate(endDate.atStartOfDay());
+        task.setEndDate(endDate);
         return task;
     }
 
