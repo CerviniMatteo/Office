@@ -19,7 +19,7 @@ public class TaskMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(brokerInterceptor)
-                .addPathPatterns("/task/**State", "/task/acceptTask", "/task/startTask", "/task/createTask");
+                .addPathPatterns("/task/**State", "/task/acceptTask", "/task/startTask", "/task/createTask", "/task/deleteTask");
         System.out.println("Added interceptor for task/** endpoints");
     }
 

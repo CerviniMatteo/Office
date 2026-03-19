@@ -88,6 +88,16 @@ public class TaskRestController {
         };
     }
 
+    public Task<String> deleteTask(Long payload) {
+        return new Task<>() {
+            @Override
+            protected String call(){
+                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/deleteTask", payload);
+                return checkResponse(response);
+            }
+        };
+    }
+
     @Nullable
     private String checkResponse(HttpResponse<String> response) {
         if (response == null) {

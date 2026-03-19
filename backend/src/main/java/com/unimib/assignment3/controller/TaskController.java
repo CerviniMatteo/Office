@@ -135,5 +135,17 @@ public class TaskController {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
         }
+
+    @PostMapping("/deleteTask")
+    public ResponseEntity<String> deleteTask(@RequestBody Long taskId, HttpServletRequest httpServletRequest) {
+        System.out.println("Called tasks/deleteTask for taskId: " + taskId );
+        try {
+            facade.deleteTask(taskId);
+            httpServletRequest.setAttribute("taskId", taskId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
 

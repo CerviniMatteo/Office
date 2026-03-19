@@ -23,7 +23,11 @@ public class BrokerInterceptor implements HandlerInterceptor {
                                 @Nonnull HttpServletResponse response,
                                 @Nonnull Object handler,
                                 Exception ex) {
+        if(request.getRequestURI().endsWith("/deleteTask")) {
+            taskObserverNotifier.notifyOnDeleteAllTaskObservers((Long) request.getAttribute("taskId"));
+        }else{
+            taskObserverNotifier.notifyOnFetchAllTaskObservers((Long) request.getAttribute("taskId"));
+        }
         System.out.println("afterCompletion: notifying observers");
-        taskObserverNotifier.notifyAllTaskObservers((Long) request.getAttribute("taskId"));
     }
 }

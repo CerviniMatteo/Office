@@ -53,6 +53,12 @@ public class TaskWebSocketClientApp {
                             System.out.println(taskId);
                             Platform.runLater(() -> ganttCalendar.getController().updateEntry(taskId));
                         }
+                        if (message.contains("DELETE_TASK:")) {
+                            String substring = message.substring(message.indexOf(":") + 1);
+                            Long taskId = Long.valueOf(substring);
+                            System.out.println(taskId);
+                            Platform.runLater(() -> ganttCalendar.getController().deleteEntry(taskId));
+                        }
                     }
                 });
             }
