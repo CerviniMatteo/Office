@@ -15,7 +15,6 @@ import com.unimib.assignment3.UI.view.components.impl.layout.TaskCreationForm;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.factory.CalendarEntryStylingFactory;
 import com.unimib.assignment3.UI.view.factory.TaskCardFactory;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -211,7 +210,12 @@ public class GanttCalendarController implements DefaultController {
             taskLabel.getStyleClass().add("active-task-entry-lbl");
             taskLabel.setMaxWidth(Double.MAX_VALUE);
             taskLabel.setWrapText(true);
-
+            taskLabel.onMouseClickedProperty().set(e -> {
+                Pair<CalendarEntry<TaskDTO>, TaskCardBase> pair = entries.get(taskDTO.taskId());
+                if (pair != null && pair.getValue() != null) {
+                    pair.getValue().showTaskPopup(detailedWeekView);
+                }
+            });
             activeTaskContainer.getChildren().add(taskLabel);
         }
     }
