@@ -82,6 +82,7 @@ public class GanttCalendarController implements DefaultController {
             tempEntry.setUserObject(null);
             tempEntry.setInterval(clickedTime, clickedTime.plusHours(3));
             param.getCalendar().setStyle(CalendarEntryStylingFactory.styleCalendarEntry(TO_BE_STARTED));
+
             form.setOnClose(() -> tempEntry.getCalendar().removeEntry(tempEntry));
             // Show the form asynchronously
             form.setOnSuccess(newTask -> {

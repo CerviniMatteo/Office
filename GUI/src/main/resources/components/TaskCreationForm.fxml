@@ -9,16 +9,15 @@
          xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
-        <!-- WRAPPER per centratura -->
         <StackPane alignment="CENTER">
 
             <ScrollPane
                     fitToWidth="true"
                     hbarPolicy="NEVER"
                     styleClass="transparent-scroll"
-                    maxHeight="500">
+                    prefHeight="500"
+                    maxHeight="980">
 
-                <!-- Wrapper interno per centratura verticale -->
                 <StackPane alignment="CENTER">
 
                     <VBox

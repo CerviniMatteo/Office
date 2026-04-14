@@ -14,17 +14,16 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Locale;
 
+import static com.unimib.assignment3.UI.model.enums.TimeFormat.AMPM;
+
 public class CustomTimePickerController implements DefaultController {
 
-    // Allowed time range
     private static final LocalTime MIN_TIME = LocalTime.of(7, 0);
     private static final LocalTime MAX_TIME = LocalTime.of(19, 0);
 
-    // Property representing the current time format (AM/PM or 24h)
     private final ObjectProperty<TimeFormat> timeFormat =
             new SimpleObjectProperty<>();
 
-    // Internal state of the selected time
     private LocalTime currentTime;
 
     @FXML private TextField hourField;
@@ -33,48 +32,33 @@ public class CustomTimePickerController implements DefaultController {
 
     @FXML
     private void initialize() {
-        // Detect system format and initialize accordingly
-        timeFormat.set(isSystemUsingAmPm() ? TimeFormat.AMPM : TimeFormat.H24);
+        timeFormat.set(isSystemUsingAmPm() ? AMPM : TimeFormat.H24);
 
         initDefaultDateTime();
         initListeners();
     }
 
-    /**
-     * Initializes the default time using the current system time,
-     * clamped within the allowed range.
-     */
     private void initDefaultDateTime() {
         LocalDateTime now = LocalDateTime.now();
         currentTime = clampTime(now.toLocalTime());
-
         updateUI();
     }
 
-    /**
-     * Initializes listeners for UI interactions and format changes.
-     */
     private void initListeners() {
 
-        // Update UI when time format changes (does NOT re-parse fields)
         timeFormat.addListener((obs, oldVal, newVal) -> updateUI());
 
-        // Update internal state when user finishes editing hour field
         hourField.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) updateCurrentTimeFromFields();
         });
 
-        // Update internal state when user finishes editing minute field
         minuteField.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) updateCurrentTimeFromFields();
         });
     }
 
-    /**
-     * Updates the UI fields based on the internal time state.
-     */
     private void updateUI() {
-        if (timeFormat.get() == TimeFormat.AMPM) {
+        if (timeFormat.get() == AMPM) {
             hourField.setText(formatHourAmPm(currentTime));
         } else {
             hourField.setText(String.format("%02d", currentTime.getHour()));
@@ -83,12 +67,9 @@ public class CustomTimePickerController implements DefaultController {
         minuteField.setText(String.format("%02d", currentTime.getMinute()));
     }
 
-    /**
-     * Safely updates the internal time from user input fields.
-     * If parsing fails, restores previous valid UI state.
-     */
     private void updateCurrentTimeFromFields() {
         try {
+            normalizeHourField(); // 🔥 ensure consistent format before parsing
             currentTime = buildTime(hourField, minuteField);
         } catch (Exception e) {
             updateUI();
@@ -96,11 +77,30 @@ public class CustomTimePickerController implements DefaultController {
     }
 
     /**
-     * Formats hour in AM/PM format (e.g., 02PM).
+     * Normalizes the hour field (e.g. "10pm" → "10 PM")
      */
+    private void normalizeHourField() {
+        if (timeFormat.get() != AMPM) return;
+
+        String text = hourField.getText();
+        if (text == null || text.isEmpty()) return;
+
+        text = text.trim().toUpperCase();
+
+        // remove all spaces/tabs
+        text = text.replaceAll("\\s+", "");
+
+        // reinsert proper format if AM/PM exists
+        if (text.matches("\\d{1,2}(AM|PM)")) {
+            text = text.replaceAll("(\\d{1,2})(AM|PM)", "$1 $2");
+        }
+
+        hourField.setText(text);
+    }
+
     private String formatHourAmPm(LocalTime time) {
         int hour = time.getHour();
-        String amPm = hour >= 12 ? "PM" : "AM";
+        String amPm = hour >= 12 ? " PM" : " AM";
 
         hour = hour % 12;
         if (hour == 0) hour = 12;
@@ -108,18 +108,12 @@ public class CustomTimePickerController implements DefaultController {
         return String.format("%02d%s", hour, amPm);
     }
 
-    /**
-     * Ensures the given time is within the allowed range.
-     */
     private LocalTime clampTime(LocalTime time) {
         if (time.isBefore(MIN_TIME)) return MIN_TIME;
         if (time.isAfter(MAX_TIME)) return MAX_TIME;
         return time;
     }
 
-    /**
-     * Detects whether the system uses AM/PM format.
-     */
     public boolean isSystemUsingAmPm() {
         DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
         if (df instanceof SimpleDateFormat) {
@@ -128,9 +122,6 @@ public class CustomTimePickerController implements DefaultController {
         return false;
     }
 
-    /**
-     * Robust parsing of user input fields into a LocalTime object.
-     */
     private LocalTime buildTime(TextField hourField, TextField minuteField) {
         String hourText = hourField.getText().trim().toLowerCase();
         int minute = Integer.parseInt(minuteField.getText().trim());
@@ -141,13 +132,12 @@ public class CustomTimePickerController implements DefaultController {
 
         int hour;
 
-        if (timeFormat.get() == TimeFormat.AMPM) {
+        if (timeFormat.get() == AMPM) {
 
             boolean isPM = hourText.contains("pm");
             boolean isAM = hourText.contains("am");
 
-            // Remove non-numeric characters (e.g., "PM", spaces, etc.)
-            hourText = hourText.replaceAll("[^0-9]", "");
+            hourText = hourText.replace(" ", "").replaceAll("[^0-9]", "");
 
             if (hourText.isEmpty()) {
                 throw new IllegalArgumentException("Hour empty");
@@ -159,7 +149,6 @@ public class CustomTimePickerController implements DefaultController {
                 throw new IllegalArgumentException("Invalid AM/PM hour");
             }
 
-            // Default to AM if no suffix is provided
             if (!isAM && !isPM) isAM = true;
 
             if (isPM && hour != 12) hour += 12;
@@ -176,30 +165,18 @@ public class CustomTimePickerController implements DefaultController {
         return clampTime(LocalTime.of(hour, minute));
     }
 
-    /**
-     * Returns the currently selected time.
-     */
     public LocalTime getSelectedTime() {
         return currentTime;
     }
 
-    /**
-     * Sets the time format (AM/PM or 24h).
-     */
     public void setTimeFormat(TimeFormat format) {
         this.timeFormat.set(format);
     }
 
-    /**
-     * Returns the current time format.
-     */
     public TimeFormat getTimeFormat() {
         return timeFormat.get();
     }
 
-    /**
-     * Returns the observable property for time format.
-     */
     public ObjectProperty<TimeFormat> timeFormatProperty() {
         return timeFormat;
     }
