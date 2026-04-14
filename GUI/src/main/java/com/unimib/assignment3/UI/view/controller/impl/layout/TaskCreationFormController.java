@@ -2,153 +2,134 @@ package com.unimib.assignment3.UI.view.controller.impl.layout;
 
 import com.unimib.assignment3.UI.model.dto.TaskDTO;
 import com.unimib.assignment3.UI.model.enums.TaskState;
+import com.unimib.assignment3.UI.model.enums.TimeFormat;
+import com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog;
+import com.unimib.assignment3.UI.view.components.impl.layout.CustomDatePicker;
+import com.unimib.assignment3.UI.view.components.impl.layout.CustomTimePicker;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
+import com.unimib.assignment3.UI.view.utils.ComponentVisibilityUtils;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.skin.DatePickerSkin;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 
 public class TaskCreationFormController implements DefaultController {
 
-    // Formatter for displaying dates in dd/MM/yyyy format
-    private static final DateTimeFormatter DATE_FORMAT =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-    // Allowed time range
-    private static final LocalTime MIN_TIME = LocalTime.of(7, 0);
-    private static final LocalTime MAX_TIME = LocalTime.of(19, 0);
-
     // ================= UI COMPONENTS =================
-    @FXML private Rectangle designRectangle;
     @FXML private TextField descriptionField;
 
-    @FXML private HBox startDateContainer;
-    @FXML private Pane startPickerContainer;
-    @FXML private TextField startDateField;
-    @FXML private TextField startHourField;
-    @FXML private TextField startMinuteField;
-    @FXML private VBox startTimeBox;
-
-    @FXML private HBox endDateContainer;
-    @FXML private Pane endPickerContainer;
-    @FXML private Button startCalendarButton;
-    @FXML private Button endCalendarButton;
-    @FXML private TextField endDateField;
-    @FXML private TextField endHourField;
-    @FXML private TextField endMinuteField;
-    @FXML private HBox endDateBox;
+    @FXML private HBox header;
 
     @FXML private Button submitButton;
     @FXML private Button closeButton;
 
-    // ================= INTERNAL VARIABLES =================
-    private DatePicker startDatePicker;
-    private DatePicker endDatePicker;
-    private Node startPickerNode;
-    private Node endPickerNode;
+    @FXML private Pane startPickerContainer;
+    @FXML private Pane startTimeBox;
+    @FXML private Pane endPickerContainer;
+    @FXML private Pane endTimeBox;
 
+    @FXML private StackPane shrinkContainer;
+    // ================= INTERNAL COMPONENTS =================
+    private CustomDatePicker startDatePicker;
+    private CustomDatePicker endDatePicker;
+    private CustomTimePicker startTimePicker;
+    private CustomTimePicker endTimePicker;
+
+    // ================= CALLBACKS =================
     private Consumer<TaskDTO> onSuccess;
     private Runnable onClose;
-
 
     // ================= INITIALIZATION =================
     @FXML
     private void initialize() {
-        initDatePickers();
-        initStartCalendarButton();
-        initEndCalendarButton();
-        initDefaultDateTime();
 
+        // Create components
+        startDatePicker = new CustomDatePicker();
+        endDatePicker = new CustomDatePicker();
+
+        startTimePicker = new CustomTimePicker();
+        endTimePicker = new CustomTimePicker();
+
+        // Inject components
+        startPickerContainer.getChildren().add(startDatePicker);
+        startTimeBox.getChildren().add(startTimePicker);
+        endPickerContainer.getChildren().add(endDatePicker);
+        endTimeBox.getChildren().add(endTimePicker);
+
+        // Actions
         submitButton.setOnAction(event -> handleSubmit());
-    }
 
-    // ================= DATE PICKERS =================
-    private void initDatePickers() {
-        startDatePicker = new DatePicker(LocalDate.now());
-        endDatePicker = new DatePicker(LocalDate.now());
-
-        startDatePicker.setOnAction(ev ->
-                startDateField.setText(DATE_FORMAT.format(startDatePicker.getValue()))
-        );
-
-        endDatePicker.setOnAction(ev ->
-                endDateField.setText(DATE_FORMAT.format(endDatePicker.getValue()))
-        );
-    }
-
-    // Initialize the start calendar button to show/hide start date picker
-    private void initStartCalendarButton()
-        { startCalendarButton.setOnAction(ev -> { ensureStartPickerNode(); if (isEndPickerVisible()) hideEndPicker(); toggleStartPicker(); }); }
-    // Initialize the end calendar button to show/hide end date picker
-    private void initEndCalendarButton() { endCalendarButton.setOnAction(ev -> { ensureEndPickerNode(); if (isStartPickerVisible()) hideStartPicker(); toggleEndPicker(); }); }
-
-    // ================= DEFAULT DATE/TIME =================
-    /**
-     * Initializes default values and formats based on system (AM/PM or 24h).
-     */
-    private void initDefaultDateTime() {
-        LocalDateTime now = LocalDateTime.now();
-
-        startDateField.setText(now.toLocalDate().format(DATE_FORMAT));
-        endDateField.setText(now.toLocalDate().format(DATE_FORMAT));
-
-        LocalTime start = clampTime(now.toLocalTime());
-        LocalTime end = clampTime(now.toLocalTime());
-
-        if (isSystemUsingAmPm()) {
-            startHourField.setText(formatHourAmPm(start));
-            endHourField.setText(formatHourAmPm(end));
-        } else {
-            startHourField.setText(String.format("%02d", start.getHour()));
-            endHourField.setText(String.format("%02d", end.getHour()));
+        if (closeButton != null) {
+            closeButton.setOnAction(event -> {
+                if (onClose != null) onClose.run();
+            });
         }
 
-        startMinuteField.setText(String.format("%02d", start.getMinute()));
-        endMinuteField.setText(String.format("%02d", end.getMinute()));
+        createToggleButton();
     }
 
-    /**
-     * Formats hour in AM/PM format (e.g., 03PM)
-     */
-    private String formatHourAmPm(LocalTime time) {
-        int hour = time.getHour();
-        String amPm = hour >= 12 ? "PM" : "AM";
+    private void createToggleButton(){
+        ToggleButton toggle = new ToggleButton();
+        toggle.getStyleClass().add("toggle-switch");
 
-        hour = hour % 12;
-        if (hour == 0) hour = 12;
+        Circle circle = new Circle(13);
+        circle.setTranslateX(-15);
+        circle.setStyle("-fx-fill: white;");
+        toggle.setGraphic(circle);
+        Label AMPM  = new Label("AM/PM");
+        AMPM.getStyleClass().add("insert-text-lbl");
+        Label twenty24h = new Label("24h");
+        twenty24h.getStyleClass().add("insert-text-lbl");
+        ComponentVisibilityUtils.setDisabled(twenty24h);
+        Region region1 = new Region();
+        region1.setPrefWidth(20);
+        Region region2 = new Region();
+        region2.setPrefWidth(20);
 
-        return String.format("%02d%s", hour, amPm);
+        toggle.selectedProperty().addListener((obs, oldVal, isSelected) -> {
+            TimeFormat format;
+
+            if (isSelected) {
+                circle.setTranslateX(15);
+                ComponentVisibilityUtils.setDisabled(AMPM);
+                ComponentVisibilityUtils.setEnabled(twenty24h);
+                format = TimeFormat.H24;
+            } else {
+                circle.setTranslateX(-15);
+                ComponentVisibilityUtils.setEnabled(AMPM);
+                ComponentVisibilityUtils.setDisabled(twenty24h);
+                format = TimeFormat.AMPM;
+            }
+            startTimePicker.setTimeFormat(format);
+            endTimePicker.setTimeFormat(format);
+        });
+
+        header.getChildren().add(0, AMPM);
+        header.getChildren().add(1, region1);
+        header.getChildren().add(2, toggle);
+        header.getChildren().add(3, region2);
+        header.getChildren().add(4, twenty24h);
     }
 
-    /**
-     * Clamps a LocalTime between MIN_TIME and MAX_TIME
-     */
-    private LocalTime clampTime(LocalTime time) {
-        if (time.isBefore(MIN_TIME)) return MIN_TIME;
-        if (time.isAfter(MAX_TIME)) return MAX_TIME;
-        return time;
-    }
-
-    // ================= SUBMIT =================
     private void handleSubmit() {
         try {
             TaskDTO task = buildTaskDTO();
-            if (onSuccess != null) onSuccess.accept(task);
+            if(task.description().isEmpty()){
+                AlertDialog.showAlert("Error", "Description cannot be empty");
+            }
+            else if (onSuccess != null) onSuccess.accept(task);
         } catch (Exception e) {
             showAlert("Error", e.getMessage());
         }
@@ -156,6 +137,7 @@ public class TaskCreationFormController implements DefaultController {
 
     // ================= DTO =================
     private TaskDTO buildTaskDTO() {
+
         LocalDateTime start = buildStartDateTime();
         LocalDateTime end = buildEndDateTime();
 
@@ -174,137 +156,26 @@ public class TaskCreationFormController implements DefaultController {
     }
 
     private LocalDateTime buildStartDateTime() {
-        return LocalDateTime.of(startDatePicker.getValue(),
-                buildTime(startHourField, startMinuteField));
+        return LocalDateTime.of(
+                startDatePicker.getSelectedDateTime(),
+                startTimePicker.getSelectedTime()
+        );
     }
 
     private LocalDateTime buildEndDateTime() {
-        return LocalDateTime.of(endDatePicker.getValue(),
-                buildTime(endHourField, endMinuteField));
+        return LocalDateTime.of(
+                endDatePicker.getSelectedDateTime(),
+                endTimePicker.getSelectedTime()
+        );
     }
 
-    /**
-     * Builds LocalTime from UI fields.
-     * - Supports AM/PM or 24h input
-     * - Converts everything to 24h for backend
-     * - Applies clamping at the end
-     */
-    private LocalTime buildTime(TextField hourField, TextField minuteField) {
-        try {
-            String hourText = hourField.getText().trim().toLowerCase();
-            int minute = Integer.parseInt(minuteField.getText().trim());
-
-            if (minute < 0 || minute > 59) {
-                throw new IllegalArgumentException("Invalid minutes");
-            }
-
-            int hour;
-
-            if (isSystemUsingAmPm()) {
-                boolean isPM = hourText.contains("pm");
-                boolean isAM = hourText.contains("am");
-
-                hourText = hourText.replaceAll("[^0-9]", "");
-                hour = Integer.parseInt(hourText);
-
-                if (hour < 1 || hour > 12) {
-                    throw new IllegalArgumentException("Invalid AM/PM hour");
-                }
-
-                // Convert to 24h
-                if (isPM && hour != 12) hour += 12;
-                if (isAM && hour == 12) hour = 0;
-
-            } else {
-                hour = Integer.parseInt(hourText);
-
-                if (hour < 0 || hour > 23) {
-                    throw new IllegalArgumentException("Invalid hour");
-                }
-            }
-
-            // Apply clamping AFTER full time is built
-            return clampTime(LocalTime.of(hour, minute));
-
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Hour or minutes not numeric");
-        }
-    }
-
-    /**
-     * Detects if system uses AM/PM format
-     */
-    public boolean isSystemUsingAmPm() {
-        DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
-        if (df instanceof SimpleDateFormat) {
-            return ((SimpleDateFormat) df).toPattern().contains("a");
-        }
-        return false;
-    }
-
-    // ================= DATE PICKER LOGIC =================
-    private void ensureStartPickerNode() {
-        if (startPickerNode == null) {
-            startPickerNode = new DatePickerSkin(startDatePicker).getPopupContent();
-        }
-    }
-
-    private void ensureEndPickerNode() {
-        if (endPickerNode == null) {
-            endPickerNode = new DatePickerSkin(endDatePicker).getPopupContent();
-        }
-    }
-
-    private boolean isStartPickerVisible() {
-        return startPickerContainer.getChildren().contains(startPickerNode);
-    }
-
-    private boolean isEndPickerVisible() {
-        return endPickerContainer.getChildren().contains(endPickerNode);
-    }
-
-    private void toggleStartPicker() {
-        if (isStartPickerVisible()) hideStartPicker();
-        else showStartPicker();
-    }
-
-    private void toggleEndPicker() {
-        if (isEndPickerVisible()) hideEndPicker();
-        else showEndPicker();
-    }
-
-    private void showStartPicker() {
-        startPickerContainer.getChildren().add(startPickerNode);
-    }
-
-    private void hideStartPicker() {
-        startPickerContainer.getChildren().remove(startPickerNode);
-    }
-
-    private void showEndPicker() {
-        endPickerContainer.getChildren().add(endPickerNode);
-    }
-
-    private void hideEndPicker() {
-        endPickerContainer.getChildren().remove(endPickerNode);
-    }
-
-    // ================= GETTERS =================
+    // ================= CALLBACKS =================
     public void setOnSuccess(Consumer<TaskDTO> onSuccess) {
         this.onSuccess = onSuccess;
     }
 
     public void setOnClose(Runnable onClose) {
         this.onClose = onClose;
-    }
-
-    @FXML
-    private void handleClose() {
-        if (onClose != null) {
-            onClose.run();
-        }
-        // Hide/remove the popup from UI
-        closeButton.getScene().getWindow().hide();
     }
 
     public Button getCloseButton() {

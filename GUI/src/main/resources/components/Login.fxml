@@ -6,7 +6,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.layout.Region?>
 
 <fx:root type="javafx.scene.layout.VBox"
@@ -15,26 +14,11 @@
          spacing="20"
          alignment="CENTER">
 
-    <StackPane fx:id="rootStack" prefWidth="800" prefHeight="600">
+    <StackPane fx:id="rootStack" maxWidth="500" prefHeight="300" styleClass="design-rectangle" StackPane.alignment="CENTER">
 
-        <Rectangle fx:id="designRectangle"
-                   width="470"
-                   height="290"
-                   arcWidth="40"
-                   arcHeight="40"
-                   translateY="-20"
-                   styleClass="design-rectangle"/>
-
-
-        <!-- FORM: same width as rectangle, centered -->
-        <VBox
-                alignment="CENTER"
+        <VBox alignment="CENTER"
               prefWidth="426"
-              maxWidth="426"
-              translateY="-20">
-
-            <!-- Top spacer (equal to bottom spacer) -->
-            <Region VBox.vgrow="ALWAYS"/>
+              maxWidth="400">
 
             <Label fx:id="insertEmailLabel"
                    text="INSERT YOUR EMAIL TO LOGIN"
@@ -63,10 +47,6 @@
                     styleClass="styled-btn"
                     prefWidth="200"
                     prefHeight="36"/>
-
-            <!-- Bottom spacer (mirrors top spacer) -->
-            <Region VBox.vgrow="ALWAYS"/>
-
         </VBox>
 
     </StackPane>

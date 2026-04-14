@@ -1,405 +1,439 @@
-/**
- * app.css
- */
+    /**
+     * app.css
+     */
 
-/* ===================================================== */
-/* ROOT BACKGROUND                                       */
-/* ===================================================== */
-.root {
-    -fx-background-color: transparent;
-    -fx-background-image: url("/images/root.jpg");
-    -fx-background-position: center center;
-    -fx-background-size: cover;
-}
+    /* ===================================================== */
+    /* ROOT BACKGROUND                                       */
+    /* ===================================================== */
+    .root {
+        -fx-background-color: transparent;
+        -fx-background-image: url("/images/root.jpg");
+        -fx-background-position: center center;
+        -fx-background-size: cover;
+    }
 
-.no-transparent-bg {
-    -fx-background-color: #1e1b4b;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-border-color: rgba(255, 255, 255, 0.6);
-    -fx-border-width: 2px;
-    -fx-padding: 16px;
-}
+    .no-transparent-bg {
+        -fx-background-color: #1e1b4b;
+        -fx-background-radius: 8px;
+        -fx-border-radius: 8px;
+        -fx-border-color: rgba(255, 255, 255, 0.6);
+        -fx-border-width: 2px;
+        -fx-padding: 16px;
+    }
 
-/* ===================================================== */
-/* GLOBAL BUTTON RESET                                   */
-/* ===================================================== */
-.button {
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
-}
+    /* ===================================================== */
+    /* GLOBAL BUTTON RESET                                   */
+    /* ===================================================== */
+    .button {
+        -fx-focus-color: transparent;
+        -fx-faint-focus-color: transparent;
+        -fx-background-insets: 0;
+        -fx-background-radius: 8;
+        -fx-cursor: hand;
+    }
 
-.button:focused {
-    -fx-focus-color: transparent;
-}
+    .button:focused {
+        -fx-focus-color: transparent;
+    }
 
-.button:pressed {
-    -fx-opacity: 0.9;
-}
+    .button:pressed {
+        -fx-opacity: 0.9;
+    }
 
-/* ===================================================== */
-/* LOGIN SCREEN                                          */
-/* ===================================================== */
-.design-rectangle {
-    -fx-fill: rgba(30, 27, 75, 0.75);
-    -fx-stroke: rgba(255, 255, 255, 0.5);
-    -fx-stroke-width: 2;
-    -fx-stroke-type: centered;
-    -fx-background-radius: 20px;
-    -fx-border-radius: 20px;
-}
-
-/* ===================================================== */
-/* TASK CARD (GLASS STYLE)                               */
-/* ===================================================== */
-.task-card, BorderPane.task-card {
-    -fx-background-image: null;
-    -fx-background-insets: 0;
-    -fx-background-color: #1e1b4b;
-    -fx-border-width: 2px;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-padding: 16px;
-}
-
-/* ===================================================== */
-/* TASK LABELS                                           */
-/* ===================================================== */
-.task-description-lbl {
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-font-size: 26px;
-}
-
-.task-date-lbl {
-    -fx-font-weight: bold;
-    -fx-text-fill: #00E5FF;
-    -fx-font-size: 20px;
-    -fx-padding: 8px 14px;
-    -fx-border-color: rgba(0, 229, 255, 0.6);
-    -fx-border-width: 2px;
-    -fx-border-radius: 8px;
-}
-
-.task-state-lbl {
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-border-color: rgba(255, 255, 255, 0.6);
-    -fx-font-size: 24px;
-    -fx-padding: 8px 16px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-alignment: center;
-}
-
-/* TASK STATE LABEL COLORS */
-.task-state-lbl.task-to-start { -fx-text-fill: #FF4DA6; }
-.task-state-lbl.task-started { -fx-text-fill: #00BCD4; }
-.task-state-lbl.task-done { -fx-text-fill: #b300ff; }
-
-/* ===================================================== */
-/* BASE BUTTON STYLE                                     */
-/* ===================================================== */
-.styled-btn, .styled-btn-black, .styled-btn-red, .styled-btn-white {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-border-radius: 30px;
-    -fx-background-radius: 30px;
-    -fx-border-width: 3px;
-    -fx-padding: 8px 14px;
-}
-
-.styled-btn {
-    -fx-text-fill: white;
-    -fx-background-color: rgba(255,255,255,0.08);
-    -fx-border-color: rgba(255,255,255,0.4);
-}
-
-.styled-btn-black {
-    -fx-text-fill: black;
-    -fx-background-color: rgba(0,0,0,0.08);
-    -fx-border-color: rgba(0,0,0,0.4);
-}
-
-.styled-btn-red {
-    -fx-text-fill: rgba(255, 50, 14, 0.9);
-    -fx-background-color: rgba(255,50,14,0.08);
-    -fx-border-color: rgba(232,50,14,0.9);
-}
-
-.styled-btn-white {
-    -fx-background-color: rgba(255,255,255,0.08);
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-border-width: 1.5px;
-    -fx-border-color: rgba(255,255,255,0.4);
-}
+    /* ===================================================== */
+    /* LOGIN SCREEN                                          */
+    /* ===================================================== */
+    .design-rectangle {
+        -fx-background-color: rgba(30, 27, 75, 0.75);
+        -fx-background-radius: 20;
+        -fx-border-color: rgba(255, 255, 255, 0.5);
+        -fx-border-width: 2;
+        -fx-border-radius: 20;
+        -fx-padding: 20;
+    }
 
 
-.styled-btn:hover,
-.styled-btn-black:hover,
-.styled-btn-red:hover,
-.styled-btn-white:hover{
-    -fx-border-color: #00E5FF;
-    -fx-text-fill: #00E5FF;
-    -fx-background-color: rgba(0,229,255,0.08);
-}
+    /* ===================================================== */
+    /* TASK CARD (GLASS STYLE)                               */
+    /* ===================================================== */
+    .task-card, BorderPane.task-card {
+        -fx-background-image: null;
+        -fx-background-insets: 0;
+        -fx-background-color: #1e1b4b;
+        -fx-border-width: 2px;
+        -fx-background-radius: 8px;
+        -fx-border-radius: 8px;
+        -fx-padding: 16px;
+    }
 
-/* ICON STYLING */
-.styled-btn .btn-icon,
-.styled-btn-black .btn-icon,
-.styled-btn-red .btn-icon,
-.styled-btn-white .btn-icon {
-    -fx-fill: white;
-}
+    /* ===================================================== */
+    /* TASK LABELS                                           */
+    /* ===================================================== */
+    .task-description-lbl {
+        -fx-font-weight: bold;
+        -fx-text-fill: white;
+        -fx-font-size: 26px;
+    }
 
-.styled-btn-black .btn-icon { -fx-fill: black; }
-.styled-btn-white .btn-icon { -fx-fill: white; }
-.styled-btn-red .btn-icon { -fx-fill: rgba(255,50,14,0.9); }
+    .task-date-lbl {
+        -fx-font-weight: bold;
+        -fx-text-fill: #00E5FF;
+        -fx-font-size: 20px;
+        -fx-padding: 8px 14px;
+        -fx-border-color: rgba(0, 229, 255, 0.6);
+        -fx-border-width: 2px;
+        -fx-border-radius: 8px;
+    }
 
-.styled-btn:hover .btn-icon,
-.styled-btn-black:hover .btn-icon,
-.styled-btn-red:hover .btn-icon,
-.styled-btn-white:hover .btn-icon{ -fx-fill: #00E5FF; }
+    .task-state-lbl {
+        -fx-font-weight: bold;
+        -fx-text-fill: white;
+        -fx-border-color: rgba(255, 255, 255, 0.6);
+        -fx-font-size: 24px;
+        -fx-padding: 8px 16px;
+        -fx-border-radius: 8px;
+        -fx-background-radius: 8px;
+        -fx-alignment: center;
+    }
 
-.styled-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
+    /* TASK STATE LABEL COLORS */
+    .task-state-lbl.task-to-start { -fx-text-fill: #FF4DA6; }
+    .task-state-lbl.task-started { -fx-text-fill: #00BCD4; }
+    .task-state-lbl.task-done { -fx-text-fill: #b300ff; }
 
-/* ICON-ONLY BUTTON */
-.icon-btn {
-    -fx-padding: 4px;
-    -fx-min-width: 28px;
-    -fx-min-height: 28px;
-    -fx-pref-width: 28px;
-    -fx-pref-height: 28px;
-    -fx-max-width: 28px;
-    -fx-max-height: 28px;
-    -fx-alignment: center;
-    -fx-content-display: graphic-only;
-}
+    /* ===================================================== */
+    /* BASE BUTTON STYLE                                     */
+    /* ===================================================== */
+    .styled-btn, .styled-btn-black, .styled-btn-red, .styled-btn-white {
+        -fx-font-size: 20px;
+        -fx-font-weight: bold;
+        -fx-border-radius: 30px;
+        -fx-background-radius: 30px;
+        -fx-border-width: 3px;
+        -fx-padding: 8px 14px;
+    }
 
-.icon-btn .stack-pane { -fx-alignment: center; }
-.icon-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
+    .styled-btn {
+        -fx-text-fill: white;
+        -fx-background-color: rgba(255,255,255,0.08);
+        -fx-border-color: rgba(255,255,255,0.4);
+    }
 
-/* ===================================================== */
-/* SIDEBAR & LEGEND STYLES                               */
-/* ===================================================== */
-.transparent-spacer { -fx-background-color: transparent; -fx-border-color: transparent; }
+    .styled-btn-black {
+        -fx-text-fill: black;
+        -fx-background-color: rgba(0,0,0,0.08);
+        -fx-border-color: rgba(0,0,0,0.4);
+    }
 
-.legend-header-lbl {
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-border-radius: 8px;
-    -fx-border-color: rgba(255, 255, 255, 0.6);
-    -fx-border-width: 2px;
-    -fx-padding: 10;
-}
+    .styled-btn-red {
+        -fx-text-fill: rgba(255, 50, 14, 0.9);
+        -fx-background-color: rgba(255,50,14,0.08);
+        -fx-border-color: rgba(232,50,14,0.9);
+    }
 
-.legend-item-lbl { -fx-text-fill: white; -fx-font-size: 20px; }
+    .styled-btn-white {
+        -fx-background-color: rgba(255,255,255,0.08);
+        -fx-background-radius: 8px;
+        -fx-border-radius: 8px;
+        -fx-border-width: 1.5px;
+        -fx-border-color: rgba(255,255,255,0.4);
+    }
 
-.legend-rect-tostart { -fx-fill: #FF4DA6; }
-.legend-rect-started { -fx-fill: #00BCD4; }
-.legend-rect-done    { -fx-fill: #b300ff; }
 
-.legend-separator { -fx-background-color: rgba(255, 255, 255, 0.5); }
+    .styled-btn:hover,
+    .styled-btn-black:hover,
+    .styled-btn-red:hover,
+    .styled-btn-white:hover{
+        -fx-border-color: #00E5FF;
+        -fx-text-fill: #00E5FF;
+        -fx-background-color: rgba(0,229,255,0.08);
+    }
 
-/* ===================================================== */
-/* ACTIVE TASKS CONTAINER                                */
-/* ===================================================== */
-.transparent-scroll {
-    -fx-background-color: transparent;
-    -fx-background: transparent;
-    -fx-border-color: transparent;
-    -fx-hbar-policy: never;
-}
+    /* ICON STYLING */
+    .styled-btn .btn-icon,
+    .styled-btn-black .btn-icon,
+    .styled-btn-red .btn-icon,
+    .styled-btn-white .btn-icon {
+        -fx-fill: white;
+    }
 
-.transparent-scroll > .viewport { -fx-background-color: transparent; }
-.transparent-vbox { -fx-background-color: transparent; }
+    .styled-btn-black .btn-icon { -fx-fill: black; }
+    .styled-btn-white .btn-icon { -fx-fill: white; }
+    .styled-btn-red .btn-icon { -fx-fill: rgba(255,50,14,0.9); }
 
-.active-task-entry-lbl {
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-padding: 5 10;
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-background-radius: 5;
-}
+    .styled-btn:hover .btn-icon,
+    .styled-btn-black:hover .btn-icon,
+    .styled-btn-red:hover .btn-icon,
+    .styled-btn-white:hover .btn-icon{ -fx-fill: #00E5FF; }
 
-/* ===================================================== */
-/* INPUT FIELDS & TEXTAREAS (GLOBAL)                     */
-/* ===================================================== */
-.input-form,
-.text-field,
-.text-area {
-    -fx-background-color: rgba(255,255,255,0.05);
-    -fx-control-inner-background: transparent;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-border-color: rgba(255,255,255,0.4);
-    -fx-border-width: 1.5;
-    -fx-text-fill: white;
-    -fx-font-size: 15px;
-    -fx-font-weight: 600;
-    -fx-padding: 10px 16px;
-    -fx-focus-color: #00E5FF;
-    -fx-faint-focus-color: transparent;
-}
-.insert-text-lbl {
-    -fx-text-fill: white;
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-    -fx-padding: 8px 12px;
-}
+    .styled-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
 
-.info-text-lbl {
-    -fx-text-fill: white;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
+    /* ICON-ONLY BUTTON */
+    .icon-btn {
+        -fx-padding: 4px;
+        -fx-min-width: 28px;
+        -fx-min-height: 28px;
+        -fx-pref-width: 28px;
+        -fx-pref-height: 28px;
+        -fx-max-width: 28px;
+        -fx-max-height: 28px;
+        -fx-alignment: center;
+        -fx-content-display: graphic-only;
+    }
 
-/* ===================================================== */
-/* DATE PICKER & CALENDAR POPUP                          */
-/* ===================================================== */
-.date-picker,
-.date-picker .text-field,
-.date-picker .text-area {
-    -fx-background-color: rgba(30,27,75,0.85);
-    -fx-control-inner-background: transparent;
-}
+    .icon-btn .stack-pane { -fx-alignment: center; }
+    .icon-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
 
-.date-picker-popup {
-    -fx-background-color: #1e1b4b;
-    -fx-border-color: rgba(255,255,255,0.2);
-    -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 4);
-}
+    .toggle-switch {
+        -fx-background-color: #b300ff;
+        -fx-background-radius: 30;
+        -fx-min-width: 60px;
+        -fx-min-height: 30px;
+        -fx-max-width: 60px;
+        -fx-max-height: 30px;
+        -fx-padding: 0;
+    }
 
-.date-picker-popup .month-year-pane {
-    -fx-background-color: #1e1b4b;
-    -fx-padding: 10px;
-}
+    /* Nasconde il testo */
+    .toggle-switch .text {
+        -fx-fill: transparent;
+    }
 
-.date-picker-popup .month-year-pane .label {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-}
+    /* Il pallino */
+    .toggle-switch .thumb {
+        -fx-background-color: white;
+        -fx-background-radius: 50%;
+        -fx-pref-width: 26px;
+        -fx-pref-height: 26px;
+        -fx-translate-x: -15px; /* posizione OFF */
+    }
 
-.date-picker-popup .left-arrow,
-.date-picker-popup .right-arrow { -fx-background-color: white; }
-.date-picker-popup .left-arrow-button:hover,
-.date-picker-popup .right-arrow-button:hover { -fx-background-color: rgba(255,255,255,0.1); }
+    /* Stato ON */
+    .toggle-switch:selected {
+        -fx-background-color: #00E5FF;
+    }
 
-.date-picker-popup .day-name-cell { -fx-background-color: #1e1b4b; -fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 11px; -fx-font-weight: bold; }
-.date-picker-popup .day-cell { -fx-background-color: #1e1b4b; -fx-padding: 8px; }
-.date-picker-popup .day-cell:filled { -fx-text-fill: white; }
-.date-picker-popup .day-cell:filled:hover { -fx-background-color: rgba(30, 27, 75, 0.75); -fx-text-fill: #00E5FF; }
-.date-picker-popup .day-cell:filled:selected { -fx-background-color: #00E5FF; -fx-text-fill: #1e1b4b; -fx-font-weight: bold; }
-.date-picker-popup .day-cell:filled.today { -fx-text-fill: #00E5FF; -fx-border-color: #00E5FF; -fx-border-width: 1px; -fx-border-radius: 3px; }
-.date-picker-popup .day-cell:disabled { -fx-opacity: 0.4; }
-.date-picker-popup .day-cell.previous-month,
-.date-picker-popup .day-cell.next-month { -fx-text-fill: rgba(255,255,255,0.35); }
+    /* Sposta il pallino quando attivo */
+    .toggle-switch:selected .thumb {
+        -fx-translate-x: 15px;
+    }
 
-/* ===================================================== */
-/* CALENDAR — GLOBAL OVERRIDES                           */
-/* ===================================================== */
-.calendar-view,
-.detailed-week-view,
-.week-view,
-.day-view,
-.week-day-view { -fx-background-color: transparent; }
+    /* ===================================================== */
+    /* SIDEBAR & LEGEND STYLES                               */
+    /* ===================================================== */
+    .transparent-spacer { -fx-background-color: transparent; -fx-border-color: transparent; }
 
-.week-day-view .day-background,
-.day-view .day-background {
-    -fx-background-color: transparent;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-width: 0 1 0 0;
-}
+    .legend-header-lbl {
+        -fx-text-fill: white;
+        -fx-font-size: 20px;
+        -fx-font-weight: bold;
+        -fx-border-radius: 8px;
+        -fx-border-color: rgba(255, 255, 255, 0.6);
+        -fx-border-width: 2px;
+        -fx-padding: 10;
+    }
 
-.hour-line { -fx-stroke: rgba(255, 255, 255, 0.10); -fx-stroke-width: 1; }
-.half-hour-line { -fx-stroke: rgba(255, 255, 255, 0.05); -fx-stroke-width: 1; }
-.now-line { -fx-stroke: #00E5FF; -fx-stroke-width: 2; }
+    .legend-item-lbl { -fx-text-fill: white; -fx-font-size: 20px; }
 
-/* ===================================================== */
-/* TIME SCALE                                            */
-/* ===================================================== */
-.time-scale,
-.calendar .time-scale,
-.detailed-week-view .time-scale,
-.week-view .time-scale {
-    -fx-background-color: transparent;
-    -fx-min-width: 64px;
-    -fx-pref-width: 72px;
-    -fx-max-width: 90px;
-}
+    .legend-rect-tostart { -fx-fill: #FF4DA6; }
+    .legend-rect-started { -fx-fill: #00BCD4; }
+    .legend-rect-done    { -fx-fill: #b300ff; }
 
-.time-scale .label,
-.time-scale .time-label,
-.time-label {
-    -fx-text-fill: rgba(255, 255, 255, 0.75);
-    -fx-font-size: 11px;
-    -fx-padding: 0 8px;
-    -fx-alignment: center-right;
-}
+    .legend-separator { -fx-background-color: rgba(255, 255, 255, 0.5); }
 
-/* ===================================================== */
-/* WEEK DAY HEADER                                       */
-/* ===================================================== */
-.week-day-header-view,
-.day-name-label,
-.date-label {
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-}
+    /* ===================================================== */
+    /* ACTIVE TASKS CONTAINER                                */
+    /* ===================================================== */
+    .transparent-scroll {
+        -fx-background-color: transparent;
+        -fx-background: transparent;
+        -fx-border-color: transparent;
+        -fx-hbar-policy: never;
+    }
 
-.week-day-header-view.today .day-name-label,
-.week-day-header-view.today .date-label { -fx-text-fill: #00E5FF; }
+    .transparent-scroll > .viewport { -fx-background-color: transparent; }
+    .transparent-vbox { -fx-background-color: transparent; }
 
-/* ===================================================== */
-/* TASK CREATION FORM                                    */
-/* ===================================================== */
-.task-creation-overlay { -fx-background-color: rgba(0,0,0,0.45); }
+    .active-task-entry-lbl {
+        -fx-text-fill: white;
+        -fx-font-size: 16px;
+        -fx-padding: 5 10;
+        -fx-background-color: rgba(255, 255, 255, 0.1);
+        -fx-background-radius: 5;
+    }
 
-#rootStack .task-creation-form {
-    -fx-background-color: rgba(30,27,75,0.85);
-    -fx-background-radius: 16px;
-    -fx-border-radius: 16px;
-    -fx-border-color: rgba(255,255,255,0.15);
-}
+    /* ===================================================== */
+    /* INPUT FIELDS & TEXTAREAS (GLOBAL)                     */
+    /* ===================================================== */
+    .input-form,
+    .text-field,
+    .text-area {
+        -fx-background-color: rgba(255,255,255,0.05);
+        -fx-control-inner-background: transparent;
+        -fx-background-radius: 8px;
+        -fx-border-radius: 8px;
+        -fx-border-color: rgba(255,255,255,0.4);
+        -fx-border-width: 1.5;
+        -fx-text-fill: white;
+        -fx-font-size: 15px;
+        -fx-font-weight: 600;
+        -fx-padding: 10px 16px;
+        -fx-focus-color: #00E5FF;
+        -fx-faint-focus-color: transparent;
+    }
+    .insert-text-lbl {
+        -fx-text-fill: white;
+        -fx-font-size: 26px;
+        -fx-font-weight: bold;
+    }
 
-/* ===================================================== */
-/* DIALOGS                                               */
-/* ===================================================== */
-.dialog-pane { -fx-background-color: #1e1b4b; -fx-padding: 0; }
+    .info-text-lbl {
+        -fx-text-fill: white;
+        -fx-font-size: 18px;
+        -fx-font-weight: bold;
+    }
 
-.dialog-pane > .content { -fx-background-color: #1e1b4b; -fx-padding: 20; }
-.dialog-pane > .button-bar { -fx-background-color: #1e1b4b; -fx-padding: 15; }
+    /* ===================================================== */
+    /* DATE PICKER & CALENDAR POPUP                          */
+    /* ===================================================== */
+    .date-picker,
+    .date-picker .text-field,
+    .date-picker .text-area {
+        -fx-background-color: rgba(30,27,75,0.85);
+        -fx-control-inner-background: transparent;
+    }
 
-.dialog-title { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; }
-.dialog-message { -fx-text-fill: white; -fx-font-size: 14px; }
+    .date-picker-popup {
+        -fx-background-color: #1e1b4b;
+        -fx-border-color: rgba(255,255,255,0.2);
+        -fx-border-width: 1px;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 4);
+    }
 
-/* ===================================================== */
-/* SUCCESS / FAILURE BANNERS                             */
-/* ===================================================== */
-.success-banner {
-    -fx-background-color: #00C853;
-    -fx-text-fill: white;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 12 0 0 12;
-    -fx-opacity: 0.95;
-}
+    .date-picker-popup .month-year-pane {
+        -fx-background-color: #1e1b4b;
+        -fx-padding: 10px;
+    }
 
-.failure-banner {
-    -fx-background-color: #FF1744;
-    -fx-text-fill: white;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 12 0 0 12;
-    -fx-opacity: 0.95;
-}
+    .date-picker-popup .month-year-pane .label {
+        -fx-text-fill: white;
+        -fx-font-weight: bold;
+        -fx-font-size: 14px;
+    }
+
+    .date-picker-popup .left-arrow,
+    .date-picker-popup .right-arrow { -fx-background-color: white; }
+    .date-picker-popup .left-arrow-button:hover,
+    .date-picker-popup .right-arrow-button:hover { -fx-background-color: rgba(255,255,255,0.1); }
+
+    .date-picker-popup .day-name-cell { -fx-background-color: #1e1b4b; -fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 11px; -fx-font-weight: bold; }
+    .date-picker-popup .day-cell { -fx-background-color: #1e1b4b; -fx-padding: 8px; }
+    .date-picker-popup .day-cell:filled { -fx-text-fill: white; }
+    .date-picker-popup .day-cell:filled:hover { -fx-background-color: rgba(30, 27, 75, 0.75); -fx-text-fill: #00E5FF; }
+    .date-picker-popup .day-cell:filled:selected { -fx-background-color: #00E5FF; -fx-text-fill: #1e1b4b; -fx-font-weight: bold; }
+    .date-picker-popup .day-cell:filled.today { -fx-text-fill: #00E5FF; -fx-border-color: #00E5FF; -fx-border-width: 1px; -fx-border-radius: 3px; }
+    .date-picker-popup .day-cell:disabled { -fx-opacity: 0.4; }
+    .date-picker-popup .day-cell.previous-month,
+    .date-picker-popup .day-cell.next-month { -fx-text-fill: rgba(255,255,255,0.35); }
+
+    /* ===================================================== */
+    /* CALENDAR — GLOBAL OVERRIDES                           */
+    /* ===================================================== */
+    .calendar-view,
+    .detailed-week-view,
+    .week-view,
+    .day-view,
+    .week-day-view { -fx-background-color: transparent; }
+
+    .week-day-view .day-background,
+    .day-view .day-background {
+        -fx-background-color: transparent;
+        -fx-border-color: rgba(255, 255, 255, 0.08);
+        -fx-border-width: 0 1 0 0;
+    }
+
+    .hour-line { -fx-stroke: rgba(255, 255, 255, 0.10); -fx-stroke-width: 1; }
+    .half-hour-line { -fx-stroke: rgba(255, 255, 255, 0.05); -fx-stroke-width: 1; }
+    .now-line { -fx-stroke: #00E5FF; -fx-stroke-width: 2; }
+
+    /* ===================================================== */
+    /* TIME SCALE                                            */
+    /* ===================================================== */
+    .time-scale,
+    .calendar .time-scale,
+    .detailed-week-view .time-scale,
+    .week-view .time-scale {
+        -fx-background-color: transparent;
+        -fx-min-width: 64px;
+        -fx-pref-width: 72px;
+        -fx-max-width: 90px;
+    }
+
+    .time-scale .label,
+    .time-scale .time-label,
+    .time-label {
+        -fx-text-fill: rgba(255, 255, 255, 0.75);
+        -fx-font-size: 11px;
+        -fx-padding: 0 8px;
+        -fx-alignment: center-right;
+    }
+
+    /* ===================================================== */
+    /* WEEK DAY HEADER                                       */
+    /* ===================================================== */
+    .week-day-header-view,
+    .day-name-label,
+    .date-label {
+        -fx-background-color: transparent;
+        -fx-text-fill: white;
+        -fx-font-weight: bold;
+        -fx-font-size: 13px;
+    }
+
+    .week-day-header-view.today .day-name-label,
+    .week-day-header-view.today .date-label { -fx-text-fill: #00E5FF; }
+
+    /* ===================================================== */
+    /* TASK CREATION FORM                                    */
+    /* ===================================================== */
+    .task-creation-overlay { -fx-background-color: rgba(0,0,0,0.45); }
+
+    #rootStack .task-creation-form {
+        -fx-background-color: rgba(30,27,75,0.85);
+        -fx-background-radius: 16px;
+        -fx-border-radius: 16px;
+        -fx-border-color: rgba(255,255,255,0.15);
+    }
+
+    /* ===================================================== */
+    /* DIALOGS                                               */
+    /* ===================================================== */
+    .dialog-pane { -fx-background-color: #1e1b4b; -fx-padding: 0; }
+
+    .dialog-pane > .content { -fx-background-color: #1e1b4b; -fx-padding: 20; }
+    .dialog-pane > .button-bar { -fx-background-color: #1e1b4b; -fx-padding: 15; }
+
+    .dialog-title { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; }
+    .dialog-message { -fx-text-fill: white; -fx-font-size: 14px; }
+
+    /* ===================================================== */
+    /* SUCCESS / FAILURE BANNERS                             */
+    /* ===================================================== */
+    .success-banner {
+        -fx-background-color: #00C853;
+        -fx-text-fill: white;
+        -fx-font-size: 18px;
+        -fx-font-weight: bold;
+        -fx-background-radius: 12 0 0 12;
+        -fx-opacity: 0.95;
+    }
+
+    .failure-banner {
+        -fx-background-color: #FF1744;
+        -fx-text-fill: white;
+        -fx-font-size: 18px;
+        -fx-font-weight: bold;
+        -fx-background-radius: 12 0 0 12;
+        -fx-opacity: 0.95;
+    }
 
