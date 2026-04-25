@@ -2,6 +2,7 @@ package com.unimib.assignment3;
 
 import com.unimib.assignment3.POJO.Employee;
 import com.unimib.assignment3.POJO.Task;
+import com.unimib.assignment3.POJO.UserChatMapping;
 import com.unimib.assignment3.enums.TaskState;
 import com.unimib.assignment3.facade.Facade;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +15,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication
@@ -41,6 +43,11 @@ public class BackendApplication {
                     createEmployee(facade, "Marco", "Rossi", BASE64_IMAGE_2),
                     createEmployee(facade, "Luca", "Verdi", BASE64_IMAGE_3)
             );
+
+            long l = 1L;
+            UserChatMapping userChatMapping1 = facade.saveChat(employees.getFirst().getWorkerId(), Collections.singletonList(l));
+            UserChatMapping userChatMapping2 = facade.saveChat(employees.getLast().getWorkerId(), Collections.singletonList(l));
+
 
             System.out.println("Loaded " + tasks.size() + " tasks and " + employees.size() + " employees.");
         };

@@ -293,6 +293,40 @@
         -fx-font-weight: bold;
     }
 
+    .my-message {
+        -fx-background-color: #6c5ce7;   /* purple */
+        -fx-background-radius: 20;       /* more rounded */
+
+        -fx-border-color: #4b3fcf;       /* darker purple stroke */
+        -fx-border-radius: 20;
+        -fx-border-width: 2;
+
+        -fx-text-fill: #f1f1f1;          /* NOT pure white (softer) */
+        -fx-font-size: 16px;
+        -fx-font-weight: bold;
+
+        -fx-padding: 10 14 10 14;
+
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);
+    }
+
+    .other-message {
+        -fx-background-color: #f39c12;   /* orange */
+        -fx-background-radius: 20;
+
+        -fx-border-color: #d68910;       /* darker orange */
+        -fx-border-radius: 20;
+        -fx-border-width: 2;
+
+        -fx-text-fill: #2c3e50;          /* dark readable text */
+        -fx-font-size: 16px;
+        -fx-font-weight: bold;
+
+        -fx-padding: 10 14 10 14;
+
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);
+    }
+
     /* ===================================================== */
     /* DATE PICKER & CALENDAR POPUP                          */
     /* ===================================================== */

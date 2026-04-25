@@ -2,7 +2,7 @@ package com.unimib.assignment3.UI.view.controller.impl.layout;
 
 import com.unimib.assignment3.UI.view.components.impl.custom.InformationBanner;
 import com.unimib.assignment3.UI.model.controller.LoginRestController;
-import com.unimib.assignment3.UI.view.components.impl.layout.GanttCalendar;
+import com.unimib.assignment3.UI.view.components.impl.layout.Chat;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.state.ApplicationStateManager;
 import com.unimib.assignment3.UI.utils.SessionManagerSingleton;
@@ -79,7 +79,7 @@ public class LoginViewController implements DefaultController {
                 try {
                     Long response = Long.parseLong(replaceSpaces(loginTask.getValue()));
                     SessionManagerSingleton.getInstance().setAttribute("employeeId", response);
-                    stateManager.replaceWindow(new GanttCalendar());
+                    stateManager.replaceWindow(new Chat());
 
                     showBanner(BannerType.SUCCESS, "Login successful");
                 } catch (Exception ex){

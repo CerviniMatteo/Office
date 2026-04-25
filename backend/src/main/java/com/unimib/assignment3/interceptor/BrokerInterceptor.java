@@ -1,5 +1,6 @@
 package com.unimib.assignment3.interceptor;
 
+import com.unimib.assignment3.notifier.ChatObserverNotifier;
 import com.unimib.assignment3.notifier.TaskObserverNotifier;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,12 @@ public class BrokerInterceptor implements HandlerInterceptor {
 
     @Autowired
     private final TaskObserverNotifier taskObserverNotifier;
+    @Autowired
+    private final ChatObserverNotifier  chatObserverNotifier;
 
-    public BrokerInterceptor(TaskObserverNotifier taskObserverNotifier) {
+    public BrokerInterceptor(TaskObserverNotifier taskObserverNotifier, ChatObserverNotifier chatObserverNotifier) {
         this.taskObserverNotifier = taskObserverNotifier;
+        this.chatObserverNotifier = chatObserverNotifier;
     }
 
     @Override
@@ -24,10 +28,10 @@ public class BrokerInterceptor implements HandlerInterceptor {
                                 @Nonnull Object handler,
                                 Exception ex) {
         if(request.getRequestURI().endsWith("/deleteTask")) {
-            taskObserverNotifier.notifyOnDeleteAllTaskObservers((Long) request.getAttribute("taskId"));
-        }else{
-            taskObserverNotifier.notifyOnFetchAllTaskObservers((Long) request.getAttribute("taskId"));
+            taskObserverNotifier.notifyOnDeleteAllTaskSubscribers((Long) request.getAttribute("taskId"));
         }
-        System.out.println("afterCompletion: notifying observers");
+        else{
+            taskObserverNotifier.notifyOnFetchAllTaskSubscribers((Long) request.getAttribute("taskId"));
+        }
     }
 }

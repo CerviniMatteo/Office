@@ -9,10 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-import java.net.http.HttpResponse;
-
-import static com.unimib.assignment3.UI.constants.Rest.BASE_ENDPOINT;
-import static com.unimib.assignment3.UI.utils.RestHelper.createPostRequest;
 import static com.unimib.assignment3.UI.utils.StringHelper.replaceUnderscores;
 
 public abstract class TaskCardBaseController implements DefaultController {

@@ -11,6 +11,7 @@ import com.unimib.assignment3.UI.model.dto.TaskDTO;
 import com.unimib.assignment3.UI.model.enums.TaskState;
 import com.unimib.assignment3.UI.view.components.abstr.TaskCardBase;
 import com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog;
+import com.unimib.assignment3.UI.view.components.impl.custom.StyledButton;
 import com.unimib.assignment3.UI.view.components.impl.layout.TaskCreationForm;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.factory.CalendarEntryStylingFactory;
@@ -18,6 +19,7 @@ import com.unimib.assignment3.UI.view.factory.TaskCardFactory;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
@@ -27,7 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Collection;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +51,8 @@ public class GanttCalendarController implements DefaultController {
     private Calendar<TaskDTO> toStartCalendar;
     private Calendar<TaskDTO> startedCalendar;
     private Calendar<TaskDTO> doneCalendar;
+
+    private StyledButton chatButton;
 
     @FXML
     public void initialize() {

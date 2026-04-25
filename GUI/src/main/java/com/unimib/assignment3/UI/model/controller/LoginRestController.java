@@ -6,10 +6,11 @@ import com.unimib.assignment3.UI.utils.RestHelper;
 import javafx.concurrent.Task;
 
 import java.net.http.HttpResponse;
+
+import static com.unimib.assignment3.UI.constants.Rest.BASE_LOGIN_ENDPOINT;
 import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 
 public class LoginRestController {
-    private static final String BASE_ENDPOINT = "http://localhost:8080/login";
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static Task<String> login(String email) {
@@ -17,7 +18,7 @@ public class LoginRestController {
             @Override
             protected String call() {
                 try {
-                    HttpResponse <String> response = RestHelper.createGetRequest(BASE_ENDPOINT+ "/" + email);
+                    HttpResponse <String> response = RestHelper.createGetRequest(BASE_LOGIN_ENDPOINT+ "/" + email);
                     mapper.registerModule(new JavaTimeModule());
                     return mapper.readValue(response.body(), String.class);
                 } catch (Exception e) {

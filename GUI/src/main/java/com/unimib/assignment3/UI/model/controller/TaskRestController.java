@@ -10,7 +10,7 @@ import org.springframework.lang.Nullable;
 
 import java.net.http.HttpResponse;
 import java.util.List;
-import static com.unimib.assignment3.UI.constants.Rest.BASE_ENDPOINT;
+import static com.unimib.assignment3.UI.constants.Rest.BASE_TASK_ENDPOINT;
 import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 import static com.unimib.assignment3.UI.utils.RestHelper.createPostRequest;
 
@@ -20,7 +20,7 @@ public class TaskRestController {
 
     public List<TaskDTO> fetchTasks() {
         try {
-            HttpResponse<String> response = RestHelper.createGetRequest(BASE_ENDPOINT + "/all");
+            HttpResponse<String> response = RestHelper.createGetRequest(BASE_TASK_ENDPOINT + "/all");
             return mapper.readValue(response.body(), new TypeReference<>() {});
         } catch (Exception e) {
             showAlert("Error", e.getMessage());
@@ -30,7 +30,7 @@ public class TaskRestController {
 
     public TaskDTO fetchTask(Long taskId) {
         try {
-            HttpResponse<String> response = RestHelper.createGetRequest(BASE_ENDPOINT + "/" + taskId);
+            HttpResponse<String> response = RestHelper.createGetRequest(BASE_TASK_ENDPOINT + "/" + taskId);
             return mapper.readValue(response.body(), TaskDTO.class);
         } catch (Exception e) {
             showAlert("Error", e.getMessage());
@@ -42,7 +42,7 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call() {
-                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/changeState", payload);
+                HttpResponse<String> response = createPostRequest(BASE_TASK_ENDPOINT + "/changeState", payload);
                 return checkResponse(response);
             }
         };
@@ -52,7 +52,7 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call() {
-                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/startTask", payload);
+                HttpResponse<String> response = createPostRequest(BASE_TASK_ENDPOINT + "/startTask", payload);
                 return checkResponse(response);
             }
         };
@@ -62,7 +62,7 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call() {
-                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/resetState", taskId);
+                HttpResponse<String> response = createPostRequest(BASE_TASK_ENDPOINT + "/resetState", taskId);
                 return checkResponse(response);
             }
         };
@@ -72,7 +72,7 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call(){
-                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/acceptTask", payload);
+                HttpResponse<String> response = createPostRequest(BASE_TASK_ENDPOINT + "/acceptTask", payload);
                 return checkResponse(response);
             }
         };
@@ -82,7 +82,7 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call(){
-                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/createTask", payload);
+                HttpResponse<String> response = createPostRequest(BASE_TASK_ENDPOINT + "/createTask", payload);
                 return checkResponse(response);
             }
         };
@@ -92,7 +92,7 @@ public class TaskRestController {
         return new Task<>() {
             @Override
             protected String call(){
-                HttpResponse<String> response = createPostRequest(BASE_ENDPOINT + "/deleteTask", payload);
+                HttpResponse<String> response = createPostRequest(BASE_TASK_ENDPOINT + "/deleteTask", payload);
                 return checkResponse(response);
             }
         };

@@ -3,7 +3,9 @@ package com.unimib.assignment3.facade;
 import com.unimib.assignment3.DTO.TaskDTO;
 import com.unimib.assignment3.POJO.*;
 import com.unimib.assignment3.enums.*;
+import com.unimib.assignment3.repository.UserChatMappingRepository;
 import com.unimib.assignment3.service.*;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,9 @@ public class Facade {
     /** Team service for managing team-related operations. */
     @Autowired
     private TeamService teamService;
+
+    @Autowired
+    private UserChatMappingRepository userChatMappingRepository;
 
     // <---- Employee Methods ---->
 
@@ -954,5 +959,9 @@ public class Facade {
      */
     public List<Employee> getEmployeesInTeamIdWithEmployeeRole(Long teamId, WorkerRole workerRole) {
         return teamService.getEmployeesInTeamIdWithEmployeeRole(teamId, workerRole);
+    }
+
+    public UserChatMapping saveChat(Long employeeId, List<Long> chatIds){
+        return userChatMappingRepository.saveAndFlush(new UserChatMapping(employeeId, chatIds));
     }
 }

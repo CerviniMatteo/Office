@@ -12,13 +12,13 @@ public class TaskObserverNotifier {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void notifyOnFetchAllTaskObservers(Long taskId) {
+    public void notifyOnFetchAllTaskSubscribers(Long taskId) {
         System.out.println("notifyAllObservers called");
         String message = "FETCH_TASK:" + taskId;
         messagingTemplate.convertAndSend("/topic/task", message);
     }
 
-    public void notifyOnDeleteAllTaskObservers(Long taskId) {
+    public void notifyOnDeleteAllTaskSubscribers(Long taskId) {
         System.out.println("notifyAllObservers called");
         String message = "DELETE_TASK:" + taskId;
         messagingTemplate.convertAndSend("/topic/task", message);

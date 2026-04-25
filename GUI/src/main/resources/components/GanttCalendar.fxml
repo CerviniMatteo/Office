@@ -74,6 +74,14 @@
                         maxWidth="Infinity"
                         styleClass="legend-separator"/>
 
+                <Button fx:id="chatButton"
+                        text="OPEN CHAT"
+                        styleClass="styled-btn"
+                        maxWidth="Infinity"/>
+                <Region prefHeight="2"
+                        maxWidth="Infinity"
+                        styleClass="legend-separator"/>
+
                 <Button fx:id="logOutButton"
                         text="LOG OUT"
                         styleClass="styled-btn-red"

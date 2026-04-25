@@ -8,10 +8,10 @@ import javafx.concurrent.Task;
 
 import java.net.http.HttpResponse;
 
+import static com.unimib.assignment3.UI.constants.Rest.BASE_EMPLOYEE_ENDPOINT;
 import static com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog.showAlert;
 
 public class WorkerRestController {
-    private static final String BASE_ENDPOINT = "http://localhost:8080/employee";
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static Task<WorkerDTO> fetchWorker(Long workerId) {
@@ -19,7 +19,7 @@ public class WorkerRestController {
             @Override
             protected WorkerDTO call() {
                 try {
-                    HttpResponse<String> response = RestHelper.createGetRequest(BASE_ENDPOINT+ "/" + workerId);
+                    HttpResponse<String> response = RestHelper.createGetRequest(BASE_EMPLOYEE_ENDPOINT);
                     mapper.registerModule(new JavaTimeModule());
                     return mapper.readValue(response.body(), WorkerDTO.class);
                 } catch (Exception e) {
