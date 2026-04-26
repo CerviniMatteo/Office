@@ -1,8 +1,9 @@
 package com.unimib.assignment3.UI.web_socket_client;
 
-import com.unimib.assignment3.UI.view.components.impl.layout.GanttCalendar;
 import jakarta.annotation.Nonnull;
-import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -14,11 +15,7 @@ import java.lang.reflect.Type;
  */
 public class TaskWebSocketClientApp {
 
-    private final GanttCalendar ganttCalendar;
-
-    public TaskWebSocketClientApp(GanttCalendar ganttCalendar) {
-        this.ganttCalendar = ganttCalendar;
-    }
+    private final StringProperty property = new SimpleStringProperty();
 
     /**
      * Start the WebSocket STOMP client and subscribe to task updates.
@@ -46,25 +43,17 @@ public class TaskWebSocketClientApp {
                     public void handleFrame(@Nonnull StompHeaders headers, Object payload) {
                         String message = (String) payload;
                         System.out.println("Received message: " + message);
-
-                        if (message.contains("FETCH_TASK:")) {
-                            String substring = message.substring(message.indexOf(":") + 1);
-                            Long taskId = Long.valueOf(substring);
-                            System.out.println(taskId);
-                            Platform.runLater(() -> ganttCalendar.getController().updateEntry(taskId));
-                        }
-                        if (message.contains("DELETE_TASK:")) {
-                            String substring = message.substring(message.indexOf(":") + 1);
-                            Long taskId = Long.valueOf(substring);
-                            System.out.println(taskId);
-                            Platform.runLater(() -> ganttCalendar.getController().deleteEntry(taskId));
-                        }
+                        property.set(message);
                     }
                 });
             }
         };
 
-        StompSession session = stompClient.connectAsync("ws://localhost:8080/ws", sessionHandler).get();
-        System.out.println("Session ID: " + session.getSessionId() + "\nLayout ID:" + System.identityHashCode(ganttCalendar));
+        stompClient.connectAsync("ws://localhost:8080/ws", sessionHandler).get();
+    }
+
+
+    public ObservableValue<String> getProperty() {
+        return property;
     }
 }

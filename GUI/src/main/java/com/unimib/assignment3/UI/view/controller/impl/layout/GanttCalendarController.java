@@ -16,10 +16,11 @@ import com.unimib.assignment3.UI.view.components.impl.layout.TaskCreationForm;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.factory.CalendarEntryStylingFactory;
 import com.unimib.assignment3.UI.view.factory.TaskCardFactory;
+import com.unimib.assignment3.UI.web_socket_client.TaskWebSocketClientApp;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
@@ -46,6 +47,7 @@ public class GanttCalendarController implements DefaultController {
 
     private Map<Long, Pair<CalendarEntry<TaskDTO>, TaskCardBase>> entries;
     private TaskRestController taskRestController;
+    private TaskWebSocketClientApp webSocketClientApp;
 
     // 1. Define a separate Calendar for each state
     private Calendar<TaskDTO> toStartCalendar;
@@ -140,6 +142,36 @@ public class GanttCalendarController implements DefaultController {
                     addActiveTaskToDashboard(taskDTO);
                 }
             });
+        }
+
+        webSocketClientApp = new TaskWebSocketClientApp();
+        try {
+            webSocketClientApp.start();
+        } catch (Exception e) {
+            System.out.println("Could not connect to GanttCalendar");
+            AlertDialog.showAlert("Error", "Could not connect to GanttCalendar: " + e.getMessage());
+        }
+
+        webSocketClientApp.getProperty().addListener((obs, oldVal, newVal) -> {;
+            if (newVal != null && !newVal.isEmpty()) {
+                handleTaskChange(newVal);
+            }
+
+        });
+    }
+
+    private void handleTaskChange(String message){
+        if (message.contains("FETCH_TASK:")) {
+            String substring = message.substring(message.indexOf(":") + 1);
+            Long taskId = Long.valueOf(substring);
+            System.out.println(taskId);
+            Platform.runLater(() -> updateEntry(taskId));
+        }
+        if (message.contains("DELETE_TASK:")) {
+            String substring = message.substring(message.indexOf(":") + 1);
+            Long taskId = Long.valueOf(substring);
+            System.out.println(taskId);
+            Platform.runLater(() -> deleteEntry(taskId));
         }
     }
 
