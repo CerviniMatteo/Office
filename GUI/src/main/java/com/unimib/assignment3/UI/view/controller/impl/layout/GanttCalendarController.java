@@ -12,6 +12,7 @@ import com.unimib.assignment3.UI.model.enums.TaskState;
 import com.unimib.assignment3.UI.view.components.abstr.TaskCardBase;
 import com.unimib.assignment3.UI.view.components.impl.custom.AlertDialog;
 import com.unimib.assignment3.UI.view.components.impl.custom.StyledButton;
+import com.unimib.assignment3.UI.view.components.impl.layout.Chat;
 import com.unimib.assignment3.UI.view.components.impl.layout.TaskCreationForm;
 import com.unimib.assignment3.UI.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.UI.view.factory.CalendarEntryStylingFactory;
@@ -20,7 +21,10 @@ import com.unimib.assignment3.UI.web_socket_client.TaskWebSocketClientApp;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
@@ -41,20 +45,24 @@ public class GanttCalendarController implements DefaultController {
 
     @FXML
     private DetailedWeekView detailedWeekView;
+    @FXML
+    private HBox centerContainer;
 
     @FXML
     private VBox activeTaskContainer;
 
     private Map<Long, Pair<CalendarEntry<TaskDTO>, TaskCardBase>> entries;
     private TaskRestController taskRestController;
-    private TaskWebSocketClientApp webSocketClientApp;
 
     // 1. Define a separate Calendar for each state
     private Calendar<TaskDTO> toStartCalendar;
     private Calendar<TaskDTO> startedCalendar;
     private Calendar<TaskDTO> doneCalendar;
 
-    private StyledButton chatButton;
+    @FXML
+    private Button chatButton;
+
+    private Chat chat;
 
     @FXML
     public void initialize() {
@@ -144,7 +152,7 @@ public class GanttCalendarController implements DefaultController {
             });
         }
 
-        webSocketClientApp = new TaskWebSocketClientApp();
+        TaskWebSocketClientApp webSocketClientApp = new TaskWebSocketClientApp();
         try {
             webSocketClientApp.start();
         } catch (Exception e) {
@@ -157,6 +165,17 @@ public class GanttCalendarController implements DefaultController {
                 handleTaskChange(newVal);
             }
 
+        });
+
+        chatButton.setOnAction(event -> {
+             if(chat == null){
+                 chat = new Chat();
+             }
+            if(centerContainer.getChildren().contains(chat)){
+                centerContainer.getChildren().remove(chat);
+            } else {
+                centerContainer.getChildren().add(chat);
+            }
         });
     }
 

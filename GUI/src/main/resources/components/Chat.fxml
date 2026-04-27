@@ -1,48 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-
 <fx:root type="VBox"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         minWidth="400" minHeight="600"
-         prefHeight="600.0" prefWidth="400.0"
-         maxWidth="400.0" maxHeight="600.0"
+         prefWidth="400"
+         prefHeight="400"
+         spacing="10"
          styleClass="design-rectangle">
 
-    <!-- TOP BUTTON -->
-    <Button fx:id="addChat"
-            text="ADD NEW CHAT"
-            styleClass="styled-btn"
-            maxWidth="Infinity"/>
-
+    <!-- ========================= -->
     <!-- CHAT LIST -->
+    <!-- ========================= -->
     <VBox fx:id="chats"
-          spacing="5"
-          style="-fx-padding: 5;"/>
+          spacing="10"
+          prefWidth="200"
+          alignment="TOP_CENTER">
+        <Label text="CHATS"
+               styleClass="insert-text-lbl"
+               maxWidth="Infinity"
+               alignment="CENTER"
+               textAlignment="CENTER"/>
+    </VBox>
 
-    <!-- SCROLL AREA -->
-    <ScrollPane fx:id="scrollPane"
-                fitToWidth="true"
-                fitToHeight="true"
-                styleClass="transparent-scroll">
-        <VBox   fx:id="chatContainer"
-                HBox.hgrow="ALWAYS"
-                VBox.vgrow="ALWAYS"
-                spacing="10">
-        </VBox>
-    </ScrollPane>
-
-    <!-- INPUT AREA -->
-    <HBox spacing="5">
-        <TextField fx:id="inputForm"
-                   promptText="Enter message..."
-                   HBox.hgrow="ALWAYS"
-                   styleClass="input-form"/>
-        <Button fx:id="sendButton"
-                text="Send"
+    <!-- ========================= -->
+    <!-- CHAT AREA -->
+    <!-- hidden until chat is selected -->
+    <!-- ========================= -->
+    <VBox fx:id="chatArea"
+          spacing="10"
+          visible="false"
+          managed="false"
+          VBox.vgrow="ALWAYS">
+        <!-- BACK BUTTON -->
+        <Button fx:id="backButton"
+                text="← Back"
                 styleClass="styled-btn"/>
-    </HBox>
+        <!-- MESSAGES -->
+        <ScrollPane fx:id="scrollPane"
+                    fitToWidth="true"
+                    VBox.vgrow="ALWAYS"
+                    styleClass="transparent-scroll">
+            <VBox fx:id="chatContainer"
+                  spacing="10"/>
+        </ScrollPane>
+        <!-- INPUT AREA -->
+        <HBox spacing="5">
+            <TextField fx:id="inputForm"
+                       promptText="Enter message..."
+                       HBox.hgrow="ALWAYS"
+                       styleClass="input-form"/>
+            <Button fx:id="sendButton"
+                    text="Send"
+                    styleClass="styled-btn"/>
+        </HBox>
+    </VBox>
 
 </fx:root>

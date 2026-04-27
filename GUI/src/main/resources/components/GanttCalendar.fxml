@@ -8,7 +8,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
-
 <fx:root type="javafx.scene.layout.BorderPane"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml">
@@ -22,7 +21,10 @@
     </left>
 
     <center>
-        <DetailedWeekView fx:id="detailedWeekView"/>
+        <HBox fx:id="centerContainer" >
+            <DetailedWeekView fx:id="detailedWeekView" HBox.hgrow="ALWAYS"/>
+            <Region prefWidth="40"/>
+        </HBox>
     </center>
 
     <right>
