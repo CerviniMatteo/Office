@@ -69,7 +69,7 @@ public class ChatWebSocketClientApp {
 
         // connessione
         this.session = stompClient
-                .connectAsync("ws://localhost:8080/ws", sessionHandler)
+                .connectAsync("wss://localhost:8080/ws", sessionHandler)
                 .get();
     }
 

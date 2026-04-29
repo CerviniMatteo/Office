@@ -1,11 +1,10 @@
-# src/main/resources/application.yml
 spring:
   profiles:
-    active: prod   # default profile
+    active: prod
 
 ---
 
-# Production profile: H2
+# Production profile
 spring:
   config:
     activate:
@@ -19,9 +18,17 @@ spring:
     hibernate:
       ddl-auto: update
 
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: tuapassword
+    key-store-type: PKCS12
+    key-alias: myalias
+
 ---
 
-# Test profile: H2 in-memory
+# Test profile
 spring:
   config:
     activate:
@@ -34,4 +41,3 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-

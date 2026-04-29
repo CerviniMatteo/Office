@@ -49,7 +49,7 @@ public class TaskWebSocketClientApp {
             }
         };
 
-        stompClient.connectAsync("ws://localhost:8080/ws", sessionHandler).get();
+        stompClient.connectAsync("wss://localhost:8080/ws", sessionHandler).get();
     }
 
 
