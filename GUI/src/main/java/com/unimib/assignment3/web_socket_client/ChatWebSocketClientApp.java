@@ -6,28 +6,42 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import org.springframework.lang.NonNull;
+import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.*;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.lang.reflect.Type;
 
 /**
- * WebSocket client that subscribes to chat topics and supports sending messages.
+ * WebSocket client helper that subscribes to chat-related topics
+ * and allows sending messages to the server.
  */
-public class ChatWebSocketClientApp extends AbstractWebSocketClientApp {
+public class ChatWebSocketClientApp {
 
     private StompSession session;
     private final StringProperty receivedMessage = new SimpleStringProperty();
+    /**
+     * Start the WebSocket STOMP client and subscribe to messages.
+     * @throws Exception if the connection fails
+     */
+    public void start() throws Exception {
+        WebSocketStompClient stompClient =
+                new WebSocketStompClient(new StandardWebSocketClient());
 
-    @Override
-    protected StompSessionHandler createSessionHandler() {
-        return new StompSessionHandlerAdapter() {
+        stompClient.setMessageConverter(new StringMessageConverter());
+
+        StompSessionHandler sessionHandler = new StompSessionHandlerAdapter() {
+
             @Override
-            public void afterConnected(@NonNull StompSession s, @Nonnull StompHeaders connectedHeaders) {
+            public void afterConnected(StompSession session, @Nonnull StompHeaders connectedHeaders) {
                 System.out.println("Connected to WebSocket server");
-                ChatWebSocketClientApp.this.session = s;
 
-                s.subscribe("/topic/chat", new StompFrameHandler() {
+                // salva la sessione
+                ChatWebSocketClientApp.this.session = session;
+
+                // subscribe al topic
+                session.subscribe("/topic/chat", new StompFrameHandler() {
                     @Override
                     public Type getPayloadType(@Nonnull StompHeaders headers) {
                         return String.class;
@@ -43,34 +57,38 @@ public class ChatWebSocketClientApp extends AbstractWebSocketClientApp {
             }
 
             @Override
-            public void handleException(@NonNull StompSession s, StompCommand command,
-                                        @NonNull StompHeaders headers, @NonNull byte[] payload,
-                                        @NonNull Throwable exception) {
+            public void handleException(@NonNull StompSession session, StompCommand command,
+                                        @NonNull StompHeaders headers, @NonNull byte[] payload, Throwable exception) {
                 System.err.println("STOMP error: " + exception.getMessage());
             }
 
             @Override
-            public void handleTransportError(@NonNull StompSession s, @NonNull Throwable exception) {
+            public void handleTransportError(@NonNull StompSession session, Throwable exception) {
                 System.err.println("Transport error: " + exception.getMessage());
             }
         };
-    }
 
-    @Override
-    protected void connect(WebSocketStompClient stompClient, String wsUrl) throws Exception {
-        this.session = stompClient.connectAsync(wsUrl, createSessionHandler()).get();
+        // connessione
+        this.session = stompClient
+                .connectAsync("ws://localhost:8080/ws", sessionHandler)
+                .get();
     }
 
     public ObservableValue<String> receiveMessage() {
         return receivedMessage;
     }
 
+    /**
+     * Send a message to the server.
+     *
+     * @param message     contenuto del messaggio
+     */
     public void sendMessage(String message) {
         if (session != null && session.isConnected()) {
             session.send("/app/chat", message);
             System.out.println("Sent message: " + message);
         } else {
-            System.err.println("WebSocket not connected — cannot send message");
+            System.out.println("WebSocket not connected");
         }
     }
 }

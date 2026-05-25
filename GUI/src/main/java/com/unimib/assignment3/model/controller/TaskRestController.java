@@ -23,26 +23,26 @@ public class TaskRestController extends BaseRestController {
     }
 
     public Task<String> changeTaskState(ChangeTaskStateRequestDTO payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/changeState", payload, String.class);
+        return postTask(BASE_TASK_ENDPOINT + "/changeState", payload);
     }
 
     public Task<String> startTask(StartTaskRequestDTO payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/startTask", payload, String.class);
+        return postTask(BASE_TASK_ENDPOINT + "/startTask", payload);
     }
 
     public Task<String> resetTaskState(Long taskId) {
-        return postTask(BASE_TASK_ENDPOINT + "/resetState", taskId, String.class);
+        return postTask(BASE_TASK_ENDPOINT + "/resetState", taskId);
     }
 
     public Task<String> acceptTask(AcceptTaskRequestDTO payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/acceptTask", payload, String.class);
+        return postTask(BASE_TASK_ENDPOINT + "/acceptTask", payload);
     }
 
     public Task<String> createTask(TaskDTO payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/createTask", payload, String.class);
+        return postTask(BASE_TASK_ENDPOINT + "/createTask", payload);
     }
 
     public Task<String> deleteTask(Long payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/deleteTask", payload, String.class);
+        return postTask(BASE_TASK_ENDPOINT + "/deleteTask", payload);
     }
 }

@@ -5,7 +5,6 @@ import com.unimib.assignment3.POJO.*;
 import com.unimib.assignment3.enums.*;
 import com.unimib.assignment3.repository.UserChatMappingRepository;
 import com.unimib.assignment3.service.*;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -507,12 +506,11 @@ public class Facade {
     /**
      * Transitions a task to a new state and updates relevant dates.
      *
-     * @param taskId       the ID of the task to update
+     * @param taskId           the ID of the task to update
      * @param currentTaskState the target state
-     * @return the updated task entity
      */
-    public Task changeTaskState(Long taskId, TaskState currentTaskState) {
-        return taskService.changeTaskState(taskId, currentTaskState);
+    public void changeTaskState(Long taskId, TaskState currentTaskState) {
+        taskService.changeTaskState(taskId, currentTaskState);
     }
 
     /**

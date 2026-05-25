@@ -14,12 +14,9 @@ public class BrokerInterceptor implements HandlerInterceptor {
 
     @Autowired
     private final TaskObserverNotifier taskObserverNotifier;
-    @Autowired
-    private final ChatObserverNotifier  chatObserverNotifier;
 
-    public BrokerInterceptor(TaskObserverNotifier taskObserverNotifier, ChatObserverNotifier chatObserverNotifier) {
+    public BrokerInterceptor(TaskObserverNotifier taskObserverNotifier) {
         this.taskObserverNotifier = taskObserverNotifier;
-        this.chatObserverNotifier = chatObserverNotifier;
     }
 
     @Override

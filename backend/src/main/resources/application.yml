@@ -19,12 +19,9 @@ spring:
       ddl-auto: update
 
 server:
-  port: 8443
+  port: 8080
   ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: tuapassword
-    key-store-type: PKCS12
-    key-alias: myalias
+    enabled: false
 
 ---
 
@@ -43,9 +40,6 @@ spring:
       ddl-auto: create-drop
 
 server:
-  port: 8443
+  port: 8080
   ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: tuapassword
-    key-store-type: PKCS12
-    key-alias: myalias
+    enabled: false

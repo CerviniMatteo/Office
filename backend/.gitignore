@@ -38,3 +38,14 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Certificate and key files
+*.pem
+*.cer
+*.crt
+*.key
+
+# Ignore keystore and other generated security files
+keystore.p12
+
+

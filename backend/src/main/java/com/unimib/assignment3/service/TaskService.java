@@ -6,7 +6,6 @@ import com.unimib.assignment3.POJO.Task;
 import com.unimib.assignment3.constants.EmployeeConstants;
 import com.unimib.assignment3.constants.TaskConstants;
 import com.unimib.assignment3.enums.TaskState;
-import com.unimib.assignment3.mappers.TaskDtoMapper;
 import com.unimib.assignment3.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,7 @@ import java.util.List;
 
 import static com.unimib.assignment3.constants.EmployeeConstants.EMPLOYEE_NOT_FOUND;
 import static com.unimib.assignment3.constants.TaskConstants.TASK_NOT_FOUND;
-import static com.unimib.assignment3.enums.TaskState.DONE;
-import static com.unimib.assignment3.enums.TaskState.TO_BE_STARTED;
+import static com.unimib.assignment3.enums.TaskState.*;
 
 @Service
 public class TaskService {
@@ -36,10 +34,10 @@ public class TaskService {
      */
     @Transactional
     public Task createTask(TaskState initialState) {
-        TaskState state = initialState != null ? initialState : TaskState.STARTED;
+        TaskState state = initialState != null ? initialState : STARTED;
         Task task = new Task(state);
 
-        if (state == TaskState.STARTED) {
+        if (state == STARTED) {
             task.setStartDate(LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0)));
         } else if (state == DONE) {
             LocalDateTime now = LocalDateTime.now();
@@ -129,7 +127,7 @@ public class TaskService {
      * Changes a task's state.
      */
     @Transactional
-    public Task changeTaskState(Long taskId, TaskState newState) {
+    public void changeTaskState(Long taskId, TaskState newState) {
         if (newState == null) throw new IllegalArgumentException(TaskConstants.NULL_TASK_STATE);
 
         Task task = getTaskOrThrow(taskId);
@@ -137,7 +135,7 @@ public class TaskService {
         switch (newState) {
             case TO_BE_STARTED -> {
                 // Transition to STARTED: set state and initialize startDate
-                task.setTaskState(TaskState.STARTED);
+                task.setTaskState(STARTED);
             }
             case STARTED -> {
                 task.setTaskState(DONE);
@@ -145,7 +143,6 @@ public class TaskService {
             }
             case DONE -> throw new IllegalStateException(TaskConstants.TASK_ALREADY_FINISHED);
         }
-        return task;
     }
 
     /**

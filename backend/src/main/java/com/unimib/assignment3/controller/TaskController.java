@@ -75,7 +75,7 @@ public class TaskController {
         try {
             facade.changeTaskState(taskId, taskState);
             httpServletRequest.setAttribute("taskId", taskId);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.created(URI.create(taskId + "")).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

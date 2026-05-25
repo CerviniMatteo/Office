@@ -179,6 +179,7 @@ public class GanttCalendarController implements DefaultController {
     }
 
     private void handleTaskChange(String message){
+        System.out.println("GanttCalendarController received WS message: " + message);
         if (message.contains("FETCH_TASK:")) {
             String substring = message.substring(message.indexOf(":") + 1);
             Long taskId = Long.valueOf(substring);
