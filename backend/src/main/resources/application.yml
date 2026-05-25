@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: test
 
 ---
 
@@ -41,3 +41,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: tuapassword
+    key-store-type: PKCS12
+    key-alias: myalias

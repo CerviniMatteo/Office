@@ -30,7 +30,7 @@ public class BackendApplication {
     }
 
     @Bean
-    @Profile("ui")
+    @Profile("test")
     CommandLineRunner loadFakeData(Facade facade) {
         return args -> {
 
