@@ -1,7 +1,7 @@
 package com.unimib.assignment3.controller;
 
-import com.unimib.assignment3.DTO.Message;
-import com.unimib.assignment3.repository.UserChatMappingRepository;
+import com.unimib.assignment3.DTO.MessageDTO;
+import com.unimib.assignment3.facade.Facade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,12 +11,17 @@ import java.util.List;
 @RequestMapping("/chats")
 public class ChatController {
     @Autowired
-    UserChatMappingRepository userChatMappingRepository;
+    Facade facade;
 
-    @GetMapping("/{employeeId}")
+    @GetMapping("/chatIds/{employeeId}")
     public List<Long> getChats(@PathVariable Long employeeId) {
         System.out.println("fetch chats by employeeId: " + employeeId);
+        return facade.findChatRoomIdByUserId(employeeId);
+    }
 
-        return userChatMappingRepository.findRoomIdsByUserId(employeeId);
+    @GetMapping("/messages/{roomId}/{employeeId}")
+    public List<MessageDTO> getUnreadMessages(@PathVariable Long roomId, @PathVariable Long employeeId) {
+        System.out.println("fetch messages by roomId: " + roomId);
+        return facade.findUnreadMessagesByRoomIdAndReceiverId(roomId, employeeId);
     }
 }

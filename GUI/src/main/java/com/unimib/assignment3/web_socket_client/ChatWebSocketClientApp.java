@@ -85,10 +85,23 @@ public class ChatWebSocketClientApp {
      */
     public void sendMessage(String message) {
         if (session != null && session.isConnected()) {
-            session.send("/app/chat", message);
+            session.send("/app/send", message);
             System.out.println("Sent message: " + message);
         } else {
             System.out.println("WebSocket not connected");
+        }
+    }
+
+    /**
+     * Send a read-receipt notification to the server on a dedicated STOMP destination.
+     * @param message serialized read receipt JSON
+     */
+    public void sendReadReceipt(String message) {
+        if (session != null && session.isConnected()) {
+            session.send("/app/remove", message);
+            System.out.println("Sent read receipt: " + message);
+        } else {
+            System.out.println("WebSocket not connected - read receipt not sent");
         }
     }
 }

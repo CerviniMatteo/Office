@@ -15,7 +15,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication
@@ -45,8 +44,12 @@ public class BackendApplication {
             );
 
             long l = 1L;
-            UserChatMapping userChatMapping1 = facade.saveChat(employees.getFirst().getWorkerId(), Collections.singletonList(l));
-            UserChatMapping userChatMapping2 = facade.saveChat(employees.getLast().getWorkerId(), Collections.singletonList(l));
+            UserChatMapping userChatMapping1 = facade.createChat(employees.getFirst().getWorkerId());
+            userChatMapping1.setRoomId(l);
+            facade.saveChat(userChatMapping1);
+            UserChatMapping userChatMapping2 = facade.createChat(employees.getLast().getWorkerId());
+            userChatMapping2.setRoomId(l);
+            facade.saveChat(userChatMapping2);
 
 
             System.out.println("Loaded " + tasks.size() + " tasks and " + employees.size() + " employees.");

@@ -25,6 +25,9 @@ public final class SessionManagerSingleton {
         sessionAttributes.put(key, value);
     }
 
+    public void removeAttribute(String key) {sessionAttributes.remove(key);
+    }
+
     public Object getAttribute(String key) {
         return sessionAttributes.get(key);
     }

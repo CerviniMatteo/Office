@@ -1,16 +1,18 @@
 package com.unimib.assignment3.facade;
 
+import com.unimib.assignment3.DTO.MessageDTO;
 import com.unimib.assignment3.DTO.TaskDTO;
 import com.unimib.assignment3.POJO.*;
 import com.unimib.assignment3.enums.*;
-import com.unimib.assignment3.repository.UserChatMappingRepository;
 import com.unimib.assignment3.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Facade class providing a unified interface to manage Employees, Supervisors, Tasks, and Teams.
@@ -39,7 +41,10 @@ public class Facade {
     private TeamService teamService;
 
     @Autowired
-    private UserChatMappingRepository userChatMappingRepository;
+    private UserChatMappingService userChatMappingService;
+
+    @Autowired
+    private UnreadMessagesService unreadMessagesService;
 
     // <---- Employee Methods ---->
 
@@ -959,7 +964,51 @@ public class Facade {
         return teamService.getEmployeesInTeamIdWithEmployeeRole(teamId, workerRole);
     }
 
-    public UserChatMapping saveChat(Long employeeId, List<Long> chatIds){
-        return userChatMappingRepository.saveAndFlush(new UserChatMapping(employeeId, chatIds));
+    public UserChatMapping createChat(Long employeeId){
+        return userChatMappingService.createChat(employeeId);
     }
+
+    public UserChatMapping saveChat(UserChatMapping userChatMapping){
+        return userChatMappingService.saveChat(userChatMapping);
+
+    }
+
+    public List<Long> findChatRoomIdByUserId(Long employeeId){
+        return userChatMappingService.findRoomIdsByUserId(employeeId);
+
+    }
+
+    public Pair<Long, Long> findUserIdByRoomIdAndUserId(Long roomId){
+        return userChatMappingService.findUserIdsByRoomId(roomId);
+    }
+
+    public UnreadMessages saveUnreadMessages(@NonNull UnreadMessages unreadMessages) {
+        return unreadMessagesService.saveUnreadMessages(unreadMessages);
+    }
+
+    public void appendUnreadMessage(@NonNull Long roomId, @NonNull String message) {
+        unreadMessagesService.appendMessage(roomId, message);
+    }
+
+    public void removeUnreadMessage(@NonNull Long roomId, @NonNull String message) {
+        unreadMessagesService.removeSingleMessage(roomId, message);
+    }
+
+    private List<String> getUnreadMessagesByRoomId(Long roomId) {
+        return unreadMessagesService.getMessages(roomId);
+    }
+
+    public List<MessageDTO> findUnreadMessagesByRoomIdAndReceiverId(@NonNull Long roomId, @NonNull Long employeeId) {
+        Pair<Long, Long> userIdPair = findUserIdByRoomIdAndUserId(roomId);
+        List<String> messages = getUnreadMessagesByRoomId(roomId);
+
+        return messages.stream().map(message ->
+                new MessageDTO(
+                        roomId,
+                        userIdPair.getFirst().equals(employeeId) ? userIdPair.getFirst() : userIdPair.getSecond(),
+                        message
+                )
+        ).collect(Collectors.toList());
+    }
+
 }

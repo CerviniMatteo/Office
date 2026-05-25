@@ -9,6 +9,7 @@ import com.unimib.assignment3.model.controller.TaskRestController;
 import com.unimib.assignment3.model.custom_entity.CalendarEntry;
 import com.unimib.assignment3.model.dto.TaskDTO;
 import com.unimib.assignment3.model.enums.TaskState;
+import com.unimib.assignment3.utils.SessionManagerSingleton;
 import com.unimib.assignment3.view.components.abstr.TaskCardBase;
 import com.unimib.assignment3.view.components.impl.custom.AlertDialog;
 import com.unimib.assignment3.view.components.impl.layout.Chat;
@@ -16,6 +17,7 @@ import com.unimib.assignment3.view.components.impl.layout.TaskCreationForm;
 import com.unimib.assignment3.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.view.factory.CalendarEntryStylingFactory;
 import com.unimib.assignment3.view.factory.TaskCardFactory;
+import com.unimib.assignment3.view.state.ApplicationStateManager;
 import com.unimib.assignment3.web_socket_client.TaskWebSocketClientApp;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -59,6 +61,9 @@ public class GanttCalendarController implements DefaultController {
 
     @FXML
     private Button chatButton;
+
+    @FXML
+    private Button logOutButton;
 
     private Chat chat;
 
@@ -175,6 +180,13 @@ public class GanttCalendarController implements DefaultController {
             } else {
                 centerContainer.getChildren().add(chat);
             }
+        });
+
+        logOutButton.setOnAction(_ -> {
+            SessionManagerSingleton sessionManagerSingleton = SessionManagerSingleton.getInstance();
+            sessionManagerSingleton.removeAttribute("employeeId");
+            ApplicationStateManager stateManager = ApplicationStateManager.getInstance();
+            stateManager.goBack();
         });
     }
 
