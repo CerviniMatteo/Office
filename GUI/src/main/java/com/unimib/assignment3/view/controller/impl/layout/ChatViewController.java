@@ -9,7 +9,6 @@ import com.unimib.assignment3.view.components.impl.custom.ChatEntry;
 import com.unimib.assignment3.view.components.impl.custom.StyledButton;
 import com.unimib.assignment3.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.web_socket_client.ChatWebSocketClientApp;
-import com.unimib.assignment3.model.dto.ReadReceipt;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -64,62 +63,23 @@ public class ChatViewController implements DefaultController {
         var task = getListTask();
         new Thread(task).start();
 
-        // listeners and websocket setup
-        setupBackButtonListener();
-        setupSendButtonListener();
-        setupChatContainerListener();
-
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
-    }
-
-    // =========================
-    // LISTENERS SETUP
-    // =========================
-    private void setupBackButtonListener() {
         backButton.setOnAction(e -> closeChat());
-    }
 
-    private void setupWebSocketClient() {
+        // WEBSOCKET
         chatWebSocketClientApp = new ChatWebSocketClientApp();
 
         try {
             chatWebSocketClientApp.start();
         } catch (Exception e) {
             AlertDialog.showAlert("Error", "Could not connect: " + e.getMessage());
-            return;
         }
 
-        chatWebSocketClientApp.receiveMessage().addListener((obs, oldV, newV) -> onWebSocketMessageReceived(newV));
-    }
+        chatWebSocketClientApp.receiveMessage().addListener((_, _, newV) -> {
+            if (newV == null || newV.isEmpty()) return;
 
-    private void onWebSocketMessageReceived(String newV) {
-        if (newV == null || newV.isEmpty()) return;
-
-        Platform.runLater(() -> {
-            try {
-                String trimmed = newV.trim();
-
-                if (trimmed.startsWith("[")) {
-                    // server sent an array of messages
-                    MessageDTO[] msgs = mapper.readValue(trimmed, MessageDTO[].class);
-                    for (MessageDTO msg : msgs) {
-                        // SAVE
-                        saveToFile(msg);
-
-                        // CACHE
-                        chatCache
-                                .computeIfAbsent(msg.chatId(), _ -> new ArrayList<>())
-                                .add(msg);
-
-                        // RENDER ONLY IF OPEN
-                        if (selectedChatId != null && selectedChatId.equals(msg.chatId())) {
-                            renderMessage(msg);
-                            sendReadReceipt(msg);
-                        }
-                    }
-                } else {
-                    MessageDTO msg = mapper.readValue(trimmed, MessageDTO.class);
+            Platform.runLater(() -> {
+                try {
+                    MessageDTO msg = mapper.readValue(newV, MessageDTO.class);
 
                     // SAVE
                     saveToFile(msg);
@@ -132,59 +92,38 @@ public class ChatViewController implements DefaultController {
                     // RENDER ONLY IF OPEN
                     if (selectedChatId != null && selectedChatId.equals(msg.chatId())) {
                         renderMessage(msg);
-                        sendReadReceipt(msg);
                     }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            });
+        });
+
+        sendButton.setOnAction(_ -> {
+            String text = inputForm.getText();
+            if (text == null || text.isEmpty()) return;
+            if (selectedChatId == null) return;
+
+            try {
+                MessageDTO msg = new MessageDTO(selectedChatId, employeeId, text);
+
+                chatWebSocketClientApp.sendMessage(
+                        mapper.writeValueAsString(msg)
+                );
+
+                inputForm.clear();
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-    }
 
-    private void sendReadReceipt(MessageDTO msg) {
-        try {
-            if(msg.senderId().equals(employeeId)) return;
-            ReadReceipt receipt = new ReadReceipt(
-                    msg.chatId(),
-                    msg.senderId(),
-                    employeeId,
-                    msg.message()
-            );
+        chatContainer.heightProperty().addListener((_, _, _) ->
+                scrollPane.setVvalue(1.0)
+        );
 
-            chatWebSocketClientApp.sendReadReceipt(
-                    mapper.writeValueAsString(receipt)
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setupSendButtonListener() {
-        sendButton.setOnAction(_ -> onSendButton());
-    }
-
-    private void onSendButton() {
-        String text = inputForm.getText();
-        if (text == null || text.isEmpty()) return;
-        if (selectedChatId == null) return;
-
-        try {
-            MessageDTO msg = new MessageDTO(selectedChatId, employeeId, text);
-
-            chatWebSocketClientApp.sendMessage(
-                    mapper.writeValueAsString(msg)
-            );
-
-            inputForm.clear();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setupChatContainerListener() {
-        chatContainer.heightProperty().addListener((_, _, _) -> scrollPane.setVvalue(1.0));
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 
     // =========================
@@ -198,28 +137,18 @@ public class ChatViewController implements DefaultController {
             List<Long> chatIds = task.getValue();
             if (chatIds == null) return;
 
-            for (Long roomId : chatIds) {
+            for (Long chatId : chatIds) {
                 StyledButton btn = new StyledButton();
-                btn.setText("Chat " + roomId);
+                btn.setText("Chat " + chatId);
                 btn.setMaxWidth(Double.MAX_VALUE);
 
-                btn.setOnAction(_ -> openChat(roomId));
+                btn.setOnAction(_ -> openChat(chatId));
 
                 chats.getChildren().add(btn);
-                getUnreadMessagesTask(roomId, employeeId);
             }
-
         });
 
         return task;
-    }
-
-    private void getUnreadMessagesTask(Long roomId, Long employeeId) {
-        var task = new ChatRestController().getUnreadMessages(roomId, employeeId);
-        task.setOnSucceeded(_ -> {
-            List<MessageDTO>  messages = task.getValue();
-            saveToFile(messages);
-        });
     }
 
     // =========================
@@ -236,9 +165,18 @@ public class ChatViewController implements DefaultController {
 
         chatContainer.getChildren().clear();
 
-        loadFromFile(chatId);
-
-        setupWebSocketClient();
+        // If we already have messages cached for this chat, render them instead
+        // of reloading from file (which may contain the same messages). This
+        // prevents duplicate rendering when messages were received while the
+        // user was offline and later saved to disk.
+        List<MessageDTO> cached = chatCache.get(chatId);
+        if (cached != null && !cached.isEmpty()) {
+            for (MessageDTO m : cached) {
+                renderMessage(m);
+            }
+        } else {
+            loadFromFile(chatId);
+        }
     }
 
     // =========================
@@ -260,12 +198,8 @@ public class ChatViewController implements DefaultController {
     // SAVE FILE
     // =========================
     private void saveToFile(MessageDTO msg) {
-        saveToFile(List.of(msg));
-    }
-
-    private void saveToFile(List<MessageDTO> msg) {
         try {
-            Path file = baseDir.resolve(msg.getFirst().chatId() + ".txt");
+            Path file = baseDir.resolve(msg.chatId() + ".txt");
 
             String json = mapper.writeValueAsString(msg);
 
@@ -294,23 +228,16 @@ public class ChatViewController implements DefaultController {
                     .filter(l -> !l.isBlank())
                     .forEach(line -> {
                         try {
-                            String trimmed = line.trim();
-                            if (trimmed.startsWith("[")) {
-                                MessageDTO[] msgs = mapper.readValue(trimmed, MessageDTO[].class);
-                                for (MessageDTO msg : msgs) {
-                                    chatCache
-                                            .computeIfAbsent(chatId, _ -> new ArrayList<>())
-                                            .add(msg);
+                            MessageDTO msg = mapper.readValue(line, MessageDTO.class);
 
-                                    renderMessage(msg);
-                                }
-                            } else {
-                                MessageDTO msg = mapper.readValue(trimmed, MessageDTO.class);
-
-                                chatCache
-                                        .computeIfAbsent(chatId, _ -> new ArrayList<>())
-                                        .add(msg);
-
+                            // Avoid adding/rendering duplicates: the same message
+                            // may already be present in memory because it was
+                            // received over the websocket and cached. Use
+                            // List.contains (MessageDTO is a record so equals
+                            // is field-based) to skip duplicates.
+                            var list = chatCache.computeIfAbsent(chatId, _ -> new ArrayList<>());
+                            if (!list.contains(msg)) {
+                                list.add(msg);
                                 renderMessage(msg);
                             }
 

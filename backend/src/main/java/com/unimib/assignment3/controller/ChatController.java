@@ -18,10 +18,4 @@ public class ChatController {
         System.out.println("fetch chats by employeeId: " + employeeId);
         return facade.findChatRoomIdByUserId(employeeId);
     }
-
-    @GetMapping("/messages/{roomId}/{employeeId}")
-    public List<MessageDTO> getUnreadMessages(@PathVariable Long roomId, @PathVariable Long employeeId) {
-        System.out.println("fetch messages by roomId: " + roomId);
-        return facade.findUnreadMessagesByRoomIdAndReceiverId(roomId, employeeId);
-    }
 }

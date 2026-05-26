@@ -43,9 +43,6 @@ public class Facade {
     @Autowired
     private UserChatMappingService userChatMappingService;
 
-    @Autowired
-    private UnreadMessagesService unreadMessagesService;
-
     // <---- Employee Methods ---->
 
     /**
@@ -973,42 +970,9 @@ public class Facade {
 
     }
 
-    public List<Long> findChatRoomIdByUserId(Long employeeId){
+    public List<Long> findChatRoomIdByUserId(Long employeeId) {
         return userChatMappingService.findRoomIdsByUserId(employeeId);
 
-    }
-
-    public Pair<Long, Long> findUserIdByRoomIdAndUserId(Long roomId){
-        return userChatMappingService.findUserIdsByRoomId(roomId);
-    }
-
-    public UnreadMessages saveUnreadMessages(@NonNull UnreadMessages unreadMessages) {
-        return unreadMessagesService.saveUnreadMessages(unreadMessages);
-    }
-
-    public void appendUnreadMessage(@NonNull Long roomId, @NonNull String message) {
-        unreadMessagesService.appendMessage(roomId, message);
-    }
-
-    public void removeUnreadMessage(@NonNull Long roomId, @NonNull String message) {
-        unreadMessagesService.removeSingleMessage(roomId, message);
-    }
-
-    private List<String> getUnreadMessagesByRoomId(Long roomId) {
-        return unreadMessagesService.getMessages(roomId);
-    }
-
-    public List<MessageDTO> findUnreadMessagesByRoomIdAndReceiverId(@NonNull Long roomId, @NonNull Long employeeId) {
-        Pair<Long, Long> userIdPair = findUserIdByRoomIdAndUserId(roomId);
-        List<String> messages = getUnreadMessagesByRoomId(roomId);
-
-        return messages.stream().map(message ->
-                new MessageDTO(
-                        roomId,
-                        userIdPair.getFirst().equals(employeeId) ? userIdPair.getFirst() : userIdPair.getSecond(),
-                        message
-                )
-        ).collect(Collectors.toList());
     }
 
 }
