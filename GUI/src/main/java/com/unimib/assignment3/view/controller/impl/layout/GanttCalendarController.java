@@ -34,11 +34,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static com.unimib.assignment3.model.enums.TaskState.*;
 
 public class GanttCalendarController implements DefaultController {
@@ -171,7 +169,7 @@ public class GanttCalendarController implements DefaultController {
 
         });
 
-        chatButton.setOnAction(_ -> {
+         chatButton.setOnAction(_ -> {
              if(chat == null){
                  chat = new Chat();
              }
@@ -278,7 +276,7 @@ public class GanttCalendarController implements DefaultController {
             taskLabel.getStyleClass().add("active-task-entry-lbl");
             taskLabel.setMaxWidth(Double.MAX_VALUE);
             taskLabel.setWrapText(true);
-            taskLabel.onMouseClickedProperty().set(e -> {
+            taskLabel.onMouseClickedProperty().set(_ -> {
                 Pair<CalendarEntry<TaskDTO>, TaskCardBase> pair = entries.get(taskDTO.taskId());
                 if (pair != null && pair.getValue() != null) {
                     pair.getValue().showTaskPopup();
@@ -287,5 +285,4 @@ public class GanttCalendarController implements DefaultController {
             activeTaskContainer.getChildren().add(taskLabel);
         }
     }
-
 }

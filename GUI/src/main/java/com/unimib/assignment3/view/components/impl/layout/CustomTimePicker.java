@@ -1,7 +1,7 @@
 package com.unimib.assignment3.view.components.impl.layout;
 
 import com.unimib.assignment3.model.enums.TimeFormat;
-import com.unimib.assignment3.view.controller.impl.layout.CustomTimePickerController;
+import com.unimib.assignment3.view.controller.impl.layout.custom_date_time.CustomTimePickerController;
 import com.unimib.assignment3.view.utils.FXMLUtilLoader;
 import javafx.scene.layout.HBox;
 
@@ -35,9 +35,5 @@ public class CustomTimePicker extends HBox {
 
     public void setTimeFormat(TimeFormat format) {
         controller.setTimeFormat(format);
-    }
-
-    public TimeFormat getTimeFormat() {
-        return controller.getTimeFormat();
     }
 }

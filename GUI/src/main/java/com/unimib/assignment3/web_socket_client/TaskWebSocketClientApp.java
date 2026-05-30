@@ -32,7 +32,7 @@ public class TaskWebSocketClientApp {
         StompSessionHandler sessionHandler = new StompSessionHandlerAdapter() {
             @Override
             public void afterConnected(StompSession session, @Nonnull StompHeaders connectedHeaders) {
-                System.out.println("Connected to WebSocket server");
+                System.out.println("Connected to: WebSocketStompClient server");
 
                 session.subscribe("/topic/task", new StompFrameHandler() {
                     @Override
@@ -44,10 +44,6 @@ public class TaskWebSocketClientApp {
                     public void handleFrame(@Nonnull StompHeaders headers, Object payload) {
                         String message = (String) payload;
                         System.out.println("Received message: " + message);
-                        // Ensure the JavaFX property is updated on the FX thread and
-                        // force a change even if the message is identical by resetting
-                        // to null first. This makes repeated identical messages fire
-                        // the change listener in controllers.
                         Platform.runLater(() -> {
                             try {
                                 property.set(null);

@@ -9,7 +9,6 @@ import com.unimib.assignment3.utils.SessionManagerSingleton;
 import com.unimib.assignment3.model.enums.BannerType;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -23,7 +22,7 @@ import static com.unimib.assignment3.view.components.impl.custom.InformationBann
 /**
  * Controller for the Login view. Handles UI initialization, layout clipping and login submission.
  */
-public class LoginViewController implements DefaultController {
+public class LoginController implements DefaultController {
 
     @FXML
     private Label insertEmailLabel;
@@ -44,21 +43,6 @@ public class LoginViewController implements DefaultController {
 
         if(submitButton != null)
             submitButton.setOnAction(_ -> handleSubmit(inputForm));
-    }
-
-    /**
-     * Attach handlers to controls looked up from a root node.
-     * @param root root node where controls will be looked up
-     */
-    public void attachHandlers(Parent root) {
-        try {
-            final TextField input = (TextField) root.lookup("#inputForm");
-            final Button submit = (Button) root.lookup("#submitButton");
-
-            if (submit != null) submit.setOnAction(event -> handleSubmit(input));
-        } catch (Exception e) {
-            showAlert("Error", e.getMessage());
-        }
     }
 
     /**

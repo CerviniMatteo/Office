@@ -1,7 +1,7 @@
 package com.unimib.assignment3.view.components.impl.layout;
 
 import com.unimib.assignment3.view.controller.abstr.DefaultController;
-import com.unimib.assignment3.view.controller.impl.layout.CustomDatePickerController;
+import com.unimib.assignment3.view.controller.impl.layout.custom_date_time.CustomDatePickerController;
 import com.unimib.assignment3.view.utils.FXMLUtilLoader;
 import javafx.scene.layout.VBox;
 

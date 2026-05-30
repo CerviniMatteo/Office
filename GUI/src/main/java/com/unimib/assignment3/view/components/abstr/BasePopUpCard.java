@@ -3,7 +3,6 @@ package com.unimib.assignment3.view.components.abstr;
 import com.unimib.assignment3.view.controller.abstr.DefaultController;
 import com.unimib.assignment3.view.state.ApplicationStateManager;
 import com.unimib.assignment3.view.utils.FXMLUtilLoader;
-import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
 public class BasePopUpCard extends BorderPane {

@@ -19,28 +19,38 @@ import java.lang.reflect.Type;
  */
 public class ChatWebSocketClientApp {
 
+    // Singleton instance to avoid multiple connections from different controllers
+    private static final ChatWebSocketClientApp INSTANCE = new ChatWebSocketClientApp();
+
     private StompSession session;
     private final StringProperty receivedMessage = new SimpleStringProperty();
     /**
      * Start the WebSocket STOMP client and subscribe to messages.
      * @throws Exception if the connection fails
      */
-    public void start() throws Exception {
-        WebSocketStompClient stompClient =
-                new WebSocketStompClient(new StandardWebSocketClient());
+    private ChatWebSocketClientApp() {
+        // private constructor for singleton
+    }
 
+    public static ChatWebSocketClientApp getInstance() {
+        return INSTANCE;
+    }
+
+    public synchronized void start() throws Exception {
+        // If already connected, do nothing
+        if (session != null && session.isConnected()) {
+            return;
+        }
+
+        WebSocketStompClient stompClient = new WebSocketStompClient(new StandardWebSocketClient());
         stompClient.setMessageConverter(new StringMessageConverter());
 
         StompSessionHandler sessionHandler = new StompSessionHandlerAdapter() {
-
             @Override
             public void afterConnected(StompSession session, @Nonnull StompHeaders connectedHeaders) {
-                System.out.println("Connected to WebSocket server");
-
-                // salva la sessione
+                System.out.println("Connected to: ChatWebSocketClientApp server");
                 ChatWebSocketClientApp.this.session = session;
 
-                // subscribe al topic
                 session.subscribe("/topic/chat", new StompFrameHandler() {
                     @Override
                     public Type getPayloadType(@Nonnull StompHeaders headers) {
@@ -68,10 +78,8 @@ public class ChatWebSocketClientApp {
             }
         };
 
-        // connessione
-        this.session = stompClient
-                .connectAsync("ws://localhost:8080/ws", sessionHandler)
-                .get();
+        // connect and wait for session (throws if fails)
+        this.session = stompClient.connectAsync("ws://localhost:8080/ws", sessionHandler).get();
     }
 
     public ObservableValue<String> receiveMessage() {
@@ -89,19 +97,6 @@ public class ChatWebSocketClientApp {
             System.out.println("Sent message: " + message);
         } else {
             System.out.println("WebSocket not connected");
-        }
-    }
-
-    /**
-     * Send a read-receipt notification to the server on a dedicated STOMP destination.
-     * @param message serialized read receipt JSON
-     */
-    public void sendReadReceipt(String message) {
-        if (session != null && session.isConnected()) {
-            session.send("/app/remove", message);
-            System.out.println("Sent read receipt: " + message);
-        } else {
-            System.out.println("WebSocket not connected - read receipt not sent");
         }
     }
 }
