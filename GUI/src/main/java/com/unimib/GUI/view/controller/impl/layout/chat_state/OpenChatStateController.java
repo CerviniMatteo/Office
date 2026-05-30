@@ -3,6 +3,7 @@ package com.unimib.GUI.view.controller.impl.layout.chat_state;
 import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.view.components.impl.layout.Chat;
 import com.unimib.GUI.view.controller.abstr.ChatController;
+import com.unimib.GUI.view.utils.FileUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -18,6 +19,8 @@ public class OpenChatStateController extends ChatController {
     public OpenChatStateController(Chat chat) {
         super(chat);
     }
+
+    private Path chatPath;
 
     @FXML
     private void initialize() {
@@ -50,7 +53,9 @@ public class OpenChatStateController extends ChatController {
                     MessageDTO msg = mapper.readValue(newV, MessageDTO.class);
 
                     // SAVE
-                    saveToFile(msg);
+                    chatPath = baseDir.resolve(msg.chatId() + ".txt");
+
+                    FileUtils.appendObject(chatPath, msg);
 
                     // CACHE
                     chatCache
@@ -96,7 +101,14 @@ public class OpenChatStateController extends ChatController {
         if (cached != null && !cached.isEmpty()) {
             cached.forEach(this::renderMessage);
         } else {
-            loadFromFile(chatId);
+            chatPath = baseDir.resolve(chatId + ".txt");
+            // Read
+            List<MessageDTO> messages =
+                    FileUtils.readObjects(chatPath, MessageDTO.class);
+
+            for (MessageDTO msg : messages) {
+                renderMessage(msg);
+            }
         }
     }
 
@@ -108,56 +120,5 @@ public class OpenChatStateController extends ChatController {
         // Preserve chat cache and shared state when switching back
         closed.adoptStateFrom(this);
         chat.setController(closed);
-    }
-
-
-    // =========================
-    // LOAD FROM FILE
-    // =========================
-    protected void loadFromFile(Long chatId) {
-        try {
-            Path file = baseDir.resolve(chatId + ".txt");
-
-            if (!Files.exists(file)) {
-                return;
-            }
-
-            try (var lines = Files.lines(file)) {
-                lines.filter(line -> !line.isBlank()).forEach(line -> {
-                    try {
-                        MessageDTO msg = mapper.readValue(line, MessageDTO.class);
-
-                        var list = chatCache.computeIfAbsent(chatId, _ -> new ArrayList<>());
-
-                        if (!list.contains(msg)) {
-                            list.add(msg);
-                            renderMessage(msg);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveToFile(MessageDTO msg) {
-        try {
-            Path file = baseDir.resolve(msg.chatId() + ".txt");
-
-            String json = mapper.writeValueAsString(msg);
-
-            Files.writeString(
-                    file,
-                    json + System.lineSeparator(),
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.APPEND
-            );
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

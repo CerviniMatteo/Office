@@ -174,8 +174,10 @@ public class GanttCalendarController implements DefaultController {
                  chat = new Chat();
              }
             if(centerContainer.getChildren().contains(chat)){
+                chatButton.setText("OPEN CHAT");
                 centerContainer.getChildren().remove(chat);
             } else {
+                chatButton.setText("CLOSE CHAT");
                 centerContainer.getChildren().add(chat);
             }
         });

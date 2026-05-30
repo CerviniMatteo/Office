@@ -15,8 +15,8 @@
     </parent>
 
     <properties>
-        <java.version>25</java.version>
-        <javafx.version>25</javafx.version>
+        <java.version>24</java.version>
+        <javafx.version>24</javafx.version>
     </properties>
 
     <dependencies>
