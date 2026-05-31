@@ -11,9 +11,21 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
 import java.nio.file.*;
 import java.util.*;
 
+/**
+ * Abstract base for chat state controllers.
+ *
+ * FIX 1: chatCache moved to the Chat component (stable, long-lived owner) so it
+ *         survives controller switches without any adoptStateFrom() copy.
+ *         This makes Bug 2 (re-open shows only last message) structurally impossible.
+ *
+ * FIX 2: adoptStateFrom() no longer copies the cache — it only transfers the
+ *         ephemeral fields (selectedChatId, employeeId, chatWebSocketClientApp)
+ *         that genuinely belong to the controller instance.
+ */
 public abstract class ChatController implements DefaultController {
 
     protected Chat chat;
@@ -31,8 +43,9 @@ public abstract class ChatController implements DefaultController {
 
     protected ChatWebSocketClientApp chatWebSocketClientApp;
 
-    protected final Map<Long, List<MessageDTO>> chatCache = new HashMap<>();
     protected final ObjectMapper mapper = new ObjectMapper();
+
+    protected final Map<Long, List<MessageDTO>> chatCache;
 
     protected final Path baseDir = Paths.get(
             System.getProperty("user.home"),
@@ -40,10 +53,14 @@ public abstract class ChatController implements DefaultController {
             "chats"
     );
 
-    public ChatController(Chat chat) {
+    public ChatController(Chat chat, Map<Long, List<MessageDTO>> chatCache) {
         this.chat = chat;
+        this.chatCache = chatCache;
     }
 
+    // =========================
+    // INITIALISE
+    // =========================
 
     @FXML
     private void initialize() {
@@ -55,6 +72,7 @@ public abstract class ChatController implements DefaultController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         chatWebSocketClientApp = ChatWebSocketClientApp.getInstance();
         try {
             chatWebSocketClientApp.start();
@@ -63,27 +81,28 @@ public abstract class ChatController implements DefaultController {
         }
     }
 
-    protected void baseInitialize(){
-            initialize();
+    protected void baseInitialize() {
+        initialize();
     }
 
     // =========================
     // STATE TRANSFER
     // =========================
+
     /**
-     * Copy shared state from another controller instance.
-     * Called when switching between Closed and Open states to preserve cache and identifiers.
+     * Copy ephemeral controller-scoped state when switching between Closed/Open.
+     * The cache is NOT copied here — it lives on Chat and is already shared.
      */
     public void adoptStateFrom(ChatController other) {
-        this.chatCache.putAll(other.chatCache);
-        this.selectedChatId = other.selectedChatId;
-        this.employeeId = other.employeeId;
+        this.selectedChatId         = other.selectedChatId;
+        this.employeeId             = other.employeeId;
         this.chatWebSocketClientApp = other.chatWebSocketClientApp;
     }
 
     // =========================
     // RENDER MESSAGE
     // =========================
+
     protected void renderMessage(MessageDTO msg) {
         Label label = createMessage(msg.message());
 

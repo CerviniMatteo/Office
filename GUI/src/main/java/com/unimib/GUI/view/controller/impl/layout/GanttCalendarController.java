@@ -18,6 +18,7 @@ import com.unimib.GUI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.view.factory.CalendarEntryStylingFactory;
 import com.unimib.GUI.view.factory.TaskCardFactory;
 import com.unimib.GUI.view.state.ApplicationStateManager;
+import com.unimib.GUI.web_socket_client.ChatWebSocketClientApp;
 import com.unimib.GUI.web_socket_client.TaskWebSocketClientApp;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -184,6 +185,7 @@ public class GanttCalendarController implements DefaultController {
 
         logOutButton.setOnAction(_ -> {
             webSocketClientApp.stop();
+            ChatWebSocketClientApp.resetInstance();
             SessionManagerSingleton sessionManagerSingleton = SessionManagerSingleton.getInstance();
             sessionManagerSingleton.removeAttribute("employeeId");
             ApplicationStateManager stateManager = ApplicationStateManager.getInstance();
