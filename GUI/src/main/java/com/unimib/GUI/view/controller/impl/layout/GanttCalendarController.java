@@ -162,7 +162,7 @@ public class GanttCalendarController implements DefaultController {
             AlertDialog.showAlert("Error", "Could not connect to GanttCalendar: " + e.getMessage());
         }
 
-        webSocketClientApp.getProperty().addListener((_, _, newVal) -> {;
+        webSocketClientApp.getProperty().addListener((_, _, newVal) -> {
             if (newVal != null && !newVal.isEmpty()) {
                 handleTaskChange(newVal);
             }
@@ -183,6 +183,7 @@ public class GanttCalendarController implements DefaultController {
         });
 
         logOutButton.setOnAction(_ -> {
+            webSocketClientApp.stop();
             SessionManagerSingleton sessionManagerSingleton = SessionManagerSingleton.getInstance();
             sessionManagerSingleton.removeAttribute("employeeId");
             ApplicationStateManager stateManager = ApplicationStateManager.getInstance();
