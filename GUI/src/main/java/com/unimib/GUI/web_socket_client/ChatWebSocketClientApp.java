@@ -50,7 +50,15 @@ public class ChatWebSocketClientApp {
      * Call on logout AFTER stop().
      */
     public static synchronized void resetInstance() {
-        INSTANCE = null;
+        if (INSTANCE != null) {
+            try {
+                INSTANCE.stop();
+            } catch (Exception e) {
+                System.err.println("Error stopping ChatWebSocketClientApp during reset: " + e.getMessage());
+            } finally {
+                INSTANCE = null;
+            }
+        }
     }
 
     /**
