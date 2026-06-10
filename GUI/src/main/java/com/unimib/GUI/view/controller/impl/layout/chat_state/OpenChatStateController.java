@@ -14,23 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controller for the "chat open" state.
- *
- * FIX 1 (listener leak / message duplication on re-login):
- *   The ChangeListener is stored in a field so it can be removed in closeChat().
- *   Without removal, every login adds another listener to the singleton's
- *   receivedMessage property, causing 1 incoming message to fire N times.
- *
- * FIX 2 (re-open shows only last message):
- *   displayChat() now seeds getChatCache() from disk when there is no cached data,
- *   so the cache is always the authoritative, unified source of truth.
- *   Subsequent opens hit the cache (which includes both persisted and live messages).
- *
- * FIX 3 (chatPath overwritten by unrelated messages):
- *   chatPath is derived inline inside the listener from msg.chatId() instead of
- *   being stored as a mutable instance field that any arriving message could clobber.
- */
 public class OpenChatStateController extends ChatController {
 
     protected OpenChatStateController(Chat chat, Map<Long, List<MessageDTO>> chatCache) {
@@ -105,10 +88,7 @@ public class OpenChatStateController extends ChatController {
     public void displayChat(Long chatId) {
         selectedChatId = chatId;
 
-        chats.setVisible(false);
-        chats.setManaged(false);
-        chatArea.setVisible(true);
-        chatArea.setManaged(true);
+        closeChat(false, true);
 
         chatContainer.getChildren().clear();
 
@@ -127,13 +107,21 @@ public class OpenChatStateController extends ChatController {
         }
     }
 
+    private void closeChat(boolean chatsIdOpen, boolean chatAreaOpen){
+        chats.setVisible(chatsIdOpen);
+        chats.setManaged(chatsIdOpen);
+        chatArea.setVisible(chatAreaOpen);
+        chatArea.setManaged(chatAreaOpen);
+    }
+
     // =========================
     // CLOSE CHAT
     // =========================
 
     private void closeChat() {
         chatWebSocketClientApp.removeReceiveListener(msgListener);
-
+        chatCache.clear();
+        closeChat(true, false);
         ClosedChatStateController closed = new ClosedChatStateController(this.chat, this.chatCache);
         closed.adoptStateFrom(this);
         chat.setController(closed);

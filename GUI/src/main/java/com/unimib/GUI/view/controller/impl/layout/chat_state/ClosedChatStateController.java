@@ -12,18 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controller for the "chat list" state (no chat currently open).
- *
- * No changes to logic from the original. Included here so the full picture
- * is clear: this controller never touches the WebSocket listener, so it has
- * no listener-leak responsibility. The cache it carries via Chat is already
- * persistent and shared — no adoption of cache needed.
- */
+
 public class ClosedChatStateController extends ChatController {
 
     public ClosedChatStateController(Chat chat) {
-        super(chat, new HashMap<Long, List<MessageDTO>>());
+        super(chat, new HashMap<>());
     }
 
     protected ClosedChatStateController(Chat chat, Map<Long, List<MessageDTO>> chatCache) {

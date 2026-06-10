@@ -15,17 +15,6 @@ import javafx.scene.layout.VBox;
 import java.nio.file.*;
 import java.util.*;
 
-/**
- * Abstract base for chat state controllers.
- *
- * FIX 1: chatCache moved to the Chat component (stable, long-lived owner) so it
- *         survives controller switches without any adoptStateFrom() copy.
- *         This makes Bug 2 (re-open shows only last message) structurally impossible.
- *
- * FIX 2: adoptStateFrom() no longer copies the cache — it only transfers the
- *         ephemeral fields (selectedChatId, employeeId, chatWebSocketClientApp)
- *         that genuinely belong to the controller instance.
- */
 public abstract class ChatController implements DefaultController {
 
     protected Chat chat;
