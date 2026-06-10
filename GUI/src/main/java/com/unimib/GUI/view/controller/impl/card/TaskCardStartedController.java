@@ -4,7 +4,7 @@ import com.unimib.GUI.model.dto.AcceptTaskRequestDTO;
 import com.unimib.GUI.model.dto.ChangeTaskStateRequestDTO;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.view.controller.abstr.TaskCardBaseWithWorkersImgController;
-import com.unimib.GUI.view.utils.StringFormatter;
+import com.unimib.GUI.view.utils.StringHelper;
 import com.unimib.GUI.view.utils.WorkerImageUtils;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -30,7 +30,7 @@ public class TaskCardStartedController extends TaskCardBaseWithWorkersImgControl
         getTitleLabel().getStyleClass().add("task-started");
 
         getDateLabel().setText(
-                "TASK STARTED ON: " + StringFormatter.localDateTimeFormatter(getCurrentTask().startDate())
+                "TASK STARTED ON: " + StringHelper.localDateTimeFormatter(getCurrentTask().startDate())
         );
 
         WorkerImageUtils.populateWorkerImages(

@@ -2,7 +2,7 @@ package com.unimib.GUI.view.controller.impl.card;
 
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.view.controller.abstr.TaskCardBaseWithWorkersImgController;
-import com.unimib.GUI.view.utils.StringFormatter;
+import com.unimib.GUI.view.utils.StringHelper;
 import com.unimib.GUI.view.utils.WorkerImageUtils;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -19,8 +19,8 @@ public class TaskCardDoneController extends TaskCardBaseWithWorkersImgController
         super.initialize();
 
         getDateLabel().setText(
-                "TASK STARTED ON: " + StringFormatter.localDateTimeFormatter(getCurrentTask().startDate()) + "\n" +
-                "TASK COMPLETED ON: " + StringFormatter.localDateTimeFormatter(getCurrentTask().endDate())
+                "TASK STARTED ON: " + StringHelper.localDateTimeFormatter(getCurrentTask().startDate()) + "\n" +
+                "TASK COMPLETED ON: " + StringHelper.localDateTimeFormatter(getCurrentTask().endDate())
         );
 
         WorkerImageUtils.populateWorkerImages(

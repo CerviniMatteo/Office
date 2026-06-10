@@ -14,10 +14,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import static com.unimib.GUI.utils.StringHelper.replaceSpaces;
 import static com.unimib.GUI.view.components.impl.custom.AlertDialog.showAlert;
 import static com.unimib.GUI.view.components.impl.custom.InformationBanner.timeInSeconds;
+import static com.unimib.GUI.view.utils.StringHelper.hashString;
 
 /**
  * Controller for the Login view. Handles UI initialization, layout clipping and login submission.
@@ -55,7 +57,8 @@ public class LoginController implements DefaultController {
             return;
         }
 
-        String email = input.getText();
+        String email = hashString(input.getText());
+
         try {
             LoginRestController restController = new LoginRestController();
             Task<String> loginTask = restController.login(email);

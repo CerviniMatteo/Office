@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 import java.util.Locale;
 import static com.unimib.backend.constants.CommonConstants.EMAIL_SUFFIX;
+import static com.unimib.backend.utils.StringHelper.hashString;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 /**
  * Abstract base class representing a person in the system.
@@ -206,7 +208,7 @@ public abstract class Worker {
     public static String generateEmail(String name, String surname) {
         String email =  name.toLowerCase(Locale.ROOT) + "." + surname.toLowerCase(Locale.ROOT) + EMAIL_SUFFIX;
         EmailValidator.getInstance().isValid(email);
-        return email;
+        return hashString(email);
     }
 
     @Override
