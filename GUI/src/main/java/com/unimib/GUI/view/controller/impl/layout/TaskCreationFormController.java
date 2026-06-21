@@ -1,5 +1,6 @@
 package com.unimib.GUI.view.controller.impl.layout;
 
+import com.unimib.GUI.model.controller.TaskRestController;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.model.enums.TaskState;
 import com.unimib.GUI.model.enums.TimeFormat;
@@ -8,6 +9,7 @@ import com.unimib.GUI.view.components.impl.layout.CustomDatePicker;
 import com.unimib.GUI.view.components.impl.layout.CustomTimePicker;
 import com.unimib.GUI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.view.utils.ComponentVisibilityUtils;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,7 +22,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 
 import java.time.LocalDateTime;
-import java.util.function.Consumer;
 
 import static com.unimib.GUI.view.components.impl.custom.AlertDialog.showAlert;
 
@@ -32,7 +33,6 @@ public class TaskCreationFormController implements DefaultController {
     @FXML private HBox header;
 
     @FXML private Button submitButton;
-    @FXML private Button closeButton;
 
     @FXML private Pane startPickerContainer;
     @FXML private Pane startTimeBox;
@@ -40,98 +40,184 @@ public class TaskCreationFormController implements DefaultController {
     @FXML private Pane endTimeBox;
 
     @FXML private StackPane shrinkContainer;
+
     // ================= INTERNAL COMPONENTS =================
     private CustomDatePicker startDatePicker;
     private CustomDatePicker endDatePicker;
     private CustomTimePicker startTimePicker;
     private CustomTimePicker endTimePicker;
 
-    // ================= CALLBACKS =================
-    private Consumer<TaskDTO> onSuccess;
-    private Runnable onClose;
+    private ToggleButton timeFormatToggle;
+    private Circle toggleThumb;
+    private Label ampmLabel;
+    private Label h24Label;
+
+    private TaskRestController restController;
 
     // ================= INITIALIZATION =================
     @FXML
     private void initialize() {
+        initPickers();
+        initTimeFormatToggle();
+        initActions();
 
-        // Create components
+        restController = new TaskRestController();
+    }
+
+    /**
+     * Creates the date/time picker components and injects them into their containers.
+     */
+    private void initPickers() {
         startDatePicker = new CustomDatePicker();
         endDatePicker = new CustomDatePicker();
 
         startTimePicker = new CustomTimePicker();
         endTimePicker = new CustomTimePicker();
 
-        // Inject components
         startPickerContainer.getChildren().add(startDatePicker);
         startTimeBox.getChildren().add(startTimePicker);
         endPickerContainer.getChildren().add(endDatePicker);
         endTimeBox.getChildren().add(endTimePicker);
+    }
 
-        // Actions
-        submitButton.setOnAction(_ -> handleSubmit());
+    /**
+     * Builds the AM/PM <-> 24h toggle switch and wires it into the header.
+     */
+    private void initTimeFormatToggle() {
+        timeFormatToggle = new ToggleButton();
+        timeFormatToggle.getStyleClass().add("toggle-switch");
 
-        if (closeButton != null) {
-            closeButton.setOnAction(_ -> {
-                if (onClose != null) onClose.run();
-            });
+        toggleThumb = new Circle(13);
+        toggleThumb.setTranslateX(-15);
+        toggleThumb.setStyle("-fx-fill: white;");
+        timeFormatToggle.setGraphic(toggleThumb);
+
+        ampmLabel = new Label("AM/PM");
+        ampmLabel.getStyleClass().add("insert-text-lbl");
+
+        h24Label = new Label("24h");
+        h24Label.getStyleClass().add("insert-text-lbl");
+        ComponentVisibilityUtils.setDisabled(h24Label);
+
+        Region leftSpacer = new Region();
+        leftSpacer.setPrefWidth(20);
+        Region rightSpacer = new Region();
+        rightSpacer.setPrefWidth(20);
+
+        timeFormatToggle.selectedProperty().addListener((_, _, isSelected) -> applyTimeFormat(isSelected));
+
+        header.getChildren().add(0, ampmLabel);
+        header.getChildren().add(1, leftSpacer);
+        header.getChildren().add(2, timeFormatToggle);
+        header.getChildren().add(3, rightSpacer);
+        header.getChildren().add(4, h24Label);
+    }
+
+    /**
+     * Applies the given time format to both time pickers and updates the toggle visuals/labels.
+     */
+    private void applyTimeFormat(boolean is24h) {
+        TimeFormat format;
+
+        if (is24h) {
+            toggleThumb.setTranslateX(15);
+            ComponentVisibilityUtils.setDisabled(ampmLabel);
+            ComponentVisibilityUtils.setEnabled(h24Label);
+            format = TimeFormat.H24;
+        } else {
+            toggleThumb.setTranslateX(-15);
+            ComponentVisibilityUtils.setEnabled(ampmLabel);
+            ComponentVisibilityUtils.setDisabled(h24Label);
+            format = TimeFormat.AMPM;
         }
 
-        createToggleButton();
+        startTimePicker.setTimeFormat(format);
+        endTimePicker.setTimeFormat(format);
     }
 
-    private void createToggleButton(){
-        ToggleButton toggle = new ToggleButton();
-        toggle.getStyleClass().add("toggle-switch");
-
-        Circle circle = new Circle(13);
-        circle.setTranslateX(-15);
-        circle.setStyle("-fx-fill: white;");
-        toggle.setGraphic(circle);
-        Label AMPM  = new Label("AM/PM");
-        AMPM.getStyleClass().add("insert-text-lbl");
-        Label twenty24h = new Label("24h");
-        twenty24h.getStyleClass().add("insert-text-lbl");
-        ComponentVisibilityUtils.setDisabled(twenty24h);
-        Region region1 = new Region();
-        region1.setPrefWidth(20);
-        Region region2 = new Region();
-        region2.setPrefWidth(20);
-
-        toggle.selectedProperty().addListener((_, _, isSelected) -> {
-            TimeFormat format;
-
-            if (isSelected) {
-                circle.setTranslateX(15);
-                ComponentVisibilityUtils.setDisabled(AMPM);
-                ComponentVisibilityUtils.setEnabled(twenty24h);
-                format = TimeFormat.H24;
-            } else {
-                circle.setTranslateX(-15);
-                ComponentVisibilityUtils.setEnabled(AMPM);
-                ComponentVisibilityUtils.setDisabled(twenty24h);
-                format = TimeFormat.AMPM;
-            }
-            startTimePicker.setTimeFormat(format);
-            endTimePicker.setTimeFormat(format);
-        });
-
-        header.getChildren().add(0, AMPM);
-        header.getChildren().add(1, region1);
-        header.getChildren().add(2, toggle);
-        header.getChildren().add(3, region2);
-        header.getChildren().add(4, twenty24h);
+    /**
+     * Wires up button actions.
+     */
+    private void initActions() {
+        submitButton.setOnAction(_ -> handleSubmit());
     }
 
+    // ================= PUBLIC API =================
+
+    /**
+     * Resets the form to its default state:
+     * - clears the description field
+     * - clears both date pickers
+     * - clears both time pickers
+     * - resets the time format toggle to AM/PM (default)
+     *
+     * Safe to call multiple times (e.g. after a successful submit, or when the
+     * creation form is reopened) without re-instantiating any component.
+     */
+    public void clear() {
+        descriptionField.clear();
+
+        clearDatePicker(startDatePicker);
+        clearDatePicker(endDatePicker);
+        clearTimePicker(startTimePicker);
+        clearTimePicker(endTimePicker);
+
+        resetTimeFormatToggle();
+    }
+
+    private void clearDatePicker(CustomDatePicker picker) {
+        if (picker == null) {
+            return;
+        }
+        picker.clear();
+    }
+
+    private void clearTimePicker(CustomTimePicker picker) {
+        if (picker == null) {
+            return;
+        }
+        picker.clear();
+    }
+
+    /**
+     * Brings the AM/PM <-> 24h toggle back to its default (AM/PM) state without
+     * re-triggering side effects beyond what selectedProperty's listener already does.
+     */
+    private void resetTimeFormatToggle() {
+        if (timeFormatToggle.isSelected()) {
+            timeFormatToggle.setSelected(false);
+        } else {
+            // Toggle already at default; still make sure pickers/labels are in sync.
+            applyTimeFormat(false);
+        }
+    }
+
+    // ================= SUBMIT HANDLING =================
     private void handleSubmit() {
+
+        if (descriptionField.getText() == null || descriptionField.getText().isBlank()) {
+            AlertDialog.showAlert("Error", "Description cannot be empty");
+            return;
+        }
+
+        final TaskDTO taskDTO;
         try {
-            TaskDTO task = buildTaskDTO();
-            if(task.description().isEmpty()){
-                AlertDialog.showAlert("Error", "Description cannot be empty");
-            }
-            else if (onSuccess != null) onSuccess.accept(task);
+            taskDTO = buildTaskDTO();
         } catch (Exception e) {
             showAlert("Error", e.getMessage());
+            return;
         }
+
+        Task<String> createTaskTask = restController.createTask(taskDTO);
+        createTaskTask.setOnSucceeded(_ -> {
+            showAlert("Success", "Task created successfully");
+            clear();
+        });
+        createTaskTask.setOnFailed(_ -> {
+            showAlert("Error", "Failed to create task: " + createTaskTask.getException().getMessage());
+        });
+
+        new Thread(createTaskTask).start();
     }
 
     // ================= DTO =================
@@ -166,18 +252,5 @@ public class TaskCreationFormController implements DefaultController {
                 endDatePicker.getSelectedDateTime(),
                 endTimePicker.getSelectedTime()
         );
-    }
-
-    // ================= CALLBACKS =================
-    public void setOnSuccess(Consumer<TaskDTO> onSuccess) {
-        this.onSuccess = onSuccess;
-    }
-
-    public void setOnClose(Runnable onClose) {
-        this.onClose = onClose;
-    }
-
-    public Button getCloseButton() {
-        return closeButton;
     }
 }

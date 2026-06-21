@@ -13,89 +13,72 @@
 
 <fx:root type="BorderPane"
          xmlns="http://javafx.com/javafx/21"
-         xmlns:fx="http://javafx.com/fxml/1">
+         xmlns:fx="http://javafx.com/fxml/1"
+         maxWidth="Infinity"
+         minHeight="-Infinity"
+         maxHeight="Infinity">
 
     <padding>
-        <Insets top="15" right="15" bottom="15" left="15"/>
+        <Insets top="12" right="12" bottom="12" left="12"/>
     </padding>
 
-    <!-- DATE -->
     <top>
         <Label fx:id="dateLabel"
-               styleClass="task-date-lbl"
+               styleClass="task-date-lbl-compact"
                wrapText="true"
+               textOverrun="CLIP"
+               maxWidth="Infinity"
                BorderPane.alignment="CENTER"
-               textAlignment="CENTER"/>
+               textAlignment="CENTER">
+            <BorderPane.margin>
+                <Insets bottom="10"/>
+            </BorderPane.margin>
+        </Label>
     </top>
 
     <center>
-        <VBox alignment="TOP_CENTER"
-              spacing="20"
-              BorderPane.alignment="CENTER">
+        <VBox spacing="10" maxWidth="Infinity">
 
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
+            <Label fx:id="titleLabel"
+                   styleClass="task-description-lbl-compact"
+                   wrapText="true"
+                   textOverrun="CLIP"
+                   maxWidth="Infinity">
+                <VBox.margin>
+                    <Insets top="10" bottom="10"/>
+                </VBox.margin>
+            </Label>
 
-            <!-- ===== TITLE SECTION ===== -->
-            <VBox alignment="CENTER" spacing="10">
+            <Label fx:id="stateLabel"
+                   styleClass="task-state-lbl-compact"
+                   wrapText="true"
+                   textOverrun="CLIP"
+                   maxWidth="Infinity"
+                   alignment="CENTER"
+                   textAlignment="CENTER"
+                   text="COMPLETED"/>
 
-                <Label fx:id="titleLabel"
-                       styleClass="task-description-lbl"
-                       wrapText="true"
-                       maxWidth="550"
-                       alignment="CENTER"
-                       textAlignment="CENTER"/>
+            <GridPane fx:id="workersGrid"
+                      hgap="8" vgap="8"
+                      maxWidth="Infinity">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                </rowConstraints>
+            </GridPane>
 
-                <Label fx:id="stateLabel"
-                       styleClass="task-state-lbl"
-                       wrapText="true"
-                       alignment="CENTER"
-                       textAlignment="CENTER"
-                       text="COMPLETED"/>
-
-            </VBox>
-
-            <!-- ===== BOTTOM SECTION ===== -->
-            <VBox alignment="CENTER" spacing="25">
-                <HBox alignment="CENTER_RIGHT">
-                    <GridPane fx:id="workersGrid"
-                              hgap="15"
-                              vgap="15"
-                              maxWidth="300">
-
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="50"/>
-                            <ColumnConstraints percentWidth="50"/>
-                        </columnConstraints>
-
-                        <rowConstraints>
-                            <RowConstraints percentHeight="100"/>
-                        </rowConstraints>
-
-                    </GridPane>
-
-                </HBox>
-
+            <HBox spacing="8" maxWidth="Infinity">
                 <Button fx:id="resetButton"
-                        text="RESET TASK"
-                        styleClass="styled-btn"/>
-
-                <HBox alignment="CENTER" spacing="20">
-
-                    <Button fx:id="deleteButton"
-                            text="DELETE TASK"
-                            styleClass="styled-btn-red"/>
-
-                    <Region HBox.hgrow="ALWAYS"/>
-
-                    <Button fx:id="closeButton"
-                            text="CLOSE CARD"
-                            styleClass="styled-btn-black"/>
-
-                </HBox>
-
-            </VBox>
+                        text="RESET"
+                        styleClass="styled-btn-compact"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="deleteButton"
+                        text="DELETE"
+                        styleClass="styled-btn-red-compact"/>
+            </HBox>
 
         </VBox>
     </center>

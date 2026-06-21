@@ -15,6 +15,7 @@ public class FXMLUtilLoader {
         try {
             loader.load();
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException("Failed to load " + fxmlResource, e);
         }
 

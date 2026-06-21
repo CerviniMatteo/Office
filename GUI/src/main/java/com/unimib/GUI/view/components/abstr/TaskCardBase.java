@@ -1,15 +1,18 @@
 package com.unimib.GUI.view.components.abstr;
 
 import com.unimib.GUI.view.controller.abstr.TaskCardBaseController;
+import com.unimib.GUI.view.utils.FXMLUtilLoader;
+import javafx.scene.layout.BorderPane;
+
 /**
  * Base class for task cards. Subclasses load a specific FXML layout but
  * share the same controller behavior (TaskCardController).
  */
-public abstract class TaskCardBase extends BasePopUpCard {
+public abstract class TaskCardBase extends BorderPane {
 
     protected TaskCardBase(String fxmlResource, TaskCardBaseController controller) {
-        super(fxmlResource, controller, "task-card", 700, 400);
-        controller.getCloseButton().setOnAction(_ -> removeTaskPopup());
+        super();
+        FXMLUtilLoader.load(this, controller, fxmlResource, "task-card");
     }
 
 

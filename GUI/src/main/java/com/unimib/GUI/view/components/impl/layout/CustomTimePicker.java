@@ -36,4 +36,12 @@ public class CustomTimePicker extends HBox {
     public void setTimeFormat(TimeFormat format) {
         controller.setTimeFormat(format);
     }
+
+    /**
+     * Resets this time picker to its default state (current system time,
+     * clamped to the allowed range). Time format selection is preserved.
+     */
+    public void clear() {
+        controller.clear();
+    }
 }

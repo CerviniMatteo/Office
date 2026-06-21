@@ -2,7 +2,7 @@ package com.unimib.GUI.view.controller.impl.layout;
 
 import com.unimib.GUI.view.components.impl.custom.InformationBanner;
 import com.unimib.GUI.model.controller.LoginRestController;
-import com.unimib.GUI.view.components.impl.layout.GanttCalendar;
+import com.unimib.GUI.view.components.impl.layout.TaskContainer;
 import com.unimib.GUI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.view.state.ApplicationStateManager;
 import com.unimib.GUI.utils.SessionManagerSingleton;
@@ -14,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import static com.unimib.GUI.utils.StringHelper.replaceSpaces;
 import static com.unimib.GUI.view.components.impl.custom.AlertDialog.showAlert;
@@ -67,7 +66,7 @@ public class LoginController implements DefaultController {
                 try {
                     Long response = Long.parseLong(replaceSpaces(loginTask.getValue()));
                     SessionManagerSingleton.getInstance().setAttribute("employeeId", response);
-                    stateManager.replaceWindow(new GanttCalendar());
+                    stateManager.replaceWindow(new TaskContainer());
 
                     showBanner(BannerType.SUCCESS, "Login successful");
                 } catch (Exception ex){

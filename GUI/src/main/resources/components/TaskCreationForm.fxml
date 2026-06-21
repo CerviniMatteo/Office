@@ -9,87 +9,69 @@
          xmlns:fx="http://javafx.com/fxml/1">
 
     <center>
-        <StackPane alignment="CENTER">
+        <ScrollPane
+                fitToWidth="true"
+                hbarPolicy="NEVER"
+                styleClass="transparent-scroll"
+                prefHeight="500"
+                maxHeight="980">
 
-            <ScrollPane
-                    fitToWidth="true"
-                    hbarPolicy="NEVER"
-                    styleClass="transparent-scroll"
-                    prefHeight="500"
-                    maxHeight="980">
+            <StackPane>
 
-                <StackPane alignment="CENTER">
+                <VBox
+                        alignment="CENTER"
+                        spacing="10"
+                        maxWidth="550"
+                        minHeight="430"
+                        styleClass="semi-transparent-bg">
 
-                    <VBox
-                            alignment="CENTER"
-                            spacing="10"
-                            maxWidth="550"
-                            minHeight="430"
-                            styleClass="design-rectangle">
+                    <!-- CLOSE -->
+                    <HBox fx:id="header" >
+                    </HBox>
 
-                        <!-- CLOSE -->
-                        <HBox fx:id="header">
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Button fx:id="closeButton"
-                                    styleClass="styled-btn-red"
-                                    prefWidth="30" prefHeight="30"
-                                    minWidth="30" minHeight="30"
-                                    maxWidth="30" maxHeight="30">
-                                <graphic>
-                                    <SVGPath
-                                            content="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-                                            scaleX="0.015"
-                                            scaleY="0.015"
-                                            styleClass="btn-icon"/>
-                                </graphic>
-                            </Button>
-                        </HBox>
+                    <HBox alignment="CENTER">
+                        <Label text="FILL IN TASK DETAILS"
+                               styleClass="insert-text-lbl"/>
+                    </HBox>
 
-                        <HBox alignment="CENTER">
-                            <Label text="FILL IN TASK DETAILS"
-                                   styleClass="insert-text-lbl"/>
-                        </HBox>
+                    <TextField fx:id="descriptionField"
+                               promptText="Enter the task description"
+                               styleClass="input-form"
+                               prefHeight="45"/>
 
-                        <TextField fx:id="descriptionField"
-                                   promptText="Enter the task description"
-                                   styleClass="input-form"
-                                   prefHeight="45"/>
+                    <!-- START -->
+                    <HBox fx:id="startDateContainer" spacing="10">
+                        <VBox>
+                            <Label text="START DATE" styleClass="info-text-lbl"/>
+                            <Pane fx:id="startPickerContainer"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Pane fx:id="startTimeBox"/>
+                    </HBox>
 
-                        <!-- START -->
-                        <HBox fx:id="startDateContainer" spacing="10">
-                            <VBox>
-                                <Label text="START DATE" styleClass="info-text-lbl"/>
-                                <Pane fx:id="startPickerContainer"/>
-                            </VBox>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Pane fx:id="startTimeBox"/>
-                        </HBox>
+                    <!-- END -->
+                    <HBox fx:id="endDateContainer" spacing="10">
+                        <VBox>
+                            <Label text="END DATE" styleClass="info-text-lbl"/>
+                            <Pane fx:id="endPickerContainer"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Pane fx:id="endTimeBox"/>
+                    </HBox>
 
-                        <!-- END -->
-                        <HBox fx:id="endDateContainer" spacing="10">
-                            <VBox>
-                                <Label text="END DATE" styleClass="info-text-lbl"/>
-                                <Pane fx:id="endPickerContainer"/>
-                            </VBox>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Pane fx:id="endTimeBox"/>
-                        </HBox>
+                    <HBox alignment="CENTER">
+                        <Button fx:id="submitButton"
+                                text="SUBMIT"
+                                styleClass="styled-btn"
+                                prefWidth="200"
+                                prefHeight="45"/>
+                    </HBox>
 
-                        <HBox alignment="CENTER">
-                            <Button fx:id="submitButton"
-                                    text="SUBMIT"
-                                    styleClass="styled-btn"
-                                    prefWidth="200"
-                                    prefHeight="45"/>
-                        </HBox>
+                </VBox>
 
-                    </VBox>
+            </StackPane>
 
-                </StackPane>
-
-            </ScrollPane>
-
-        </StackPane>
+        </ScrollPane>
     </center>
 
 </fx:root>

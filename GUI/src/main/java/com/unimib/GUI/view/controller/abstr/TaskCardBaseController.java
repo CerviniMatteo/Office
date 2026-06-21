@@ -19,7 +19,6 @@ public abstract class TaskCardBaseController implements DefaultController {
 
     @FXML private Label titleLabel;
     @FXML private Label stateLabel;
-    @FXML private Button closeButton;
     @FXML private Button deleteButton;
 
     public TaskCardBaseController(TaskDTO task) {
@@ -50,5 +49,4 @@ public abstract class TaskCardBaseController implements DefaultController {
     public Long getCurrentWorkerId() { return currentWorkerId; }
     public Label getTitleLabel() { return titleLabel; }
     public Label getStateLabel() { return stateLabel; }
-    public Button getCloseButton() { return closeButton; }
 }

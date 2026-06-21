@@ -1,5 +1,6 @@
 package com.unimib.GUI.view.controller.impl.layout.custom_date_time;
 import com.unimib.GUI.model.enums.TimeFormat;
+import com.unimib.GUI.view.controller.abstr.Clearable;
 import com.unimib.GUI.view.controller.abstr.DefaultController;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,7 +16,7 @@ import java.util.Locale;
 
 import static com.unimib.GUI.model.enums.TimeFormat.AMPM;
 
-public class CustomTimePickerController implements DefaultController {
+public class CustomTimePickerController implements DefaultController, Clearable {
 
     private static final LocalTime MIN_TIME = LocalTime.of(7, 0);
     private static final LocalTime MAX_TIME = LocalTime.of(19, 0);
@@ -178,5 +179,15 @@ public class CustomTimePickerController implements DefaultController {
 
     public ObjectProperty<TimeFormat> timeFormatProperty() {
         return timeFormat;
+    }
+
+    /**
+     * Resets the time picker to the current system time (clamped to the
+     * allowed range) and refreshes the hour/minute fields accordingly.
+     * Does not change the currently selected {@link TimeFormat}.
+     */
+    @Override
+    public void clear() {
+        initDefaultDateTime();
     }
 }

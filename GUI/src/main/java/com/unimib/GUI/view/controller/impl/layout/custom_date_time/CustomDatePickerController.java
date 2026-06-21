@@ -1,5 +1,6 @@
 package com.unimib.GUI.view.controller.impl.layout.custom_date_time;
 
+import com.unimib.GUI.view.controller.abstr.Clearable;
 import com.unimib.GUI.view.controller.abstr.DefaultController;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,7 +13,7 @@ import javafx.scene.layout.Pane;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class CustomDatePickerController implements DefaultController {
+public class CustomDatePickerController implements DefaultController, Clearable {
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -40,8 +41,8 @@ public class CustomDatePickerController implements DefaultController {
     }
 
     public boolean isPickerVisible() {
-    return pickerContainer.getChildren().contains(pickerNode);
-}
+        return pickerContainer.getChildren().contains(pickerNode);
+    }
 
     private void togglePicker() {
         if (isPickerVisible()){
@@ -67,5 +68,18 @@ public class CustomDatePickerController implements DefaultController {
         if(isPickerVisible()){
             hidePicker();
         }
+    }
+
+    /**
+     * Resets the date picker to today's date, updates the visible text
+     * field accordingly, and closes the calendar popup if it was open.
+     */
+    @Override
+    public void clear() {
+        popPicker();
+
+        LocalDate today = LocalDate.now();
+        datePicker.setValue(today);
+        dateField.setText(today.format(DATE_FORMAT));
     }
 }

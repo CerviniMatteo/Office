@@ -1,473 +1,753 @@
-    /**
+/**
      * app.css
      */
 
-    /* ===================================================== */
-    /* ROOT BACKGROUND                                       */
-    /* ===================================================== */
-    .root {
-        -fx-background-color: transparent;
-        -fx-background-image: url("/images/root.jpg");
-        -fx-background-position: center center;
-        -fx-background-size: cover;
-    }
-
-    .no-transparent-bg {
-        -fx-background-color: #1e1b4b;
-        -fx-background-radius: 8px;
-        -fx-border-radius: 8px;
-        -fx-border-color: rgba(255, 255, 255, 0.6);
-        -fx-border-width: 2px;
-        -fx-padding: 16px;
-    }
-
-    /* ===================================================== */
-    /* GLOBAL BUTTON RESET                                   */
-    /* ===================================================== */
-    .button {
-        -fx-focus-color: transparent;
-        -fx-faint-focus-color: transparent;
-        -fx-background-insets: 0;
-        -fx-background-radius: 8;
-        -fx-cursor: hand;
-    }
-
-    .button:focused {
-        -fx-focus-color: transparent;
-    }
-
-    .button:pressed {
-        -fx-opacity: 0.9;
-    }
-
-    /* ===================================================== */
-    /* LOGIN SCREEN                                          */
-    /* ===================================================== */
-    .design-rectangle {
-        -fx-background-color: rgba(30, 27, 75, 0.75);
-        -fx-background-radius: 20;
-        -fx-border-color: rgba(255, 255, 255, 0.5);
-        -fx-border-width: 2;
-        -fx-border-radius: 20;
-        -fx-padding: 20;
-    }
-
-
-    /* ===================================================== */
-    /* TASK CARD (GLASS STYLE)                               */
-    /* ===================================================== */
-    .task-card, BorderPane.task-card {
-        -fx-background-image: null;
-        -fx-background-insets: 0;
-        -fx-background-color: #1e1b4b;
-        -fx-border-width: 2px;
-        -fx-background-radius: 8px;
-        -fx-border-radius: 8px;
-        -fx-padding: 16px;
-    }
-
-    /* ===================================================== */
-    /* TASK LABELS                                           */
-    /* ===================================================== */
-    .task-description-lbl {
-        -fx-font-weight: bold;
-        -fx-text-fill: white;
-        -fx-font-size: 26px;
-    }
-
-    .task-date-lbl {
-        -fx-font-weight: bold;
-        -fx-text-fill: #00E5FF;
-        -fx-font-size: 20px;
-        -fx-padding: 8px 14px;
-        -fx-border-color: rgba(0, 229, 255, 0.6);
-        -fx-border-width: 2px;
-        -fx-border-radius: 8px;
-    }
-
-    .task-state-lbl {
-        -fx-font-weight: bold;
-        -fx-text-fill: white;
-        -fx-border-color: rgba(255, 255, 255, 0.6);
-        -fx-font-size: 24px;
-        -fx-padding: 8px 16px;
-        -fx-border-radius: 8px;
-        -fx-background-radius: 8px;
-        -fx-alignment: center;
-    }
-
-    /* TASK STATE LABEL COLORS */
-    .task-state-lbl.task-to-start { -fx-text-fill: #FF4DA6; }
-    .task-state-lbl.task-started { -fx-text-fill: #00BCD4; }
-    .task-state-lbl.task-done { -fx-text-fill: #b300ff; }
-
-    /* ===================================================== */
-    /* BASE BUTTON STYLE                                     */
-    /* ===================================================== */
-    .styled-btn, .styled-btn-black, .styled-btn-red, .styled-btn-white {
-        -fx-font-size: 20px;
-        -fx-font-weight: bold;
-        -fx-border-radius: 30px;
-        -fx-background-radius: 30px;
-        -fx-border-width: 3px;
-        -fx-padding: 8px 14px;
-    }
-
-    .styled-btn {
-        -fx-text-fill: white;
-        -fx-background-color: rgba(255,255,255,0.08);
-        -fx-border-color: rgba(255,255,255,0.4);
-    }
-
-    .styled-btn-black {
-        -fx-text-fill: black;
-        -fx-background-color: rgba(0,0,0,0.08);
-        -fx-border-color: rgba(0,0,0,0.4);
-    }
-
-    .styled-btn-red {
-        -fx-text-fill: rgba(255, 50, 14, 0.9);
-        -fx-background-color: rgba(255,50,14,0.08);
-        -fx-border-color: rgba(232,50,14,0.9);
-    }
-
-    .styled-btn-white {
-        -fx-background-color: rgba(255,255,255,0.08);
-        -fx-background-radius: 8px;
-        -fx-border-radius: 8px;
-        -fx-border-width: 1.5px;
-        -fx-border-color: rgba(255,255,255,0.4);
-    }
-
-
-    .styled-btn:hover,
-    .styled-btn-black:hover,
-    .styled-btn-red:hover,
-    .styled-btn-white:hover{
-        -fx-border-color: #00E5FF;
-        -fx-text-fill: #00E5FF;
-        -fx-background-color: rgba(0,229,255,0.08);
-    }
-
-    /* ICON STYLING */
-    .styled-btn .btn-icon,
-    .styled-btn-black .btn-icon,
-    .styled-btn-red .btn-icon,
-    .styled-btn-white .btn-icon {
-        -fx-fill: white;
-    }
-
-    .styled-btn-black .btn-icon { -fx-fill: black; }
-    .styled-btn-white .btn-icon { -fx-fill: white; }
-    .styled-btn-red .btn-icon { -fx-fill: rgba(255,50,14,0.9); }
-
-    .styled-btn:hover .btn-icon,
-    .styled-btn-black:hover .btn-icon,
-    .styled-btn-red:hover .btn-icon,
-    .styled-btn-white:hover .btn-icon{ -fx-fill: #00E5FF; }
-
-    .styled-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
-
-    /* ICON-ONLY BUTTON */
-    .icon-btn {
-        -fx-padding: 4px;
-        -fx-min-width: 28px;
-        -fx-min-height: 28px;
-        -fx-pref-width: 28px;
-        -fx-pref-height: 28px;
-        -fx-max-width: 28px;
-        -fx-max-height: 28px;
-        -fx-alignment: center;
-        -fx-content-display: graphic-only;
-    }
-
-    .icon-btn .stack-pane { -fx-alignment: center; }
-    .icon-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
-
-    .toggle-switch {
-        -fx-background-color: #b300ff;
-        -fx-background-radius: 30;
-        -fx-min-width: 60px;
-        -fx-min-height: 30px;
-        -fx-max-width: 60px;
-        -fx-max-height: 30px;
-        -fx-padding: 0;
-    }
-
-    /* Nasconde il testo */
-    .toggle-switch .text {
-        -fx-fill: transparent;
-    }
-
-    /* Il pallino */
-    .toggle-switch .thumb {
-        -fx-background-color: white;
-        -fx-background-radius: 50%;
-        -fx-pref-width: 26px;
-        -fx-pref-height: 26px;
-        -fx-translate-x: -15px; /* posizione OFF */
-    }
-
-    /* Stato ON */
-    .toggle-switch:selected {
-        -fx-background-color: #00E5FF;
-    }
-
-    /* Sposta il pallino quando attivo */
-    .toggle-switch:selected .thumb {
-        -fx-translate-x: 15px;
-    }
-
-    /* ===================================================== */
-    /* SIDEBAR & LEGEND STYLES                               */
-    /* ===================================================== */
-    .transparent-spacer { -fx-background-color: transparent; -fx-border-color: transparent; }
-
-    .legend-header-lbl {
-        -fx-text-fill: white;
-        -fx-font-size: 20px;
-        -fx-font-weight: bold;
-        -fx-border-radius: 8px;
-        -fx-border-color: rgba(255, 255, 255, 0.6);
-        -fx-border-width: 2px;
-        -fx-padding: 10;
-    }
-
-    .legend-item-lbl { -fx-text-fill: white; -fx-font-size: 20px; }
-
-    .legend-rect-tostart { -fx-fill: #FF4DA6; }
-    .legend-rect-started { -fx-fill: #00BCD4; }
-    .legend-rect-done    { -fx-fill: #b300ff; }
-
-    .legend-separator { -fx-background-color: rgba(255, 255, 255, 0.5); }
-
-    /* ===================================================== */
-    /* ACTIVE TASKS CONTAINER                                */
-    /* ===================================================== */
-    .transparent-scroll {
-        -fx-background-color: transparent;
-        -fx-background: transparent;
-        -fx-border-color: transparent;
-        -fx-hbar-policy: never;
-    }
-
-    .transparent-scroll > .viewport { -fx-background-color: transparent; }
-    .transparent-vbox { -fx-background-color: transparent; }
-
-    .active-task-entry-lbl {
-        -fx-text-fill: white;
-        -fx-font-size: 16px;
-        -fx-padding: 5 10;
-        -fx-background-color: rgba(255, 255, 255, 0.1);
-        -fx-background-radius: 5;
-    }
-
-    /* ===================================================== */
-    /* INPUT FIELDS & TEXTAREAS (GLOBAL)                     */
-    /* ===================================================== */
-    .input-form,
-    .text-field,
-    .text-area {
-        -fx-background-color: rgba(255,255,255,0.05);
-        -fx-control-inner-background: transparent;
-        -fx-background-radius: 8px;
-        -fx-border-radius: 8px;
-        -fx-border-color: rgba(255,255,255,0.4);
-        -fx-border-width: 1.5;
-        -fx-text-fill: white;
-        -fx-font-size: 15px;
-        -fx-font-weight: 600;
-        -fx-padding: 10px 16px;
-        -fx-focus-color: #00E5FF;
-        -fx-faint-focus-color: transparent;
-    }
-    .insert-text-lbl {
-        -fx-text-fill: white;
-        -fx-font-size: 26px;
-        -fx-font-weight: bold;
-    }
-
-    .info-text-lbl {
-        -fx-text-fill: white;
-        -fx-font-size: 18px;
-        -fx-font-weight: bold;
-    }
-
-    .my-message {
-        -fx-background-color: #6c5ce7;   /* purple */
-        -fx-background-radius: 20;       /* more rounded */
-
-        -fx-border-color: #4b3fcf;       /* darker purple stroke */
-        -fx-border-radius: 20;
-        -fx-border-width: 2;
-
-        -fx-text-fill: #f1f1f1;          /* NOT pure white (softer) */
-        -fx-font-size: 16px;
-        -fx-font-weight: bold;
-
-        -fx-padding: 10 14 10 14;
-
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);
-    }
-
-    .other-message {
-        -fx-background-color: #f39c12;   /* orange */
-        -fx-background-radius: 20;
-
-        -fx-border-color: #d68910;       /* darker orange */
-        -fx-border-radius: 20;
-        -fx-border-width: 2;
-
-        -fx-text-fill: #2c3e50;          /* dark readable text */
-        -fx-font-size: 16px;
-        -fx-font-weight: bold;
-
-        -fx-padding: 10 14 10 14;
-
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);
-    }
-
-    /* ===================================================== */
-    /* DATE PICKER & CALENDAR POPUP                          */
-    /* ===================================================== */
-    .date-picker,
-    .date-picker .text-field,
-    .date-picker .text-area {
-        -fx-background-color: rgba(30,27,75,0.85);
-        -fx-control-inner-background: transparent;
-    }
-
-    .date-picker-popup {
-        -fx-background-color: #1e1b4b;
-        -fx-border-color: rgba(255,255,255,0.2);
-        -fx-border-width: 1px;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 4);
-    }
-
-    .date-picker-popup .month-year-pane {
-        -fx-background-color: #1e1b4b;
-        -fx-padding: 10px;
-    }
-
-    .date-picker-popup .month-year-pane .label {
-        -fx-text-fill: white;
-        -fx-font-weight: bold;
-        -fx-font-size: 14px;
-    }
-
-    .date-picker-popup .left-arrow,
-    .date-picker-popup .right-arrow { -fx-background-color: white; }
-    .date-picker-popup .left-arrow-button:hover,
-    .date-picker-popup .right-arrow-button:hover { -fx-background-color: rgba(255,255,255,0.1); }
-
-    .date-picker-popup .day-name-cell { -fx-background-color: #1e1b4b; -fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 11px; -fx-font-weight: bold; }
-    .date-picker-popup .day-cell { -fx-background-color: #1e1b4b; -fx-padding: 8px; }
-    .date-picker-popup .day-cell:filled { -fx-text-fill: white; }
-    .date-picker-popup .day-cell:filled:hover { -fx-background-color: rgba(30, 27, 75, 0.75); -fx-text-fill: #00E5FF; }
-    .date-picker-popup .day-cell:filled:selected { -fx-background-color: #00E5FF; -fx-text-fill: #1e1b4b; -fx-font-weight: bold; }
-    .date-picker-popup .day-cell:filled.today { -fx-text-fill: #00E5FF; -fx-border-color: #00E5FF; -fx-border-width: 1px; -fx-border-radius: 3px; }
-    .date-picker-popup .day-cell:disabled { -fx-opacity: 0.4; }
-    .date-picker-popup .day-cell.previous-month,
-    .date-picker-popup .day-cell.next-month { -fx-text-fill: rgba(255,255,255,0.35); }
-
-    /* ===================================================== */
-    /* CALENDAR — GLOBAL OVERRIDES                           */
-    /* ===================================================== */
-    .calendar-view,
-    .detailed-week-view,
-    .week-view,
-    .day-view,
-    .week-day-view { -fx-background-color: transparent; }
-
-    .week-day-view .day-background,
-    .day-view .day-background {
-        -fx-background-color: transparent;
-        -fx-border-color: rgba(255, 255, 255, 0.08);
-        -fx-border-width: 0 1 0 0;
-    }
-
-    .hour-line { -fx-stroke: rgba(255, 255, 255, 0.10); -fx-stroke-width: 1; }
-    .half-hour-line { -fx-stroke: rgba(255, 255, 255, 0.05); -fx-stroke-width: 1; }
-    .now-line { -fx-stroke: #00E5FF; -fx-stroke-width: 2; }
-
-    /* ===================================================== */
-    /* TIME SCALE                                            */
-    /* ===================================================== */
-    .time-scale,
-    .calendar .time-scale,
-    .detailed-week-view .time-scale,
-    .week-view .time-scale {
-        -fx-background-color: transparent;
-        -fx-min-width: 64px;
-        -fx-pref-width: 72px;
-        -fx-max-width: 90px;
-    }
-
-    .time-scale .label,
-    .time-scale .time-label,
-    .time-label {
-        -fx-text-fill: rgba(255, 255, 255, 0.75);
-        -fx-font-size: 11px;
-        -fx-padding: 0 8px;
-        -fx-alignment: center-right;
-    }
-
-    /* ===================================================== */
-    /* WEEK DAY HEADER                                       */
-    /* ===================================================== */
-    .week-day-header-view,
-    .day-name-label,
-    .date-label {
-        -fx-background-color: transparent;
-        -fx-text-fill: white;
-        -fx-font-weight: bold;
-        -fx-font-size: 13px;
-    }
-
-    .week-day-header-view.today .day-name-label,
-    .week-day-header-view.today .date-label { -fx-text-fill: #00E5FF; }
-
-    /* ===================================================== */
-    /* TASK CREATION FORM                                    */
-    /* ===================================================== */
-    .task-creation-overlay { -fx-background-color: rgba(0,0,0,0.45); }
-
-    #rootStack .task-creation-form {
-        -fx-background-color: rgba(30,27,75,0.85);
-        -fx-background-radius: 16px;
-        -fx-border-radius: 16px;
-        -fx-border-color: rgba(255,255,255,0.15);
-    }
-
-    /* ===================================================== */
-    /* DIALOGS                                               */
-    /* ===================================================== */
-    .dialog-pane { -fx-background-color: #1e1b4b; -fx-padding: 0; }
-
-    .dialog-pane > .content { -fx-background-color: #1e1b4b; -fx-padding: 20; }
-    .dialog-pane > .button-bar { -fx-background-color: #1e1b4b; -fx-padding: 15; }
-
-    .dialog-title { -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; }
-    .dialog-message { -fx-text-fill: white; -fx-font-size: 14px; }
-
-    /* ===================================================== */
-    /* SUCCESS / FAILURE BANNERS                             */
-    /* ===================================================== */
-    .success-banner {
-        -fx-background-color: #00C853;
-        -fx-text-fill: white;
-        -fx-font-size: 18px;
-        -fx-font-weight: bold;
-        -fx-background-radius: 12 0 0 12;
-        -fx-opacity: 0.95;
-    }
-
-    .failure-banner {
-        -fx-background-color: #FF1744;
-        -fx-text-fill: white;
-        -fx-font-size: 18px;
-        -fx-font-weight: bold;
-        -fx-background-radius: 12 0 0 12;
-        -fx-opacity: 0.95;
-    }
-
+/* ===================================================== */
+/* ROOT BACKGROUND + DESIGN TOKENS (COLOR VARIABLES)     */
+/* ===================================================== */
+.root {
+    /* --- Base surfaces --- */
+    -app-bg-dark:            #0f0d1a;
+    -app-surface-1:          #1e1b4b;   /* dialog / overlay panels */
+    -app-surface-2:          #2a2452;   /* task cards */
+    -app-surface-3:          rgba(26, 22, 51, 0.8);  /* semi-transparent bg */
+    -app-surface-4:          rgba(30, 27, 75, 0.75); /* login rectangle */
+    -app-surface-4-strong:   rgba(30, 27, 75, 0.85); /* task creation form */
+
+    /* --- Accent: cyan (primary) --- */
+    -app-cyan:               #00E5FF;
+    -app-cyan-08:            rgba(0, 229, 255, 0.08);
+    -app-cyan-10:            rgba(0, 229, 255, 0.1);
+    -app-cyan-15:            rgba(0, 229, 255, 0.15);
+    -app-cyan-20:            rgba(0, 229, 255, 0.2);
+    -app-cyan-25:            rgba(0, 229, 255, 0.25);
+    -app-cyan-30:            rgba(0, 229, 255, 0.3);
+    -app-cyan-35:            rgba(0, 229, 255, 0.35);
+    -app-cyan-40:            rgba(0, 229, 255, 0.4);
+    -app-cyan-50:            rgba(0, 229, 255, 0.5);
+
+    /* --- Accent: pink (to-start state) --- */
+    -app-pink:               #FF4DA6;
+    -app-pink-08:            rgba(255, 77, 166, 0.08);
+    -app-pink-10:            rgba(255, 77, 166, 0.1);
+    -app-pink-40:            rgba(255, 77, 166, 0.4);
+    -app-pink-50:            rgba(255, 77, 166, 0.5);
+
+    /* --- Accent: teal (started state) --- */
+    -app-teal:               #00BCD4;
+    -app-teal-08:            rgba(0, 188, 212, 0.08);
+    -app-teal-10:            rgba(0, 188, 212, 0.1);
+    -app-teal-15:            rgba(0, 188, 212, 0.15);
+    -app-teal-25:            rgba(0, 188, 212, 0.25);
+    -app-teal-30:            rgba(0, 188, 212, 0.3);
+    -app-teal-40:            rgba(0, 188, 212, 0.4);
+    -app-teal-50:            rgba(0, 188, 212, 0.5);
+
+    /* --- Accent: purple (done state) --- */
+    -app-purple:             #b300ff;
+    -app-purple-08:          rgba(179, 0, 255, 0.08);
+    -app-purple-10:          rgba(179, 0, 255, 0.1);
+    -app-purple-40:          rgba(179, 0, 255, 0.4);
+    -app-purple-50:          rgba(179, 0, 255, 0.5);
+
+    /* --- Accent: red (destructive) --- */
+    -app-red:                #ff6b6b;
+    -app-red-hover:          #ff9090;
+    -app-red-12:             rgba(255, 107, 107, 0.12);
+    -app-red-22:             rgba(255, 107, 107, 0.22);
+    -app-red-50:             rgba(255, 107, 107, 0.5);
+
+    /* --- Neutral: gray (black-style buttons) --- */
+    -app-gray-40:            rgba(50, 50, 50, 0.4);
+    -app-gray-50:            rgba(100, 100, 100, 0.5);
+    -app-gray-30-cyan:       rgba(0, 229, 255, 0.3); /* shared hover glow */
+
+    /* --- Neutral: white / overlays --- */
+    -app-white:              white;
+    -app-white-text:         #f0f0f0;
+    -app-white-text-soft:    #e0e0e0;
+    -app-white-04:           rgba(255, 255, 255, 0.04);
+    -app-white-05:           rgba(255, 255, 255, 0.05);
+    -app-white-08:           rgba(255, 255, 255, 0.08);
+    -app-white-15:           rgba(255, 255, 255, 0.15);
+    -app-white-30:           rgba(255, 255, 255, 0.3);
+    -app-white-35:           rgba(255, 255, 255, 0.35);
+    -app-white-40:           rgba(255, 255, 255, 0.4);
+    -app-white-50:           rgba(255, 255, 255, 0.5);
+
+    /* --- Status colors --- */
+    -app-success:            #00C853;
+    -app-failure:             #FF1744;
+
+    /* --- Shadows --- */
+    -app-shadow-soft:        rgba(0, 0, 0, 0.15);
+    -app-shadow-mid:         rgba(0, 0, 0, 0.2);
+    -app-shadow-strong:      rgba(0, 0, 0, 0.3);
+    -app-shadow-overlay:     rgba(0, 0, 0, 0.45);
+
+    -fx-background-color: -app-bg-dark;
+    -fx-background-image: url("/images/root.jpg");
+    -fx-background-position: center center;
+    -fx-background-size: cover;
+}
+
+.semi-transparent-bg {
+    -fx-background-color: -app-surface-3;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-color: -app-cyan-20;
+    -fx-border-width: 1px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, -app-shadow-strong, 8, 0, 0, 3);
+}
+
+/* ===================================================== */
+/* GLOBAL BUTTON RESET                                   */
+/* ===================================================== */
+.button {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.button:focused {
+    -fx-focus-color: transparent;
+}
+
+.button:pressed {
+    -fx-opacity: 0.9;
+}
+
+/* ===================================================== */
+/* LOGIN SCREEN                                          */
+/* ===================================================== */
+.design-rectangle {
+    -fx-background-color: -app-surface-4;
+    -fx-background-radius: 20;
+    -fx-border-color: -app-white-50;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+    -fx-padding: 20;
+}
+
+
+/* ===================================================== */
+/* TASK CARD (GLASS STYLE                                */
+/* ===================================================== */
+.task-card, BorderPane.task-card {
+    -fx-background-image: null;
+    -fx-background-insets: 0;
+    -fx-background-color: -app-surface-2;
+    -fx-border-width: 0;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-padding: 16px;
+    -fx-effect: dropshadow(gaussian, -app-shadow-strong, 8, 0, 0, 4);
+}
+
+.task-card:hover, BorderPane.task-card:hover {
+    -fx-effect: dropshadow(gaussian, -app-cyan-40, 12, 0, 0, 6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* ===== COMPACT TASK CARDS ===== */
+.task-card-compact {
+    -fx-max-width: 320px;
+    -fx-min-width: 280px;
+}
+
+/* ===================================================== */
+/* TASK CONTAINERS                                       */
+/* ===================================================== */
+
+.task-column-header {
+    -fx-text-fill: -app-cyan;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 12px 0;
+}
+
+.task-column-header.to-start { -fx-text-fill: -app-pink; }
+.task-column-header.started { -fx-text-fill: -app-teal; }
+.task-column-header.done { -fx-text-fill: -app-purple; }
+
+/* ===================================================== */
+/* TASK LABELS                                           */
+/* ===================================================== */
+.task-description-lbl {
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-white-text;
+    -fx-font-size: 20px;
+    -fx-line-spacing: 2;
+}
+
+.task-description-lbl-compact {
+    -fx-font-weight: 600;
+    -fx-text-fill: -app-white-text;
+    -fx-font-size: 16px;
+    -fx-line-spacing: 1;
+}
+
+.task-date-lbl {
+    -fx-font-weight: 600;
+    -fx-text-fill: -app-cyan;
+    -fx-font-size: 17px;
+    -fx-padding: 6px 12px;
+    -fx-border-color: rgba(0, 229, 255, 0.6);
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+    -fx-background-color: -app-cyan-10;
+}
+
+.task-date-lbl-compact {
+    -fx-font-weight: 600;
+    -fx-text-fill: -app-cyan;
+    -fx-font-size: 14px;
+    -fx-padding: 4px 8px;
+    -fx-border-color: -app-cyan-50;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-color: -app-cyan-08;
+    -fx-wrap-text: true;
+}
+
+.task-state-lbl {
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-white;
+    -fx-border-color: -app-white-40;
+    -fx-font-size: 15px;
+    -fx-padding: 6px 12px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-background-color: -app-white-05;
+    -fx-alignment: center;
+}
+
+.task-state-lbl-compact {
+    -fx-font-weight: 600;
+    -fx-text-fill: -app-white;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-font-size: 13px;
+    -fx-padding: 4px 8px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-background-color: -app-white-04;
+    -fx-alignment: center;
+}
+
+/* TASK STATE LABEL COLORS */
+.task-state-lbl.task-to-start {
+    -fx-text-fill: -app-pink;
+    -fx-border-color: -app-pink-50;
+    -fx-background-color: -app-pink-10;
+}
+.task-state-lbl.task-started {
+    -fx-text-fill: -app-teal;
+    -fx-border-color: -app-teal-50;
+    -fx-background-color: -app-teal-10;
+}
+.task-state-lbl.task-done {
+    -fx-text-fill: -app-purple;
+    -fx-border-color: -app-purple-50;
+    -fx-background-color: -app-purple-10;
+}
+
+.task-state-lbl-compact.task-to-start {
+    -fx-text-fill: -app-pink;
+    -fx-border-color: -app-pink-40;
+    -fx-background-color: -app-pink-08;
+}
+.task-state-lbl-compact.task-started {
+    -fx-text-fill: -app-teal;
+    -fx-border-color: -app-teal-40;
+    -fx-background-color: -app-teal-08;
+}
+.task-state-lbl-compact.task-done {
+    -fx-text-fill: -app-purple;
+    -fx-border-color: -app-purple-40;
+    -fx-background-color: -app-purple-08;
+}
+
+/* ===================================================== */
+/* BASE BUTTON STYLE (HYBRID - OLD/NEW)                  */
+/* ===================================================== */
+.styled-btn, .styled-btn-black, .styled-btn-red, .styled-btn-white {
+    -fx-font-size: 19px;
+    -fx-font-weight: 600;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-padding: 8px 16px;
+    -fx-effect: dropshadow(gaussian, -app-shadow-mid, 4, 0, 0, 1);
+    -fx-cursor: hand;
+}
+
+.styled-btn {
+    -fx-text-fill: -app-white;
+    -fx-background-color: -app-cyan-15;
+    -fx-border-color: -app-cyan-50;
+}
+
+.styled-btn-black {
+    -fx-text-fill: -app-white;
+    -fx-background-color: -app-gray-40;
+    -fx-border-color: -app-gray-50;
+}
+
+.styled-btn-red {
+    -fx-text-fill: -app-red;
+    -fx-background-color: -app-red-12;
+    -fx-border-color: -app-red-50;
+}
+
+.styled-btn-white {
+    -fx-background-color: -app-white-08;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-border-color: -app-white-40;
+    -fx-text-fill: -app-white;
+    -fx-padding: 8px 16px;
+}
+
+
+.styled-btn:hover {
+    -fx-background-color: -app-cyan-25;
+    -fx-border-color: -app-cyan;
+    -fx-text-fill: -app-cyan;
+    -fx-effect: dropshadow(gaussian, -app-cyan-50, 8, 0, 0, 2);
+}
+
+.styled-btn-black:hover {
+    -fx-background-color: -app-gray-50;
+    -fx-border-color: -app-cyan;
+    -fx-text-fill: -app-cyan;
+    -fx-effect: dropshadow(gaussian, -app-cyan-30, 6, 0, 0, 1);
+}
+
+.styled-btn-red:hover {
+    -fx-background-color: -app-red-22;
+    -fx-border-color: -app-red;
+    -fx-text-fill: -app-red-hover;
+    -fx-effect: dropshadow(gaussian, -app-red-50, 8, 0, 0, 2);
+}
+
+.styled-btn-white:hover {
+    -fx-background-color: -app-white-15;
+    -fx-border-color: -app-cyan;
+    -fx-text-fill: -app-cyan;
+    -fx-effect: dropshadow(gaussian, -app-cyan-30, 6, 0, 0, 1);
+}
+
+/* ===== COMPACT BUTTONS ===== */
+.styled-btn-compact, .styled-btn-black-compact, .styled-btn-red-compact {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-border-radius: 16px;
+    -fx-background-radius: 16px;
+    -fx-border-width: 1.5px;
+    -fx-padding: 4px 10px;
+    -fx-effect: dropshadow(gaussian, -app-shadow-soft, 3, 0, 0, 1);
+    -fx-cursor: hand;
+}
+
+.styled-btn-compact {
+    -fx-text-fill: -app-white;
+    -fx-background-color: -app-cyan-15;
+    -fx-border-color: -app-cyan-50;
+}
+
+.styled-btn-black-compact {
+    -fx-text-fill: -app-white;
+    -fx-background-color: -app-gray-40;
+    -fx-border-color: -app-gray-50;
+}
+
+.styled-btn-red-compact {
+    -fx-text-fill: -app-red;
+    -fx-background-color: -app-red-12;
+    -fx-border-color: -app-red-50;
+}
+
+.styled-btn-compact:hover {
+    -fx-background-color: -app-cyan-25;
+    -fx-border-color: -app-cyan;
+    -fx-text-fill: -app-cyan;
+    -fx-effect: dropshadow(gaussian, -app-cyan-50, 6, 0, 0, 1);
+}
+
+.styled-btn-black-compact:hover {
+    -fx-background-color: -app-gray-50;
+    -fx-border-color: -app-cyan;
+    -fx-text-fill: -app-cyan;
+    -fx-effect: dropshadow(gaussian, -app-cyan-30, 4, 0, 0, 1);
+}
+
+.styled-btn-red-compact:hover {
+    -fx-background-color: -app-red-22;
+    -fx-border-color: -app-red;
+    -fx-text-fill: -app-red-hover;
+    -fx-effect: dropshadow(gaussian, -app-red-50, 6, 0, 0, 1);
+}
+
+/* ICON STYLING */
+.styled-btn .btn-icon,
+.styled-btn-black .btn-icon,
+.styled-btn-red .btn-icon,
+.styled-btn-white .btn-icon {
+    -fx-fill: -app-white;
+}
+
+.styled-btn-black .btn-icon { -fx-fill: black; }
+.styled-btn-white .btn-icon { -fx-fill: -app-white; }
+.styled-btn-red .btn-icon { -fx-fill: rgba(255,50,14,0.9); }
+
+.styled-btn:hover .btn-icon,
+.styled-btn-black:hover .btn-icon,
+.styled-btn-red:hover .btn-icon,
+.styled-btn-white:hover .btn-icon{ -fx-fill: -app-cyan; }
+
+.styled-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
+
+/* ICON-ONLY BUTTON */
+.icon-btn {
+    -fx-padding: 4px;
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
+    -fx-pref-width: 28px;
+    -fx-pref-height: 28px;
+    -fx-max-width: 28px;
+    -fx-max-height: 28px;
+    -fx-alignment: center;
+    -fx-content-display: graphic-only;
+}
+
+.icon-btn .stack-pane { -fx-alignment: center; }
+.icon-btn .btn-icon { -fx-scale-x: 1; -fx-scale-y: 1; }
+
+.toggle-switch {
+    -fx-background-color: -app-purple;
+    -fx-background-radius: 30;
+    -fx-min-width: 60px;
+    -fx-min-height: 30px;
+    -fx-max-width: 60px;
+    -fx-max-height: 30px;
+    -fx-padding: 0;
+}
+
+/* Nasconde il testo */
+.toggle-switch .text {
+    -fx-fill: transparent;
+}
+
+/* Il pallino */
+.toggle-switch .thumb {
+    -fx-background-color: -app-white;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 26px;
+    -fx-pref-height: 26px;
+    -fx-translate-x: -15px; /* posizione OFF */
+}
+
+/* Stato ON */
+.toggle-switch:selected {
+    -fx-background-color: -app-cyan;
+}
+
+/* Sposta il pallino quando attivo */
+.toggle-switch:selected .thumb {
+    -fx-translate-x: 15px;
+}
+
+/* ===================================================== */
+/* SIDEBAR & LEGEND STYLES                               */
+/* ===================================================== */
+.transparent-spacer { -fx-background-color: transparent; -fx-border-color: transparent; }
+
+.legend-header-lbl {
+    -fx-text-fill: -app-white;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+    -fx-border-color: -app-cyan-30;
+    -fx-border-width: 1px;
+    -fx-padding: 12px;
+    -fx-background-color: -app-cyan-08;
+    -fx-text-alignment: center;
+}
+
+.legend-item-lbl {
+    -fx-text-fill: -app-white-text-soft;
+    -fx-font-size: 17px;
+    -fx-font-weight: 600;
+}
+
+.legend-rect-tostart { -fx-fill: -app-pink; }
+.legend-rect-started { -fx-fill: -app-teal; }
+.legend-rect-done    { -fx-fill: -app-purple; }
+
+.legend-separator {
+    -fx-background-color: -app-cyan-20;
+    -fx-padding: 2px 0;
+}
+
+/* ===================================================== */
+/* ACTIVE TASKS CONTAINER                                */
+/* ===================================================== */
+.transparent-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-hbar-policy: never;
+    -fx-padding: 0;
+}
+
+.transparent-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-scroll > .scroll-bar {
+    -fx-opacity: 0.5;
+}
+
+.transparent-scroll > .scroll-bar:hover {
+    -fx-opacity: 0.8;
+}
+
+.transparent-scroll .scroll-bar {
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(gaussian, -app-cyan-20, 4, 0, 0, 1);
+}
+
+.transparent-scroll .scroll-bar:vertical .increment-button,
+.transparent-scroll .scroll-bar:vertical .decrement-button,
+.transparent-scroll .scroll-bar:horizontal .increment-button,
+.transparent-scroll .scroll-bar:horizontal .decrement-button {
+    -fx-padding: 0;
+}
+
+.transparent-scroll .scroll-bar .thumb {
+    -fx-background-color: -app-cyan-40;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, -app-cyan-30, 3, 0, 0, 1);
+}
+
+.transparent-scroll .scroll-bar .thumb:hover {
+    -fx-background-color: rgba(0, 229, 255, 0.6);
+}
+.transparent-vbox { -fx-background-color: transparent; }
+
+.active-task-entry-lbl {
+    -fx-text-fill: -app-white;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 12px;
+    -fx-background-color: -app-teal-15;
+    -fx-background-radius: 6px;
+    -fx-border-color: -app-teal-30;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-effect: dropshadow(gaussian, -app-shadow-soft, 3, 0, 0, 1);
+    -fx-cursor: hand;
+}
+
+.active-task-entry-lbl:hover {
+    -fx-background-color: -app-teal-25;
+    -fx-border-color: -app-cyan-50;
+    -fx-effect: dropshadow(gaussian, -app-cyan-30, 6, 0, 0, 2);
+}
+
+/* ===================================================== */
+/* INPUT FIELDS & TEXTAREAS (GLOBAL)                     */
+/* ===================================================== */
+.input-form,
+.text-field,
+.text-area {
+    -fx-background-color: -app-white-05;
+    -fx-control-inner-background: transparent;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: -app-white-40;
+    -fx-border-width: 1.5;
+    -fx-text-fill: -app-white;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-padding: 10px 16px;
+    -fx-focus-color: -app-cyan;
+    -fx-faint-focus-color: transparent;
+}
+.insert-text-lbl {
+    -fx-text-fill: -app-white;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+.info-text-lbl {
+    -fx-text-fill: -app-white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* ===================================================== */
+/* CHAT MESSAGE BUBBLES (UNIFIED WITH APP THEME)         */
+/* ===================================================== */
+.my-message {
+    -fx-background-color: -app-cyan-15;
+    -fx-background-radius: 18;
+
+    -fx-border-color: -app-cyan-50;
+    -fx-border-radius: 18;
+    -fx-border-width: 1.5;
+
+    -fx-text-fill: -app-white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+
+    -fx-padding: 10 14 10 14;
+
+    -fx-effect: dropshadow(gaussian, -app-cyan-20, 6, 0, 0, 2);
+}
+
+.other-message {
+    -fx-background-color: -app-surface-2;
+    -fx-background-radius: 18;
+
+    -fx-border-color: -app-white-15;
+    -fx-border-radius: 18;
+    -fx-border-width: 1.5;
+
+    -fx-text-fill: -app-white-text;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+
+    -fx-padding: 10 14 10 14;
+
+    -fx-effect: dropshadow(gaussian, -app-shadow-strong, 6, 0, 0, 2);
+}
+
+/* ===================================================== */
+/* TASK CREATION FORM                                    */
+/* ===================================================== */
+.task-creation-overlay { -fx-background-color: -app-shadow-overlay; }
+
+#rootStack .task-creation-form {
+    -fx-background-color: -app-surface-4-strong;
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-border-color: -app-white-15;
+}
+
+/* ===================================================== */
+/* TASK CREATION FORM SPECIFIC                           */
+/* ===================================================== */
+.form-label {
+    -fx-text-fill: -app-cyan;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 6px;
+    -fx-border-color: -app-cyan-30;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-color: -app-cyan-08;
+    -fx-min-width: 0;
+    -fx-pref-width: USE_COMPUTED_SIZE;
+}
+
+.form-title {
+    -fx-text-fill: -app-cyan;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* ===================================================== */
+/* FORM SECTION LABEL (START DATE / END DATE headers)    */
+/* ===================================================== */
+.form-section-label {
+    -fx-text-fill: -app-white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 10px;
+    -fx-background-color: -app-cyan-15;
+    -fx-background-radius: 6px;
+    -fx-border-color: -app-cyan-40;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+}
+
+/* ===================================================== */
+/* STYLED-BTN-WHITE COMPACT (calendar button)            */
+/* ===================================================== */
+.styled-btn-white {
+    -fx-background-color: -app-white-08;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1.5px;
+    -fx-border-color: -app-white-35;
+    -fx-text-fill: -app-white;
+    -fx-padding: 4px;
+    -fx-cursor: hand;
+}
+
+.styled-btn-white:hover {
+    -fx-background-color: -app-cyan-15;
+    -fx-border-color: -app-cyan;
+    -fx-effect: dropshadow(gaussian, -app-cyan-40, 6, 0, 0, 1);
+}
+
+/* ===================================================== */
+/* FORM INPUT COMPACT (inside time/date pickers)         */
+/* ===================================================== */
+.form-input {
+    -fx-background-color: -app-white-05;
+    -fx-control-inner-background: transparent;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-border-color: -app-cyan-35;
+    -fx-border-width: 1px;
+    -fx-text-fill: -app-white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 6px 8px;
+    -fx-focus-color: -app-cyan;
+    -fx-faint-focus-color: transparent;
+    -fx-prompt-text-fill: rgba(255,255,255,0.3);
+}
+
+.form-input:focused {
+    -fx-border-color: -app-cyan;
+    -fx-effect: dropshadow(gaussian, -app-cyan-30, 4, 0, 0, 1);
+}
+
+/* ===================================================== */
+/* DIALOGS                                               */
+/* ===================================================== */
+.dialog-pane { -fx-background-color: -app-surface-1; -fx-padding: 0; }
+
+.dialog-pane > .content { -fx-background-color: -app-surface-1; -fx-padding: 20; }
+.dialog-pane > .button-bar { -fx-background-color: -app-surface-1; -fx-padding: 15; }
+
+.dialog-title { -fx-text-fill: -app-white; -fx-font-size: 22px; -fx-font-weight: bold; }
+.dialog-message { -fx-text-fill: -app-white; -fx-font-size: 17px; }
+
+/* ===================================================== */
+/* SUCCESS / FAILURE BANNERS                             */
+/* ===================================================== */
+.success-banner {
+    -fx-background-color: -app-success;
+    -fx-text-fill: -app-white;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12 0 0 12;
+    -fx-opacity: 0.95;
+}
+
+.failure-banner {
+    -fx-background-color: -app-failure;
+    -fx-text-fill: -app-white;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12 0 0 12;
+    -fx-opacity: 0.95;
+}

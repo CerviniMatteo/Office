@@ -1,25 +1,25 @@
 package com.unimib.GUI.view.components.impl.layout;
 
-import com.unimib.GUI.model.dto.TaskDTO;
-import com.unimib.GUI.view.components.abstr.BasePopUpCard;
 import com.unimib.GUI.view.controller.impl.layout.TaskCreationFormController;
-import com.unimib.GUI.view.state.ApplicationStateManager;
+import com.unimib.GUI.view.utils.FXMLUtilLoader;
+import javafx.scene.layout.BorderPane;
 
-import java.util.function.Consumer;
+public class TaskCreationForm extends BorderPane {
 
-public class TaskCreationForm extends BasePopUpCard{
+    private final TaskCreationFormController controller;
 
     public TaskCreationForm(TaskCreationFormController controller) {
-        super("/components/TaskCreationForm.fxml", controller, "task-creation-overlay", Double.MAX_VALUE, Double.MAX_VALUE);
-        controller.getCloseButton().setOnAction(_ -> ApplicationStateManager.getInstance().removeWindow(this));
+        this.controller = controller;
+        FXMLUtilLoader.load(this, controller, "/components/TaskCreationForm.fxml", "app.css");
     }
 
-    public void setOnSuccess(Consumer<TaskDTO> onSuccess) {
-        if (controller != null) ((TaskCreationFormController) controller).setOnSuccess(onSuccess);
-    }
-
-    public void setOnClose(Runnable onClose) {
-
-        if (controller != null) ((TaskCreationFormController) controller).setOnClose(onClose);
+    /**
+     * Resets this form to its default state by delegating to the
+     * {@link TaskCreationFormController} supplied by the creator
+     * (e.g. when the creator wants to reopen/reuse this form without
+     * re-instantiating it).
+     */
+    public void clear() {
+        controller.clear();
     }
 }
