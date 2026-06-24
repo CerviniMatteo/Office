@@ -30,7 +30,7 @@
                             styleClass="transparent-scroll">
                     <VBox fx:id="notStartedTaskBox"
                           minHeight="280"
-                          prefWidth="320"
+                          prefWidth="350"
                           spacing="14"
                           styleClass="semi-transparent-bg">
                         <padding>
