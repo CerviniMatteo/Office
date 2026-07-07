@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootApplication
 public class BackendApplication {
@@ -43,13 +44,16 @@ public class BackendApplication {
                     createEmployee(facade, "Luca", "Verdi", BASE64_IMAGE_3)
             );
 
-            long l = 1L;
+            UUID uuid = new UUID(0L, 0L);
+            Long l = uuid.getMostSignificantBits() & Long.MAX_VALUE;
             UserChatMapping userChatMapping1 = facade.createChat(employees.getFirst().getWorkerId());
             userChatMapping1.setRoomId(l);
             facade.saveChat(userChatMapping1);
-            UserChatMapping userChatMapping2 = facade.createChat(employees.getLast().getWorkerId());
-            userChatMapping2.setRoomId(l);
+            UserChatMapping userChatMapping2 = facade.createChat(employees.get(1).getWorkerId());
             facade.saveChat(userChatMapping2);
+            UserChatMapping userChatMapping3 = facade.createChat(employees.getLast().getWorkerId());
+            userChatMapping3.setRoomId(l);
+            facade.saveChat(userChatMapping3);
 
 
             System.out.println("Loaded " + tasks.size() + " tasks and " + employees.size() + " employees.");

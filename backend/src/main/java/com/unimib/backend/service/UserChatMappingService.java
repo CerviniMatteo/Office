@@ -47,5 +47,9 @@ public class UserChatMappingService {
             throw new IllegalArgumentException(message);
         }
     }
+
+    public List<Long> findUnMatchedEmployeeIds(Long employeeId) {
+        return userChatMappingRepository.findUnmatchedUserIds(employeeId);
+    }
 }
 

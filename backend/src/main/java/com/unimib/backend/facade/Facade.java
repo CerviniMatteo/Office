@@ -972,4 +972,7 @@ public class Facade {
 
     }
 
+    public List<Long> findUnMatchedEmployeeIds(Long employeeId) {
+        return userChatMappingService.findUnMatchedEmployeeIds(employeeId);
+    }
 }
