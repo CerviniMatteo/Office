@@ -134,6 +134,13 @@
 
                 <Region prefHeight="2" maxWidth="Infinity" styleClass="legend-separator"/>
 
+                <Button fx:id="openDashboardButton"
+                        text="OPEN DASHBOARD"
+                        styleClass="styled-btn"
+                        maxWidth="Infinity"/>
+
+                <Region prefHeight="2" maxWidth="Infinity" styleClass="legend-separator"/>
+
                 <Button fx:id="createTaskButton"
                         text="CREATE TASK"
                         styleClass="styled-btn"

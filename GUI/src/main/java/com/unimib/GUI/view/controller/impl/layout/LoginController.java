@@ -1,95 +1,152 @@
 package com.unimib.GUI.view.controller.impl.layout;
 
+import com.unimib.GUI.model.enums.BannerType;
 import com.unimib.GUI.view.components.impl.custom.InformationBanner;
-import com.unimib.GUI.model.controller.LoginRestController;
 import com.unimib.GUI.view.components.impl.layout.TaskContainer;
 import com.unimib.GUI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.view.state.ApplicationStateManager;
 import com.unimib.GUI.utils.SessionManagerSingleton;
-import com.unimib.GUI.model.enums.BannerType;
+import com.unimib.GUI.view.viewmodel.LoginViewModel;
+import javafx.animation.PauseTransition;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.animation.PauseTransition;
 import javafx.util.Duration;
-
 import static com.unimib.GUI.utils.StringHelper.replaceSpaces;
 import static com.unimib.GUI.view.components.impl.custom.AlertDialog.showAlert;
-import static com.unimib.GUI.view.components.impl.custom.InformationBanner.timeInSeconds;
-import static com.unimib.GUI.view.utils.StringHelper.hashString;
 
 /**
- * Controller for the Login view. Handles UI initialization, layout clipping and login submission.
+ * Controller for the Login view.
+ *
+ * <p>This controller is responsible only for managing the user interface.
+ * It handles user interactions, delegates the authentication workflow to the
+ * {@link LoginViewModel}, and updates the UI according to the operation result.</p>
+ *
+ * <p>Business logic, networking and data retrieval are intentionally delegated
+ * to the ViewModel and Repository layers.</p>
  */
 public class LoginController implements DefaultController {
 
+    /**
+     * Label displayed above the email input field.
+     */
     @FXML
     private Label insertEmailLabel;
 
+    /**
+     * Text field used to insert the user's email.
+     */
     @FXML
     private TextField inputForm;
 
+    /**
+     * Button used to submit the login request.
+     */
     @FXML
     private Button submitButton;
 
     /**
-     * Initialize UI components and event handlers.
+     * ViewModel responsible for the login workflow.
+     */
+    private final LoginViewModel viewModel = new LoginViewModel();
+
+    /**
+     * Initializes the view components and registers the event handlers.
+     *
+     * <p>This method is automatically invoked by the {@code FXMLLoader}
+     * after the FXML elements have been injected.</p>
      */
     @FXML
     private void initialize() {
-        if(inputForm != null)
-            inputForm.setText("matteo.cervini@example.com");
 
-        if(submitButton != null)
+        if (inputForm != null) {
+            inputForm.setText("matteo.cervini@example.com");
+        }
+
+        if (submitButton != null) {
             submitButton.setOnAction(_ -> handleSubmit(inputForm));
+        }
     }
 
     /**
-     * Handle the login submission flow: run login task and show banners/dialogs on result.
-     * @param input the TextField containing the email to submit
+     * Handles the login button action.
+     *
+     * <p>The entered email is forwarded to the {@link LoginViewModel},
+     * which performs the authentication process asynchronously.
+     * According to the outcome, the UI is updated by displaying feedback,
+     * storing the authenticated user identifier and navigating to the next view.</p>
+     *
+     * @param input the text field containing the user's email.
      */
     private void handleSubmit(TextField input) {
+
         if (input == null) {
             showAlert("Error", "Input field not found");
             return;
         }
 
-        String email = hashString(input.getText());
+        Task<String> loginTask = viewModel.login(input.getText());
 
-        try {
-            LoginRestController restController = new LoginRestController();
-            Task<String> loginTask = restController.login(email);
-            ApplicationStateManager stateManager = ApplicationStateManager.getInstance();
-            loginTask.setOnSucceeded(_ -> {
-                try {
-                    Long response = Long.parseLong(replaceSpaces(loginTask.getValue()));
-                    SessionManagerSingleton.getInstance().setAttribute("employeeId", response);
-                    stateManager.replaceWindow(new TaskContainer());
+        ApplicationStateManager stateManager =
+                ApplicationStateManager.getInstance();
 
-                    showBanner(BannerType.SUCCESS, "Login successful");
-                } catch (Exception ex){
-                    showAlert("Error", ex.getMessage());
-                }
-            });
+        loginTask.setOnSucceeded(_ -> {
 
-            loginTask.setOnFailed(_ -> {
-                    showBanner(BannerType.FAILURE, "Login failed\nEmail not found");
-            });
+            try {
 
-            new Thread(loginTask).start();
-        } catch (Exception e){
-            showAlert("Error", e.getMessage());
-        }
+                Long employeeId =
+                        Long.parseLong(replaceSpaces(loginTask.getValue()));
+
+                SessionManagerSingleton.getInstance()
+                        .setAttribute("employeeId", employeeId);
+
+                stateManager.replaceWindow(new TaskContainer());
+
+                showBanner(BannerType.SUCCESS, "Login successful");
+
+            } catch (Exception ex) {
+
+                showAlert("Error", ex.getMessage());
+
+            }
+
+        });
+
+        loginTask.setOnFailed(_ ->
+                showBanner(
+                        BannerType.FAILURE,
+                        "Login failed\nEmail not found"
+                )
+        );
+
+        new Thread(loginTask).start();
     }
 
+    /**
+     * Displays a temporary information banner.
+     *
+     * <p>The banner is automatically removed after a predefined timeout.</p>
+     *
+     * @param type    the banner type.
+     * @param message the message to display.
+     */
     private void showBanner(BannerType type, String message) {
-        InformationBanner banner = new InformationBanner(type, message);
-        ApplicationStateManager stateManager = ApplicationStateManager.getInstance();
+
+        InformationBanner banner =
+                new InformationBanner(type, message);
+
+        ApplicationStateManager stateManager =
+                ApplicationStateManager.getInstance();
+
         stateManager.addWindow(banner);
-        PauseTransition pause = new PauseTransition(Duration.seconds(timeInSeconds));
-        pause.setOnFinished(p -> stateManager.removeWindow(banner));
+
+        PauseTransition pause =
+                new PauseTransition(Duration.seconds(InformationBanner.timeInSeconds));
+
+        pause.setOnFinished(_ -> stateManager.removeWindow(banner));
+
         pause.play();
     }
 }
