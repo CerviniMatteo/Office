@@ -1,7 +1,7 @@
 package com.unimib.GUI.UI.view.controller.impl.layout;
 
 import com.unimib.GUI.UI.view.components.impl.task.TaskCardSkeleton;
-import com.unimib.GUI.UI.viewmodel.impl.TaskCardViewModel;
+import com.unimib.GUI.UI.viewmodel.impl.TaskViewModel;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.model.enums.TaskState;
 import com.unimib.GUI.utils.SessionManagerSingleton;
@@ -63,7 +63,7 @@ public class TaskContainerController implements DefaultController {
             new HashMap<>();
 
 
-    private TaskCardViewModel viewModel;
+    private TaskViewModel viewModel;
 
     private Chat chat;
 
@@ -75,7 +75,7 @@ public class TaskContainerController implements DefaultController {
         centerContainer.setFillHeight(true);
 
 
-        viewModel = new TaskCardViewModel();
+        viewModel = new TaskViewModel();
 
         observeTasks();
 

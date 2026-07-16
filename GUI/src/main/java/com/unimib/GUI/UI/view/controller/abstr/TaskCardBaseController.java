@@ -1,6 +1,6 @@
 package com.unimib.GUI.UI.view.controller.abstr;
 
-import com.unimib.GUI.UI.viewmodel.impl.TaskCardViewModel;
+import com.unimib.GUI.UI.viewmodel.impl.TaskViewModel;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.utils.SessionManagerSingleton;
 
@@ -13,7 +13,7 @@ import static com.unimib.GUI.utils.StringHelper.replaceUnderscores;
 
 public abstract class TaskCardBaseController implements DefaultController {
 
-    private final TaskCardViewModel viewModel;
+    private final TaskViewModel viewModel;
     private final TaskDTO currentTask;
     private final Long currentWorkerId;
 
@@ -37,7 +37,7 @@ public abstract class TaskCardBaseController implements DefaultController {
                         .getInstance()
                         .getAttribute("employeeId");
 
-        this.viewModel = new TaskCardViewModel();
+        this.viewModel = new TaskViewModel();
     }
 
 
@@ -86,7 +86,7 @@ public abstract class TaskCardBaseController implements DefaultController {
     }
 
 
-    public TaskCardViewModel getViewModel() {
+    public TaskViewModel getViewModel() {
         return viewModel;
     }
 

@@ -14,7 +14,7 @@ import javafx.concurrent.Task;
 
 import java.util.List;
 
-public class TaskCardViewModel extends BaseViewModel {
+public class TaskViewModel extends BaseViewModel {
 
     private final TaskCardRepository repository = new TaskCardRepository();
 
