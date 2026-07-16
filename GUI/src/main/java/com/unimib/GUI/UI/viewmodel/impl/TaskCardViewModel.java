@@ -46,11 +46,11 @@ public class TaskCardViewModel extends BaseViewModel {
     // ReadOnly properties
     // =======================
 
-    public ReadOnlyObjectProperty<UIState<List<TaskDTO>>> tasksStateProperty() {
+    public ReadOnlyObjectProperty<UIState<List<TaskDTO>>> getTasksStateProperty() {
         return tasksState;
     }
 
-    public ReadOnlyObjectProperty<UIState<TaskDTO>> taskStateProperty() {
+    public ReadOnlyObjectProperty<UIState<TaskDTO>> getTaskStateProperty() {
         return taskState;
     }
 

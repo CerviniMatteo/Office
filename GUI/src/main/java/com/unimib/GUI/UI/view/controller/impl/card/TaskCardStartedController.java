@@ -9,8 +9,6 @@ import com.unimib.GUI.UI.view.utils.WorkerImageUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-
-import static com.unimib.GUI.UI.view.components.impl.custom.AlertDialog.showAlert;
 import static com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils.*;
 
 public class TaskCardStartedController extends TaskCardBaseWithWorkersImgController {
@@ -59,20 +57,26 @@ public class TaskCardStartedController extends TaskCardBaseWithWorkersImgControl
                 .add("task-started");
 
 
-        addListener(
+        observeState(
                 getViewModel().acceptTaskStateProperty(),
-                acceptButton,
-                "Task accepted!"
+                () -> acceptButton.setDisable(true),
+                _ -> {
+                    acceptButton.setDisable(false);
+                    showSuccess("Task accepted successfully!");
+                },
+                this::showError
         );
 
 
-        addListener(
+        observeState(
                 getViewModel().changeTaskStateProperty(),
-                changeStateButton,
-                "Task completed!"
+                () -> changeStateButton.setDisable(true),
+                _ -> {
+                    changeStateButton.setDisable(false);
+                    showSuccess("Task state changed!");
+                },
+                this::showError
         );
-
-
         setupButtons();
     }
 
@@ -121,11 +125,7 @@ public class TaskCardStartedController extends TaskCardBaseWithWorkersImgControl
 
 
         } catch (Exception ex) {
-
-            showAlert(
-                    "Error",
-                    "Failed to create request payload"
-            );
+            showError("Failed to create request payload");
         }
     }
 
@@ -149,11 +149,7 @@ public class TaskCardStartedController extends TaskCardBaseWithWorkersImgControl
 
 
         } catch (Exception ex) {
-
-            showAlert(
-                    "Error",
-                    "Failed to create request payload"
-            );
+            showError("Failed to create request payload");
         }
     }
 }

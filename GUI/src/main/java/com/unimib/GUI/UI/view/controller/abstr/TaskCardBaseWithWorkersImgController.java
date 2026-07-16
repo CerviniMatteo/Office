@@ -7,8 +7,6 @@ import javafx.scene.layout.GridPane;
 
 public abstract class TaskCardBaseWithWorkersImgController extends TaskCardBaseController{
 
-    private final int IMG_SIZE = 50;
-    private final double STROKE_WIDTH = 2.0;
     private final boolean isCurrentWorkerAssigned;
 
     @FXML
@@ -35,10 +33,10 @@ public abstract class TaskCardBaseWithWorkersImgController extends TaskCardBaseC
     public boolean isCurrentWorkerAssigned() {return isCurrentWorkerAssigned;}
 
     public int getImgSize() {
-        return IMG_SIZE;
+        return 50;
     }
 
     public double getStrokeWidth() {
-        return STROKE_WIDTH;
+        return 2.0;
     }
 }

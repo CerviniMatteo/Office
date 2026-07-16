@@ -32,10 +32,14 @@ public class TaskCardDoneController extends TaskCardBaseWithWorkersImgController
 
         getStateLabel().getStyleClass().add("task-done");
 
-        addListener(
+        observeState(
                 getViewModel().resetTaskStateProperty(),
-                resetButton,
-                "Task reset!"
+                () -> resetButton.setDisable(true),
+                _ -> {
+                    resetButton.setDisable(false);
+                    showSuccess("Task reset successfully!");
+                },
+                this::showError
         );
 
         resetButton.setOnAction(_ -> resetTask());

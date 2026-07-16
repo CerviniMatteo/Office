@@ -61,7 +61,7 @@ public class FxApplication extends Application {
             }
         });
 
-        stage.setTitle("JavaFX App");
+        stage.setTitle("Office");
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
