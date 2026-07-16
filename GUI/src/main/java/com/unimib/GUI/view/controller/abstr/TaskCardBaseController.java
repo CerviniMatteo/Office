@@ -4,6 +4,7 @@ import com.unimib.GUI.model.controller.TaskRestController;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.utils.SessionManagerSingleton;
 import com.unimib.GUI.view.components.impl.custom.AlertDialog;
+import com.unimib.GUI.view.viewmodel.TaskCardViewModel;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,8 @@ import javafx.scene.control.Label;
 import static com.unimib.GUI.utils.StringHelper.replaceUnderscores;
 
 public abstract class TaskCardBaseController implements DefaultController {
+
+    private final TaskCardViewModel viewModel;
 
     private final TaskDTO currentTask;
     private final TaskRestController taskRestController;
@@ -28,6 +31,8 @@ public abstract class TaskCardBaseController implements DefaultController {
                 (Long) SessionManagerSingleton
                         .getInstance()
                         .getAttribute("employeeId");
+
+        viewModel = new TaskCardViewModel();
     }
 
     @FXML
@@ -37,7 +42,7 @@ public abstract class TaskCardBaseController implements DefaultController {
                 replaceUnderscores(currentTask.taskState().toString())
         );
         deleteButton.setOnAction(_ -> {
-            Task<String> task = taskRestController.deleteTask(currentTask.taskId());
+            Task<String> task = viewModel.deleteTask(currentTask.taskId());
             task.setOnSucceeded(_ -> AlertDialog.showAlert("Success", "Task successfully deleted"));
 
             new Thread(task).start();

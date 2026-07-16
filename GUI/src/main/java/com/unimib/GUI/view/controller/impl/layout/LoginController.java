@@ -50,7 +50,7 @@ public class LoginController implements DefaultController {
     /**
      * ViewModel responsible for the login workflow.
      */
-    private final LoginViewModel viewModel = new LoginViewModel();
+    private LoginViewModel viewModel;
 
     /**
      * Initializes the view components and registers the event handlers.
@@ -60,6 +60,8 @@ public class LoginController implements DefaultController {
      */
     @FXML
     private void initialize() {
+
+        viewModel = new LoginViewModel();
 
         if (inputForm != null) {
             inputForm.setText("matteo.cervini@example.com");
