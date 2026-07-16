@@ -1,4 +1,4 @@
-package com.unimib.GUI.UI.viewmodel;
+package com.unimib.GUI.UI.viewmodel.impl;
 
 import com.unimib.GUI.repository.LoginRepository;
 import javafx.concurrent.Task;

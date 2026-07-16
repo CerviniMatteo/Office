@@ -1,6 +1,6 @@
 package com.unimib.GUI.UI.view.controller.impl.layout;
 
-import com.unimib.GUI.model.controller.TaskRestController;
+import com.unimib.GUI.model.controller.impl.TaskRestController;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.utils.SessionManagerSingleton;
 import com.unimib.GUI.UI.view.components.abstr.TaskCardBase;
@@ -9,7 +9,7 @@ import com.unimib.GUI.UI.view.components.impl.layout.Chat;
 import com.unimib.GUI.UI.view.components.impl.layout.TaskCreationForm;
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.UI.view.factory.TaskCardFactory;
-import com.unimib.GUI.UI.view.state.ApplicationStateManager;
+import com.unimib.GUI.UI.state.ApplicationStateManager;
 import com.unimib.GUI.web_socket_client.ChatWebSocketClientApp;
 import com.unimib.GUI.web_socket_client.TaskWebSocketClientApp;
 import javafx.application.Platform;

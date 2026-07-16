@@ -1,7 +1,7 @@
 
-package com.unimib.GUI.model.controller;
+package com.unimib.GUI.model.controller.impl;
 
-import com.unimib.GUI.model.controller.base.BaseRestController;
+import com.unimib.GUI.model.controller.BaseRestController;
 import com.unimib.GUI.model.dto.WorkerDTO;
 import javafx.concurrent.Task;
 

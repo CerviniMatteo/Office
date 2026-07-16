@@ -4,7 +4,6 @@ import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.UI.view.controller.abstr.TaskCardBaseWithWorkersImgController;
 import com.unimib.GUI.UI.view.utils.StringHelper;
 import com.unimib.GUI.UI.view.utils.WorkerImageUtils;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -33,6 +32,12 @@ public class TaskCardDoneController extends TaskCardBaseWithWorkersImgController
 
         getStateLabel().getStyleClass().add("task-done");
 
+        addListener(
+                getViewModel().resetTaskStateProperty(),
+                resetButton,
+                "Task reset!"
+        );
+
         resetButton.setOnAction(_ -> resetTask());
     }
 
@@ -42,9 +47,7 @@ public class TaskCardDoneController extends TaskCardBaseWithWorkersImgController
 
     private void resetTask() {
         try {
-            Task<String> task = getTaskController().resetTaskState(getCurrentTask().taskId());
-            task.setOnFailed(_ -> showAlert("Error", task.getException().getMessage()));
-            new Thread(task).start();
+            getViewModel().resetTaskState(getCurrentTask().taskId());
         } catch (Exception ex) {
             showAlert("Error", "Failed to create request payload");
         }

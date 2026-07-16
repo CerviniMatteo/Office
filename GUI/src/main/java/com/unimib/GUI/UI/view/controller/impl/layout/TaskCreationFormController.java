@@ -1,6 +1,6 @@
 package com.unimib.GUI.UI.view.controller.impl.layout;
 
-import com.unimib.GUI.model.controller.TaskRestController;
+import com.unimib.GUI.model.controller.impl.TaskRestController;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.model.enums.TaskState;
 import com.unimib.GUI.model.enums.TimeFormat;

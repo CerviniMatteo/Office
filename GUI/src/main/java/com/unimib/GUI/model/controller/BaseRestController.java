@@ -1,4 +1,4 @@
-package com.unimib.GUI.model.controller.base;
+package com.unimib.GUI.model.controller;
 
 import javafx.concurrent.Task;
 import org.springframework.core.ParameterizedTypeReference;

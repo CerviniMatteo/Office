@@ -1,4 +1,4 @@
-package com.unimib.GUI.UI.view.state;
+package com.unimib.GUI.UI.state;
 
 import com.unimib.GUI.FxApplication;
 import javafx.application.Platform;

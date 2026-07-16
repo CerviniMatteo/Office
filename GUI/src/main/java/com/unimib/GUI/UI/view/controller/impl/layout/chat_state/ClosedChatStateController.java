@@ -1,6 +1,6 @@
 package com.unimib.GUI.UI.view.controller.impl.layout.chat_state;
 
-import com.unimib.GUI.model.controller.ChatRestController;
+import com.unimib.GUI.model.controller.impl.ChatRestController;
 import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.UI.view.components.impl.custom.StyledButton;
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;

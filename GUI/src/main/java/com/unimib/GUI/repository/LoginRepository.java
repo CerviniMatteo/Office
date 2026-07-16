@@ -1,6 +1,6 @@
 package com.unimib.GUI.repository;
 
-import com.unimib.GUI.model.controller.LoginRestController;
+import com.unimib.GUI.model.controller.impl.LoginRestController;
 import javafx.concurrent.Task;
 
 public class LoginRepository {
