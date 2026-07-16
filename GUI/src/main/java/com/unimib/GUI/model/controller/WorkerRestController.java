@@ -17,7 +17,7 @@ public class WorkerRestController extends BaseRestController {
                 try {
                     return getOne(BASE_EMPLOYEE_ENDPOINT + "/" + workerId, WorkerDTO.class);
                 } catch (Exception e) {
-                    com.unimib.GUI.view.components.impl.custom.AlertDialog.showAlert("Error", e.getMessage());
+                    com.unimib.GUI.UI.view.components.impl.custom.AlertDialog.showAlert("Error", e.getMessage());
                     return null;
                 }
             }

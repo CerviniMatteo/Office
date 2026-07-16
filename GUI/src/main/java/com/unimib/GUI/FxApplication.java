@@ -1,6 +1,6 @@
 package com.unimib.GUI;
-import com.unimib.GUI.view.components.impl.layout.Login;
-import com.unimib.GUI.view.state.ApplicationStateManager;
+import com.unimib.GUI.UI.view.components.impl.layout.Login;
+import com.unimib.GUI.UI.view.state.ApplicationStateManager;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.RestTemplate;
 
-import static com.unimib.GUI.view.components.impl.custom.AlertDialog.showAlert;
+import static com.unimib.GUI.UI.view.components.impl.custom.AlertDialog.showAlert;
 
 public abstract class BaseRestController {
 
