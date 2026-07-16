@@ -101,6 +101,15 @@
     -fx-effect: dropshadow(gaussian, -app-shadow-strong, 8, 0, 0, 3);
 }
 
+.skeleton {
+    -fx-fill: linear-gradient(
+            from 0% 0% to 100% 0%,
+            #302938,
+            #50475b,
+            #302938
+    );
+}
+
 /* ===================================================== */
 /* GLOBAL BUTTON RESET                                   */
 /* ===================================================== */

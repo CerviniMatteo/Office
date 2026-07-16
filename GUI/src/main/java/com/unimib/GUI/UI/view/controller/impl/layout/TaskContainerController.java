@@ -1,7 +1,9 @@
 package com.unimib.GUI.UI.view.controller.impl.layout;
 
+import com.unimib.GUI.UI.view.components.impl.task.TaskCardSkeleton;
 import com.unimib.GUI.UI.viewmodel.impl.TaskCardViewModel;
 import com.unimib.GUI.model.dto.TaskDTO;
+import com.unimib.GUI.model.enums.TaskState;
 import com.unimib.GUI.utils.SessionManagerSingleton;
 import com.unimib.GUI.UI.view.components.abstr.TaskCardBase;
 import com.unimib.GUI.UI.view.components.impl.custom.AlertDialog;
@@ -20,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,6 +59,9 @@ public class TaskContainerController implements DefaultController {
     private final Map<Long, TaskCardBase> tasks =
             new HashMap<>();
 
+    private final Map<Long, TaskCardSkeleton> skeletonTasks =
+            new HashMap<>();
+
 
     private TaskCardViewModel viewModel;
 
@@ -70,7 +76,6 @@ public class TaskContainerController implements DefaultController {
 
 
         viewModel = new TaskCardViewModel();
-
 
         observeTasks();
 
@@ -118,52 +123,167 @@ public class TaskContainerController implements DefaultController {
         setupButtons(webSocketClient);
     }
 
+    private void showInitialSkeleton(){
 
+        clearContainers();
+
+
+        for(int i = 0; i < 3; i++){
+
+            notStartedTaskBox.getChildren()
+                    .add(newSkeletonPlaceholder(-1L));
+
+
+            startedTaskBox.getChildren()
+                    .add(newSkeletonPlaceholder(-1L));
+
+
+            doneTaskBox.getChildren()
+                    .add(newSkeletonPlaceholder(-1L));
+        }
+    }
+
+    private TaskCardSkeleton newSkeletonPlaceholder(Long taskId) {
+
+        TaskDTO placeholder = new TaskDTO(
+                taskId,
+                "",
+                TaskState.TO_BE_STARTED,
+                null,
+                null,
+                Collections.emptyMap()
+        );
+
+        return new TaskCardSkeleton(placeholder);
+    }
+
+    private void removeInitialSkeleton(){
+
+        notStartedTaskBox.getChildren()
+                .removeIf(
+                        node -> node instanceof TaskCardSkeleton
+                );
+
+
+        startedTaskBox.getChildren()
+                .removeIf(
+                        node -> node instanceof TaskCardSkeleton
+                );
+
+
+        doneTaskBox.getChildren()
+                .removeIf(
+                        node -> node instanceof TaskCardSkeleton
+                );
+    }
+
+    private void showTaskSkeleton(Long taskId){
+
+        removeSkeleton(taskId);
+
+        TaskCardSkeleton skeleton =
+                newSkeletonPlaceholder(taskId);
+
+        skeleton.setId(
+                "skeleton-" + taskId
+        );
+
+        skeletonTasks.put(
+                taskId,
+                skeleton
+        );
+
+        doneTaskBox.getChildren()
+                .add(skeleton);
+    }
+
+    private void removeSkeleton(Long taskId){
+
+        TaskCardSkeleton skeleton =
+                skeletonTasks.remove(taskId);
+
+
+        if(skeleton == null)
+            return;
+
+
+        notStartedTaskBox.getChildren()
+                .remove(skeleton);
+
+
+        startedTaskBox.getChildren()
+                .remove(skeleton);
+
+
+        doneTaskBox.getChildren()
+                .remove(skeleton);
+    }
 
     private void observeTasks() {
+
+        showInitialSkeleton();
 
         observeState(
                 viewModel.getTasksStateProperty(),
 
-                // loading
                 () -> {
                 },
 
 
-                // success
                 fetchedTasks -> {
+
+                    removeInitialSkeleton();
 
                     if(fetchedTasks == null)
                         return;
 
+                    clearContainers();
 
-                    fetchedTasks.forEach(task -> {
+                    tasks.clear();
+
+
+                    for(TaskDTO taskDTO : fetchedTasks) {
 
                         TaskCardBase card =
-                                TaskCardFactory.create(task);
+                                TaskCardFactory.create(taskDTO);
 
 
                         if(card != null) {
 
                             tasks.put(
-                                    task.taskId(),
+                                    taskDTO.taskId(),
                                     card
                             );
 
 
                             addTask(
-                                    task,
+                                    taskDTO,
                                     card
                             );
                         }
-                    });
+                    }
                 },
 
 
-                this::showError
+                error -> {
+
+                    removeInitialSkeleton();
+
+                    this.showError(error);
+                }
         );
     }
 
+    private void clearContainers() {
+
+        notStartedTaskBox.getChildren().clear();
+
+        startedTaskBox.getChildren().clear();
+
+        doneTaskBox.getChildren().clear();
+
+        activeTaskContainer.getChildren().clear();
+    }
 
 
     private void observeTask() {
@@ -171,16 +291,19 @@ public class TaskContainerController implements DefaultController {
         observeState(
                 viewModel.getTaskStateProperty(),
 
-                // loading
                 () -> {
                 },
 
 
-                // success
                 updatedTask -> {
 
                     if(updatedTask == null)
                         return;
+
+
+                    removeSkeleton(
+                            updatedTask.taskId()
+                    );
 
 
                     removeTask(
@@ -205,13 +328,13 @@ public class TaskContainerController implements DefaultController {
                                 card
                         );
                     }
+
                 },
 
 
                 this::showError
         );
     }
-
 
 
     private void setupCenterComponents() {
@@ -344,35 +467,21 @@ public class TaskContainerController implements DefaultController {
 
     private void handleTaskChange(String message) {
 
-
         if(message.startsWith("FETCH_TASK:")) {
 
-
-            Long taskId =
-                    Long.valueOf(
-                            message.substring(
-                                    message.indexOf(":") + 1
-                            )
-                    );
-
+            Long taskId = Long.valueOf(
+                    message.substring("FETCH_TASK:".length())
+            );
 
             Platform.runLater(
                     () -> updateTaskCard(taskId)
             );
 
-        }
+        } else if(message.startsWith("DELETE_TASK:")) {
 
-
-        if(message.startsWith("DELETE_TASK:")) {
-
-
-            Long taskId =
-                    Long.valueOf(
-                            message.substring(
-                                    message.indexOf(":") + 1
-                            )
-                    );
-
+            Long taskId = Long.valueOf(
+                    message.substring("DELETE_TASK:".length())
+            );
 
             Platform.runLater(
                     () -> deleteEntry(taskId)
@@ -380,14 +489,12 @@ public class TaskContainerController implements DefaultController {
         }
     }
 
+    private void updateTaskCard(Long taskId){
 
-
-    private void updateTaskCard(Long taskId) {
+        showTaskSkeleton(taskId);
 
         viewModel.fetchTask(taskId);
-
     }
-
 
 
     private void deleteEntry(Long taskId) {
