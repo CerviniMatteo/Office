@@ -108,7 +108,7 @@ public class TaskCreationFormController implements DefaultController {
     private void observeCreateTask() {
 
         observeState(
-                viewModel.createTaskStateProperty(),
+                viewModel.getCreateTaskStateProperty(),
 
                 null,
 

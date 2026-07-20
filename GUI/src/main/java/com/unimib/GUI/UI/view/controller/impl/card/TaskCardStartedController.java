@@ -58,7 +58,7 @@ public class TaskCardStartedController extends TaskCardBaseWithWorkersImgControl
 
 
         observeState(
-                getViewModel().acceptTaskStateProperty(),
+                getViewModel().getAcceptTaskStateProperty(),
                 () -> acceptButton.setDisable(true),
                 _ -> {
                     acceptButton.setDisable(false);
@@ -69,7 +69,7 @@ public class TaskCardStartedController extends TaskCardBaseWithWorkersImgControl
 
 
         observeState(
-                getViewModel().changeTaskStateProperty(),
+                getViewModel().getChangeTaskStateProperty(),
                 () -> changeStateButton.setDisable(true),
                 _ -> {
                     changeStateButton.setDisable(false);

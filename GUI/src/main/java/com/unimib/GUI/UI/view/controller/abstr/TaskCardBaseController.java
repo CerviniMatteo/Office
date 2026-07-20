@@ -57,9 +57,9 @@ public abstract class TaskCardBaseController implements DefaultController {
 
 
         observeState(
-                viewModel.deleteTaskStateProperty(),
+                viewModel.getDeleteTaskStateProperty(),
                 () -> deleteButton.setDisable(true),
-                result -> {
+                _ -> {
                     deleteButton.setDisable(false);
 
                     showSuccess(

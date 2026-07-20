@@ -10,7 +10,7 @@ import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
 
-import static com.unimib.GUI.constants.Rest.*;
+import static com.unimib.GUI.constants.Rest.BASE_TASK_ENDPOINT;
 
 public class TaskRestController extends BaseRestController {
 
@@ -23,26 +23,26 @@ public class TaskRestController extends BaseRestController {
     }
 
     public Task<String> changeTaskState(ChangeTaskStateRequestDTO payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/changeState", payload);
+        return postTask(BASE_TASK_ENDPOINT + "/changeState", payload, String.class);
     }
 
     public Task<String> startTask(StartTaskRequestDTO payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/startTask", payload);
+        return postTask(BASE_TASK_ENDPOINT + "/startTask", payload, String.class);
     }
 
     public Task<String> resetTaskState(Long taskId) {
-        return postTask(BASE_TASK_ENDPOINT + "/resetState", taskId);
+        return postTask(BASE_TASK_ENDPOINT + "/resetState", taskId, String.class);
     }
 
     public Task<String> acceptTask(AcceptTaskRequestDTO payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/acceptTask", payload);
+        return postTask(BASE_TASK_ENDPOINT + "/acceptTask", payload, String.class);
     }
 
     public Task<String> createTask(TaskDTO payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/createTask", payload);
+        return postTask(BASE_TASK_ENDPOINT + "/createTask", payload, String.class);
     }
 
-    public Task<String> deleteTask(Long payload) {
-        return postTask(BASE_TASK_ENDPOINT + "/deleteTask", payload);
+    public Task<String> deleteTask(Long taskId) {
+        return postTask(BASE_TASK_ENDPOINT + "/deleteTask", taskId, String.class);
     }
 }

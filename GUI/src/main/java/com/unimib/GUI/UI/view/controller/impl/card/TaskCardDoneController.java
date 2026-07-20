@@ -33,7 +33,7 @@ public class TaskCardDoneController extends TaskCardBaseWithWorkersImgController
         getStateLabel().getStyleClass().add("task-done");
 
         observeState(
-                getViewModel().resetTaskStateProperty(),
+                getViewModel().getResetTaskStateProperty(),
                 () -> resetButton.setDisable(true),
                 _ -> {
                     resetButton.setDisable(false);

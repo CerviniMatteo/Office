@@ -1,61 +1,64 @@
 package com.unimib.GUI.model.controller;
 
+import com.unimib.GUI.UI.view.components.impl.custom.AlertDialog;
 import javafx.concurrent.Task;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-
-import static com.unimib.GUI.UI.view.components.impl.custom.AlertDialog.showAlert;
 
 public abstract class BaseRestController {
 
-    protected static final RestTemplate rest = createRestTemplate();
+    protected final RestTemplate rest = new RestTemplate();
 
-    private static RestTemplate createRestTemplate() {
-
-        return new RestTemplate();
-    }
-
-    // --- GET ---
-    @Nullable
-    protected <T> T getOne(String url, Class<T> type) {
+    protected <T> T getOne(String url, Class<T> responseType) {
         try {
-            return rest.getForObject(url, type);
+            return rest.getForObject(url, responseType);
         } catch (Exception e) {
-            showAlert("Error", e.getMessage());
+            AlertDialog.showAlert("Error", e.getMessage());
             return null;
         }
     }
 
-    @Nullable
-    protected <T> T getMany(String url, ParameterizedTypeReference<T> type) {
+    protected <T> T getMany(String url, ParameterizedTypeReference<T> responseType) {
         try {
-            ResponseEntity<T> response = rest.exchange(url, HttpMethod.GET, null, type);
+            ResponseEntity<T> response = rest.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    responseType
+            );
+
             return response.getBody();
+
         } catch (Exception e) {
-            showAlert("Error", e.getMessage());
+            AlertDialog.showAlert("Error", e.getMessage());
             return null;
         }
     }
 
-    // --- POST ---
-    protected <T> Task<T> postTask(String url, Object payload) {
+    protected <T, R> Task<R> postTask(String url, T payload, Class<R> responseType) {
+
         return new Task<>() {
             @Override
-            protected T call() {
+            protected R call() {
+
                 try {
-                    HttpEntity<Object> entity = new HttpEntity<>(payload);
-                    ResponseEntity<T> response = rest.exchange(url, HttpMethod.POST, entity, (Class<T>) String.class);
+                    HttpEntity<T> entity = new HttpEntity<>(payload);
+
+                    ResponseEntity<R> response = rest.exchange(
+                            url,
+                            HttpMethod.POST,
+                            entity,
+                            responseType
+                    );
+
                     return response.getBody();
+
                 } catch (Exception e) {
-                    showAlert("Error", e.getMessage());
+                    AlertDialog.showAlert("Error", e.getMessage());
                     return null;
                 }
             }
         };
     }
-
 }

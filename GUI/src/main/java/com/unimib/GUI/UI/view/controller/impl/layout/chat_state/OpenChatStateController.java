@@ -1,13 +1,11 @@
 package com.unimib.GUI.UI.view.controller.impl.layout.chat_state;
 
-import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
 import com.unimib.GUI.UI.view.controller.abstr.ChatController;
 import com.unimib.GUI.UI.view.utils.FileUtils;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
+import com.unimib.GUI.model.dto.MessageDTO;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -16,69 +14,59 @@ import java.util.Map;
 
 public class OpenChatStateController extends ChatController {
 
-    protected OpenChatStateController(Chat chat, Map<Long, List<MessageDTO>> chatCache) {
+    protected OpenChatStateController(
+            Chat chat,
+            Map<Long, List<MessageDTO>> chatCache
+    ) {
         super(chat, chatCache);
     }
 
-    private ChangeListener<String> msgListener;
-
     @FXML
     private void initialize() {
+
         super.baseInitialize();
 
-        // ---- Send button ----
-        sendButton.setOnAction(_ -> {
-            String text = inputForm.getText();
-            if (text == null || text.isBlank()) return;   // FIX: isBlank() catches whitespace
-            if (selectedChatId == null) return;
+        observeState(
+                viewModel.getSendMessageStateProperty(),
+                () -> sendButton.setDisable(true),
+                unused -> {
+                    sendButton.setDisable(false);
+                    inputForm.clear();
+                },
+                error -> {
+                    sendButton.setDisable(false);
+                    showError(error);
+                }
+        );
 
-            try {
-                MessageDTO msg = new MessageDTO(selectedChatId, employeeId, text);
-                chatWebSocketClientApp.sendMessage(mapper.writeValueAsString(msg));
-                inputForm.clear();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        viewModel.getMessagesProperty().addListener((obs, oldMessages, messages) -> {
+            if (messages == null || selectedChatId == null)
+                return;
+            chatContainer.getChildren().clear();
+            messages.forEach(message -> {
+                System.out.printf("Rendering message: %s%n", message);
+                renderMessage(message);
+            });
         });
 
-        msgListener = (_, _, newV) -> {
-            if (newV == null || newV.isEmpty()) return;
+        sendButton.setOnAction(_ -> {
 
-            Platform.runLater(() -> {
-                try {
-                    MessageDTO msg = mapper.readValue(newV, MessageDTO.class);
+            String text = inputForm.getText();
 
-                    Path path = baseDir.resolve(msg.chatId() + ".txt");
+            if (text == null || text.isBlank() || selectedChatId == null)
+                return;
 
-                    FileUtils.appendObject(path, msg);
+            viewModel.sendMessage(text);
+        });
 
-                    chatCache
-                            .computeIfAbsent(msg.chatId(), _ -> new ArrayList<>())
-                            .add(msg);
+        backButton.setOnAction(_ -> exitChat());
 
-                    // RENDER only if this chat is currently open
-                    if (selectedChatId != null && selectedChatId.equals(msg.chatId())) {
-                        renderMessage(msg);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        };
-
-        // Use the ChatWebSocketClientApp helper so listeners are tracked and can be
-        // removed by stop()/reset if a controller fails to do so.
-        chatWebSocketClientApp.addReceiveListener(msgListener);
-
-        // ---- Back button ----
-        backButton.setOnAction(_ -> closeChat());
-
-        // ---- Auto-scroll ----
         chatContainer.heightProperty().addListener((_, _, _) ->
                 scrollPane.setVvalue(1.0));
 
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(
+                ScrollPane.ScrollBarPolicy.NEVER
+        );
     }
 
     // =========================
@@ -86,44 +74,41 @@ public class OpenChatStateController extends ChatController {
     // =========================
 
     public void displayChat(Long chatId) {
+
         selectedChatId = chatId;
 
-        closeChat(false, true);
+        setChatVisible(false, true);
 
         chatContainer.getChildren().clear();
 
-        List<MessageDTO> cached = chatCache.get(chatId);
-
-        if (cached != null && !cached.isEmpty()) {
-            cached.forEach(this::renderMessage);
-        } else {
-            Path path = baseDir.resolve(chatId + ".txt");
-            List<MessageDTO> messages = FileUtils.readObjects(path, MessageDTO.class);
-
-           chatCache.put(chatId, new ArrayList<>(messages));
-
-
-            messages.forEach(this::renderMessage);
-        }
+        viewModel.openChat(chatId);
     }
 
-    private void closeChat(boolean chatsIdOpen, boolean chatAreaOpen){
-        chats.setVisible(chatsIdOpen);
-        chats.setManaged(chatsIdOpen);
-        chatArea.setVisible(chatAreaOpen);
-        chatArea.setManaged(chatAreaOpen);
+    private void setChatVisible(boolean chatsVisible, boolean areaVisible) {
+
+        chats.setVisible(chatsVisible);
+        chats.setManaged(chatsVisible);
+
+        chatArea.setVisible(areaVisible);
+        chatArea.setManaged(areaVisible);
     }
 
     // =========================
-    // CLOSE CHAT
+    // EXIT CHAT
     // =========================
 
-    private void closeChat() {
-        chatWebSocketClientApp.removeReceiveListener(msgListener);
-        chatCache.clear();
-        closeChat(true, false);
-        ClosedChatStateController closed = new ClosedChatStateController(this.chat, this.chatCache);
+    private void exitChat() {
+
+        viewModel.closeChat();
+        viewModel.disconnect();
+
+        setChatVisible(true, false);
+
+        ClosedChatStateController closed =
+                new ClosedChatStateController(chat, chatCache);
+
         closed.adoptStateFrom(this);
+
         chat.setController(closed);
     }
 }

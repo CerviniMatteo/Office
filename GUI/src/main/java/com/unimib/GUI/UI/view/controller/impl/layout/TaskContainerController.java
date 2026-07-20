@@ -71,52 +71,33 @@ public class TaskContainerController implements DefaultController {
 
     @FXML
     public void initialize() {
-
         centerContainer.setFillHeight(true);
-
 
         viewModel = new TaskViewModel();
 
         observeTasks();
-
         observeTask();
-
 
         viewModel.fetchTasks();
 
-
-
-        TaskWebSocketClientApp webSocketClient =
-                new TaskWebSocketClientApp();
-
+        TaskWebSocketClientApp webSocketClient = new TaskWebSocketClientApp();
 
         try {
-
             webSocketClient.start();
-
         } catch (Exception e) {
-
             AlertDialog.showAlert(
                     "Error",
                     "Could not connect to TaskContainer: "
                             + e.getMessage()
             );
         }
-
-
-
         webSocketClient
                 .getProperty()
                 .addListener((_, _, message) -> {
-
                     if(message != null && !message.isEmpty()) {
-
                         handleTaskChange(message);
-
                     }
                 });
-
-
 
         setupCenterComponents();
 
@@ -127,16 +108,11 @@ public class TaskContainerController implements DefaultController {
 
         clearContainers();
 
-
         for(int i = 0; i < 3; i++){
-
-            notStartedTaskBox.getChildren()
-                    .add(newSkeletonPlaceholder(-1L));
-
+            notStartedTaskBox.getChildren().add(newSkeletonPlaceholder(-1L));
 
             startedTaskBox.getChildren()
                     .add(newSkeletonPlaceholder(-1L));
-
 
             doneTaskBox.getChildren()
                     .add(newSkeletonPlaceholder(-1L));
@@ -144,7 +120,6 @@ public class TaskContainerController implements DefaultController {
     }
 
     private TaskCardSkeleton newSkeletonPlaceholder(Long taskId) {
-
         TaskDTO placeholder = new TaskDTO(
                 taskId,
                 "",
@@ -164,12 +139,10 @@ public class TaskContainerController implements DefaultController {
                         node -> node instanceof TaskCardSkeleton
                 );
 
-
         startedTaskBox.getChildren()
                 .removeIf(
                         node -> node instanceof TaskCardSkeleton
                 );
-
 
         doneTaskBox.getChildren()
                 .removeIf(
@@ -386,75 +359,31 @@ public class TaskContainerController implements DefaultController {
 
         chatButton.setOnAction(_ -> {
 
-
             if(chat == null) {
-
                 chat = new Chat();
-
             }
 
-
-            if(centerContainer
-                    .getChildren()
-                    .contains(chat)) {
-
-
-                chatButton.setText(
-                        "OPEN CHAT"
-                );
-
-
-                centerContainer
-                        .getChildren()
-                        .remove(chat);
-
-
+            if(chatButton.getText().equals("CLOSE CHAT")) {
+                chatButton.setText("OPEN CHAT");
+                centerContainer.getChildren().remove(chat);
             } else {
-
-
-                chatButton.setText(
-                        "CLOSE CHAT"
-                );
-
-
-                centerContainer
-                        .getChildren()
-                        .remove(form);
-
-
-                centerContainer
-                        .getChildren()
-                        .add(chat);
+                chatButton.setText("CLOSE CHAT");
+                centerContainer.getChildren().remove(form);
+                centerContainer.getChildren().add(chat);
             }
 
         });
     }
 
-
-
     private void setupButtons(
             TaskWebSocketClientApp webSocketClient
     ) {
-
-
         logOutButton.setOnAction(_ -> {
-
-
             webSocketClient.stop();
-
-
-            ChatWebSocketClientApp.resetInstance();
-
-
-
+            ChatWebSocketClientApp.getInstance().stop();
             SessionManagerSingleton session =
                     SessionManagerSingleton.getInstance();
-
-
-            session.removeAttribute(
-                    "employeeId"
-            );
-
+            session.removeAttribute("employeeId");
 
             ApplicationStateManager
                     .getInstance()
@@ -462,8 +391,6 @@ public class TaskContainerController implements DefaultController {
 
         });
     }
-
-
 
     private void handleTaskChange(String message) {
 

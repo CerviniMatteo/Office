@@ -9,20 +9,12 @@ public interface DefaultController {
 
 
     default void showError(String message) {
-
-        AlertDialog.showAlert(
-                "Error",
-                message
-        );
+        AlertDialog.showAlert("Error", message);
     }
 
 
     default void showSuccess(String message) {
-
-        AlertDialog.showAlert(
-                "Success",
-                message
-        );
+        AlertDialog.showAlert("Success", message);
     }
 
 
@@ -34,35 +26,22 @@ public interface DefaultController {
     ) {
 
         property.addListener((_, _, state) -> {
-
             if (state == null)
                 return;
 
-
             if (state.isLoading()) {
-
                 if (onLoading != null)
                     onLoading.run();
-
                 return;
             }
-
 
             if (state.getError() != null) {
-
                 if (onError != null)
-                    onError.accept(
-                            state.getError()
-                    );
-
-                return;
+                    onError.accept(state.getError());
             }
 
-
             if (onSuccess != null)
-                onSuccess.accept(
-                        state.getData()
-                );
+                onSuccess.accept(state.getData());
         });
     }
 }

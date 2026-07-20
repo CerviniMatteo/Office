@@ -43,8 +43,8 @@ public class TaskViewModel extends BaseViewModel {
             new SimpleObjectProperty<>();
 
     // =======================
-    // ReadOnly properties
-    // =======================
+// Read-only State Getters
+// =======================
 
     public ReadOnlyObjectProperty<UIState<List<TaskDTO>>> getTasksStateProperty() {
         return tasksState;
@@ -54,27 +54,27 @@ public class TaskViewModel extends BaseViewModel {
         return taskState;
     }
 
-    public ReadOnlyObjectProperty<UIState<String>> createTaskStateProperty() {
+    public ReadOnlyObjectProperty<UIState<String>> getCreateTaskStateProperty() {
         return createTaskState;
     }
 
-    public ReadOnlyObjectProperty<UIState<String>> deleteTaskStateProperty() {
+    public ReadOnlyObjectProperty<UIState<String>> getDeleteTaskStateProperty() {
         return deleteTaskState;
     }
 
-    public ReadOnlyObjectProperty<UIState<String>> acceptTaskStateProperty() {
+    public ReadOnlyObjectProperty<UIState<String>> getAcceptTaskStateProperty() {
         return acceptTaskState;
     }
 
-    public ReadOnlyObjectProperty<UIState<String>> startTaskStateProperty() {
+    public ReadOnlyObjectProperty<UIState<String>> getStartTaskStateProperty() {
         return startTaskState;
     }
 
-    public ReadOnlyObjectProperty<UIState<String>> changeTaskStateProperty() {
+    public ReadOnlyObjectProperty<UIState<String>> getChangeTaskStateProperty() {
         return changeTaskState;
     }
 
-    public ReadOnlyObjectProperty<UIState<String>> resetTaskStateProperty() {
+    public ReadOnlyObjectProperty<UIState<String>> getResetTaskStateProperty() {
         return resetTaskState;
     }
 

@@ -32,7 +32,7 @@ public class TaskCardNotStartedController extends TaskCardBaseController {
 
 
         observeState(
-                getViewModel().startTaskStateProperty(),
+                getViewModel().getStartTaskStateProperty(),
 
 
                 () -> changeStateButton.setDisable(true),
