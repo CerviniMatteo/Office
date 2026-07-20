@@ -2,6 +2,7 @@ package com.unimib.GUI.UI.viewmodel.impl;
 
 import com.unimib.GUI.UI.state.UIState;
 import com.unimib.GUI.UI.viewmodel.BaseViewModel;
+import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.repository.ChatRepository;
 import javafx.application.Platform;
@@ -15,7 +16,7 @@ public class ChatViewModel extends BaseViewModel {
 
     private final ChatRepository repository = new ChatRepository();
 
-    private final ObjectProperty<UIState<List<Long>>> chatsState =
+    private final ObjectProperty<UIState<List<ChatInfoDTO>>> chatsState =
             new SimpleObjectProperty<>();
 
     private final ObjectProperty<UIState<Void>> connectionState =
@@ -114,7 +115,7 @@ public class ChatViewModel extends BaseViewModel {
         disconnect();
     }
 
-    public ReadOnlyObjectProperty<UIState<List<Long>>> getChatsStateProperty() {
+    public ReadOnlyObjectProperty<UIState<List<ChatInfoDTO>>> getChatsStateProperty() {
         return chatsState;
     }
 

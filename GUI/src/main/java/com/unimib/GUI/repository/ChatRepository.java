@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unimib.GUI.UI.view.utils.FileUtils;
 import com.unimib.GUI.model.controller.ChatSocketController;
 import com.unimib.GUI.model.controller.impl.ChatRestController;
+import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
 import javafx.concurrent.Task;
 
@@ -43,7 +44,7 @@ public class ChatRepository {
         });
     }
 
-    public Task<List<Long>> getChats(Long employeeId) {
+    public Task<List<ChatInfoDTO>> getChats(Long employeeId) {
         return restDataSource.getChats(employeeId);
     }
 

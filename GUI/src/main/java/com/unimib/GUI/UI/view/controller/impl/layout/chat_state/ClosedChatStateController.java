@@ -1,5 +1,6 @@
 package com.unimib.GUI.UI.view.controller.impl.layout.chat_state;
 
+import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.UI.view.components.impl.custom.StyledButton;
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
@@ -48,23 +49,23 @@ public class ClosedChatStateController extends ChatController {
         );
     }
 
-    private void showChatList(List<Long> chatIds) {
+    private void showChatList(List<ChatInfoDTO> chatInfos) {
 
-        if(chatIds == null)
+        if(chatInfos == null)
             return;
 
 
         chats.getChildren().clear();
 
 
-        for(Long chatId : chatIds) {
+        for(ChatInfoDTO chatInfo : chatInfos) {
 
             StyledButton btn = new StyledButton();
 
-            btn.setText("Chat " + chatId);
+            btn.setText(chatInfo.receiverInfo());
             btn.setMaxWidth(Double.MAX_VALUE);
 
-            btn.setOnAction(_ -> openChat(chatId));
+            btn.setOnAction(_ -> openChat(chatInfo.chatId()));
 
             chats.getChildren().add(btn);
         }

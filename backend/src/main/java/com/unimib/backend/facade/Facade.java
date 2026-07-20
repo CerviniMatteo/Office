@@ -1,5 +1,6 @@
 package com.unimib.backend.facade;
 
+import com.unimib.backend.DTO.ChatInfoDTO;
 import com.unimib.backend.DTO.TaskDTO;
 import com.unimib.backend.POJO.*;
 import com.unimib.backend.enums.*;
@@ -967,9 +968,8 @@ public class Facade {
 
     }
 
-    public List<Long> findChatRoomIdByUserId(Long employeeId) {
-        return userChatMappingService.findRoomIdsByUserId(employeeId);
-
+    public List<ChatInfoDTO> findChatInfoByUserId(Long employeeId) {
+        return userChatMappingService.findChatInfoByUserId(employeeId);
     }
 
     public List<Long> findUnMatchedEmployeeIds(Long employeeId) {

@@ -1,12 +1,12 @@
 package com.unimib.backend.service;
 
+import com.unimib.backend.DTO.ChatInfoDTO;
 import com.unimib.backend.POJO.UserChatMapping;
 import com.unimib.backend.repository.UserChatMappingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +32,9 @@ public class UserChatMappingService {
         return userChatMappingRepository.saveAndFlush(mapping);
     }
 
-    public List<Long> findRoomIdsByUserId(@NonNull Long userId) {
+    public List<ChatInfoDTO> findChatInfoByUserId(@NonNull Long userId) {
         assertNotNull(userId, "User id cannot be null");
-        return userChatMappingRepository.findRoomIdsByUserId(userId);
+        return userChatMappingRepository.findRoomInfoByUserId(userId);
     }
 
     public Pair<Long, Long> findUserIdsByRoomId(@NonNull Long roomId) {
