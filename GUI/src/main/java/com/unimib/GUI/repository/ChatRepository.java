@@ -6,6 +6,7 @@ import com.unimib.GUI.model.controller.ChatSocketController;
 import com.unimib.GUI.model.controller.impl.ChatRestController;
 import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
+import com.unimib.GUI.model.dto.UserInfoDTO;
 import javafx.concurrent.Task;
 
 import java.nio.file.Path;
@@ -19,6 +20,7 @@ public class ChatRepository {
     private final ObjectMapper mapper;
 
     private final Map<Long, List<MessageDTO>> cache = new HashMap<>();
+
     private final List<Consumer<Long>> cacheListeners = new ArrayList<>();
 
     private final Path baseDir =
@@ -45,7 +47,21 @@ public class ChatRepository {
     }
 
     public Task<List<ChatInfoDTO>> getChats(Long employeeId) {
-        return restDataSource.getChats(employeeId);
+        return new Task<>() {
+            @Override
+            protected List<ChatInfoDTO> call() {
+                return restDataSource.getChats(employeeId);
+            }
+        };
+    }
+
+    public Task<List<UserInfoDTO>> getUnMatchedEmployeeInfos(Long employeeId) {
+        return new Task<>() {
+            @Override
+            protected List<UserInfoDTO> call() {
+                return restDataSource.getUnMatchedEmployeeInfos(employeeId);
+            }
+        };
     }
 
     public Task<Void> connect() {
@@ -60,33 +76,31 @@ public class ChatRepository {
         return socketDataSource.sendMessage(message);
     }
 
-    public synchronized void cacheMessage(MessageDTO message) {
 
-        cache.computeIfAbsent(
-                message.chatId(),
-                this::loadMessagesFromDisk
-        ).add(message);
+    public void cacheMessage(MessageDTO message) {
 
-        FileUtils.appendObject(
-                baseDir.resolve(message.chatId() + ".txt"),
-                message
-        );
+        synchronized (this) {
+            cache.computeIfAbsent(message.chatId(), this::loadMessagesFromDisk)
+                    .add(message);
+
+            FileUtils.appendObject(
+                    baseDir.resolve(message.chatId() + ".txt"),
+                    message
+            );
+        }
 
         notifyCacheChanged(message.chatId());
     }
 
-    public synchronized List<MessageDTO> loadMessages(Long chatId) {
-
-        return new ArrayList<>(
-                cache.computeIfAbsent(
-                        chatId,
-                        this::loadMessagesFromDisk
-                )
-        );
+    public List<MessageDTO> loadMessages(Long chatId) {
+        synchronized (this) {
+            return new ArrayList<>(
+                    cache.computeIfAbsent(chatId, this::loadMessagesFromDisk)
+            );
+        }
     }
 
     private List<MessageDTO> loadMessagesFromDisk(Long chatId) {
-
         return new ArrayList<>(
                 FileUtils.readObjects(
                         baseDir.resolve(chatId + ".txt"),
@@ -96,14 +110,35 @@ public class ChatRepository {
     }
 
     public void addCacheListener(Consumer<Long> listener) {
-        cacheListeners.add(listener);
+        synchronized (cacheListeners) {
+            cacheListeners.add(listener);
+        }
     }
 
     public void removeCacheListener(Consumer<Long> listener) {
-        cacheListeners.remove(listener);
+        synchronized (cacheListeners) {
+            cacheListeners.remove(listener);
+        }
     }
 
     private void notifyCacheChanged(Long chatId) {
-        cacheListeners.forEach(listener -> listener.accept(chatId));
+
+        List<Consumer<Long>> snapshot;
+
+        synchronized (cacheListeners) {
+            snapshot = new ArrayList<>(cacheListeners);
+        }
+
+        for (Consumer<Long> listener : snapshot) {
+            try {
+                listener.accept(chatId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Task<Void> createChat(Long employeeId1, Long employeeId2) {
+        return restDataSource.createChat(employeeId1, employeeId2);
     }
 }

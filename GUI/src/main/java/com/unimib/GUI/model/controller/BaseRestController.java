@@ -15,7 +15,7 @@ public abstract class BaseRestController {
             return rest.getForObject(url, responseType);
         } catch (Exception e) {
             AlertDialog.showAlert("Error", e.getMessage());
-            return null;
+            throw new RuntimeException("GET request failed for " + url, e);
         }
     }
 
@@ -32,11 +32,11 @@ public abstract class BaseRestController {
 
         } catch (Exception e) {
             AlertDialog.showAlert("Error", e.getMessage());
-            return null;
+            throw new RuntimeException("GET request failed for " + url, e);
         }
     }
 
-    protected <T, R> Task<R> postTask(String url, T payload, Class<R> responseType) {
+    protected <T, R> Task<R> post(String url, T payload, Class<R> responseType) {
 
         return new Task<>() {
             @Override
@@ -56,7 +56,7 @@ public abstract class BaseRestController {
 
                 } catch (Exception e) {
                     AlertDialog.showAlert("Error", e.getMessage());
-                    return null;
+                    throw new RuntimeException("POST request failed for " + url, e);
                 }
             }
         };

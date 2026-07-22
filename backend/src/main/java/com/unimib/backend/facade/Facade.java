@@ -2,6 +2,7 @@ package com.unimib.backend.facade;
 
 import com.unimib.backend.DTO.ChatInfoDTO;
 import com.unimib.backend.DTO.TaskDTO;
+import com.unimib.backend.DTO.UserInfoDTO;
 import com.unimib.backend.POJO.*;
 import com.unimib.backend.enums.*;
 import com.unimib.backend.service.*;
@@ -963,6 +964,10 @@ public class Facade {
         return userChatMappingService.createChat(employeeId);
     }
 
+    public void bindChat(Long employeeId1, Long employeeId2){
+       userChatMappingService.bindChat(employeeId1, employeeId2);
+    }
+
     public UserChatMapping saveChat(UserChatMapping userChatMapping){
         return userChatMappingService.saveChat(userChatMapping);
 
@@ -972,7 +977,7 @@ public class Facade {
         return userChatMappingService.findChatInfoByUserId(employeeId);
     }
 
-    public List<Long> findUnMatchedEmployeeIds(Long employeeId) {
+    public List<UserInfoDTO> findUnMatchedEmployeeIds(Long employeeId) {
         return userChatMappingService.findUnMatchedEmployeeIds(employeeId);
     }
 }

@@ -46,6 +46,11 @@ public abstract class ChatController implements DefaultController {
     @FXML
     protected ScrollPane scrollPane;
 
+    @FXML
+    protected VBox closedChatArea;
+
+    @FXML
+    protected VBox unmatchedEmployeeContainer;
 
     protected long employeeId;
 

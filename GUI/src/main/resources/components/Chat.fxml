@@ -1,72 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
 
-<fx:root type="VBox"
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="StackPane"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          prefWidth="400"
          maxWidth="400"
-         spacing="10"
          styleClass="semi-transparent-bg">
 
-    <!-- ========================= -->
-    <!-- CHAT LIST -->
-    <!-- ========================= -->
-    <VBox fx:id="chats"
-          spacing="10"
+    <VBox spacing="15"
           prefWidth="400"
-          maxWidth="400"
-          alignment="TOP_CENTER">
-        <Label text="CHATS"
-               styleClass="insert-text-lbl"
-               maxWidth="400"
-               alignment="CENTER"
-               textAlignment="CENTER"/>
-    </VBox>
+          maxWidth="400">
+        <padding>
+            <Insets top="15" right="15" bottom="15" left="15"/>
+        </padding>
+        <VBox fx:id="closedChatArea">
 
-    <!-- ========================= -->
-    <!-- CHAT AREA -->
-    <!-- hidden until chat is selected -->
-    <!-- ========================= -->
-    <VBox fx:id="chatArea"
-          spacing="10"
-          prefWidth="400"
-          maxWidth="400"
-          visible="false"
-          managed="false"
-          VBox.vgrow="ALWAYS">
+            <!-- ========================= -->
+            <!-- AVAILABLE CHATS -->
+            <!-- ========================= -->
 
-        <!-- BACK BUTTON -->
-        <Button fx:id="backButton"
-                text="← Back"
-                styleClass="styled-btn-compact"
-                prefWidth="400"
-                maxWidth="400"/>
+            <Label text="Available Chats"
+                   styleClass="section-title"/>
 
-        <!-- MESSAGES -->
-        <ScrollPane fx:id="scrollPane"
-                    fitToWidth="true"
-                    VBox.vgrow="ALWAYS"
-                    styleClass="transparent-scroll">
-            <VBox fx:id="chatContainer"
-                  spacing="10"
-                  maxWidth="400"/>
-        </ScrollPane>
+            <ScrollPane fitToWidth="true"
+                        prefHeight="220"
+                        styleClass="transparent-scroll">
 
-        <!-- INPUT AREA -->
-        <HBox spacing="8"
-              prefWidth="400"
-              maxWidth="400"
-              alignment="CENTER_LEFT">
-            <TextField fx:id="inputForm"
-                       promptText="Enter message..."
-                       HBox.hgrow="ALWAYS"
-                       styleClass="form-input"/>
-            <Button fx:id="sendButton"
-                    text="Send"
-                    styleClass="styled-btn-compact"/>
-        </HBox>
+                <VBox fx:id="chats"
+                      spacing="8"
+                      prefWidth="380"
+                      styleClass="chat-list"/>
+            </ScrollPane>
+
+            <!-- ========================= -->
+            <!-- NEW CHAT -->
+            <!-- ========================= -->
+
+            <Separator/>
+
+            <Label text="Start a New Chat"
+                   styleClass="section-title"/>
+
+            <ScrollPane fitToWidth="true"
+                        prefHeight="180"
+                        styleClass="transparent-scroll">
+
+                <VBox fx:id="unmatchedEmployeeContainer"
+                      spacing="8"/>
+
+            </ScrollPane>
+        </VBox>
+
+        <!-- ========================= -->
+        <!-- CHAT AREA -->
+        <!-- ========================= -->
+
+        <VBox fx:id="chatArea"
+              spacing="10"
+              visible="false"
+              managed="false"
+              VBox.vgrow="ALWAYS">
+
+            <Button fx:id="backButton"
+                    text="← Back"
+                    styleClass="styled-btn-compact"
+                    maxWidth="Infinity"/>
+
+            <ScrollPane fx:id="scrollPane"
+                        fitToWidth="true"
+                        VBox.vgrow="ALWAYS"
+                        styleClass="transparent-scroll">
+
+                <VBox fx:id="chatContainer"
+                      spacing="10"/>
+
+            </ScrollPane>
+
+            <HBox spacing="8">
+
+                <TextField fx:id="inputForm"
+                           promptText="Type a message..."
+                           HBox.hgrow="ALWAYS"
+                           styleClass="form-input"/>
+
+                <Button fx:id="sendButton"
+                        text="Send"
+                        styleClass="styled-btn-compact"/>
+
+            </HBox>
+
+        </VBox>
 
     </VBox>
 

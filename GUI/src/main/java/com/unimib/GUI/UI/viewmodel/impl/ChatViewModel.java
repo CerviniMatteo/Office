@@ -4,10 +4,9 @@ import com.unimib.GUI.UI.state.UIState;
 import com.unimib.GUI.UI.viewmodel.BaseViewModel;
 import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
+import com.unimib.GUI.model.dto.UserInfoDTO;
 import com.unimib.GUI.repository.ChatRepository;
-import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -19,16 +18,22 @@ public class ChatViewModel extends BaseViewModel {
     private final ObjectProperty<UIState<List<ChatInfoDTO>>> chatsState =
             new SimpleObjectProperty<>();
 
+    private final ObjectProperty<UIState<List<UserInfoDTO>>> newChatsState =
+            new SimpleObjectProperty<>();
+
     private final ObjectProperty<UIState<Void>> connectionState =
             new SimpleObjectProperty<>();
 
     private final ObjectProperty<UIState<Void>> sendMessageState =
             new SimpleObjectProperty<>();
 
-    private final ListProperty<MessageDTO> messages =
-            new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ObjectProperty<UIState<List<MessageDTO>>> messagesState =
+            new SimpleObjectProperty<>();
 
     private final ObjectProperty<Long> selectedChat =
+            new SimpleObjectProperty<>();
+
+    private final ObjectProperty<UIState<Void>> createChatState =
             new SimpleObjectProperty<>();
 
     private final Long employeeId;
@@ -46,9 +51,10 @@ public class ChatViewModel extends BaseViewModel {
             if (currentChat == null || !currentChat.equals(chatId))
                 return;
 
-            Platform.runLater(() ->
-                    messages.setAll(repository.loadMessages(chatId))
-            );
+            // Can fire from the socket's receive thread. loadMessages()
+            // reads from the on-disk cache, so route it through execute()
+            // like every other action instead of calling it inline.
+            execute(() -> repository.loadMessages(chatId), messagesState);
         };
 
         repository.addCacheListener(cacheListener);
@@ -56,27 +62,26 @@ public class ChatViewModel extends BaseViewModel {
         connect();
     }
 
-    // =========================
-    // Actions
-    // =========================
-
     public void loadChats() {
         execute(repository.getChats(employeeId), chatsState);
+    }
+
+    public void getUnMatchedEmployeeInfos() {
+        execute(repository.getUnMatchedEmployeeInfos(employeeId), newChatsState);
     }
 
     private void connect() {
         execute(repository.connect(), connectionState);
     }
 
-    public void disconnect() {
-        execute(repository.disconnect(), connectionState);
-    }
-
     public void openChat(Long chatId) {
 
         selectedChat.set(chatId);
 
-        messages.setAll(repository.loadMessages(chatId));
+        // Previously called repository.loadMessages(chatId) directly,
+        // blocking the FX Application Thread on a disk read for chats
+        // not yet in memory. Now goes through the shared executor.
+        execute(() -> repository.loadMessages(chatId), messagesState);
     }
 
     public void sendMessage(String text) {
@@ -101,22 +106,27 @@ public class ChatViewModel extends BaseViewModel {
         );
     }
 
+    public void createChat(Long targetEmployeeId) {
+        execute(repository.createChat(this.employeeId, targetEmployeeId), createChatState);
+    }
+
     public void closeChat() {
-
         selectedChat.set(null);
-
-        messages.clear();
+        messagesState.set(null);
     }
 
     public void destroy() {
-
+        closeChat();
         repository.removeCacheListener(cacheListener);
-
-        disconnect();
+        execute(repository.disconnect(), connectionState);
     }
 
     public ReadOnlyObjectProperty<UIState<List<ChatInfoDTO>>> getChatsStateProperty() {
         return chatsState;
+    }
+
+    public ReadOnlyObjectProperty<UIState<List<UserInfoDTO>>> getNewChatsStateProperty() {
+        return newChatsState;
     }
 
     public ReadOnlyObjectProperty<UIState<Void>> getConnectionStateProperty() {
@@ -127,8 +137,12 @@ public class ChatViewModel extends BaseViewModel {
         return sendMessageState;
     }
 
-    public ReadOnlyListProperty<MessageDTO> getMessagesProperty() {
-        return messages;
+    public ReadOnlyObjectProperty<UIState<List<MessageDTO>>> getMessagesStateProperty() {
+        return messagesState;
+    }
+
+    public ReadOnlyObjectProperty<UIState<Void>> getCreateChatStateProperty() {
+        return createChatState;
     }
 
     public ReadOnlyObjectProperty<Long> getSelectedChatProperty() {

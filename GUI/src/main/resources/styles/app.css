@@ -1,6 +1,6 @@
 /**
-     * app.css
-     */
+ * app.css
+ */
 
 /* ===================================================== */
 /* ROOT BACKGROUND + DESIGN TOKENS (COLOR VARIABLES)     */
@@ -143,7 +143,7 @@
 
 
 /* ===================================================== */
-/* TASK CARD (GLASS STYLE                                */
+/* TASK CARD (GLASS STYLE)                               */
 /* ===================================================== */
 .task-card, BorderPane.task-card {
     -fx-background-image: null;
@@ -600,6 +600,69 @@
 }
 
 /* ===================================================== */
+/* CHAT PANEL & SECTION STYLES                           */
+/* ===================================================== */
+
+/* Section titles ("Available Chats", "Start a New Chat") */
+.section-title {
+    -fx-text-fill: -app-cyan;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* Chat list scroll container transparency */
+.chat-list-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.chat-list-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.chat-list {
+    -fx-background-color: transparent;
+}
+
+/* Separator styling matching design tokens */
+.separator *.line {
+    -fx-border-color: -app-cyan-20;
+    -fx-border-width: 1px;
+}
+
+/* ===================================================== */
+/* UNMATCHED EMPLOYEE BAR                                */
+/* ===================================================== */
+.unmatched-employee-bar {
+    -fx-background-color: -app-surface-2;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: -app-cyan-20;
+    -fx-border-width: 1px;
+    -fx-padding: 8px 12px;
+    -fx-alignment: center-left;
+    -fx-spacing: 10px;
+    -fx-min-height: 46px;
+    -fx-pref-height: 46px;
+    -fx-max-width: Infinity;
+    -fx-effect: dropshadow(gaussian, -app-shadow-soft, 4, 0, 0, 1);
+}
+
+.unmatched-employee-bar:hover {
+    -fx-background-color: -app-cyan-10;
+    -fx-border-color: -app-cyan-50;
+    -fx-effect: dropshadow(gaussian, -app-cyan-25, 6, 0, 0, 2);
+}
+
+.unmatched-employee-bar .label {
+    -fx-text-fill: -app-white-text;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+/* ===================================================== */
 /* CHAT MESSAGE BUBBLES (UNIFIED WITH APP THEME)         */
 /* ===================================================== */
 .my-message {
@@ -636,37 +699,75 @@
     -fx-effect: dropshadow(gaussian, -app-shadow-strong, 6, 0, 0, 2);
 }
 
+.fab-button {
+    -fx-background-radius: 100;
+    -fx-min-width: 56;
+    -fx-min-height: 56;
+    -fx-max-width: 56;
+    -fx-max-height: 56;
+
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+
+    -fx-background-color: -app-purple;
+    -fx-text-fill: white;
+
+    -fx-cursor: hand;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 12, 0.3, 0, 4);
+}
+
+.fab-button:hover {
+    -fx-background-color: #6d78ff;
+}
+
+.fab-button:pressed {
+    -fx-background-color: #4c5ad4;
+}
+
 /* ===================================================== */
 /* TASK CREATION FORM                                    */
 /* ===================================================== */
 .task-creation-overlay { -fx-background-color: -app-shadow-overlay; }
 
 #rootStack .task-creation-form {
-    -fx-background-color: -app-surface-4-strong;
-    -fx-background-radius: 16px;
-    -fx-border-radius: 16px;
-    -fx-border-color: -app-white-15;
+    -fx-background-color: -app-surface-3;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+
+    -fx-border-width: 1.5;
+    -fx-border-color: -app-cyan-20;
+
+    -fx-padding: 22;
+
+    -fx-effect: dropshadow(
+            gaussian,
+            -app-shadow-strong,
+            12,
+            0,
+            0,
+            4
+    );
 }
 
 /* ===================================================== */
 /* TASK CREATION FORM SPECIFIC                           */
 /* ===================================================== */
 .form-label {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+
     -fx-text-fill: -app-cyan;
-    -fx-font-size: 11px;
+
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-padding: 2px 6px;
-    -fx-border-color: -app-cyan-30;
-    -fx-border-width: 1px;
-    -fx-border-radius: 4px;
-    -fx-background-color: -app-cyan-08;
-    -fx-min-width: 0;
-    -fx-pref-width: USE_COMPUTED_SIZE;
+
+    -fx-padding: 0 0 4 2;
 }
 
 .form-title {
-    -fx-text-fill: -app-cyan;
-    -fx-font-size: 15px;
+    -fx-text-fill: -app-white;
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
 }
 
@@ -674,15 +775,15 @@
 /* FORM SECTION LABEL (START DATE / END DATE headers)    */
 /* ===================================================== */
 .form-section-label {
-    -fx-text-fill: -app-white;
-    -fx-font-size: 13px;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-padding: 6px 10px;
-    -fx-background-color: -app-cyan-15;
-    -fx-background-radius: 6px;
-    -fx-border-color: -app-cyan-40;
-    -fx-border-width: 1px;
-    -fx-border-radius: 6px;
+
+    -fx-text-fill: -app-cyan;
+
+    -fx-padding: 6 0 2 0;
 }
 
 /* ===================================================== */
@@ -709,19 +810,14 @@
 /* FORM INPUT COMPACT (inside time/date pickers)         */
 /* ===================================================== */
 .form-input {
-    -fx-background-color: -app-white-05;
-    -fx-control-inner-background: transparent;
-    -fx-background-radius: 6px;
-    -fx-border-radius: 6px;
-    -fx-border-color: -app-cyan-35;
-    -fx-border-width: 1px;
-    -fx-text-fill: -app-white;
-    -fx-font-size: 13px;
-    -fx-font-weight: 600;
-    -fx-padding: 6px 8px;
-    -fx-focus-color: -app-cyan;
-    -fx-faint-focus-color: transparent;
-    -fx-prompt-text-fill: rgba(255,255,255,0.3);
+    -fx-font-size: 14px;
+
+    -fx-padding: 10 12;
+
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+
+    -fx-border-width: 1.5;
 }
 
 .form-input:focused {

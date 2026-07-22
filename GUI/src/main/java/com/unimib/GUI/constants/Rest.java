@@ -8,6 +8,6 @@ public class Rest {
     public static final String BASE_EMPLOYEE_ENDPOINT = BASE_ENDPOINT + "/employee";
     public static final String BASE_CHAT_ENDPOINT = BASE_ENDPOINT + "/chats";
     public static final String CHATS_ENDPOINT =  BASE_CHAT_ENDPOINT + "/chatIds";
-    public static final String UNREAD_MESSAGES =  BASE_CHAT_ENDPOINT + "/messages";
-
+    public static final String UNMATCHED_EMPLOYEE_INFOS_ENDPOINT =  BASE_CHAT_ENDPOINT + "/unmatchedEmployeeInfos";
+    public static final String CREATE_CHATS_ENDPOINT =  BASE_CHAT_ENDPOINT + "/create";
 }

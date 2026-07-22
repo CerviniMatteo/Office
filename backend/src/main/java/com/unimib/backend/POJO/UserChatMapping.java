@@ -31,4 +31,8 @@ public class UserChatMapping {
     public void setRoomId(Long roomId){
         this.roomIds.add(roomId);
     }
+
+    public Long getUserId(){
+        return userId;
+    }
 }

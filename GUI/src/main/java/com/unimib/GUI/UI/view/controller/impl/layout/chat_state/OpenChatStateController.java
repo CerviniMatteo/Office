@@ -2,15 +2,15 @@ package com.unimib.GUI.UI.view.controller.impl.layout.chat_state;
 
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
 import com.unimib.GUI.UI.view.controller.abstr.ChatController;
-import com.unimib.GUI.UI.view.utils.FileUtils;
 import com.unimib.GUI.model.dto.MessageDTO;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils.setVisible;
 
 public class OpenChatStateController extends ChatController {
 
@@ -39,15 +39,23 @@ public class OpenChatStateController extends ChatController {
                 }
         );
 
-        viewModel.getMessagesProperty().addListener((obs, oldMessages, messages) -> {
-            if (messages == null || selectedChatId == null)
-                return;
-            chatContainer.getChildren().clear();
-            messages.forEach(message -> {
-                System.out.printf("Rendering message: %s%n", message);
-                renderMessage(message);
-            });
-        });
+        observeState(
+                viewModel.getMessagesStateProperty(),
+                () -> Platform.runLater(() -> chatContainer.getChildren().clear()),
+                messages -> {
+
+                    if (messages == null || selectedChatId == null)
+                        return;
+
+                    chatContainer.getChildren().clear();
+
+                    for (MessageDTO message : messages) {
+                        System.out.printf("Rendering message: %s%n", message);
+                        renderMessage(message);
+                    }
+                },
+                this::showError
+        );
 
         sendButton.setOnAction(_ -> {
 
@@ -77,7 +85,7 @@ public class OpenChatStateController extends ChatController {
 
         selectedChatId = chatId;
 
-        setChatVisible(false, true);
+        setChatVisible(true,  false);
 
         chatContainer.getChildren().clear();
 
@@ -85,12 +93,9 @@ public class OpenChatStateController extends ChatController {
     }
 
     private void setChatVisible(boolean chatsVisible, boolean areaVisible) {
+        setVisible(chatsVisible, chatArea);
+        setVisible(areaVisible, closedChatArea);
 
-        chats.setVisible(chatsVisible);
-        chats.setManaged(chatsVisible);
-
-        chatArea.setVisible(areaVisible);
-        chatArea.setManaged(areaVisible);
     }
 
     // =========================
@@ -98,11 +103,9 @@ public class OpenChatStateController extends ChatController {
     // =========================
 
     private void exitChat() {
-
         viewModel.closeChat();
-        viewModel.disconnect();
 
-        setChatVisible(true, false);
+        setChatVisible(false, true);
 
         ClosedChatStateController closed =
                 new ClosedChatStateController(chat, chatCache);
