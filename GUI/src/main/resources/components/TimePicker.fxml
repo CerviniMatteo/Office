@@ -11,28 +11,31 @@
 
     <!-- HOUR -->
     <VBox alignment="CENTER">
-        <Label text="HOUR" styleClass="info-text-lbl"/>
-        <Region prefHeight="10" prefWidth="0"/>
+        <Label text="HOUR"
+               styleClass="form-section-label"/>
+        <Region prefHeight="6" prefWidth="0"/>
         <TextField fx:id="hourField"
                    promptText="HH"
-                   minWidth="60"
-                   prefWidth="100"
+                   minWidth="70"
+                   prefWidth="70"
                    alignment="CENTER"
-                   styleClass="input-form"/>
+                   styleClass="input-form, form-input"/>
     </VBox>
 
-    <Label text=":" styleClass="info-text-lbl"/>
+    <Label text=":"
+           styleClass="form-section-label"/>
 
     <!-- MINUTE -->
     <VBox alignment="CENTER">
-        <Label text="MINUTE" styleClass="info-text-lbl"/>
-        <Region prefHeight="10" prefWidth="0"/>
+        <Label text="MINUTE"
+               styleClass="form-section-label"/>
+        <Region prefHeight="6" prefWidth="0"/>
         <TextField fx:id="minuteField"
                    promptText="mm"
-                   minWidth="60"
-                   prefWidth="60"
+                   minWidth="70"
+                   prefWidth="70"
                    alignment="CENTER"
-                   styleClass="input-form"/>
+                   styleClass="input-form, form-input"/>
     </VBox>
 
 </fx:root>
