@@ -379,8 +379,14 @@ public class TaskContainerController implements DefaultController {
             TaskWebSocketClientApp webSocketClient
     ) {
         logOutButton.setOnAction(_ -> {
+
+            if (chat != null) {
+                chat.destroy();
+            }
+
             webSocketClient.stop();
             ChatWebSocketClientApp.getInstance().stop();
+
             SessionManagerSingleton session =
                     SessionManagerSingleton.getInstance();
             session.removeAttribute("employeeId");

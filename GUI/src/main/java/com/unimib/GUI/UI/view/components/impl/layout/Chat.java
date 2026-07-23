@@ -32,7 +32,9 @@ public class Chat extends StackPane {
         );
     }
 
-    public ChatController getController() {
-        return this.controller;
+    public void destroy() {
+        if (controller != null) {
+            controller.destroy();
+        }
     }
 }
