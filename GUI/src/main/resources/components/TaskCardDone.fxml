@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
-
 <fx:root type="BorderPane"
          xmlns="http://javafx.com/javafx/21"
          xmlns:fx="http://javafx.com/fxml/1"
@@ -70,14 +69,11 @@
                 </rowConstraints>
             </GridPane>
 
-            <HBox spacing="8" maxWidth="Infinity">
+            <HBox fx:id="bottomButtonBox" spacing="8" maxWidth="Infinity">
                 <Button fx:id="resetButton"
                         text="RESET"
                         styleClass="styled-btn-compact"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="deleteButton"
-                        text="DELETE"
-                        styleClass="styled-btn-red-compact"/>
             </HBox>
 
         </VBox>

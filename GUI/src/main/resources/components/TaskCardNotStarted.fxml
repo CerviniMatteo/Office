@@ -37,14 +37,11 @@
                    textAlignment="CENTER"
                    text="TO BE STARTED"/>
 
-            <HBox spacing="8" maxWidth="Infinity">
+            <HBox fx:id="bottomButtonBox" spacing="8" maxWidth="Infinity">
                 <Button fx:id="changeStateButton"
                         styleClass="styled-btn-compact"
                         text="START"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="deleteButton"
-                        styleClass="styled-btn-red-compact"
-                        text="DELETE"/>
             </HBox>
 
         </VBox>

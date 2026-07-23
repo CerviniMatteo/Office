@@ -26,7 +26,7 @@ public class StyledButtonController implements DefaultController {
     @FXML
     private Label label;
 
-    private final StyledButton root;
+    protected final StyledButton root;
 
     private static final double ICON_SCALE = 0.03;
 
