@@ -216,7 +216,7 @@ public class TaskCreationFormController implements DefaultController {
         ampmLabel
                 .getStyleClass()
                 .add(
-                        "insert-text-lbl"
+                        "form-section-label-big"
                 );
 
 
@@ -228,7 +228,7 @@ public class TaskCreationFormController implements DefaultController {
         h24Label
                 .getStyleClass()
                 .add(
-                        "insert-text-lbl"
+                        "form-section-label-big"
                 );
 
 

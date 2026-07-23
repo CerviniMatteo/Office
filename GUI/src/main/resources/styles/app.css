@@ -778,13 +778,26 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 
-    -fx-font-size: 15px;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 
     -fx-text-fill: -app-cyan;
 
     -fx-padding: 6 0 2 0;
 }
+
+.form-section-label-big {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+
+    -fx-text-fill: -app-cyan;
+
+    -fx-padding: 6 0 2 0;
+}
+
 
 /* ===================================================== */
 /* STYLED-BTN-WHITE COMPACT (calendar button)            */

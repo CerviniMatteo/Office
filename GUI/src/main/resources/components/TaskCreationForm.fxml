@@ -2,7 +2,6 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.shape.*?>
 
 <fx:root type="BorderPane"
          xmlns="http://javafx.com/javafx/21"
@@ -25,13 +24,12 @@
                         minHeight="430"
                         styleClass="semi-transparent-bg">
 
-                    <!-- CLOSE -->
                     <HBox fx:id="header" >
                     </HBox>
 
                     <HBox alignment="CENTER">
                         <Label text="FILL IN TASK DETAILS"
-                               styleClass="insert-text-lbl"/>
+                               styleClass="form-section-label-big"/>
                     </HBox>
 
                     <TextField fx:id="descriptionField"
@@ -42,7 +40,7 @@
                     <!-- START -->
                     <HBox fx:id="startDateContainer" spacing="10">
                         <VBox>
-                            <Label text="START DATE" styleClass="info-text-lbl"/>
+                            <Label text="START DATE" styleClass="form-section-label"/>
                             <Pane fx:id="startPickerContainer"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
@@ -52,7 +50,7 @@
                     <!-- END -->
                     <HBox fx:id="endDateContainer" spacing="10">
                         <VBox>
-                            <Label text="END DATE" styleClass="info-text-lbl"/>
+                            <Label text="END DATE" styleClass="form-section-label"/>
                             <Pane fx:id="endPickerContainer"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
