@@ -8,8 +8,8 @@ public class TaskCreationForm extends BorderPane {
 
     private final TaskCreationFormController controller;
 
-    public TaskCreationForm(TaskCreationFormController controller) {
-        this.controller = controller;
+    public TaskCreationForm(){
+        this.controller = new TaskCreationFormController();
         FXMLUtilLoader.load(this, controller, "/components/TaskCreationForm.fxml", "app.css");
     }
 

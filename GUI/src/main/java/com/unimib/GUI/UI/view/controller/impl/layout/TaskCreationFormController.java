@@ -11,14 +11,12 @@ import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 
 import java.time.LocalDateTime;
@@ -180,98 +178,39 @@ public class TaskCreationFormController implements DefaultController {
      */
     private void initTimeFormatToggle() {
 
+        timeFormatToggle = new ToggleButton();
+        timeFormatToggle.getStyleClass().add("toggle-switch");
 
-        timeFormatToggle =
-                new ToggleButton();
-
-
-        timeFormatToggle
-                .getStyleClass()
-                .add(
-                        "toggle-switch"
-                );
-
-
-
-        toggleThumb =
-                new Circle(13);
-
-
+        toggleThumb = new Circle(13);
         toggleThumb.setTranslateX(-15);
+        toggleThumb.setStyle("-fx-fill: white;");
+        timeFormatToggle.setGraphic(toggleThumb);
 
-        toggleThumb.setStyle(
-                "-fx-fill: white;"
+        ampmLabel = new Label("AM/PM");
+        ampmLabel.getStyleClass().add("form-section-label-big");
+
+        h24Label = new Label("24h");
+        h24Label.getStyleClass().add("form-section-label-big");
+
+        ComponentVisibilityUtils.setDisabled(h24Label);
+
+        timeFormatToggle.selectedProperty().addListener(
+                (_, _, selected) -> applyTimeFormat(selected)
         );
 
+        HBox switchContainer = new HBox(
+                12,
+                ampmLabel,
+                timeFormatToggle,
+                h24Label
+        );
 
-        timeFormatToggle
-                .setGraphic(toggleThumb);
+        switchContainer.setAlignment(Pos.CENTER);
+        switchContainer.setMaxWidth(Double.MAX_VALUE);
 
+        HBox.setHgrow(switchContainer, Priority.ALWAYS);
 
-
-        ampmLabel =
-                new Label("AM/PM");
-
-
-        ampmLabel
-                .getStyleClass()
-                .add(
-                        "form-section-label-big"
-                );
-
-
-
-        h24Label =
-                new Label("24h");
-
-
-        h24Label
-                .getStyleClass()
-                .add(
-                        "form-section-label-big"
-                );
-
-
-
-        ComponentVisibilityUtils
-                .setDisabled(h24Label);
-
-
-
-        Region leftSpacer =
-                new Region();
-
-        leftSpacer.setPrefWidth(20);
-
-
-
-        Region rightSpacer =
-                new Region();
-
-        rightSpacer.setPrefWidth(20);
-
-
-
-        timeFormatToggle
-                .selectedProperty()
-                .addListener(
-                        (_, _, selected) ->
-                                applyTimeFormat(selected)
-                );
-
-
-
-        header.getChildren()
-                .addAll(
-                        0,
-                        java.util.List.of(
-                                ampmLabel,
-                                leftSpacer,
-                                timeFormatToggle,
-                                rightSpacer,
-                                h24Label
-                        )
-                );
+        header.getChildren().add(0, switchContainer);
     }
 
 
