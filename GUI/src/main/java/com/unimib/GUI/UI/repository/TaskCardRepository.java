@@ -1,4 +1,4 @@
-package com.unimib.GUI.repository;
+package com.unimib.GUI.UI.repository;
 
 import com.unimib.GUI.model.controller.impl.TaskRestController;
 import com.unimib.GUI.model.dto.AcceptTaskRequestDTO;

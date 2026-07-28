@@ -1,34 +1,31 @@
 package com.unimib.GUI.UI.view.controller.impl.layout;
 
-import com.unimib.GUI.UI.viewmodel.impl.TaskViewModel;
-import com.unimib.GUI.model.dto.TaskDTO;
-import com.unimib.GUI.model.enums.TaskState;
-import com.unimib.GUI.model.enums.TimeFormat;
-import com.unimib.GUI.UI.view.components.impl.custom.AlertDialog;
 import com.unimib.GUI.UI.view.components.impl.layout.CustomDatePicker;
 import com.unimib.GUI.UI.view.components.impl.layout.CustomTimePicker;
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils;
-
+import com.unimib.GUI.UI.viewmodel.impl.TaskViewModel;
+import com.unimib.GUI.model.dto.TaskDTO;
+import com.unimib.GUI.model.enums.TaskState;
+import com.unimib.GUI.model.enums.TimeFormat;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
 
 import java.time.LocalDateTime;
 
-
 import static com.unimib.GUI.UI.view.components.impl.custom.AlertDialog.showAlert;
-
 
 public class TaskCreationFormController implements DefaultController {
 
-
-    // ================= UI COMPONENTS =================
+    // UI COMPONENTS
 
     @FXML
     private TextField descriptionField;
@@ -38,7 +35,6 @@ public class TaskCreationFormController implements DefaultController {
 
     @FXML
     private Button submitButton;
-
 
     @FXML
     private Pane startPickerContainer;
@@ -52,20 +48,17 @@ public class TaskCreationFormController implements DefaultController {
     @FXML
     private Pane endTimeBox;
 
-
     @FXML
-    private StackPane shrinkContainer;
+    private javafx.scene.layout.StackPane shrinkContainer;
 
 
-
-    // ================= INTERNAL COMPONENTS =================
+    // INTERNAL COMPONENTS
 
     private CustomDatePicker startDatePicker;
     private CustomDatePicker endDatePicker;
 
     private CustomTimePicker startTimePicker;
     private CustomTimePicker endTimePicker;
-
 
     private ToggleButton timeFormatToggle;
 
@@ -75,107 +68,52 @@ public class TaskCreationFormController implements DefaultController {
     private Label h24Label;
 
 
-
-    // ================= VIEW MODEL =================
+    // VIEW MODEL
 
     private TaskViewModel viewModel;
 
 
-
-    // ================= INITIALIZATION =================
-
     @FXML
     public void initialize() {
 
-
-        viewModel =
-                new TaskViewModel();
-
+        viewModel = new TaskViewModel();
 
         initPickers();
-
         initTimeFormatToggle();
-
         initActions();
-
         observeCreateTask();
     }
-
 
 
     private void observeCreateTask() {
 
         observeState(
                 viewModel.getCreateTaskStateProperty(),
-
                 null,
-
-                taskDTO -> {
-
-                    showSuccess(
-                            "Task created successfully"
-                    );
-
+                task -> {
+                    showSuccess("Task created successfully");
                     clear();
                 },
-
-
                 this::showError
         );
     }
 
 
-
-    /**
-     * Creates date/time picker components.
-     */
     private void initPickers() {
 
+        startDatePicker = new CustomDatePicker();
+        endDatePicker = new CustomDatePicker();
 
-        startDatePicker =
-                new CustomDatePicker();
+        startTimePicker = new CustomTimePicker();
+        endTimePicker = new CustomTimePicker();
 
+        startPickerContainer.getChildren().add(startDatePicker);
+        startTimeBox.getChildren().add(startTimePicker);
 
-        endDatePicker =
-                new CustomDatePicker();
-
-
-
-        startTimePicker =
-                new CustomTimePicker();
-
-
-        endTimePicker =
-                new CustomTimePicker();
-
-
-
-        startPickerContainer
-                .getChildren()
-                .add(startDatePicker);
-
-
-        startTimeBox
-                .getChildren()
-                .add(startTimePicker);
-
-
-
-        endPickerContainer
-                .getChildren()
-                .add(endDatePicker);
-
-
-        endTimeBox
-                .getChildren()
-                .add(endTimePicker);
+        endPickerContainer.getChildren().add(endDatePicker);
+        endTimeBox.getChildren().add(endTimePicker);
     }
 
-
-
-    /**
-     * Creates AM/PM - 24h toggle.
-     */
     private void initTimeFormatToggle() {
 
         timeFormatToggle = new ToggleButton();
@@ -184,6 +122,7 @@ public class TaskCreationFormController implements DefaultController {
         toggleThumb = new Circle(13);
         toggleThumb.setTranslateX(-15);
         toggleThumb.setStyle("-fx-fill: white;");
+
         timeFormatToggle.setGraphic(toggleThumb);
 
         ampmLabel = new Label("AM/PM");
@@ -206,224 +145,141 @@ public class TaskCreationFormController implements DefaultController {
         );
 
         switchContainer.setAlignment(Pos.CENTER);
-        switchContainer.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(
+                switchContainer,
+                Priority.ALWAYS
+        );
 
-        HBox.setHgrow(switchContainer, Priority.ALWAYS);
-
-        header.getChildren().add(0, switchContainer);
+        header.getChildren().add(
+                0,
+                switchContainer
+        );
     }
 
 
-
-    private void applyTimeFormat(
-            boolean is24h
-    ) {
-
+    private void applyTimeFormat(boolean is24h) {
 
         TimeFormat format;
 
+        if (is24h) {
 
-        if(is24h) {
+            toggleThumb.setTranslateX(15);
 
+            ComponentVisibilityUtils.setDisabled(ampmLabel);
+            ComponentVisibilityUtils.setEnabled(h24Label);
 
-            toggleThumb
-                    .setTranslateX(15);
-
-
-            ComponentVisibilityUtils
-                    .setDisabled(ampmLabel);
-
-
-            ComponentVisibilityUtils
-                    .setEnabled(h24Label);
-
-
-
-            format =
-                    TimeFormat.H24;
-
+            format = TimeFormat.H24;
 
         } else {
 
+            toggleThumb.setTranslateX(-15);
 
-            toggleThumb
-                    .setTranslateX(-15);
+            ComponentVisibilityUtils.setEnabled(ampmLabel);
+            ComponentVisibilityUtils.setDisabled(h24Label);
 
-
-            ComponentVisibilityUtils
-                    .setEnabled(ampmLabel);
-
-
-            ComponentVisibilityUtils
-                    .setDisabled(h24Label);
-
-
-
-            format =
-                    TimeFormat.AMPM;
+            format = TimeFormat.AMPM;
         }
 
-
-
-        startTimePicker
-                .setTimeFormat(format);
-
-
-        endTimePicker
-                .setTimeFormat(format);
+        startTimePicker.setTimeFormat(format);
+        endTimePicker.setTimeFormat(format);
     }
-
 
 
     private void initActions() {
 
-
-        submitButton
-                .setOnAction(
-                        _ -> handleSubmit()
-                );
+        submitButton.setOnAction(
+                event -> handleSubmit()
+        );
     }
 
 
-
-    // ================= PUBLIC API =================
+    // CLEAR
 
 
     public void clear() {
 
-
         descriptionField.clear();
 
-
         clearDatePicker(startDatePicker);
-
         clearDatePicker(endDatePicker);
 
-
         clearTimePicker(startTimePicker);
-
         clearTimePicker(endTimePicker);
-
 
         resetTimeFormatToggle();
     }
 
 
+    private void clearDatePicker(CustomDatePicker picker) {
 
-    private void clearDatePicker(
-            CustomDatePicker picker
-    ) {
-
-        if(picker != null)
+        if (picker != null) {
             picker.clear();
+        }
     }
 
 
+    private void clearTimePicker(CustomTimePicker picker) {
 
-    private void clearTimePicker(
-            CustomTimePicker picker
-    ) {
-
-        if(picker != null)
+        if (picker != null) {
             picker.clear();
+        }
     }
-
 
 
     private void resetTimeFormatToggle() {
 
-
-        if(timeFormatToggle.isSelected()) {
-
-            timeFormatToggle
-                    .setSelected(false);
-
+        if (timeFormatToggle.isSelected()) {
+            timeFormatToggle.setSelected(false);
         } else {
-
             applyTimeFormat(false);
         }
     }
 
 
-
-    // ================= SUBMIT =================
+    // SUBMIT
 
 
     private void handleSubmit() {
 
-
-        if(descriptionField
-                .getText()
-                .isBlank()) {
-
-
-            AlertDialog.showAlert(
-                    "Error",
-                    "Description cannot be empty"
-            );
-
+        if (!validate(
+                descriptionField,
+                "Description cannot be empty"
+        )) {
             return;
         }
 
-
-
-        final TaskDTO taskDTO;
-
-
         try {
 
-            taskDTO =
-                    buildTaskDTO();
+            TaskDTO taskDTO = buildTaskDTO();
 
+            viewModel.createTask(taskDTO);
 
-        } catch(Exception e) {
-
+        } catch (IllegalArgumentException e) {
 
             showAlert(
                     "Error",
                     e.getMessage()
             );
-
-            return;
         }
-
-
-
-        viewModel
-                .createTask(taskDTO);
     }
 
-
-
-    // ================= DTO =================
-
+    // DTO BUILDER
 
     private TaskDTO buildTaskDTO() {
 
+        LocalDateTime start = buildStartDateTime();
+        LocalDateTime end = buildEndDateTime();
 
-        LocalDateTime start =
-                buildStartDateTime();
+        if (end.isBefore(start)) {
 
-
-
-        LocalDateTime end =
-                buildEndDateTime();
-
-
-
-        if(end.isBefore(start)) {
-
-
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "End date must be after start date"
             );
         }
 
-
-
         return new TaskDTO(
                 null,
-                descriptionField.getText(),
+                descriptionField.getText().trim(),
                 TaskState.TO_BE_STARTED,
                 start,
                 end,
@@ -432,31 +288,21 @@ public class TaskCreationFormController implements DefaultController {
     }
 
 
-
     private LocalDateTime buildStartDateTime() {
 
+        if (startDatePicker.getSelectedDateTime() == null) {
 
-        if(startDatePicker
-                .getSelectedDateTime() == null) {
-
-
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "Start date required"
             );
         }
 
+        if (startTimePicker.getSelectedTime() == null) {
 
-
-        if(startTimePicker
-                .getSelectedTime() == null) {
-
-
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "Start time required"
             );
         }
-
-
 
         return LocalDateTime.of(
                 startDatePicker.getSelectedDateTime(),
@@ -465,31 +311,21 @@ public class TaskCreationFormController implements DefaultController {
     }
 
 
-
     private LocalDateTime buildEndDateTime() {
 
+        if (endDatePicker.getSelectedDateTime() == null) {
 
-        if(endDatePicker
-                .getSelectedDateTime() == null) {
-
-
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "End date required"
             );
         }
 
+        if (endTimePicker.getSelectedTime() == null) {
 
-
-        if(endTimePicker
-                .getSelectedTime() == null) {
-
-
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "End time required"
             );
         }
-
-
 
         return LocalDateTime.of(
                 endDatePicker.getSelectedDateTime(),

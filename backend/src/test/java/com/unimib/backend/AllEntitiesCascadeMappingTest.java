@@ -5,7 +5,10 @@ import com.unimib.backend.POJO.Supervisor;
 import com.unimib.backend.POJO.Team;
 import com.unimib.backend.POJO.Task;
 import com.unimib.backend.enums.TaskState;
-import com.unimib.backend.facade.Facade;
+import com.unimib.backend.facade.EmployeeFacade;
+import com.unimib.backend.facade.SupervisorFacade;
+import com.unimib.backend.facade.TaskFacade;
+import com.unimib.backend.facade.TeamFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +39,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class AllEntitiesCascadeMappingTest {
 
     @Autowired
-    Facade facade;
+    SupervisorFacade supervisorfacade;
+    @Autowired
+    TeamFacade teamFacade;
+    @Autowired
+    EmployeeFacade employeeFacade;
+    @Autowired
+    TaskFacade taskFacade;
 
     /**
      * Verifies cascading persist behavior between supervisors and their subordinates,
@@ -46,23 +55,23 @@ class AllEntitiesCascadeMappingTest {
     @Test
     @Transactional
     void shouldCascadePersistSupervisorSubordinateAndOrphanRemove() {
-        Supervisor parent = facade.saveSupervisor(
-                facade.createSupervisor("Parent", "Supervisor")
+        Supervisor parent = supervisorfacade.saveSupervisor(
+                supervisorfacade.createSupervisor("Parent", "Supervisor")
         );
-        Supervisor child = facade.saveSupervisor(
-                facade.createSupervisor("Child", "Supervisor")
+        Supervisor child = supervisorfacade.saveSupervisor(
+                supervisorfacade.createSupervisor("Child", "Supervisor")
         );
 
         parent.addSubordinate(child);
 
         Long childId = child.getWorkerId();
         assertNotNull(childId);
-        assertNotNull(facade.findSupervisorById(childId));
+        assertNotNull(supervisorfacade.findSupervisorById(childId));
 
         parent.removeSubordinate(child);
 
         // Child supervisor must still exist
-        assertNotNull(facade.findSupervisorById(childId));
+        assertNotNull(supervisorfacade.findSupervisorById(childId));
     }
 
     /**
@@ -72,22 +81,22 @@ class AllEntitiesCascadeMappingTest {
     @Test
     @Transactional
     void shouldOrphanRemoveTeamWhenRemovedFromSupervisor() {
-        Supervisor sup = facade.saveSupervisor(
-                facade.createSupervisor("Supervisor", "Supervisor")
+        Supervisor sup = supervisorfacade.saveSupervisor(
+                supervisorfacade.createSupervisor("Supervisor", "Supervisor")
         );
-        Team team = facade.saveTeam(facade.createTeam(sup));
+        Team team = teamFacade.saveTeam(teamFacade.createTeam(sup));
 
         // Maintain bidirectional relationship
         sup.addSupervisedTeam(team);
 
         Long teamId = team.getTeamId();
         assertNotNull(teamId);
-        assertNotNull(facade.getTeamById(teamId));
+        assertNotNull(teamFacade.getTeamById(teamId));
 
         sup.removeSupervisedTeam(team);
 
         // Team must still exist
-        assertNotNull(facade.getTeamById(teamId));
+        assertNotNull(teamFacade.getTeamById(teamId));
     }
 
     /**
@@ -97,20 +106,20 @@ class AllEntitiesCascadeMappingTest {
     @Test
     @Transactional
     void shouldMergeOnTeamPropagateToEmployees() {
-        Supervisor sup = facade.saveSupervisor(
-                facade.createSupervisor("Supervisor", "Supervisor")
+        Supervisor sup = supervisorfacade.saveSupervisor(
+                supervisorfacade.createSupervisor("Supervisor", "Supervisor")
         );
-        Employee emp = facade.saveEmployee(
-                facade.createEmployee("Employee", "Employee")
+        Employee emp = employeeFacade.saveEmployee(
+                employeeFacade.createEmployee("Employee", "Employee")
         );
-        Team team = facade.saveTeam(facade.createTeam(sup));
+        Team team = teamFacade.saveTeam(teamFacade.createTeam(sup));
         team.addEmployee(emp);
 
         Long empId = emp.getWorkerId();
         assertNotNull(empId);
 
         // Retrieve detached team and modify associated employee
-        Optional<Team> detachedTeamOpt = facade.getTeamById(team.getTeamId());
+        Optional<Team> detachedTeamOpt = teamFacade.getTeamById(team.getTeamId());
         assertTrue(detachedTeamOpt.isPresent());
         Team detachedTeam = detachedTeamOpt.get();
 
@@ -118,7 +127,7 @@ class AllEntitiesCascadeMappingTest {
                 .getFirst()
                 .setSurname("NewSurname");
 
-        Optional<Employee> detachedEmpOpt = facade.findEmployeeById(empId);
+        Optional<Employee> detachedEmpOpt = employeeFacade.findEmployeeById(empId);
         assertTrue(detachedEmpOpt.isPresent());
 
         Employee updated = detachedEmpOpt.get();
@@ -133,16 +142,16 @@ class AllEntitiesCascadeMappingTest {
     @Test
     @Transactional
     void removingEmployeeFromTaskDoesNotDeleteEmployee() {
-        Task task = facade.saveTask(
-                facade.createTask(TaskState.STARTED)
+        Task task = taskFacade.saveTask(
+                taskFacade.createTask(TaskState.STARTED)
         );
-        Employee emp = facade.saveEmployee(
-                facade.createEmployee("Tasked", "User")
+        Employee emp = employeeFacade.saveEmployee(
+                employeeFacade.createEmployee("Tasked", "User")
         );
 
         task.assignEmployee(emp);
 
-        Employee persistedEmp = facade.findEmployeeById(emp.getWorkerId())
+        Employee persistedEmp = employeeFacade.findEmployeeById(emp.getWorkerId())
                 .orElseThrow();
 
         Long empId = persistedEmp.getWorkerId();
@@ -152,7 +161,7 @@ class AllEntitiesCascadeMappingTest {
         task.removeEmployee(emp);
 
         // Employee must still exist
-        assertNotNull(facade.findEmployeeById(empId));
+        assertNotNull(employeeFacade.findEmployeeById(empId));
     }
 
     /**
@@ -162,17 +171,17 @@ class AllEntitiesCascadeMappingTest {
     @Test
     @Transactional
     void shouldMergeOnTeamPropagateToTasks() {
-        Supervisor sup = facade.saveSupervisor(
-                facade.createSupervisor("Supervisor", "Supervisor")
+        Supervisor sup = supervisorfacade.saveSupervisor(
+                supervisorfacade.createSupervisor("Supervisor", "Supervisor")
         );
-        Team team = facade.saveTeam(facade.createTeam(sup));
-        Task task = facade.saveTask(
-                facade.createTask(TaskState.TO_BE_STARTED)
+        Team team = teamFacade.saveTeam(teamFacade.createTeam(sup));
+        Task task = taskFacade.saveTask(
+                taskFacade.createTask(TaskState.TO_BE_STARTED)
         );
 
         team.addTask(task);
 
-        Team detachedTeam = facade.getTeamById(team.getTeamId())
+        Team detachedTeam = teamFacade.getTeamById(team.getTeamId())
                 .orElseThrow();
 
         Task detachedTask = detachedTeam.getTasks().getFirst();

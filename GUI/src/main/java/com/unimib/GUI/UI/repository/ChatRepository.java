@@ -1,4 +1,4 @@
-package com.unimib.GUI.repository;
+package com.unimib.GUI.UI.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unimib.GUI.UI.view.utils.FileUtils;
@@ -6,7 +6,7 @@ import com.unimib.GUI.model.controller.ChatSocketController;
 import com.unimib.GUI.model.controller.impl.ChatRestController;
 import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
-import com.unimib.GUI.model.dto.UserInfoDTO;
+import com.unimib.GUI.model.dto.WorkerInfoDTO;
 import javafx.concurrent.Task;
 
 import java.nio.file.Path;
@@ -46,22 +46,12 @@ public class ChatRepository {
         });
     }
 
-    public Task<List<ChatInfoDTO>> getChats(Long employeeId) {
-        return new Task<>() {
-            @Override
-            protected List<ChatInfoDTO> call() {
-                return restDataSource.getChats(employeeId);
-            }
-        };
+    public List<ChatInfoDTO> getChats(Long employeeId) {
+        return restDataSource.getChats(employeeId);
     }
 
-    public Task<List<UserInfoDTO>> getUnMatchedEmployeeInfos(Long employeeId) {
-        return new Task<>() {
-            @Override
-            protected List<UserInfoDTO> call() {
-                return restDataSource.getUnMatchedEmployeeInfos(employeeId);
-            }
-        };
+    public List<WorkerInfoDTO> getUnMatchedEmployeeInfos(Long employeeId) {
+        return restDataSource.getUnMatchedEmployeeInfos(employeeId);
     }
 
     public Task<Void> connect() {

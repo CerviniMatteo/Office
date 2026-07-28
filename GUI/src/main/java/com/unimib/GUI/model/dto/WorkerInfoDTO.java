@@ -1,6 +1,6 @@
 package com.unimib.GUI.model.dto;
 
-public record UserInfoDTO(
+public record WorkerInfoDTO(
         Long userId,
         String personalDetails) {
 }

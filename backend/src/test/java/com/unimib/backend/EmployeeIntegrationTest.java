@@ -4,7 +4,9 @@ import com.unimib.backend.POJO.Employee;
 import com.unimib.backend.POJO.Task;
 import com.unimib.backend.enums.WorkerRole;
 import com.unimib.backend.enums.TaskState;
-import com.unimib.backend.facade.Facade;
+import com.unimib.backend.facade.EmployeeFacade;
+import com.unimib.backend.facade.SupervisorFacade;
+import com.unimib.backend.facade.TaskFacade;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class EmployeeIntegrationTest {
 
     @Autowired
-    private Facade facade;
+    private EmployeeFacade employeeFacade;
+    @Autowired
+    private TaskFacade taskFacade;
+    @Autowired
+    private SupervisorFacade supervisorFacade;
 
     // ---------------- Helper Methods ----------------
     private Employee createEmployee(WorkerRole role) {
-        return facade.createEmployee(
+        return employeeFacade.createEmployee(
                 "Employee",
                 "Employee",
                 role.getMonthlySalary(),
@@ -38,7 +44,7 @@ class EmployeeIntegrationTest {
     }
 
     private Task createTask(TaskState state, LocalDate date) {
-        Task task = facade.createTask(state);
+        Task task = taskFacade.createTask(state);
         if (state != TaskState.TO_BE_STARTED && date != null) {
             task.setStartDate(LocalDateTime.of(date, LocalTime.of(9, 0)));
             task.setEndDate(LocalDateTime.of(date, LocalTime.of(18, 0)));
@@ -51,16 +57,16 @@ class EmployeeIntegrationTest {
     @Test
     void shouldFindEmployeeById() {
         Employee e = createEmployee(WorkerRole.JUNIOR);
-        e = facade.saveEmployee(e);
-        assertTrue(facade.findEmployeeById(e.getWorkerId()).isPresent());
+        e = employeeFacade.saveEmployee(e);
+        assertTrue(employeeFacade.findEmployeeById(e.getWorkerId()).isPresent());
     }
 
     @Transactional
     @Test
     void shouldFindEmployeeByEmail() {
         Employee e = createEmployee(WorkerRole.JUNIOR);
-        e = facade.saveEmployee(e);
-        assertEquals(facade.findEmployeeIdByEmail(e.getEmail()), Optional.of(e.getWorkerId()));
+        e = employeeFacade.saveEmployee(e);
+        assertEquals(employeeFacade.findEmployeeIdByEmail(e.getEmail()), Optional.of(e.getWorkerId()));
     }
 
     @Transactional
@@ -68,9 +74,9 @@ class EmployeeIntegrationTest {
     void shouldFindAllEmployees() {
         Employee e1 = createEmployee(WorkerRole.JUNIOR);
         Employee e2 = createEmployee(WorkerRole.SENIOR_SW_ENGINEER);
-        List<Employee> employees = facade.saveAllEmployees(List.of(e1, e2));
+        List<Employee> employees = employeeFacade.saveAllEmployees(List.of(e1, e2));
 
-        List<Employee> all = facade.findAllEmployees();
+        List<Employee> all = employeeFacade.findAllEmployees();
         assertTrue(all.size() >= 2);
         assertTrue(all.containsAll(employees));
     }
@@ -80,10 +86,10 @@ class EmployeeIntegrationTest {
     void employeeCreation() {
         Employee e1 = createEmployee(WorkerRole.JUNIOR);
         Employee e2 = createEmployee(WorkerRole.JUNIOR);
-        facade.saveEmployee(e1);
-        facade.saveEmployee(e2);
+        employeeFacade.saveEmployee(e1);
+        employeeFacade.saveEmployee(e2);
 
-        List<Employee> all = facade.findAllEmployees();
+        List<Employee> all = employeeFacade.findAllEmployees();
         assertTrue(all.size() >= 2);
     }
 
@@ -91,11 +97,11 @@ class EmployeeIntegrationTest {
     @Test
     void shouldThrowIfEmployeeNotFound() {
         Employee manager = createEmployee(WorkerRole.MANAGER);
-        manager = facade.saveEmployee(manager);
+        manager = employeeFacade.saveEmployee(manager);
 
         Employee finalManager = manager;
         assertThrows(EntityNotFoundException.class,
-                () -> facade.updateWorkerRoleById(finalManager.getWorkerId(), 999L, WorkerRole.JUNIOR));
+                () -> supervisorFacade.updateWorkerRoleById(finalManager.getWorkerId(), 999L, WorkerRole.JUNIOR));
     }
 
     // ---------------- Task Management Tests ----------------
@@ -103,25 +109,25 @@ class EmployeeIntegrationTest {
     @Test
     void testFindTaskByEmployeeAndState() {
         Employee e = createEmployee(WorkerRole.JUNIOR);
-        e = facade.saveEmployee(e);
+        e = employeeFacade.saveEmployee(e);
 
-        Task t1 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-        Task t2 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-        Task t3 = facade.saveTask(facade.createTask(TaskState.STARTED));
-        Task t4 = facade.saveTask(facade.createTask(TaskState.DONE));
+        Task t1 = taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
+        Task t2 = taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
+        Task t3 = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+        Task t4 = taskFacade.saveTask(taskFacade.createTask(TaskState.DONE));
 
-        facade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t4.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t4.getTaskId(), e.getWorkerId());
 
-        List<Task> openTasks = facade.findTasksByWorkerAndTaskState(e.getWorkerId(), TaskState.TO_BE_STARTED);
+        List<Task> openTasks = employeeFacade.findTasksByWorkerAndTaskState(e.getWorkerId(), TaskState.TO_BE_STARTED);
         assertEquals(2, openTasks.size());
 
-        List<Task> startedTasks = facade.findTasksByWorkerAndTaskState(e.getWorkerId(), TaskState.STARTED);
+        List<Task> startedTasks = employeeFacade.findTasksByWorkerAndTaskState(e.getWorkerId(), TaskState.STARTED);
         assertEquals(1, startedTasks.size());
 
-        List<Task> doneTasks = facade.findTasksByWorkerAndTaskState(e.getWorkerId(), TaskState.DONE);
+        List<Task> doneTasks = employeeFacade.findTasksByWorkerAndTaskState(e.getWorkerId(), TaskState.DONE);
         assertEquals(1, doneTasks.size());
     }
 
@@ -129,7 +135,7 @@ class EmployeeIntegrationTest {
     @Test
     void shouldFindTasksByEmployeeByTaskStateByStartDate() {
         Employee e = createEmployee(WorkerRole.JUNIOR);
-        e = facade.saveEmployee(e);
+        e = employeeFacade.saveEmployee(e);
 
         LocalDate today = LocalDate.now();
 
@@ -138,17 +144,17 @@ class EmployeeIntegrationTest {
         Task t3 = createTask(TaskState.STARTED, today);
         Task t4 = createTask(TaskState.TO_BE_STARTED, today);
 
-        facade.saveTask(t1);
-        facade.saveTask(t2);
-        facade.saveTask(t3);
-        facade.saveTask(t4);
+        taskFacade.saveTask(t1);
+        taskFacade.saveTask(t2);
+        taskFacade.saveTask(t3);
+        taskFacade.saveTask(t4);
 
-        facade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t4.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t4.getTaskId(), e.getWorkerId());
 
-        List<Task> tasks = facade.findTasksByEmployeeByTaskStateByStartDate(e.getWorkerId(), TaskState.TO_BE_STARTED, today);
+        List<Task> tasks = employeeFacade.findTasksByEmployeeByTaskStateByStartDate(e.getWorkerId(), TaskState.TO_BE_STARTED, today);
 
         assertEquals(2, tasks.size());
         assertTrue(tasks.stream().allMatch(t -> t.getTaskState() == TaskState.TO_BE_STARTED));
@@ -159,7 +165,7 @@ class EmployeeIntegrationTest {
     @Test
     void shouldFindTasksByEmployeeByTaskStateByEndDate() {
         Employee e = createEmployee(WorkerRole.JUNIOR);
-        e = facade.saveEmployee(e);
+        e = employeeFacade.saveEmployee(e);
 
         LocalDate today = LocalDate.now();
 
@@ -167,15 +173,15 @@ class EmployeeIntegrationTest {
         Task t2 = createTask(TaskState.STARTED, today);
         Task t3 = createTask(TaskState.TO_BE_STARTED, today);
 
-        facade.saveTask(t1);
-        facade.saveTask(t2);
-        facade.saveTask(t3);
+        taskFacade.saveTask(t1);
+        taskFacade.saveTask(t2);
+        taskFacade.saveTask(t3);
 
-        facade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
 
-        List<Task> tasks = facade.findTasksByEmployeeByTaskStateByEndDate(e.getWorkerId(), TaskState.STARTED, today);
+        List<Task> tasks = employeeFacade.findTasksByEmployeeByTaskStateByEndDate(e.getWorkerId(), TaskState.STARTED, today);
 
         assertEquals(2, tasks.size());
         assertTrue(tasks.stream().allMatch(t -> t.getTaskState() == TaskState.STARTED));
@@ -186,7 +192,7 @@ class EmployeeIntegrationTest {
     @Test
     void shouldFindTasksByEmployeeByTaskStateBetweenStartAndEndDates() {
         Employee e = createEmployee(WorkerRole.JUNIOR);
-        e = facade.saveEmployee(e);
+        e = employeeFacade.saveEmployee(e);
 
         LocalDate start = LocalDate.now();
         LocalDate end = start.plusDays(5);
@@ -199,15 +205,15 @@ class EmployeeIntegrationTest {
         t2.setEndDate(LocalDateTime.of(start.plusDays(2), LocalTime.of(18, 0)));
         t3.setEndDate(LocalDateTime.of(start.plusDays(4), LocalTime.of(18, 0)));
 
-        facade.saveTask(t1);
-        facade.saveTask(t2);
-        facade.saveTask(t3);
+        taskFacade.saveTask(t1);
+        taskFacade.saveTask(t2);
+        taskFacade.saveTask(t3);
 
-        facade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
 
-        List<Task> tasks = facade.findTasksByEmployeeByTaskStateByStartDateBetweenAndEndDateBetween(
+        List<Task> tasks = employeeFacade.findTasksByEmployeeByTaskStateByStartDateBetweenAndEndDateBetween(
                 e.getWorkerId(),
                 TaskState.TO_BE_STARTED,
                 start,
@@ -222,7 +228,7 @@ class EmployeeIntegrationTest {
     @Test
     void shouldFindTasksByEmployeeByTaskStateOrderByStartDateDesc() {
         Employee e = createEmployee(WorkerRole.JUNIOR);
-        e = facade.saveEmployee(e);
+        e = employeeFacade.saveEmployee(e);
 
         LocalDate today = LocalDate.now();
 
@@ -230,15 +236,15 @@ class EmployeeIntegrationTest {
         Task t2 = createTask(TaskState.TO_BE_STARTED, today);
         Task t3 = createTask(TaskState.STARTED, today.minusDays(1));
 
-        facade.saveTask(t1);
-        facade.saveTask(t2);
-        facade.saveTask(t3);
+        taskFacade.saveTask(t1);
+        taskFacade.saveTask(t2);
+        taskFacade.saveTask(t3);
 
-        facade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
 
-        List<Task> tasks = facade.findTasksByEmployeeByTaskStateOrderByStartDateDesc(
+        List<Task> tasks = employeeFacade.findTasksByEmployeeByTaskStateOrderByStartDateDesc(
                 e.getWorkerId(),
                 TaskState.TO_BE_STARTED
         );
@@ -252,7 +258,7 @@ class EmployeeIntegrationTest {
     @Test
     void shouldFindTasksByEmployeeByTaskStateOrderByEndDateDesc() {
         Employee e = createEmployee(WorkerRole.JUNIOR);
-        e = facade.saveEmployee(e);
+        e = employeeFacade.saveEmployee(e);
 
         LocalDate today = LocalDate.now();
 
@@ -264,15 +270,15 @@ class EmployeeIntegrationTest {
         t2.setEndDate(LocalDateTime.of(today, LocalTime.of(18, 0)));
         t3.setEndDate(LocalDateTime.of(today, LocalTime.of(18, 0)));
 
-        facade.saveTask(t1);
-        facade.saveTask(t2);
-        facade.saveTask(t3);
+        taskFacade.saveTask(t1);
+        taskFacade.saveTask(t2);
+        taskFacade.saveTask(t3);
 
-        facade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
-        facade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t1.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t2.getTaskId(), e.getWorkerId());
+        taskFacade.assignEmployeeToTask(t3.getTaskId(), e.getWorkerId());
 
-        List<Task> tasks = facade.findTasksByEmployeeByTaskStateOrderByEndDateDesc(
+        List<Task> tasks = employeeFacade.findTasksByEmployeeByTaskStateOrderByEndDateDesc(
                 e.getWorkerId(),
                 TaskState.STARTED
         );

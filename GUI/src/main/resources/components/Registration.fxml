@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.layout.VBox"
+         xmlns="http://javafx.com/javafx/17.0.12"
+         xmlns:fx="http://javafx.com/fxml/1"
+         alignment="CENTER"
+         spacing="20">
+
+    <StackPane fx:id="rootStack"
+               maxWidth="500"
+               prefHeight="300"
+               styleClass="design-rectangle">
+
+        <VBox alignment="CENTER"
+              prefWidth="420"
+              maxWidth="420"
+              spacing="12"
+              fillWidth="false">
+
+            <Label
+                    text="INSERT YOUR INFORMATION"
+                    styleClass="insert-text-lbl"/>
+
+            <Label
+                    text="NAME"
+                    styleClass="section-title"/>
+
+            <TextField fx:id="nameField"
+                       promptText="Enter your name"
+                       styleClass="input-form"/>
+
+            <Label
+                    text="SURNAME"
+                    styleClass="section-title"/>
+
+            <TextField fx:id="surnameField"
+                       promptText="Enter your surname"
+                       styleClass="input-form"/>
+
+            <Label
+                    text="CHOOSE YOUR PROFILE PICTURE"
+                    styleClass="section-title"/>
+
+            <Button fx:id="chooseImageButton"
+                    text="Choose Image"
+                    styleClass="styled-btn"/>
+
+            <Label fx:id="selectedImageLabel"
+                   text="No image selected"/>
+
+            <ImageView fx:id="profileImageView"
+                       fitWidth="120"
+                       fitHeight="120"
+                       preserveRatio="true"/>
+
+            <Button fx:id="submitButton"
+                    text="SUBMIT"
+                    prefWidth="220"
+                    prefHeight="40"
+                    styleClass="styled-btn"/>
+
+        </VBox>
+    </StackPane>
+
+</fx:root>

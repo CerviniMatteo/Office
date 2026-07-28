@@ -1,6 +1,6 @@
 package com.unimib.backend.controller;
 import com.unimib.backend.DTO.EmployeeDTO;
-import com.unimib.backend.facade.Facade;
+import com.unimib.backend.facade.EmployeeFacade;
 import com.unimib.backend.mappers.EmployeeDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/employee")
 public class EmployeeController {
     @Autowired
-    private final Facade facade;
+    EmployeeFacade facade;
     @Autowired
-    private final EmployeeDtoMapper employeeDtoMapper;
+    EmployeeDtoMapper employeeDtoMapper;
 
-    public EmployeeController(Facade facade, EmployeeDtoMapper employeeDtoMapper) {
-        this.facade = facade;
-        this.employeeDtoMapper = employeeDtoMapper;
-    }
 
     @GetMapping("/{employeeId}")
     public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long employeeId) {

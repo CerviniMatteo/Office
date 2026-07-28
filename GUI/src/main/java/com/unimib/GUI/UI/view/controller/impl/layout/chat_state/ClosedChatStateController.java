@@ -3,7 +3,7 @@ package com.unimib.GUI.UI.view.controller.impl.layout.chat_state;
 import com.unimib.GUI.UI.view.components.impl.custom.UnmatchedEmployeeBar;
 import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
-import com.unimib.GUI.model.dto.UserInfoDTO;
+import com.unimib.GUI.model.dto.WorkerInfoDTO;
 import com.unimib.GUI.UI.view.components.impl.custom.StyledButton;
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
 import com.unimib.GUI.UI.view.controller.abstr.ChatController;
@@ -58,7 +58,7 @@ public class ClosedChatStateController extends ChatController {
         viewModel.getUnMatchedEmployeeInfos();
     }
 
-    private void showUnmatchedEmployees(List<UserInfoDTO> employees) {
+    private void showUnmatchedEmployees(List<WorkerInfoDTO> employees) {
         if (unmatchedEmployeeContainer == null) {
             return;
         }
@@ -69,7 +69,7 @@ public class ClosedChatStateController extends ChatController {
             return;
         }
 
-        for (UserInfoDTO employee : employees) {
+        for (WorkerInfoDTO employee : employees) {
             UnmatchedEmployeeBar bar = new UnmatchedEmployeeBar(employee);
 
             bar.getController().setOnCreateClick(targetEmployeeId ->

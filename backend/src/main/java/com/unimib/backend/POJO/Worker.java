@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 
 import java.util.Locale;
 import static com.unimib.backend.constants.CommonConstants.EMAIL_SUFFIX;
+import static com.unimib.backend.constants.WorkerConstants.INVALID_EMAIL;
 import static com.unimib.backend.utils.StringHelper.hashString;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 /**
  * Abstract base class representing a person in the system.
@@ -43,6 +43,14 @@ public abstract class Worker {
     @Column(unique = true)
     private String email;
 
+    /**
+     * Plain-text email, valid only in memory for the lifetime of this instance
+     * right after creation/save, before the persisted {@code email} is hashed.
+     * Never persisted, never returned by {@link #toString()}.
+     */
+    @Transient
+    private transient String plainEmail;
+
     /** Encoded image of the worker in Base64 format. */
     @Column(name = "encoded_image", columnDefinition = "CLOB")
     private String encodedImage;
@@ -69,7 +77,9 @@ public abstract class Worker {
     public Worker(String name, String surname) {
         setName(name);
         setSurname(surname);
-        setEmail(generateEmail(name, surname));
+        String email = generateEmail(name, surname);
+        setPlainEmail(email);
+        setEmail(hashString(email));
     }
 
     /**
@@ -84,7 +94,9 @@ public abstract class Worker {
         setName(name);
         setSurname(surname);
         setEncodedImage(encodedImage);
-        setEmail(generateEmail(name, surname));
+        String email = generateEmail(name, surname);
+        setPlainEmail(email);
+        setEmail(hashString(email));
     }
 
     /**
@@ -134,6 +146,10 @@ public abstract class Worker {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getPlainEmail() {return plainEmail;}
+
+    public void setPlainEmail(String plainEmail) {this.plainEmail = plainEmail;}
 
     public String getName() {
         return name;
@@ -206,9 +222,11 @@ public abstract class Worker {
      * @return the generated email in the format "name.surname@example.com"
      */
     public static String generateEmail(String name, String surname) {
-        String email =  name.toLowerCase(Locale.ROOT) + "." + surname.toLowerCase(Locale.ROOT) + EMAIL_SUFFIX;
-        EmailValidator.getInstance().isValid(email);
-        return hashString(email);
+        String email = name.toLowerCase(Locale.ROOT) + "." + surname.toLowerCase(Locale.ROOT) + EMAIL_SUFFIX;
+        if (!EmailValidator.getInstance().isValid(email)) {
+            throw new IllegalArgumentException(INVALID_EMAIL); // o costante equivalente
+        }
+        return email;
     }
 
     @Override

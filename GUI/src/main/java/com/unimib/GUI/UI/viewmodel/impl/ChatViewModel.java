@@ -4,8 +4,8 @@ import com.unimib.GUI.UI.state.UIState;
 import com.unimib.GUI.UI.viewmodel.BaseViewModel;
 import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
-import com.unimib.GUI.model.dto.UserInfoDTO;
-import com.unimib.GUI.repository.ChatRepository;
+import com.unimib.GUI.model.dto.WorkerInfoDTO;
+import com.unimib.GUI.UI.repository.ChatRepository;
 import javafx.beans.property.*;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class ChatViewModel extends BaseViewModel {
     private final ObjectProperty<UIState<List<ChatInfoDTO>>> chatsState =
             new SimpleObjectProperty<>();
 
-    private final ObjectProperty<UIState<List<UserInfoDTO>>> newChatsState =
+    private final ObjectProperty<UIState<List<WorkerInfoDTO>>> newChatsState =
             new SimpleObjectProperty<>();
 
     private final ObjectProperty<UIState<Void>> connectionState =
@@ -63,11 +63,15 @@ public class ChatViewModel extends BaseViewModel {
     }
 
     public void loadChats() {
-        execute(repository.getChats(employeeId), chatsState);
+        execute(
+                ()->repository.getChats(employeeId),
+                chatsState);
     }
 
     public void getUnMatchedEmployeeInfos() {
-        execute(repository.getUnMatchedEmployeeInfos(employeeId), newChatsState);
+        execute(
+                ()->repository.getUnMatchedEmployeeInfos(employeeId),
+                newChatsState);
     }
 
     private void connect() {
@@ -125,7 +129,7 @@ public class ChatViewModel extends BaseViewModel {
         return chatsState;
     }
 
-    public ReadOnlyObjectProperty<UIState<List<UserInfoDTO>>> getNewChatsStateProperty() {
+    public ReadOnlyObjectProperty<UIState<List<WorkerInfoDTO>>> getNewChatsStateProperty() {
         return newChatsState;
     }
 

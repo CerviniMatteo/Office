@@ -3,7 +3,7 @@ package com.unimib.backend.controller;
 import com.unimib.backend.DTO.TaskDTO;
 import com.unimib.backend.POJO.Task;
 import com.unimib.backend.enums.TaskState;
-import com.unimib.backend.facade.Facade;
+import com.unimib.backend.facade.TaskFacade;
 import com.unimib.backend.mappers.TaskDtoMapper;
 import com.unimib.backend.DTO.AcceptTaskRequestDTO;
 import com.unimib.backend.DTO.StartTaskRequestDTO;
@@ -21,14 +21,9 @@ import java.util.List;
 public class TaskController {
 
     @Autowired
-    private final Facade facade;
+    TaskFacade facade;
     @Autowired
-    private final TaskDtoMapper taskDtoMapper;
-
-    public TaskController(Facade facade, TaskDtoMapper taskDtoMapper) {
-        this.facade = facade;
-        this.taskDtoMapper = taskDtoMapper;
-    }
+    TaskDtoMapper taskDtoMapper;
 
     @GetMapping("/all")
     public ResponseEntity<List<TaskDTO>> getAllTasks() {

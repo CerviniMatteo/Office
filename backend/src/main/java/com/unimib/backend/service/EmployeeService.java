@@ -20,6 +20,7 @@ import static com.unimib.backend.constants.CommonConstants.*;
 import static com.unimib.backend.constants.EmployeeConstants.*;
 import static com.unimib.backend.constants.TaskConstants.NULL_DATE;
 import static com.unimib.backend.constants.TaskConstants.NULL_TASK_STATE;
+import static com.unimib.backend.utils.StringHelper.hashString;
 
 /**
  * Service class for managing Dipendente (employee) entities.
@@ -79,14 +80,18 @@ public class EmployeeService {
 
     /**
      * Ensure the employee's email is unique by appending a counter if necessary.
+     * Keeps {@code plainEmail} and the hashed {@code email} consistent when regenerated.
+     *
      * @param employee the employee whose email needs to be checked
      * @throws IllegalArgumentException if the employee is null
      */
     private void checkUniqueEmail(Employee employee) {
         assertNotNull(employee, NULL_EMPLOYEE);
         int emailCounter = employeeRepository.countEmailsStartingWithEmailPrefix(employee.getName());
-        if(emailCounter != 0) {
-            employee.setEmail(generateEmail(employee.getName()+emailCounter, employee.getSurname()));
+        if (emailCounter != 0) {
+            String newPlainEmail = generateEmail(employee.getName() + emailCounter, employee.getSurname());
+            employee.setPlainEmail(newPlainEmail);
+            employee.setEmail(hashString(newPlainEmail));
         }
     }
 
@@ -139,12 +144,12 @@ public class EmployeeService {
     }
 
     private void checkSalary(double monthlySalary, WorkerRole employeeRole) {
-       if(monthlySalary < 0) {
-           throw new IllegalArgumentException(SALARY_MUST_BE_POSITIVE);
-       }
-       if(Double.compare(monthlySalary, employeeRole.getMonthlySalary()) < 0) {
-           throw new IllegalArgumentException(SALARY_MUST_BE_AT_LEAST_ROLE_MINIMUM + employeeRole);
-       }
+        if(monthlySalary < 0) {
+            throw new IllegalArgumentException(SALARY_MUST_BE_POSITIVE);
+        }
+        if(Double.compare(monthlySalary, employeeRole.getMonthlySalary()) < 0) {
+            throw new IllegalArgumentException(SALARY_MUST_BE_AT_LEAST_ROLE_MINIMUM + employeeRole);
+        }
     }
     /**
      * Find an employee by their ID.

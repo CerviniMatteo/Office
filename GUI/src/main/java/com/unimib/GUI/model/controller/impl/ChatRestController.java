@@ -3,7 +3,7 @@ package com.unimib.GUI.model.controller.impl;
 import com.unimib.GUI.model.controller.BaseRestController;
 import com.unimib.GUI.model.dto.ChatEmployeePair;
 import com.unimib.GUI.model.dto.ChatInfoDTO;
-import com.unimib.GUI.model.dto.UserInfoDTO;
+import com.unimib.GUI.model.dto.WorkerInfoDTO;
 import javafx.concurrent.Task;
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -21,10 +21,10 @@ public class ChatRestController extends BaseRestController {
         );
     }
 
-    public List<UserInfoDTO> getUnMatchedEmployeeInfos(Long employeeId) {
+    public List<WorkerInfoDTO> getUnMatchedEmployeeInfos(Long employeeId) {
         return getMany(
                 UNMATCHED_EMPLOYEE_INFOS_ENDPOINT + "/" + employeeId,
-                new ParameterizedTypeReference<List<UserInfoDTO>>() {}
+                new ParameterizedTypeReference<List<WorkerInfoDTO>>() {}
         );
     }
 

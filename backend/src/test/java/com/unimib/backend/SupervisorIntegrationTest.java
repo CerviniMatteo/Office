@@ -5,7 +5,9 @@ import com.unimib.backend.POJO.Supervisor;
 import com.unimib.backend.POJO.Team;
 import com.unimib.backend.POJO.Worker;
 import com.unimib.backend.enums.WorkerRole;
-import com.unimib.backend.facade.Facade;
+import com.unimib.backend.facade.EmployeeFacade;
+import com.unimib.backend.facade.SupervisorFacade;
+import com.unimib.backend.facade.TeamFacade;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,24 +26,28 @@ import static org.junit.jupiter.api.Assertions.*;
 class SupervisorIntegrationTest {
 
     @Autowired
-    private Facade facade;
+    private SupervisorFacade supervisorFacade;
+    @Autowired
+    private EmployeeFacade employeeFacade;
+    @Autowired
+    private TeamFacade teamFacade;
 
     /**
      * Helper method to create and save a supervisor via the facade.
      */
     private Supervisor createSupervisor() {
-        return facade.createSupervisor("Supervisor" , "Supervisor");
+        return supervisorFacade.createSupervisor("Supervisor" , "Supervisor");
     }
     private Supervisor createSupervisor(WorkerRole workerRole) {
-        return facade.createSupervisor("Supervisor", "Supervisor", workerRole);
+        return supervisorFacade.createSupervisor("Supervisor", "Supervisor", workerRole);
     }
 
     private Supervisor createSupervisor(double monthlySalary) {
-        return facade.createSupervisor("Supervisor", "Supervisor", monthlySalary, WorkerRole.MANAGER);
+        return supervisorFacade.createSupervisor("Supervisor", "Supervisor", monthlySalary, WorkerRole.MANAGER);
     }
 
     private Supervisor createSupervisor(Supervisor supervisor, List<Supervisor> subordinates) {
-        return facade.createSupervisor("Supervisor", "Supervisor", WorkerRole.MANAGER.getMonthlySalary(), WorkerRole.MANAGER, supervisor, subordinates);
+        return supervisorFacade.createSupervisor("Supervisor", "Supervisor", WorkerRole.MANAGER.getMonthlySalary(), WorkerRole.MANAGER, supervisor, subordinates);
     }
 
     /**
@@ -54,9 +60,9 @@ class SupervisorIntegrationTest {
         Supervisor s2 = createSupervisor();
         Supervisor boss = createSupervisor();
 
-        boss =facade.saveSupervisor(boss);
-        s1 = facade.saveSupervisor(s1);
-        s2 = facade.saveSupervisor(s2);
+        boss = supervisorFacade.saveSupervisor(boss);
+        s1 = supervisorFacade.saveSupervisor(s1);
+        s2 = supervisorFacade.saveSupervisor(s2);
 
         System.out.println(boss);
         System.out.println(s1);
@@ -71,13 +77,13 @@ class SupervisorIntegrationTest {
         assertNotNull(boss.getWorkerId());
         assertNotEquals(s1.getWorkerId(), s2.getWorkerId());
 
-        Optional<Supervisor> found = facade.findSupervisorById(s1.getWorkerId());
+        Optional<Supervisor> found = supervisorFacade.findSupervisorById(s1.getWorkerId());
         assertTrue(found.isPresent());
         assertEquals(s1.getName(), found.get().getName());
 
         Supervisor finalBoss = boss;
         assertThrows(EntityNotFoundException.class,
-                () -> facade.findSupervisorById(finalBoss.getWorkerId() + 1000)
+                () -> supervisorFacade.findSupervisorById(finalBoss.getWorkerId() + 1000)
         );
     }
 
@@ -91,7 +97,7 @@ class SupervisorIntegrationTest {
         assertThrows(IllegalArgumentException.class, () -> createSupervisor(WorkerRole.SENIOR));
         assertThrows(IllegalArgumentException.class, () -> createSupervisor(WorkerRole.SENIOR_SW_ENGINEER));
 
-        Supervisor supervisor = facade.saveSupervisor(createSupervisor(WorkerRole.MANAGER));
+        Supervisor supervisor = supervisorFacade.saveSupervisor(createSupervisor(WorkerRole.MANAGER));
         System.out.println(supervisor);
     }
 
@@ -103,10 +109,10 @@ class SupervisorIntegrationTest {
     void shouldFindAllSupervisors() {
         Supervisor s1 = createSupervisor();
         Supervisor s2 = createSupervisor();
-        s1 = facade.saveSupervisor(s1);
-        s2 = facade.saveSupervisor(s2);
+        s1 = supervisorFacade.saveSupervisor(s1);
+        s2 = supervisorFacade.saveSupervisor(s2);
 
-        List<Supervisor> all = facade.findAllSupervisors();
+        List<Supervisor> all = supervisorFacade.findAllSupervisors();
 
         assertTrue(all.contains(s1));
         assertTrue(all.contains(s2));
@@ -119,14 +125,14 @@ class SupervisorIntegrationTest {
     @Transactional
     void shouldDeleteSupervisor() {
         Supervisor supervisor = createSupervisor();
-        supervisor = facade.saveSupervisor(supervisor);
-        assertTrue(facade.findSupervisorById(supervisor.getWorkerId()).isPresent());
+        supervisor = supervisorFacade.saveSupervisor(supervisor);
+        assertTrue(supervisorFacade.findSupervisorById(supervisor.getWorkerId()).isPresent());
 
-        facade.deleteSupervisorById(supervisor.getWorkerId());
+        supervisorFacade.deleteSupervisorById(supervisor.getWorkerId());
 
         Supervisor finalSupervisor = supervisor;
         assertThrows(EntityNotFoundException.class,
-                () -> facade.findSupervisorById(finalSupervisor.getWorkerId())
+                () -> supervisorFacade.findSupervisorById(finalSupervisor.getWorkerId())
         );
     }
 
@@ -138,16 +144,16 @@ class SupervisorIntegrationTest {
     @Test
     void shouldDeleteEmployeeByManager() {
         Supervisor manager = createSupervisor(WorkerRole.MANAGER);
-        Employee employee = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee employee = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
 
-        manager = facade.saveSupervisor(manager);
-        employee = facade.saveEmployee(employee);
+        manager = supervisorFacade.saveSupervisor(manager);
+        employee = employeeFacade.saveEmployee(employee);
 
-        facade.fireEmployee(manager.getWorkerId(), employee.getWorkerId());
+        supervisorFacade.fireEmployee(manager.getWorkerId(), employee.getWorkerId());
 
         Employee finalEmployee = employee;
         assertThrows(EntityNotFoundException.class,
-                () -> facade.findEmployeeById(finalEmployee.getWorkerId()));
+                () -> employeeFacade.findEmployeeById(finalEmployee.getWorkerId()));
     }
 
 
@@ -158,21 +164,21 @@ class SupervisorIntegrationTest {
     @Test
     void shouldFireMultipleEmployees() {
         Supervisor manager = createSupervisor(WorkerRole.MANAGER);
-        Employee e1 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        Employee e2 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee e1 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee e2 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
 
-        manager = facade.saveSupervisor(manager);
-        e1 = facade.saveEmployee(e1);
-        e2 = facade.saveEmployee(e2);
+        manager = supervisorFacade.saveSupervisor(manager);
+        e1 = employeeFacade.saveEmployee(e1);
+        e2 = employeeFacade.saveEmployee(e2);
 
-        facade.fireEmployees(manager.getWorkerId(), List.of(e1, e2));
+        supervisorFacade.fireEmployees(manager.getWorkerId(), List.of(e1, e2));
 
         Employee finalE = e1;
         assertThrows(EntityNotFoundException.class,
-                () -> facade.findEmployeeById(finalE.getWorkerId()));
+                () -> employeeFacade.findEmployeeById(finalE.getWorkerId()));
         Employee finalE1 = e2;
         assertThrows(EntityNotFoundException.class,
-                () -> facade.findEmployeeById(finalE1.getWorkerId()));
+                () -> employeeFacade.findEmployeeById(finalE1.getWorkerId()));
     }
 
 
@@ -183,14 +189,14 @@ class SupervisorIntegrationTest {
     @Test
     void shouldUpdateMonthlySalary() {
         Supervisor manager = createSupervisor(WorkerRole.MANAGER);
-        Employee employee = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee employee = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
 
-        manager = facade.saveSupervisor(manager);
-        employee = facade.saveEmployee(employee);
+        manager = supervisorFacade.saveSupervisor(manager);
+        employee = employeeFacade.saveEmployee(employee);
 
-        facade.updateMonthlySalaryById(manager.getWorkerId(), employee.getWorkerId(), 5000.0);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), employee.getWorkerId(), 5000.0);
 
-        Optional<Employee> updatedRaw = facade.findEmployeeById(employee.getWorkerId());
+        Optional<Employee> updatedRaw = employeeFacade.findEmployeeById(employee.getWorkerId());
         updatedRaw.ifPresent(updated -> assertEquals(5000.0, updated.getMonthlySalary()));
     }
 
@@ -200,16 +206,16 @@ class SupervisorIntegrationTest {
     @Transactional
     @Test
     void shouldThrowIfFireEmployeeByNonManager() {
-        Employee nonManager = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        Employee employee = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee nonManager = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee employee = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
 
-        nonManager = facade.saveEmployee(nonManager);
-        employee = facade.saveEmployee(employee);
+        nonManager = employeeFacade.saveEmployee(nonManager);
+        employee = employeeFacade.saveEmployee(employee);
 
         Employee finalNonManager = nonManager;
         Employee finalEmployee = employee;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.fireEmployee(finalNonManager.getWorkerId(), finalEmployee.getWorkerId()));
+                () -> supervisorFacade.fireEmployee(finalNonManager.getWorkerId(), finalEmployee.getWorkerId()));
     }
 
     /**
@@ -219,14 +225,15 @@ class SupervisorIntegrationTest {
     @Test
     void shouldUpdateEmployeeRole() {
         Supervisor manager = createSupervisor(WorkerRole.MANAGER);
-        Employee employee = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee employee = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
 
-        manager = facade.saveSupervisor(manager);
-        employee = facade.saveEmployee(employee);
 
-        facade.updateWorkerRoleById(manager.getWorkerId(), employee.getWorkerId(), WorkerRole.SENIOR_SW_ENGINEER);
+        manager = supervisorFacade.saveSupervisor(manager);
+        employee = employeeFacade.saveEmployee(employee);
 
-        Optional<Employee> updatedRaw = facade.findEmployeeById(employee.getWorkerId());
+        supervisorFacade.updateWorkerRoleById(manager.getWorkerId(), employee.getWorkerId(), WorkerRole.SENIOR_SW_ENGINEER);
+
+        Optional<Employee> updatedRaw = employeeFacade.findEmployeeById(employee.getWorkerId());
         assertTrue(updatedRaw.isPresent());
         assertEquals(WorkerRole.SENIOR_SW_ENGINEER, updatedRaw.get().getWorkerRole());
     }
@@ -238,19 +245,19 @@ class SupervisorIntegrationTest {
     @Test
     void shouldFindEmployeesByMonthlySalary() {
         Supervisor manager = createSupervisor(WorkerRole.MANAGER);
-        manager = facade.saveSupervisor(manager);
+        manager = supervisorFacade.saveSupervisor(manager);
 
-        Employee e1 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        e1 = facade.saveEmployee(e1);
-        facade.updateMonthlySalaryById(manager.getWorkerId(), e1.getWorkerId(), 3100.0);
+        Employee e1 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        e1 = employeeFacade.saveEmployee(e1);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), e1.getWorkerId(), 3100.0);
 
-        Employee e2 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        e2 = facade.saveEmployee(e2);
-        facade.updateMonthlySalaryById(manager.getWorkerId(), e2.getWorkerId(), WorkerRole.MANAGER.getMonthlySalary());
-        facade.updateWorkerRoleById(manager.getWorkerId(), e2.getWorkerId(), WorkerRole.MANAGER);
+        Employee e2 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        e2 = employeeFacade.saveEmployee(e2);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), e2.getWorkerId(), WorkerRole.MANAGER.getMonthlySalary());
+        supervisorFacade.updateWorkerRoleById(manager.getWorkerId(), e2.getWorkerId(), WorkerRole.MANAGER);
 
-        List<Worker> foundSalary = (List<Worker>) facade.findWorkersByMonthlySalary(manager.getWorkerId(), WorkerRole.MANAGER.getMonthlySalary());
-        List<Worker> foundRole = (List<Worker>) facade.findWorkersByWorkerRole(manager.getWorkerId(), WorkerRole.MANAGER);
+        List<Worker> foundSalary = (List<Worker>) supervisorFacade.findWorkersByMonthlySalary(manager.getWorkerId(), WorkerRole.MANAGER.getMonthlySalary());
+        List<Worker> foundRole = (List<Worker>) supervisorFacade.findWorkersByWorkerRole(manager.getWorkerId(), WorkerRole.MANAGER);
 
         assertEquals(2, foundSalary.size());
         assertEquals(2, foundRole.size());
@@ -264,12 +271,12 @@ class SupervisorIntegrationTest {
     @Transactional
     @Test
     void shouldThrowIfNonManagerSearchBySalary() {
-        Employee nonManager = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        nonManager = facade.saveEmployee(nonManager);
+        Employee nonManager = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        nonManager = employeeFacade.saveEmployee(nonManager);
 
         Employee finalNonManager = nonManager;
         assertThrows(IllegalArgumentException.class,
-                () -> facade.findWorkersByMonthlySalary(finalNonManager.getWorkerId(), 3000.0));
+                () -> supervisorFacade.findWorkersByMonthlySalary(finalNonManager.getWorkerId(), 3000.0));
     }
 
 
@@ -281,28 +288,28 @@ class SupervisorIntegrationTest {
     @Test
     void shouldSortEmployeesByMonthlySalaryAscAndDesc() {
         Supervisor manager = createSupervisor(WorkerRole.MANAGER);
-        manager = facade.saveSupervisor(manager);
+        manager = supervisorFacade.saveSupervisor(manager);
 
-        Employee e1 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        Employee e2 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        Employee e3 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee e1 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee e2 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee e3 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
 
-        e1 = facade.saveEmployee(e1);
-        e2 = facade.saveEmployee(e2);
-        e3 = facade.saveEmployee(e3);
+        e1 = employeeFacade.saveEmployee(e1);
+        e2 = employeeFacade.saveEmployee(e2);
+        e3 = employeeFacade.saveEmployee(e3);
 
-        facade.updateMonthlySalaryById(manager.getWorkerId(), e1.getWorkerId(), 3500.0);
-        facade.updateMonthlySalaryById(manager.getWorkerId(), e2.getWorkerId(), 5500.0);
-        facade.updateMonthlySalaryById(manager.getWorkerId(), e3.getWorkerId(), 2500.0);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), e1.getWorkerId(), 3500.0);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), e2.getWorkerId(), 5500.0);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), e3.getWorkerId(), 2500.0);
 
         List<Worker> asc = (List<Worker>)
-                facade.findWorkersByWorkerRoleAscByMonthlySalary(manager.getWorkerId(), WorkerRole.JUNIOR);
+                supervisorFacade.findWorkersByWorkerRoleAscByMonthlySalary(manager.getWorkerId(), WorkerRole.JUNIOR);
 
         assertEquals(3, asc.size());
         assertTrue(asc.get(0).getMonthlySalary() <= asc.get(1).getMonthlySalary());
 
         List<Worker> desc = (List<Worker>)
-                facade.findWorkersByWorkerRoleDescByMonthlySalary(manager.getWorkerId(), WorkerRole.JUNIOR);
+                supervisorFacade.findWorkersByWorkerRoleDescByMonthlySalary(manager.getWorkerId(), WorkerRole.JUNIOR);
 
         assertEquals(3, desc.size());
         assertTrue(desc.get(0).getMonthlySalary() >= desc.get(1).getMonthlySalary());
@@ -315,22 +322,22 @@ class SupervisorIntegrationTest {
     @Test
     void shouldSortEmployeesByRoleAscAndDesc() {
         Supervisor manager = createSupervisor(WorkerRole.MANAGER);
-        manager = facade.saveSupervisor(manager);
+        manager = supervisorFacade.saveSupervisor(manager);
 
-        Employee e1 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        Employee e2 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
-        Employee e3 = facade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee e1 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee e2 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
+        Employee e3 = employeeFacade.createEmployee("Prova", "Prova", WorkerRole.JUNIOR.getMonthlySalary(), WorkerRole.JUNIOR);
 
-        e1 = facade.saveEmployee(e1);
-        e2 = facade.saveEmployee(e2);
-        e3 = facade.saveEmployee(e3);
+        e1 = employeeFacade.saveEmployee(e1);
+        e2 = employeeFacade.saveEmployee(e2);
+        e3 = employeeFacade.saveEmployee(e3);
 
-        facade.updateMonthlySalaryById(manager.getWorkerId(), e1.getWorkerId(), 3000.0);
-        facade.updateMonthlySalaryById(manager.getWorkerId(), e2.getWorkerId(), 6000.0);
-        facade.updateMonthlySalaryById(manager.getWorkerId(), e3.getWorkerId(), 4000.0);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), e1.getWorkerId(), 3000.0);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), e2.getWorkerId(), 6000.0);
+        supervisorFacade.updateMonthlySalaryById(manager.getWorkerId(), e3.getWorkerId(), 4000.0);
 
         List<Employee> asc = (List<Employee>)
-                facade.findWorkersByMonthlySalaryAscByWorkerRole(manager.getWorkerId(), 3000.0);
+                supervisorFacade.findWorkersByMonthlySalaryAscByWorkerRole(manager.getWorkerId(), 3000.0);
 
         assertFalse(asc.isEmpty());
         for (int i = 1; i < asc.size(); i++) {
@@ -340,7 +347,7 @@ class SupervisorIntegrationTest {
         }
 
         List<Employee> desc = (List<Employee>)
-                facade.findWorkersByMonthlySalaryDescByWorkerRole(manager.getWorkerId(), 3000.0);
+                supervisorFacade.findWorkersByMonthlySalaryDescByWorkerRole(manager.getWorkerId(), 3000.0);
 
         assertFalse(desc.isEmpty());
         for (int i = 1; i < desc.size(); i++) {
@@ -359,29 +366,29 @@ class SupervisorIntegrationTest {
         Supervisor boss = createSupervisor();
         Supervisor sub = createSupervisor();
 
-        boss = facade.saveSupervisor(boss);
-        sub = facade.saveSupervisor(sub);
+        boss = supervisorFacade.saveSupervisor(boss);
+        sub = supervisorFacade.saveSupervisor(sub);
 
-        facade.assignSubordinate(boss.getWorkerId(), sub.getWorkerId());
+        supervisorFacade.assignSubordinate(boss.getWorkerId(), sub.getWorkerId());
 
-        Optional<Supervisor> optionalSupervisor = facade.findSupervisorById(sub.getWorkerId());
+        Optional<Supervisor> optionalSupervisor = supervisorFacade.findSupervisorById(sub.getWorkerId());
         assertTrue(optionalSupervisor.isPresent());
         Supervisor subCheck = optionalSupervisor.get();
-        Optional<Supervisor> optionalBoss = facade.findSupervisorById(boss.getWorkerId());
+        Optional<Supervisor> optionalBoss = supervisorFacade.findSupervisorById(boss.getWorkerId());
         assertTrue(optionalBoss.isPresent());
         Supervisor bossCheck = optionalBoss.get();
 
         assertTrue(bossCheck.getSubordinates().contains(subCheck));
         assertEquals(subCheck.getSupervisor(), bossCheck);
 
-        facade.removeSubordinate(boss.getWorkerId(), sub.getWorkerId());
+        supervisorFacade.removeSubordinate(boss.getWorkerId(), sub.getWorkerId());
 
         assertFalse(bossCheck.getSubordinates().contains(subCheck));
         assertNull(subCheck.getSupervisor());
 
         Supervisor finalBoss = boss;
         assertThrows(IllegalStateException.class,
-                () -> facade.assignSubordinate(finalBoss.getWorkerId(), finalBoss.getWorkerId()));
+                () -> supervisorFacade.assignSubordinate(finalBoss.getWorkerId(), finalBoss.getWorkerId()));
     }
 
     /**
@@ -394,17 +401,17 @@ class SupervisorIntegrationTest {
         Supervisor b = createSupervisor();
         Supervisor c = createSupervisor();
 
-        a = facade.saveSupervisor(a);
-        b = facade.saveSupervisor(b);
-        c = facade.saveSupervisor(c);
+        a = supervisorFacade.saveSupervisor(a);
+        b = supervisorFacade.saveSupervisor(b);
+        c = supervisorFacade.saveSupervisor(c);
 
-        facade.assignSubordinate(a.getWorkerId(), b.getWorkerId());
-        facade.assignSubordinate(b.getWorkerId(), c.getWorkerId());
+        supervisorFacade.assignSubordinate(a.getWorkerId(), b.getWorkerId());
+        supervisorFacade.assignSubordinate(b.getWorkerId(), c.getWorkerId());
 
         Supervisor finalC = c;
         Supervisor finalA = a;
         assertThrows(IllegalStateException.class,
-                () -> facade.assignSubordinate(finalC.getWorkerId(), finalA.getWorkerId()));
+                () -> supervisorFacade.assignSubordinate(finalC.getWorkerId(), finalA.getWorkerId()));
 
         assertEquals(b, c.getSupervisor());
         assertEquals(a, b.getSupervisor());
@@ -420,12 +427,12 @@ class SupervisorIntegrationTest {
         Supervisor root = createSupervisor();
         Supervisor child = createSupervisor();
 
-        root = facade.saveSupervisor(root);
-        child = facade.saveSupervisor(child);
+        root = supervisorFacade.saveSupervisor(root);
+        child = supervisorFacade.saveSupervisor(child);
 
-        facade.assignSubordinate(root.getWorkerId(), child.getWorkerId());
+        supervisorFacade.assignSubordinate(root.getWorkerId(), child.getWorkerId());
 
-        List<Supervisor> roots = facade.findSupervisorsWithoutSupervisor();
+        List<Supervisor> roots = supervisorFacade.findSupervisorsWithoutSupervisor();
         assertTrue(roots.contains(root));
         assertFalse(roots.contains(child));
     }
@@ -440,13 +447,13 @@ class SupervisorIntegrationTest {
         Supervisor supervisor = createSupervisor();
         Supervisor supervisor2 = createSupervisor();
 
-        sub = facade.saveSupervisor(sub);
-        supervisor = facade.saveSupervisor(supervisor);
-        supervisor2 = facade.saveSupervisor(supervisor2);
+        sub = supervisorFacade.saveSupervisor(sub);
+        supervisor = supervisorFacade.saveSupervisor(supervisor);
+        supervisor2 = supervisorFacade.saveSupervisor(supervisor2);
 
-        facade.assignSubordinate(supervisor.getWorkerId(), sub.getWorkerId());
+        supervisorFacade.assignSubordinate(supervisor.getWorkerId(), sub.getWorkerId());
         // sub2 is not assigned -> should appear in "without subordinates"
-        List<Supervisor> withoutSubordinates = facade.findSupervisorsWithoutSubordinates();
+        List<Supervisor> withoutSubordinates = supervisorFacade.findSupervisorsWithoutSubordinates();
 
         assertTrue(withoutSubordinates.contains(supervisor2));
         assertFalse(withoutSubordinates.contains(supervisor));
@@ -460,20 +467,20 @@ class SupervisorIntegrationTest {
     void shouldFindSupervisorsWithoutTeam() {
         // Create and save supervisor with team
         Supervisor sup1 = createSupervisor(WorkerRole.MANAGER.getMonthlySalary() + 1000);
-        Team team = facade.createTeam(sup1);
+        Team team = teamFacade.createTeam(sup1);
         sup1.addSupervisedTeam(team);      // assign team before saving
-        sup1 = facade.saveSupervisor(sup1);
-        team = facade.saveTeam(team);
+        sup1 = supervisorFacade.saveSupervisor(sup1);
+        team = teamFacade.saveTeam(team);
 
         // Create supervisor without team
-        Supervisor sup2 = facade.saveSupervisor(createSupervisor());
+        Supervisor sup2 = supervisorFacade.saveSupervisor(createSupervisor());
 
         // Fetch supervisors without teams
-        List<Supervisor> withoutTeam = facade.findSupervisorsWithoutSupervisedTeam();
+        List<Supervisor> withoutTeam = supervisorFacade.findSupervisorsWithoutSupervisedTeam();
 
         // Assertions
         assertTrue(withoutTeam.contains(sup2));
-        Supervisor withTeam = facade.getTeamById(team.getTeamId())
+        Supervisor withTeam = teamFacade.getTeamById(team.getTeamId())
                 .orElseThrow()
                 .getSupervisor();
         assertEquals(sup1, withTeam);
@@ -486,16 +493,16 @@ class SupervisorIntegrationTest {
     @Transactional
     void shouldCreateSupervisorWithHierarchyAndTeams() {
         // Save the root supervisor first
-        Supervisor rootSupervisor = facade.saveSupervisor(
+        Supervisor rootSupervisor = supervisorFacade.saveSupervisor(
                 createSupervisor()
         );
 
         // Now create and save the teams
-        Team team1 = facade.saveTeam(facade.createTeam(rootSupervisor));
-        Team team2 = facade.saveTeam(facade.createTeam(rootSupervisor));
+        Team team1 = teamFacade.saveTeam(teamFacade.createTeam(rootSupervisor));
+        Team team2 = teamFacade.saveTeam(teamFacade.createTeam(rootSupervisor));
         // Create a subordinate supervisor that will be assigned under the new supervisor
-        Supervisor subordinate = facade.saveSupervisor(
-                facade.createSupervisor("Sub", "Sub", WorkerRole.MANAGER.getMonthlySalary(), WorkerRole.MANAGER)
+        Supervisor subordinate = supervisorFacade.saveSupervisor(
+                supervisorFacade.createSupervisor("Sub", "Sub", WorkerRole.MANAGER.getMonthlySalary(), WorkerRole.MANAGER)
         );
 
         // Create the supervisor under test, assigning superior, subordinates, and teams
@@ -504,7 +511,7 @@ class SupervisorIntegrationTest {
                 List.of(subordinate)
         );
 
-        newSupervisor = facade.saveSupervisor(newSupervisor);
+        newSupervisor = supervisorFacade.saveSupervisor(newSupervisor);
 
         newSupervisor.addSupervisedTeam(team1);
         newSupervisor.addSupervisedTeam(team2);
@@ -532,18 +539,18 @@ class SupervisorIntegrationTest {
         Supervisor s3 = createSupervisor();
         Supervisor s4 = createSupervisor();
 
-        s1 = facade.saveSupervisor(s1);
-        s2 = facade.saveSupervisor(s2);
-        s3 = facade.saveSupervisor(s3);
-        s4 = facade.saveSupervisor(s4);
+        s1 = supervisorFacade.saveSupervisor(s1);
+        s2 = supervisorFacade.saveSupervisor(s2);
+        s3 = supervisorFacade.saveSupervisor(s3);
+        s4 = supervisorFacade.saveSupervisor(s4);
 
-        facade.assignSubordinate(s1.getWorkerId(), s2.getWorkerId());
-        facade.assignSubordinate(s2.getWorkerId(), s3.getWorkerId());
-        facade.assignSubordinate(s3.getWorkerId(), s4.getWorkerId());
+        supervisorFacade.assignSubordinate(s1.getWorkerId(), s2.getWorkerId());
+        supervisorFacade.assignSubordinate(s2.getWorkerId(), s3.getWorkerId());
+        supervisorFacade.assignSubordinate(s3.getWorkerId(), s4.getWorkerId());
 
         Supervisor finalS = s4;
         Supervisor finalS1 = s1;
         assertThrows(IllegalStateException.class,
-                () -> facade.assignSubordinate(finalS.getWorkerId(), finalS1.getWorkerId()));
+                () -> supervisorFacade.assignSubordinate(finalS.getWorkerId(), finalS1.getWorkerId()));
     }
 }

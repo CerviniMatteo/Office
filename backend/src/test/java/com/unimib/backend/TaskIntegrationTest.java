@@ -5,7 +5,10 @@ import com.unimib.backend.POJO.Supervisor;
 import com.unimib.backend.POJO.Task;
 import com.unimib.backend.POJO.Team;
 import com.unimib.backend.enums.TaskState;
-import com.unimib.backend.facade.Facade;
+import com.unimib.backend.facade.EmployeeFacade;
+import com.unimib.backend.facade.SupervisorFacade;
+import com.unimib.backend.facade.TaskFacade;
+import com.unimib.backend.facade.TeamFacade;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +28,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TaskIntegrationTest {
 
     @Autowired
-    private Facade facade;
+    private TaskFacade taskFacade;
+    @Autowired
+    private EmployeeFacade employeeFacade;
+    @Autowired
+    private SupervisorFacade supervisorFacade;
+    @Autowired
+    private TeamFacade teamFacade;
 
     @Nested
     @DisplayName("CRUD and Task State management")
@@ -36,11 +45,11 @@ public class TaskIntegrationTest {
          */
         @Test
         void testCreateAndSaveTask() {
-            Task task = facade.createTask(TaskState.TO_BE_STARTED);
-            Task saved = facade.saveTask(task);
+            Task task = taskFacade.createTask(TaskState.TO_BE_STARTED);
+            Task saved = taskFacade.saveTask(task);
             assertNotNull(saved.getTaskId());
 
-            Task found = facade.getTaskById(saved.getTaskId());
+            Task found = taskFacade.getTaskById(saved.getTaskId());
             assertNotNull(found);
             assertEquals(saved.getTaskId(), found.getTaskId());
         }
@@ -51,11 +60,11 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Verify task creation with different initial states and date setting")
         void testCreateTaskWithInitialState() {
-            Task tStarted = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Task tStarted = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
             assertNotNull(tStarted.getStartDate());
             assertNull(tStarted.getEndDate());
 
-            Task tDone = facade.saveTask(facade.createTask(TaskState.DONE));
+            Task tDone = taskFacade.saveTask(taskFacade.createTask(TaskState.DONE));
             assertNotNull(tDone.getStartDate());
             assertNotNull(tDone.getEndDate());
         }
@@ -66,7 +75,7 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Verify that createTask(null) sets the default state")
         void testCreateTaskNullState() {
-            Task t = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
             assertEquals(TaskState.TO_BE_STARTED, t.getTaskState());
         }
 
@@ -75,10 +84,10 @@ public class TaskIntegrationTest {
          */
         @Test
         void testDeleteTask() {
-            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Task task = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
             Long id = task.getTaskId();
-            facade.deleteTask(id);
-            assertThrows(IllegalArgumentException.class, () -> facade.getTaskById(id));
+            taskFacade.deleteTask(id);
+            assertThrows(IllegalArgumentException.class, () -> taskFacade.getTaskById(id));
         }
 
         /**
@@ -86,13 +95,13 @@ public class TaskIntegrationTest {
          */
         @Test
         void testStateChangeAndDateValidation() {
-            Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            Task task = taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
             Long id = task.getTaskId();
 
-            facade.changeTaskState(id, task.getTaskState());
+            taskFacade.changeTaskState(id, task.getTaskState());
             assertNotNull(task.getStartDate());
 
-            facade.changeTaskState(id, task.getTaskState());
+            taskFacade.changeTaskState(id, task.getTaskState());
 
             assertNotNull(task.getEndDate());
         }
@@ -103,10 +112,10 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Verify task reset to initial state and date clearing")
         void testResetTask() {
-            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.changeTaskState(t.getTaskId(), t.getTaskState());
-            facade.resetTask(t.getTaskId());
-            Task reset = facade.getTaskById(t.getTaskId());
+            Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            taskFacade.changeTaskState(t.getTaskId(), t.getTaskState());
+            taskFacade.resetTask(t.getTaskId());
+            Task reset = taskFacade.getTaskById(t.getTaskId());
 
             assertEquals(TaskState.TO_BE_STARTED, reset.getTaskState());
             assertNull(reset.getStartDate());
@@ -118,10 +127,10 @@ public class TaskIntegrationTest {
          */
         @Test
         void testStateChangeException() {
-            Task task = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-            facade.changeTaskState(task.getTaskId(), TaskState.STARTED);
+            Task task = taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
+            taskFacade.changeTaskState(task.getTaskId(), TaskState.STARTED);
 
-            assertThrows(IllegalStateException.class, () -> facade.changeTaskState(task.getTaskId(), TaskState.DONE));
+            assertThrows(IllegalStateException.class, () -> taskFacade.changeTaskState(task.getTaskId(), TaskState.DONE));
         }
     }
 
@@ -133,15 +142,15 @@ public class TaskIntegrationTest {
          */
         @Test
         void testEmployeeAssignmentAndRemoval() {
-            Employee employee = facade.createEmployee("Mario", "Rossi");
-            employee = facade.saveEmployee(employee);
-            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Employee employee = employeeFacade.createEmployee("Mario", "Rossi");
+            employee = employeeFacade.saveEmployee(employee);
+            Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
 
-            facade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
-            assertTrue(facade.isEmployeeAssigned(t.getTaskId(), employee.getWorkerId()));
+            taskFacade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
+            assertTrue(taskFacade.isEmployeeAssigned(t.getTaskId(), employee.getWorkerId()));
 
-            facade.removeEmployeeToTask(t.getTaskId(), employee.getWorkerId());
-            assertFalse(facade.isEmployeeAssigned(t.getTaskId(), employee.getWorkerId()));
+            taskFacade.removeEmployeeToTask(t.getTaskId(), employee.getWorkerId());
+            assertFalse(taskFacade.isEmployeeAssigned(t.getTaskId(), employee.getWorkerId()));
         }
 
         /**
@@ -149,13 +158,13 @@ public class TaskIntegrationTest {
          */
         @Test
         void testMultipleAssignmentForbidden() {
-            Employee employee = facade.createEmployee("Luca", "Bianchi");
-            employee = facade.saveEmployee(employee);
-            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
+            Employee employee = employeeFacade.createEmployee("Luca", "Bianchi");
+            employee = employeeFacade.saveEmployee(employee);
+            Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            taskFacade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
 
             Employee finalEmployee = employee;
-            assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getWorkerId()));
+            assertThrows(IllegalStateException.class, () -> taskFacade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getWorkerId()));
         }
 
         /**
@@ -164,12 +173,12 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Should not be possible to assign employees to already COMPLETED tasks")
         void testAssignmentForbiddenInFinalState() {
-            Task t = facade.saveTask(facade.createTask(TaskState.DONE));
-            Employee employee = facade.createEmployee("Test", "Test");
-            employee = facade.saveEmployee(employee);
+            Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.DONE));
+            Employee employee = employeeFacade.createEmployee("Test", "Test");
+            employee = employeeFacade.saveEmployee(employee);
 
             Employee finalEmployee = employee;
-            assertThrows(IllegalStateException.class, () -> facade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getWorkerId()));
+            assertThrows(IllegalStateException.class, () -> taskFacade.assignEmployeeToTask(t.getTaskId(), finalEmployee.getWorkerId()));
         }
 
         /**
@@ -178,10 +187,10 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Throws exception when assigning an employee to a non-existent task")
         void testAssignmentToNonExistentTask() {
-            Employee employee = facade.createEmployee("Invisibile", "User");
-            employee = facade.saveEmployee(employee);
+            Employee employee = employeeFacade.createEmployee("Invisibile", "User");
+            employee = employeeFacade.saveEmployee(employee);
             Employee finalEmployee = employee;
-            assertThrows(IllegalArgumentException.class, () -> facade.assignEmployeeToTask(999L, finalEmployee.getWorkerId()));
+            assertThrows(IllegalArgumentException.class, () -> taskFacade.assignEmployeeToTask(999L, finalEmployee.getWorkerId()));
         }
     }
 
@@ -195,15 +204,15 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Successfully assign a list of employees to a task")
         void testSetAssignedEmployeesSuccess() {
-            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
-            Employee e1 = facade.saveEmployee(facade.createEmployee("Alice", "Wonderland"));
-            Employee e2 = facade.saveEmployee(facade.createEmployee("Bob", "Builder"));
+            Task task = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            Employee e1 = employeeFacade.saveEmployee(employeeFacade.createEmployee("Alice", "Wonderland"));
+            Employee e2 = employeeFacade.saveEmployee(employeeFacade.createEmployee("Bob", "Builder"));
             List<Employee> employeeList = new ArrayList<>(List.of(e1, e2));
-            facade.setAssignedEmployees(task.getTaskId(), employeeList);
+            taskFacade.setAssignedEmployees(task.getTaskId(), employeeList);
 
-            facade.setAssignedEmployees(task.getTaskId(), employeeList);
+            taskFacade.setAssignedEmployees(task.getTaskId(), employeeList);
 
-            Task resultTask = facade.getTaskById(task.getTaskId());
+            Task resultTask = taskFacade.getTaskById(task.getTaskId());
             List<Employee> assigned = resultTask.getAssignedEmployees();
 
             assertEquals(2, assigned.size());
@@ -217,16 +226,16 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Verify that setting a new list overwrites existing assignments")
         void testSetAssignedEmployeesOverwrite() {
-            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
-            Employee oldEmp = facade.saveEmployee(facade.createEmployee("Old", "Employee"));
-            facade.assignEmployeeToTask(task.getTaskId(), oldEmp.getWorkerId());
+            Task task = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            Employee oldEmp = employeeFacade.saveEmployee(employeeFacade.createEmployee("Old", "Employee"));
+            taskFacade.assignEmployeeToTask(task.getTaskId(), oldEmp.getWorkerId());
 
-            Employee newEmp = facade.saveEmployee(facade.createEmployee("New", "Employee"));
+            Employee newEmp = employeeFacade.saveEmployee(employeeFacade.createEmployee("New", "Employee"));
             List<Employee> newList = new ArrayList<>(List.of(newEmp));
 
-            facade.setAssignedEmployees(task.getTaskId(), newList);
+            taskFacade.setAssignedEmployees(task.getTaskId(), newList);
 
-            Task resultTask = facade.getTaskById(task.getTaskId());
+            Task resultTask = taskFacade.getTaskById(task.getTaskId());
             assertEquals(1, resultTask.getAssignedEmployees().size());
 
             assertFalse(resultTask.getAssignedEmployees().stream()
@@ -240,12 +249,12 @@ public class TaskIntegrationTest {
         @DisplayName("Should throw exception when the employee list is null")
         @SuppressWarnings("ConstantConditions")
         void testSetAssignedEmployeesValidationNullList() {
-            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Task task = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
 
             List<Employee> nullList = null;
 
             assertThrows(IllegalArgumentException.class, () ->
-                    facade.setAssignedEmployees(task.getTaskId(), nullList)
+                    taskFacade.setAssignedEmployees(task.getTaskId(), nullList)
             );
         }
 
@@ -255,13 +264,13 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Should throw exception when the list contains null elements")
         void testSetAssignedEmployeesValidationNullElements() {
-            Task task = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Task task = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
 
             List<Employee> listWithNull = new java.util.ArrayList<>();
             listWithNull.add(null);
 
             assertThrows(IllegalArgumentException.class, () ->
-                    facade.setAssignedEmployees(task.getTaskId(), listWithNull)
+                    taskFacade.setAssignedEmployees(task.getTaskId(), listWithNull)
             );
         }
     }
@@ -275,17 +284,17 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Verify bidirectional consistency between Task and Employee")
         void testBidirectionalConsistency() {
-            Employee employee = facade.createEmployee("Mario", "Rossi");
-            employee = facade.saveEmployee(employee);
-            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
+            Employee employee = employeeFacade.createEmployee("Mario", "Rossi");
+            employee = employeeFacade.saveEmployee(employee);
+            Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
 
-            facade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
+            taskFacade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
 
-            assertTrue(facade.getTaskById(t.getTaskId()).getAssignedEmployees().contains(employee));
+            assertTrue(taskFacade.getTaskById(t.getTaskId()).getAssignedEmployees().contains(employee));
             assertTrue(employee.getTasks().stream().anyMatch(task -> task.getTaskId().equals(t.getTaskId())));
 
-            facade.removeEmployeeToTask(t.getTaskId(), employee.getWorkerId());
-            assertFalse(facade.getTaskById(t.getTaskId()).getAssignedEmployees().contains(employee));
+            taskFacade.removeEmployeeToTask(t.getTaskId(), employee.getWorkerId());
+            assertFalse(taskFacade.getTaskById(t.getTaskId()).getAssignedEmployees().contains(employee));
         }
     }
 
@@ -297,14 +306,14 @@ public class TaskIntegrationTest {
          */
         @Test
         void testFiltersAndCounts() {
-            facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
 
-            assertEquals(2, facade.countTasksByState(TaskState.STARTED));
-            assertEquals(3, facade.getAllTasks().size());
+            assertEquals(2, taskFacade.countTasksByState(TaskState.STARTED));
+            assertEquals(3, taskFacade.getAllTasks().size());
 
-            List<Task> startedTasks = facade.getTasksByState(TaskState.TO_BE_STARTED);
+            List<Task> startedTasks = taskFacade.getTasksByState(TaskState.TO_BE_STARTED);
             assertEquals(1, startedTasks.size());
         }
 
@@ -313,12 +322,12 @@ public class TaskIntegrationTest {
          */
         @Test
         void testSearchByEmployee() {
-            Employee employee = facade.createEmployee("Anna", "Verdi");
-            employee = facade.saveEmployee(employee);
-            Task t = facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
+            Employee employee = employeeFacade.createEmployee("Anna", "Verdi");
+            employee = employeeFacade.saveEmployee(employee);
+            Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            taskFacade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
 
-            List<Task> tasksAnna = facade.getTasksByEmployee(employee);
+            List<Task> tasksAnna = taskFacade.getTasksByEmployee(employee);
             assertEquals(1, tasksAnna.size());
             assertEquals(t.getTaskId(), tasksAnna.getFirst().getTaskId());
         }
@@ -328,19 +337,19 @@ public class TaskIntegrationTest {
          */
         @Test
         void testComplexAndUnassignedTasks() {
-            Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
-            Employee employee1 = facade.createEmployee("D1", "C1");
-            employee1 = facade.saveEmployee(employee1);
-            Employee employee2 = facade.createEmployee("D2", "C2");
-            employee2 = facade.saveEmployee(employee2);
+            Task t1 = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            Employee employee1 = employeeFacade.createEmployee("D1", "C1");
+            employee1 = employeeFacade.saveEmployee(employee1);
+            Employee employee2 = employeeFacade.createEmployee("D2", "C2");
+            employee2 = employeeFacade.saveEmployee(employee2);
 
-            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
-            facade.assignEmployeeToTask(t1.getTaskId(), employee2.getWorkerId());
+            taskFacade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
+            taskFacade.assignEmployeeToTask(t1.getTaskId(), employee2.getWorkerId());
 
-            List<Task> complexTasks = facade.getComplexTasks(1);
+            List<Task> complexTasks = taskFacade.getComplexTasks(1);
             assertTrue(complexTasks.contains(t1));
 
-            List<Task> unassignedTasks = facade.getUnsignedTasks();
+            List<Task> unassignedTasks = taskFacade.getUnsignedTasks();
             assertFalse(unassignedTasks.contains(t1));
         }
     }
@@ -354,15 +363,15 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Test query for state with at least one employee")
         void testFindTasksByStateWithEMVNmployees() {
-            Task t1 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-            Employee employee1 = facade.createEmployee("Test", "User");
-            employee1 = facade.saveEmployee(employee1);
-            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
+            Task t1 = taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
+            Employee employee1 = employeeFacade.createEmployee("Test", "User");
+            employee1 = employeeFacade.saveEmployee(employee1);
+            taskFacade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
 
-            Task t2 = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
-            facade.assignEmployeeToTask(t2.getTaskId(), employee1.getWorkerId());
+            Task t2 = taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
+            taskFacade.assignEmployeeToTask(t2.getTaskId(), employee1.getWorkerId());
 
-            List<Task> result = facade.findTasksByStateWithEmployee(TaskState.TO_BE_STARTED);
+            List<Task> result = taskFacade.findTasksByStateWithEmployee(TaskState.TO_BE_STARTED);
 
             assertEquals(2, result.size());
             assertEquals(t1.getTaskId(), result.getFirst().getTaskId());
@@ -374,16 +383,16 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Test employee count for a specific Task ID")
         void testCountEmployeesByTaskId() {
-            Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
-            Employee employee1 = facade.createEmployee("D1", "C1");
-            employee1 = facade.saveEmployee(employee1);
-            Employee employee2 = facade.createEmployee("D2", "C2");
-            employee2 = facade.saveEmployee(employee2);
+            Task t1 = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            Employee employee1 = employeeFacade.createEmployee("D1", "C1");
+            employee1 = employeeFacade.saveEmployee(employee1);
+            Employee employee2 = employeeFacade.createEmployee("D2", "C2");
+            employee2 = employeeFacade.saveEmployee(employee2);
 
-            facade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
-            facade.assignEmployeeToTask(t1.getTaskId(), employee2.getWorkerId());
+            taskFacade.assignEmployeeToTask(t1.getTaskId(), employee1.getWorkerId());
+            taskFacade.assignEmployeeToTask(t1.getTaskId(), employee2.getWorkerId());
 
-            Integer count = facade.countEmployeeByTaskId(t1.getTaskId());
+            Integer count = taskFacade.countEmployeeByTaskId(t1.getTaskId());
             assertEquals(2, count);
         }
 
@@ -393,12 +402,12 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Test search by state and exact number of employees")
         void testFindTasksByStateAndEmployeesCount() {
-            Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
-            Employee employee = facade.createEmployee("Solo", "User");
-            employee = facade.saveEmployee(employee);
-            facade.assignEmployeeToTask(t1.getTaskId(), employee.getWorkerId());
+            Task t1 = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            Employee employee = employeeFacade.createEmployee("Solo", "User");
+            employee = employeeFacade.saveEmployee(employee);
+            taskFacade.assignEmployeeToTask(t1.getTaskId(), employee.getWorkerId());
 
-            List<Task> result = facade.findTasksByStateAndCountEmployee(TaskState.STARTED, 1);
+            List<Task> result = taskFacade.findTasksByStateAndCountEmployee(TaskState.STARTED, 1);
             assertEquals(1, result.size());
             assertTrue(result.contains(t1));
         }
@@ -409,13 +418,13 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Test task search by Team ID")
         void testFindTasksByTeamId() {
-            Supervisor s = facade.saveSupervisor(facade.createSupervisor("Boss", "Generale"));
+            Supervisor s = supervisorFacade.saveSupervisor(supervisorFacade.createSupervisor("Boss", "Generale"));
 
-            Team team = facade.saveTeam(facade.createTeam(s));
-            Task t1 = facade.saveTask(facade.createTask(TaskState.STARTED));
-            facade.addTaskToTeam(team, t1);
+            Team team = teamFacade.saveTeam(teamFacade.createTeam(s));
+            Task t1 = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
+            teamFacade.addTaskToTeam(team, t1);
 
-            List<Task> tasksDelTeam = facade.findTasksByTeamId(team.getTeamId());
+            List<Task> tasksDelTeam = taskFacade.findTasksByTeamId(team.getTeamId());
             assertFalse(tasksDelTeam.isEmpty());
             assertEquals(t1.getTaskId(), tasksDelTeam.getFirst().getTaskId());
         }
@@ -430,19 +439,19 @@ public class TaskIntegrationTest {
         @Test
         @DisplayName("Verify that POJO prevents inconsistent dates")
         void testInconsistentDateValidation() {
-            Task t = facade.saveTask(facade.createTask(TaskState.TO_BE_STARTED));
+            Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.TO_BE_STARTED));
             LocalDateTime today = LocalDateTime.now();
 
-            assertEquals(today, facade.setTaskEndDate(t.getTaskId(), today).getEndDate());
+            assertEquals(today, taskFacade.setTaskEndDate(t.getTaskId(), today).getEndDate());
 
             assertThrows(IllegalArgumentException.class, () ->
-                    facade.setTaskStartDate(t.getTaskId(), today.plusDays(1))
+                    taskFacade.setTaskStartDate(t.getTaskId(), today.plusDays(1))
             );
 
-            assertEquals(today, facade.setTaskStartDate(t.getTaskId(), today).getStartDate());
+            assertEquals(today, taskFacade.setTaskStartDate(t.getTaskId(), today).getStartDate());
 
             assertThrows(IllegalArgumentException.class, () ->
-                    facade.setTaskEndDate(t.getTaskId(), today.minusDays(1))
+                    taskFacade.setTaskEndDate(t.getTaskId(), today.minusDays(1))
             );
         }
     }

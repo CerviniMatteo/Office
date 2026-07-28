@@ -3,7 +3,7 @@ package com.unimib.backend.controller;
 import com.unimib.backend.DTO.ChatEmployeePair;
 import com.unimib.backend.DTO.ChatInfoDTO;
 import com.unimib.backend.DTO.UserInfoDTO;
-import com.unimib.backend.facade.Facade;
+import com.unimib.backend.facade.ChatFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/chats")
 public class ChatController {
     @Autowired
-    Facade facade;
+    ChatFacade facade;
 
     @GetMapping("/chatIds/{employeeId}")
     public List<ChatInfoDTO> getChats(@PathVariable Long employeeId) {

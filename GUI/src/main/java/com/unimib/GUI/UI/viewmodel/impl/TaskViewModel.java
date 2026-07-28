@@ -6,7 +6,7 @@ import com.unimib.GUI.model.dto.AcceptTaskRequestDTO;
 import com.unimib.GUI.model.dto.ChangeTaskStateRequestDTO;
 import com.unimib.GUI.model.dto.StartTaskRequestDTO;
 import com.unimib.GUI.model.dto.TaskDTO;
-import com.unimib.GUI.repository.TaskCardRepository;
+import com.unimib.GUI.UI.repository.TaskCardRepository;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

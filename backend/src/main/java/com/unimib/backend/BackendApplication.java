@@ -2,9 +2,11 @@ package com.unimib.backend;
 
 import com.unimib.backend.POJO.Employee;
 import com.unimib.backend.POJO.Task;
-import com.unimib.backend.POJO.UserChatMapping;
+import com.unimib.backend.POJO.WorkerChatMapping;
 import com.unimib.backend.enums.TaskState;
-import com.unimib.backend.facade.Facade;
+import com.unimib.backend.facade.ChatFacade;
+import com.unimib.backend.facade.EmployeeFacade;
+import com.unimib.backend.facade.TaskFacade;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,33 +32,33 @@ public class BackendApplication {
 
     @Bean
     @Profile("test")
-    CommandLineRunner loadFakeData(Facade facade) {
+    CommandLineRunner loadFakeData(TaskFacade taskFacade, EmployeeFacade employeeFacade, ChatFacade chatFacade) {
         return args -> {
 
             LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
 
-            List<Task> tasks = generatePlaceholderTasks(facade, monday);
+            List<Task> tasks = generatePlaceholderTasks(taskFacade, monday);
 
             List<Employee> employees = List.of(
-                    createEmployee(facade, "Matteo", "Cervini", BASE64_IMAGE_1),
-                    createEmployee(facade, "Marco", "Rossi", BASE64_IMAGE_2),
-                    createEmployee(facade, "Luca", "Verdi", BASE64_IMAGE_3)
+                    createEmployee(employeeFacade, "Matteo", "Cervini", BASE64_IMAGE_1),
+                    createEmployee(employeeFacade, "Marco", "Rossi", BASE64_IMAGE_2),
+                    createEmployee(employeeFacade, "Luca", "Verdi", BASE64_IMAGE_3)
             );
 
-            UserChatMapping userChatMapping1 = facade.createChat(employees.getFirst().getWorkerId());
-            userChatMapping1 = facade.saveChat(userChatMapping1);
-            UserChatMapping userChatMapping2 = facade.createChat(employees.get(1).getWorkerId());
-            userChatMapping2 = facade.saveChat(userChatMapping2);
-            UserChatMapping userChatMapping3 = facade.createChat(employees.getLast().getWorkerId());
-            userChatMapping3 = facade.saveChat(userChatMapping3);
+            WorkerChatMapping workerChatMapping1 = chatFacade.createChat(employees.getFirst().getWorkerId());
+            workerChatMapping1 = chatFacade.saveChat(workerChatMapping1);
+            WorkerChatMapping workerChatMapping2 = chatFacade.createChat(employees.get(1).getWorkerId());
+            workerChatMapping2 = chatFacade.saveChat(workerChatMapping2);
+            WorkerChatMapping workerChatMapping3 = chatFacade.createChat(employees.getLast().getWorkerId());
+            workerChatMapping3 = chatFacade.saveChat(workerChatMapping3);
 
-            facade.bindChat(userChatMapping1.getUserId(), userChatMapping3.getUserId());
+            chatFacade.bindChat(workerChatMapping1.getUserId(), workerChatMapping3.getUserId());
 
             System.out.println("Loaded " + tasks.size() + " tasks and " + employees.size() + " employees.");
         };
     }
 
-    private List<Task> generatePlaceholderTasks(Facade facade, LocalDate monday) {
+    private List<Task> generatePlaceholderTasks(TaskFacade taskFacade, LocalDate monday) {
 
         List<String> descriptions = List.of(
                 "Design the project architecture",
@@ -73,100 +75,41 @@ public class BackendApplication {
 
         List<Task> tasks = new ArrayList<>();
 
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(0),
-                monday.atTime(8, 0),
-                monday.atTime(11, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(1),
-                monday.atTime(12, 0),
-                monday.atTime(17, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(2),
-                monday.plusDays(1).atTime(8, 0),
-                monday.plusDays(1).atTime(11, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(3),
-                monday.plusDays(1).atTime(12, 0),
-                monday.plusDays(1).atTime(17, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(4),
-                monday.plusDays(2).atTime(8, 0),
-                monday.plusDays(2).atTime(11, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(5),
-                monday.plusDays(2).atTime(12, 0),
-                monday.plusDays(2).atTime(17, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(6),
-                monday.plusDays(3).atTime(8, 0),
-                monday.plusDays(3).atTime(11, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(7),
-                monday.plusDays(3).atTime(12, 0),
-                monday.plusDays(3).atTime(17, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(8),
-                monday.plusDays(4).atTime(8, 0),
-                monday.plusDays(4).atTime(11, 30)
-        ));
-
-        tasks.add(createAndSaveTask(
-                facade,
-                descriptions.get(9),
-                monday.plusDays(4).atTime(12, 0),
-                monday.plusDays(4).atTime(17, 30)
-        ));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(0), monday.atTime(8, 0), monday.atTime(11, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(1), monday.atTime(12, 0), monday.atTime(17, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(2), monday.plusDays(1).atTime(8, 0), monday.plusDays(1).atTime(11, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(3), monday.plusDays(1).atTime(12, 0), monday.plusDays(1).atTime(17, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(4), monday.plusDays(2).atTime(8, 0), monday.plusDays(2).atTime(11, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(5), monday.plusDays(2).atTime(12, 0), monday.plusDays(2).atTime(17, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(6), monday.plusDays(3).atTime(8, 0), monday.plusDays(3).atTime(11, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(7), monday.plusDays(3).atTime(12, 0), monday.plusDays(3).atTime(17, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(8), monday.plusDays(4).atTime(8, 0), monday.plusDays(4).atTime(11, 30)));
+        tasks.add(createAndSaveTask(taskFacade, descriptions.get(9), monday.plusDays(4).atTime(12, 0), monday.plusDays(4).atTime(17, 30)));
 
         return tasks;
     }
 
     private Task createAndSaveTask(
-            Facade facade,
+            TaskFacade taskFacade,
             String description,
             LocalDateTime startDateTime,
             LocalDateTime endDateTime
     ) {
-        Task task = facade.createTask(TaskState.TO_BE_STARTED);
+        Task task = taskFacade.createTask(TaskState.TO_BE_STARTED);
         task.setDescription(description);
         task.setStartDate(startDateTime);
         task.setEndDate(endDateTime);
-        return facade.saveTask(task);
+        return taskFacade.saveTask(task);
     }
 
     private Employee createEmployee(
-            Facade facade,
+            EmployeeFacade employeeFacade,
             String firstName,
             String lastName,
             String avatarBase64
     ) {
-        return facade.saveEmployee(
-                facade.createEmployee(firstName, lastName, avatarBase64)
+        return employeeFacade.saveEmployee(
+                employeeFacade.createEmployee(firstName, lastName, avatarBase64)
         );
     }
 }

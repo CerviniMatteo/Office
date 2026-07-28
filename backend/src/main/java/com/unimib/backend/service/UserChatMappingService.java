@@ -2,7 +2,7 @@ package com.unimib.backend.service;
 
 import com.unimib.backend.DTO.ChatInfoDTO;
 import com.unimib.backend.DTO.UserInfoDTO;
-import com.unimib.backend.POJO.UserChatMapping;
+import com.unimib.backend.POJO.WorkerChatMapping;
 import com.unimib.backend.repository.UserChatMappingRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,10 @@ public class UserChatMappingService {
     @Autowired
     private UserChatMappingRepository userChatMappingRepository;
 
-    public UserChatMapping createChat(@NonNull Long userId) {
+    public WorkerChatMapping createChat(@NonNull Long userId) {
         assertNotNull(userId, "User id cannot be null");
 
-        UserChatMapping mapping = new UserChatMapping();
+        WorkerChatMapping mapping = new WorkerChatMapping();
         mapping.setUserId(userId);
         mapping.setRoomIds(new ArrayList<>());
 
@@ -35,17 +35,17 @@ public class UserChatMappingService {
 
         long roomId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
 
-        UserChatMapping userChatMapping1 = userChatMappingRepository.findById(userId1)
+        WorkerChatMapping workerChatMapping1 = userChatMappingRepository.findById(userId1)
                 .orElseThrow(() -> new IllegalArgumentException("User mapping not found for id: " + userId1));
-        UserChatMapping userChatMapping2 = userChatMappingRepository.findById(userId2)
+        WorkerChatMapping workerChatMapping2 = userChatMappingRepository.findById(userId2)
                 .orElseThrow(() -> new IllegalArgumentException("User mapping not found for id: " + userId2));
 
-        userChatMapping1.setRoomId(roomId);
-        userChatMapping2.setRoomId(roomId);
+        workerChatMapping1.setRoomId(roomId);
+        workerChatMapping2.setRoomId(roomId);
     }
 
 
-    public UserChatMapping saveChat(@NonNull UserChatMapping mapping) {
+    public WorkerChatMapping saveChat(@NonNull WorkerChatMapping mapping) {
         assertNotNull(mapping, "UserChatMapping cannot be null");
         return userChatMappingRepository.saveAndFlush(mapping);
     }

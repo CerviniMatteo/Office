@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
     @Entity
-public class UserChatMapping {
+public class WorkerChatMapping {
 
     @Id
     private Long userId;
@@ -15,7 +15,7 @@ public class UserChatMapping {
     @ElementCollection
     private List<Long> roomIds;
 
-    public UserChatMapping() {
+    public WorkerChatMapping() {
         roomIds = new ArrayList<>();
     }
 

@@ -1,7 +1,7 @@
 package com.unimib.GUI.UI.view.controller.impl.base;
 
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
-import com.unimib.GUI.model.dto.UserInfoDTO;
+import com.unimib.GUI.model.dto.WorkerInfoDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,7 +16,7 @@ public class UnmatchedEmployeeBarController implements DefaultController {
     @FXML
     private Button createButton;
 
-    private UserInfoDTO userInfo;
+    private WorkerInfoDTO userInfo;
     private Consumer<Long> onCreateClickListener;
 
     @FXML
@@ -28,7 +28,7 @@ public class UnmatchedEmployeeBarController implements DefaultController {
         });
     }
 
-    public void setUserData(UserInfoDTO userInfo) {
+    public void setUserData(WorkerInfoDTO userInfo) {
         this.userInfo = userInfo;
         if (employeeDetailsLabel != null && userInfo != null) {
             employeeDetailsLabel.setText(userInfo.personalDetails());
@@ -39,7 +39,7 @@ public class UnmatchedEmployeeBarController implements DefaultController {
         this.onCreateClickListener = listener;
     }
 
-    public UserInfoDTO getUserInfo() {
+    public WorkerInfoDTO getUserInfo() {
         return userInfo;
     }
 }
