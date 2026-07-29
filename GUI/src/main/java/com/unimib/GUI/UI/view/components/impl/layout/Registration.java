@@ -6,11 +6,16 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 
 public class Registration extends VBox {
+    RegistrationController controller;
     public Registration() {
         super(8);
 
-        RegistrationController controller = new RegistrationController();
+        controller = new RegistrationController();
         FXMLUtilLoader.load(this, controller, "/components/Registration.fxml", "");
         setAlignment(Pos.CENTER);
+    }
+
+    public RegistrationController getController() {
+        return controller;
     }
 }

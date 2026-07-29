@@ -1,4 +1,5 @@
 package com.unimib.GUI;
+import com.unimib.GUI.UI.view.components.impl.layout.Auth;
 import com.unimib.GUI.UI.view.components.impl.layout.Login;
 import com.unimib.GUI.UI.state.ApplicationStateManager;
 import javafx.application.Application;
@@ -48,7 +49,7 @@ public class FxApplication extends Application {
         System.out.println("[DEBUG] Scene stylesheets: " + scene.getStylesheets());
 
         ApplicationStateManager stateManager = ApplicationStateManager.getInstance(this);
-        stateManager.replaceWindow(new Login());
+        stateManager.replaceWindow(new Auth());
 
         // Add mouse back/forward buttons handler: map mouse BACK/FORWARD to app navigation
         scene.addEventHandler(MouseEvent.MOUSE_PRESSED, ev -> {

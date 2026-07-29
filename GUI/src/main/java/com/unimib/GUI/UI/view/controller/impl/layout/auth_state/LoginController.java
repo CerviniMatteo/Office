@@ -18,12 +18,19 @@ public class LoginController extends AuthController {
     @FXML
     private Button submitButton;
 
+    @FXML
+    private Button goToRegisterButton;
+
     private AuthViewModel viewModel;
 
+    private Runnable switchToRegistration;
+
+    public void setSwitchToRegistration(Runnable switchToRegistration) {
+        this.switchToRegistration = switchToRegistration;
+    }
 
     @FXML
     private void initialize() {
-
         viewModel = new AuthViewModel();
 
         observeState(
@@ -39,7 +46,6 @@ public class LoginController extends AuthController {
                 this::showError
         );
 
-
         if (inputForm != null) {
             inputForm.setText("matteo.cervini@example.com");
         }
@@ -49,8 +55,15 @@ public class LoginController extends AuthController {
                     _ -> handleSubmit(inputForm)
             );
         }
-    }
 
+        goToRegisterButton.setOnAction(
+                _ -> {
+                    if (switchToRegistration != null) {
+                        switchToRegistration.run();
+                    }
+                }
+        );
+    }
 
     private void handleSubmit(TextField input) {
 

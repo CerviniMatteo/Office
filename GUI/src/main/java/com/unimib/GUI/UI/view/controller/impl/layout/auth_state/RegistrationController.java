@@ -11,11 +11,10 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Base64;
 
 import static com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils.setVisible;
+import static com.unimib.GUI.UI.view.utils.FileUtils.setUpFileChooser;
+import static com.unimib.GUI.UI.view.utils.WorkerImageUtils.encodeFileAsBase64;
 
 public class RegistrationController extends AuthController {
 
@@ -24,6 +23,9 @@ public class RegistrationController extends AuthController {
 
     @FXML
     private TextField surnameField;
+
+    @FXML
+    private TextField imageUrlField;
 
     @FXML
     private Button chooseImageButton;
@@ -37,13 +39,19 @@ public class RegistrationController extends AuthController {
     @FXML
     private ImageView profileImageView;
 
-    private File selectedImage;
+    @FXML
+    private Button goToLoginButton;
 
     private AuthViewModel viewModel;
+    private Runnable switchToLogin;
+    private String selectedImageBase64;
+
+    public void setSwitchToLogin(Runnable switchToLogin) {
+        this.switchToLogin = switchToLogin;
+    }
 
     @FXML
     private void initialize() {
-
         profileImageView.setFitWidth(120);
         profileImageView.setFitHeight(120);
         profileImageView.setPreserveRatio(true);
@@ -57,6 +65,7 @@ public class RegistrationController extends AuthController {
                         showSuccess("Registration successful!" +
                                 "\nSave the email written below" +
                                 "\nEmail: " + workerDTO.email());
+
                         saveEmployeeId(workerDTO.workerId());
                         goToTaskContainer();
                     } else {
@@ -67,67 +76,53 @@ public class RegistrationController extends AuthController {
 
         chooseImageButton.setOnAction(event -> handleChooseImage());
         submitButton.setOnAction(event -> handleSubmit());
+
+        goToLoginButton.setOnAction(_ -> {
+            if (switchToLogin != null) {
+                switchToLogin.run();
+            }
+        });
     }
 
     private void handleChooseImage() {
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Profile Picture");
 
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(
-                        "Image Files",
-                        "*.png",
-                        "*.jpg",
-                        "*.jpeg",
-                        "*.webp"
-                )
-        );
+        setUpFileChooser(fileChooser);
 
-        File file = fileChooser.showOpenDialog(
-                chooseImageButton.getScene().getWindow()
-        );
+        try {
+            selectedImageBase64 = encodeFileAsBase64(fileChooser.showOpenDialog(
+                    chooseImageButton.getScene().getWindow()));
 
-        if (file == null) {
-            return;
+            Image image = new Image(fileChooser.showOpenDialog(
+                    chooseImageButton.getScene().getWindow()).toURI().toString());
+
+            profileImageView.setImage(image);
+            setVisible(true, profileImageView);
+            selectedImageLabel.setText("Image selected");
+
+        } catch (RuntimeException e) {
+            selectedImageBase64 = null;
+            showError(e.getMessage());
         }
-
-        selectedImage = file;
-
-        Image image = new Image(selectedImage.toURI().toString());
-
-        if (image.isError()) {
-            showError("Error occurred while loading the image");
-            return;
-        }
-
-        profileImageView.setImage(image);
-        setVisible(true, profileImageView);
-        selectedImageLabel.setText("Image has been selected");
-        selectedImageLabel.getStyleClass().add("section-title");
     }
 
     private void handleSubmit() {
-
         if (!validate(nameField, "Name is required")) {
             return;
         }
+
         if (!validate(surnameField, "Surname is required")) {
             return;
         }
-        if (!validate(selectedImage, "Please select a profile picture")) {
+
+        if (!validate(selectedImageBase64, "Please select a profile picture")) {
             return;
         }
 
         String name = nameField.getText().trim();
         String surname = surnameField.getText().trim();
 
-        try {
-            byte[] fileBytes = Files.readAllBytes(selectedImage.toPath());
-            String encodedImage = Base64.getEncoder().encodeToString(fileBytes);
-            viewModel.signup(name, surname, encodedImage);
-        } catch (IOException e) {
-            showError("Failed to read selected image file");
-        }
+        viewModel.signup(name, surname, selectedImageBase64);
     }
 }

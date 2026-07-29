@@ -11,46 +11,58 @@
          spacing="20">
 
     <StackPane fx:id="rootStack"
-               maxWidth="500"
-               prefHeight="300"
+               prefWidth="650"
+               maxWidth="650"
+               prefHeight="600"
                styleClass="design-rectangle">
 
         <VBox alignment="CENTER"
-              prefWidth="420"
-              maxWidth="420"
-              spacing="12"
+              spacing="15"
+              prefWidth="550"
+              maxWidth="550"
               fillWidth="false">
 
-            <Label
-                    text="INSERT YOUR INFORMATION"
-                    styleClass="insert-text-lbl"/>
+            <Label text="INSERT YOUR INFORMATION"
+                   styleClass="insert-text-lbl"
+                   wrapText="true"
+                   prefWidth="550"
+                   alignment="CENTER"/>
 
-            <Label
-                    text="NAME"
-                    styleClass="section-title"/>
+            <Label text="NAME"
+                   styleClass="section-title"
+                   prefWidth="450"/>
 
             <TextField fx:id="nameField"
                        promptText="Enter your name"
-                       styleClass="input-form"/>
+                       styleClass="input-form"
+                       prefWidth="450"
+                       maxWidth="450"/>
 
-            <Label
-                    text="SURNAME"
-                    styleClass="section-title"/>
+            <Label text="SURNAME"
+                   styleClass="section-title"
+                   prefWidth="450"/>
 
             <TextField fx:id="surnameField"
                        promptText="Enter your surname"
-                       styleClass="input-form"/>
+                       styleClass="input-form"
+                       prefWidth="450"
+                       maxWidth="450"/>
 
-            <Label
-                    text="CHOOSE YOUR PROFILE PICTURE"
-                    styleClass="section-title"/>
+            <Label text="CHOOSE YOUR PROFILE PICTURE"
+                   styleClass="section-title"
+                   prefWidth="450"
+                   wrapText="true"/>
 
             <Button fx:id="chooseImageButton"
                     text="Choose Image"
-                    styleClass="styled-btn"/>
+                    styleClass="styled-btn"
+                    prefWidth="450"
+                    prefHeight="40"/>
 
             <Label fx:id="selectedImageLabel"
-                   text="No image selected"/>
+                   text="No image selected"
+                   prefWidth="450"
+                   alignment="CENTER"/>
 
             <ImageView fx:id="profileImageView"
                        fitWidth="120"
@@ -58,12 +70,23 @@
                        preserveRatio="true"/>
 
             <Button fx:id="submitButton"
-                    text="SUBMIT"
-                    prefWidth="220"
-                    prefHeight="40"
-                    styleClass="styled-btn"/>
+                    text="CREATE ACCOUNT"
+                    styleClass="styled-btn"
+                    prefWidth="450"
+                    prefHeight="40"/>
+
+            <HBox alignment="CENTER">
+                <Separator prefWidth="450" maxWidth="450"/>
+            </HBox>
+
+            <Button fx:id="goToLoginButton"
+                    text="Already have an account? Login"
+                    styleClass="styled-btn-black"
+                    prefWidth="450"
+                    prefHeight="40"/>
 
         </VBox>
+
     </StackPane>
 
 </fx:root>

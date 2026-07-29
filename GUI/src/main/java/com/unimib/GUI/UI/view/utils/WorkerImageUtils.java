@@ -1,8 +1,13 @@
 package com.unimib.GUI.UI.view.utils;
 
 import com.unimib.GUI.utils.ImageHelper;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.Map;
 
 /**
@@ -41,6 +46,17 @@ public final class WorkerImageUtils {
             }
             GridHelper.addImageBase64(workersGrid, entry.getValue(), imageHelper, size, 3);
         }
+    }
+
+    public static String encodeFileAsBase64(File file) {
+        Image image = new Image(file.toURI().toString());
+
+        if (image.isError()) {
+            throw new RuntimeException("Error occurred while loading image");
+        }
+
+        return Base64.getEncoder()
+                .encodeToString(FileUtils.readBytes(file));
     }
 }
 

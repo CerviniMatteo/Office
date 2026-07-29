@@ -1,52 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <fx:root type="javafx.scene.layout.VBox"
          xmlns="http://javafx.com/javafx/21"
          xmlns:fx="http://javafx.com/fxml/1"
-         spacing="20"
-         alignment="CENTER">
+         alignment="CENTER"
+         spacing="20">
 
-    <StackPane fx:id="rootStack" maxWidth="500" prefHeight="300" styleClass="design-rectangle" StackPane.alignment="CENTER">
+    <StackPane fx:id="rootStack"
+               prefWidth="650"
+               maxWidth="650"
+               prefHeight="600"
+               styleClass="design-rectangle">
 
         <VBox alignment="CENTER"
-              prefWidth="426"
-              maxWidth="500">
+              spacing="18"
+              prefWidth="550"
+              maxWidth="550"
+              fillWidth="false">
 
             <Label fx:id="insertEmailLabel"
                    text="INSERT YOUR EMAIL TO LOGIN"
                    styleClass="insert-text-lbl"
                    wrapText="true"
-                   alignment="CENTER"
-                   maxWidth="Infinity"
-                   prefWidth="Infinity"/>
+                   prefWidth="550"
+                   alignment="CENTER"/>
 
-            <Region prefHeight="20"/>
+            <Region prefHeight="10"/>
 
             <TextField fx:id="inputForm"
                        promptText="Enter your email"
                        styleClass="input-form"
-                       maxWidth="Infinity"
-                       prefWidth="Infinity">
-                <VBox.margin>
-                    <Insets left="10" right="10"/>
-                </VBox.margin>
-            </TextField>
-
-            <Region prefHeight="30"/>
+                       prefWidth="440"
+                       maxWidth="440"/>
 
             <Button fx:id="submitButton"
-                    text="SUBMIT"
+                    text="LOGIN"
                     styleClass="styled-btn"
-                    prefWidth="200"
-                    prefHeight="36"/>
+                    prefWidth="440"
+                    prefHeight="40"/>
+
+            <HBox alignment="CENTER">
+                <Separator prefWidth="450" maxWidth="450"/>
+            </HBox>
+
+            <Button fx:id="goToRegisterButton"
+                    text="Create an account"
+                    styleClass="styled-btn-black"
+                    prefWidth="440"
+                    prefHeight="40"/>
+
         </VBox>
 
     </StackPane>
