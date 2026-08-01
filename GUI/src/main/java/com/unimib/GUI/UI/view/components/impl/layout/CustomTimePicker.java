@@ -6,7 +6,6 @@ import com.unimib.GUI.UI.view.utils.FXMLUtilLoader;
 import javafx.scene.layout.HBox;
 
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class CustomTimePicker extends HBox {
 
@@ -19,13 +18,7 @@ public class CustomTimePicker extends HBox {
                 this,
                 controller,
                 "/components/TimePicker.fxml",
-                null
-        );
-
-        getStylesheets().add(
-                Objects.requireNonNull(
-                        getClass().getResource("/styles/app.css")
-                ).toExternalForm()
+                "app.css"
         );
     }
 

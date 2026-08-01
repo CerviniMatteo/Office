@@ -28,4 +28,6 @@
             </graphic>
         </Button>
     </HBox>
+    <Region prefHeight="6" prefWidth="0"/>
+    <Pane fx:id="pickerContainer"  minWidth="212" prefWidth="212"/>
 </fx:root>

@@ -5,7 +5,6 @@ import com.unimib.GUI.UI.view.utils.FXMLUtilLoader;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class CustomDatePicker extends VBox {
 
@@ -18,13 +17,7 @@ public class CustomDatePicker extends VBox {
                 this,
                 controller,
                 "/components/DatePicker.fxml",
-                null
-        );
-
-        getStylesheets().add(
-                Objects.requireNonNull(
-                        getClass().getResource("/styles/app.css")
-                ).toExternalForm()
+                "app.css"
         );
     }
 
