@@ -91,11 +91,14 @@ public class RegistrationController extends AuthController {
         setUpFileChooser(fileChooser);
 
         try {
-            selectedImageBase64 = encodeFileAsBase64(fileChooser.showOpenDialog(
-                    chooseImageButton.getScene().getWindow()));
+            File selectedFile = fileChooser.showOpenDialog(chooseImageButton.getScene().getWindow());
 
-            Image image = new Image(fileChooser.showOpenDialog(
-                    chooseImageButton.getScene().getWindow()).toURI().toString());
+            if (selectedFile == null) {
+                return;
+            }
+
+            selectedImageBase64 = encodeFileAsBase64(selectedFile);
+            Image image = new Image(selectedFile.toURI().toString());
 
             profileImageView.setImage(image);
             setVisible(true, profileImageView);
