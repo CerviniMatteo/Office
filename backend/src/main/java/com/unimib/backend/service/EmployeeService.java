@@ -35,66 +35,28 @@ public class EmployeeService {
     @Autowired
     private WorkerRepository workerRepository;
 
-    /**
-     * Save a single employee to the database and handles email uniqueness.
-     *
-     * @param employee the employee to save
-     * @throws IllegalArgumentException if email is not unique and if employee is null
-     * @return the saved employee
-     */
-    public Employee saveEmployee(@NonNull Employee employee) {
-        checkUniqueEmail(employee);
+    public synchronized Employee saveEmployee(@NonNull Employee employee) {
+        return saveWithUniqueEmail(employee, 0);
+    }
+
+    private Employee saveWithUniqueEmail(Employee employee, int attempt) {
+        assertNotNull(employee, NULL_EMPLOYEE);
+        assignEmail(employee);
         try {
             return employeeRepository.saveAndFlush(employee);
         } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException(EMAIL_HAVE_TO_BE_UNIQUE);
-        }
-    }
-
-    /**
-     * Save multiple employees to the database in bulk.
-     *
-     * @param employees list of employees
-     * @throws IllegalArgumentException if the employees list is null
-     * @return list of saved employees
-     */
-    public List<Employee> saveAllEmployees(@NonNull List<Employee> employees) {
-        assertNotNull(employees, NULL_EMPLOYEES);
-
-        List<Employee> savedEmployees = new ArrayList<>();
-
-        for (Employee employee : employees) {
-            checkUniqueEmail(employee);
-
-            try {
-                Employee saved = employeeRepository.saveAndFlush(employee);
-                savedEmployees.add(saved);
-            } catch (DataIntegrityViolationException e) {
                 throw new IllegalArgumentException(EMAIL_HAVE_TO_BE_UNIQUE);
-            }
-        }
-
-        return savedEmployees;
-    }
-
-
-    /**
-     * Ensure the employee's email is unique by appending a counter if necessary.
-     * Keeps {@code plainEmail} and the hashed {@code email} consistent when regenerated.
-     *
-     * @param employee the employee whose email needs to be checked
-     * @throws IllegalArgumentException if the employee is null
-     */
-    private void checkUniqueEmail(Employee employee) {
-        assertNotNull(employee, NULL_EMPLOYEE);
-        int emailCounter = employeeRepository.countEmailsStartingWithEmailPrefix(employee.getName());
-        if (emailCounter != 0) {
-            String newPlainEmail = generateEmail(employee.getName() + emailCounter, employee.getSurname());
-            employee.setPlainEmail(newPlainEmail);
-            employee.setEmail(hashString(newPlainEmail));
         }
     }
 
+    private void assignEmail(Employee employee) {
+        List<String> existingEmails = employeeRepository.findEmailsByNameAndSurname(employee.getName(), employee.getSurname());
+        int suffix = existingEmails.size();
+        if(suffix != 0){
+            employee.setEmail(generateEmail(employee.getName(), employee.getSurname(), suffix));
+            System.out.println("EmailNew: " + employee.getEmail());
+        }
+    }
 
     /**
      * Create a new employee with the given name and surname.

@@ -12,7 +12,7 @@ public class EmployeeDtoMapper {
                 employee.getWorkerId(),
                 employee.getName(),
                 employee.getSurname(),
-                employee.getPlainEmail(),
+                employee.getEmail(),
                 employee.getEncodedImage()
         );
     }

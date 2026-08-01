@@ -152,11 +152,12 @@ public class SupervisorService{
      * @param supervisor the worker whose email needs to be checked
      * @throws IllegalArgumentException if the worker is null
      */
+    //TODO: see duplicate repository method
     private void checkUniqueEmail(Supervisor supervisor) {
         assertNotNull(supervisor, NULL_SUPERVISOR);
-        int emailCounter = supervisorRepository.countEmailsStartingWithEmailPrefix(supervisor.getName());
+        int emailCounter = supervisorRepository.findEmailsByNameAndSurname(supervisor.getName(), supervisor.getSurname()).size();
         if(emailCounter != 0) {
-            supervisor.setEmail(generateEmail(supervisor.getName()+emailCounter, supervisor.getSurname()));
+            supervisor.setEmail(generateEmail(supervisor.getName(), supervisor.getSurname(), emailCounter));
         }
     }
 

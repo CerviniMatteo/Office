@@ -8,8 +8,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import static com.unimib.GUI.UI.view.utils.StringHelper.hashString;
-
 public class AuthViewModel extends BaseViewModel {
 
     private final AuthRepository repository;
@@ -26,7 +24,7 @@ public class AuthViewModel extends BaseViewModel {
 
     public void login(String email) {
         execute(
-                () -> repository.login(hashString(email)),
+                () -> repository.login(email),
                 loginState
         );
     }

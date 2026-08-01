@@ -13,8 +13,4 @@ public class StringHelper {
     public static String localDateTimeFormatter(LocalDateTime dateTime) {
         return dateTime.format(FORMATTER);
     }
-
-    public static String hashString(String str){
-        return DigestUtils.sha256Hex(str);
-    }
 }

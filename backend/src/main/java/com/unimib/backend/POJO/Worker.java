@@ -43,14 +43,6 @@ public abstract class Worker {
     @Column(unique = true)
     private String email;
 
-    /**
-     * Plain-text email, valid only in memory for the lifetime of this instance
-     * right after creation/save, before the persisted {@code email} is hashed.
-     * Never persisted, never returned by {@link #toString()}.
-     */
-    @Transient
-    private transient String plainEmail;
-
     /** Encoded image of the worker in Base64 format. */
     @Column(name = "encoded_image", columnDefinition = "CLOB")
     private String encodedImage;
@@ -77,9 +69,7 @@ public abstract class Worker {
     public Worker(String name, String surname) {
         setName(name);
         setSurname(surname);
-        String email = generateEmail(name, surname);
-        setPlainEmail(email);
-        setEmail(hashString(email));
+        setEmail(generateEmail(name, surname));
     }
 
     /**
@@ -94,9 +84,7 @@ public abstract class Worker {
         setName(name);
         setSurname(surname);
         setEncodedImage(encodedImage);
-        String email = generateEmail(name, surname);
-        setPlainEmail(email);
-        setEmail(hashString(email));
+        setEmail(generateEmail(name, surname));
     }
 
     /**
@@ -146,10 +134,6 @@ public abstract class Worker {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public String getPlainEmail() {return plainEmail;}
-
-    public void setPlainEmail(String plainEmail) {this.plainEmail = plainEmail;}
 
     public String getName() {
         return name;
@@ -221,12 +205,16 @@ public abstract class Worker {
      * @param surname the surname
      * @return the generated email in the format "name.surname@example.com"
      */
-    public static String generateEmail(String name, String surname) {
+    private static String generateEmail(String name, String surname) {
         String email = name.toLowerCase(Locale.ROOT) + "." + surname.toLowerCase(Locale.ROOT) + EMAIL_SUFFIX;
         if (!EmailValidator.getInstance().isValid(email)) {
             throw new IllegalArgumentException(INVALID_EMAIL); // o costante equivalente
         }
         return email;
+    }
+
+    public static String generateEmail(String name, String surname, int suffix) {
+        return generateEmail(name, surname+suffix);
     }
 
     @Override

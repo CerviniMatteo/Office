@@ -88,8 +88,7 @@ public final class FileUtils {
                         "Image Files",
                         "*.png",
                         "*.jpg",
-                        "*.jpeg",
-                        "*.webp"
+                        "*.jpeg"
                 )
         );
     }

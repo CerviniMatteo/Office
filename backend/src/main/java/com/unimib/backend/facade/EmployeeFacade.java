@@ -38,10 +38,7 @@ public class EmployeeFacade {
     public Employee saveEmployee(@NonNull Employee employee) {
         return employeeService.saveEmployee(employee);
     }
-
-    public List<Employee> saveAllEmployees(@NonNull List<Employee> employees) {
-        return employeeService.saveAllEmployees(employees);
-    }
+    
 
     /**
      * Registra un nuovo dipendente: crea, salva, e crea/salva la chat associata.

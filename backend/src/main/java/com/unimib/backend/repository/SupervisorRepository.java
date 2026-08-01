@@ -37,12 +37,15 @@ public interface SupervisorRepository extends JpaRepository<Supervisor, Long> {
     List<Supervisor> findSupervisorWithoutSupervisedTeam();
 
     /**
-     * Counts the number of workers whose email starts with a given prefix.
-     * The comparison is case-insensitive.
+     * Retrieves all emails belonging to workers whose local part starts with "name.surname",
+     * with or without a trailing numeric suffix (e.g. "mario.rossi@..." or "mario.rossi2@...").
+     * The comparison is case-insensitive. The exact match (to exclude unrelated surnames sharing
+     * the same prefix, e.g. "rossi" vs "rossini") is performed by the caller in Java.
      *
-     * @param emailPrefix the email prefix to search for.
-     * @return the count of workers with emails starting with the prefix.
+     * @param name    the exact first name to match.
+     * @param surname the exact surname to match.
+     * @return list of candidate emails matching the "name.surname" prefix.
      */
-    @Query("SELECT COUNT(d) FROM worker d WHERE LOWER(d.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))")
-    int countEmailsStartingWithEmailPrefix(@Param("emailPrefix") String emailPrefix);
+    @Query("SELECT w.email FROM worker w WHERE LOWER(w.email) LIKE LOWER(CONCAT(:name, '.', :surname, '%'))")
+    List<String> findEmailsByNameAndSurname(@Param("name") String name, @Param("surname") String surname);
 }

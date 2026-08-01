@@ -62,6 +62,7 @@
             <Label fx:id="selectedImageLabel"
                    text="No image selected"
                    prefWidth="450"
+                   styleClass="image-label"
                    alignment="CENTER"/>
 
             <ImageView fx:id="profileImageView"

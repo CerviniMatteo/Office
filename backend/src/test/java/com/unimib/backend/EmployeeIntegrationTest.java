@@ -74,11 +74,12 @@ class EmployeeIntegrationTest {
     void shouldFindAllEmployees() {
         Employee e1 = createEmployee(WorkerRole.JUNIOR);
         Employee e2 = createEmployee(WorkerRole.SENIOR_SW_ENGINEER);
-        List<Employee> employees = employeeFacade.saveAllEmployees(List.of(e1, e2));
+        e1 = employeeFacade.saveEmployee(e1);
+        e2 = employeeFacade.saveEmployee(e2);
 
         List<Employee> all = employeeFacade.findAllEmployees();
         assertTrue(all.size() >= 2);
-        assertTrue(all.containsAll(employees));
+        assertTrue(all.containsAll(List.of(e1, e2)));
     }
 
     @Transactional

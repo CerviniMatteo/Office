@@ -103,7 +103,7 @@ public class RegistrationController extends AuthController {
 
         } catch (RuntimeException e) {
             selectedImageBase64 = null;
-            showError(e.getMessage());
+            showError("Image hasn't been successfully selected");
         }
     }
 
