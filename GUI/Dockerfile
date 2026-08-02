@@ -23,4 +23,4 @@ COPY --from=build /app/target/*-jpro.zip ./app.zip
 RUN unzip app.zip && rm app.zip
 
 EXPOSE 8080
-CMD ["./javafx-client-1.0.0-jpro/bin/start.sh"]
+CMD ["./javafx-client-jpro/bin/start.sh"]
