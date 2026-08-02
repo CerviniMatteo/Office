@@ -10,15 +10,6 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
-        <relativePath/>
-    </parent>
-
-
     <properties>
 
         <java.version>24</java.version>
@@ -45,6 +36,12 @@
 
     </properties>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.1</version>
+        <relativePath/>
+    </parent>
 
     <repositories>
 
@@ -205,6 +202,10 @@
                         com.unimib.GUI.JProApplication
                     </mainClassName>
 
+                    <openURLOnStartup>false</openURLOnStartup>
+
+                    <port>8080</port>
+
                 </configuration>
 
             </plugin>
@@ -212,10 +213,12 @@
 
 
             <!-- Spring Boot -->
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
 
 
