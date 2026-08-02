@@ -17,6 +17,8 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.lang.reflect.Type;
 
+import static com.unimib.GUI.constants.Rest.WS_ENDPOINT;
+
 /**
  * WebSocket client helper that subscribes to task-related topics and updates the TaskLayout.
  */
@@ -76,7 +78,7 @@ public class TaskWebSocketClientApp {
             }
         };
 
-        session = stompClient.connectAsync("ws://localhost:8080/ws", sessionHandler).get();
+        session = stompClient.connectAsync(WS_ENDPOINT, sessionHandler).get();
     }
 
     public synchronized void stop() {

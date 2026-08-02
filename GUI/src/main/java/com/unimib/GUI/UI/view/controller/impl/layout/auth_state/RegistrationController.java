@@ -1,20 +1,28 @@
 package com.unimib.GUI.UI.view.controller.impl.layout.auth_state;
 
+import com.jpro.webapi.WebAPI;
 import com.unimib.GUI.UI.view.controller.abstr.AuthController;
 import com.unimib.GUI.UI.viewmodel.impl.AuthViewModel;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.Base64;
+import java.util.ResourceBundle;
 
 import static com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils.setVisible;
-import static com.unimib.GUI.UI.view.utils.FileUtils.setUpFileChooser;
-import static com.unimib.GUI.UI.view.utils.WorkerImageUtils.encodeFileAsBase64;
 
 public class RegistrationController extends AuthController {
 
@@ -52,29 +60,35 @@ public class RegistrationController extends AuthController {
 
     @FXML
     private void initialize() {
+
         profileImageView.setFitWidth(120);
         profileImageView.setFitHeight(120);
         profileImageView.setPreserveRatio(true);
+
         setVisible(false, profileImageView);
 
         viewModel = new AuthViewModel();
 
-        observeState(viewModel.getRegistrationState(),
+        observeState(
+                viewModel.getRegistrationState(),
                 workerDTO -> {
                     if (workerDTO != null) {
-                        showSuccess("Registration successful!" +
-                                "\nSave the email written below" +
-                                "\nEmail: " + workerDTO.email());
-
+                        showSuccess(
+                                "Registration successful!" +
+                                        "\nSave the email written below" +
+                                        "\nEmail: " + workerDTO.email()
+                        );
                         saveEmployeeId(workerDTO.workerId());
                         goToTaskContainer();
                     } else {
                         showError("User information are empty, registration failed");
                     }
                 },
-                this::showError);
+                this::showError
+        );
 
-        chooseImageButton.setOnAction(event -> handleChooseImage());
+        setupImageUpload();
+
         submitButton.setOnAction(event -> handleSubmit());
 
         goToLoginButton.setOnAction(_ -> {
@@ -84,30 +98,112 @@ public class RegistrationController extends AuthController {
         });
     }
 
-    private void handleChooseImage() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose Profile Picture");
+    private void setupImageUpload() {
+        waitForShowingWindow(chooseImageButton, this::initFileUploader);
+    }
 
-        setUpFileChooser(fileChooser);
+    private void waitForShowingWindow(Node node, Runnable onReady) {
 
-        try {
-            File selectedFile = fileChooser.showOpenDialog(chooseImageButton.getScene().getWindow());
+        Scene scene = node.getScene();
 
-            if (selectedFile == null) {
+        if (scene == null) {
+            node.sceneProperty().addListener(new ChangeListener<Scene>() {
+                @Override
+                public void changed(ObservableValue<? extends Scene> obs, Scene oldScene, Scene newScene) {
+                    if (newScene != null) {
+                        node.sceneProperty().removeListener(this);
+                        waitForShowingWindow(node, onReady);
+                    }
+                }
+            });
+            return;
+        }
+
+        Window window = scene.getWindow();
+
+        if (window == null) {
+            scene.windowProperty().addListener(new ChangeListener<Window>() {
+                @Override
+                public void changed(ObservableValue<? extends Window> obs, Window oldWindow, Window newWindow) {
+                    if (newWindow != null) {
+                        scene.windowProperty().removeListener(this);
+                        waitForShowingWindow(node, onReady);
+                    }
+                }
+            });
+            return;
+        }
+
+        if (window.isShowing()) {
+            onReady.run();
+        } else {
+            window.showingProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) {
+                    if (newVal) {
+                        window.showingProperty().removeListener(this);
+                        onReady.run();
+                    }
+                }
+            });
+        }
+    }
+
+    private void initFileUploader() {
+        WebAPI webAPI = WebAPI.getWebAPI(chooseImageButton.getScene().getWindow());
+        WebAPI.FileUploader uploader = webAPI.makeFileUploadNode(chooseImageButton);
+
+        uploader.selectFileOnClickProperty().set(true);
+
+        // 1. Log file selection step
+        uploader.selectedFileProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("[upload] Selected: " + newVal);
+            if (newVal != null) {
+                Platform.runLater(() -> selectedImageLabel.setText("Uploading file..."));
+            }
+        });
+
+        uploader.progressProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("[upload] Progress: " + newVal);
+        });
+
+        // 2. Main upload completion handler
+        uploader.uploadedFileProperty().addListener((obs, oldFile, newFile) -> {
+            System.out.println("[upload] Upload complete. Server file: " + newFile);
+
+            if (newFile == null || !newFile.exists()) {
                 return;
             }
 
-            selectedImageBase64 = encodeFileAsBase64(selectedFile);
-            Image image = new Image(selectedFile.toURI().toString());
+            try {
+                // Read binary data directly from local server storage
+                byte[] data = Files.readAllBytes(newFile.toPath());
 
-            profileImageView.setImage(image);
-            setVisible(true, profileImageView);
-            selectedImageLabel.setText("Image selected");
+                // Convert to Base64 for submission
+                selectedImageBase64 = Base64.getEncoder().encodeToString(data);
 
-        } catch (RuntimeException e) {
-            selectedImageBase64 = null;
-            showError("Image hasn't been successfully selected");
-        }
+                // Create FX Image from stream
+                Image image = new Image(new ByteArrayInputStream(data));
+
+                // Update UI components on JavaFX App Thread
+                Platform.runLater(() -> {
+                    profileImageView.setImage(image);
+
+                    // Explicitly reveal node
+                    profileImageView.setVisible(true);
+                    profileImageView.setManaged(true);
+
+                    if (selectedImageLabel != null) {
+                        selectedImageLabel.setText("Image uploaded successfully!");
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                selectedImageBase64 = null;
+                Platform.runLater(() -> showError("Failed to read uploaded file: " + e.getMessage()));
+            }
+        });
     }
 
     private void handleSubmit() {

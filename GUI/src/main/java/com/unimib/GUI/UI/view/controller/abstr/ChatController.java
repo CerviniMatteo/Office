@@ -16,7 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -60,9 +59,7 @@ public abstract class ChatController implements DefaultController {
 
     protected ChatViewModel viewModel;
 
-
     protected final Map<Long, List<MessageDTO>> chatCache;
-
 
     protected final Path baseDir = Paths.get(
             System.getProperty("user.home"),
@@ -123,13 +120,13 @@ public abstract class ChatController implements DefaultController {
         return label;
     }
 
-    public void destroy(){
-        observeState(
-                viewModel.getConnectionStateProperty(),
-                () -> {},
-                _ -> {},
-                this::showError
-        );
+    /**
+     * Called only when leaving the chat feature entirely (e.g. logout),
+     * NOT on Open<->Closed state switches, since the viewModel is shared
+     * and reused by the next controller via adoptStateFrom().
+     */
+    public void destroy() {
+        disposeListeners();
         viewModel.destroy();
     }
 }

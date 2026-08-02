@@ -3,6 +3,8 @@ target/
 !backend/src/main/**/target/
 !backend/src/test/**/target/
 .kotlin
+logs/
+RUNNING_PID
 
 ### IntelliJ IDEA ###
 .idea/*

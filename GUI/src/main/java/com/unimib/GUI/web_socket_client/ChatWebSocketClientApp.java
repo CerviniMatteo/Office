@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+import static com.unimib.GUI.constants.Rest.WS_ENDPOINT;
+
 public class ChatWebSocketClientApp {
 
     private static volatile ChatWebSocketClientApp INSTANCE;
@@ -60,7 +62,7 @@ public class ChatWebSocketClientApp {
             }
         };
 
-        session = stompClient.connectAsync("ws://localhost:8080/ws", handler) .get();
+        session = stompClient.connectAsync(WS_ENDPOINT, handler) .get();
     }
 
 

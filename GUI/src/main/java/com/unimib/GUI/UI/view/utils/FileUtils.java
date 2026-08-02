@@ -72,24 +72,4 @@ public final class FileUtils {
             throw new RuntimeException("Unable to read file", e);
         }
     }
-
-    public static void setUpFileChooser(FileChooser fileChooser){
-        File downloadFolder = new File(
-                System.getProperty("user.home"),
-                "Downloads"
-        );
-
-        if (downloadFolder.exists()) {
-            fileChooser.setInitialDirectory(downloadFolder);
-        }
-
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(
-                        "Image Files",
-                        "*.png",
-                        "*.jpg",
-                        "*.jpeg"
-                )
-        );
-    }
 }

@@ -1,84 +1,71 @@
 package com.unimib.GUI.UI.view.components.impl.custom;
 
-import com.unimib.GUI.FxApplication;
+import com.unimib.GUI.UI.state.ApplicationStateManager;
 import javafx.application.Platform;
-import javafx.scene.control.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import java.util.Objects;
+import java.util.Locale;
 
 public class AlertDialog {
 
     public static void showAlert(String title, String message) {
-
         Runnable showDialog = () -> {
-
-            Dialog<Void> dialog = new Dialog<>();
-
-            dialog.setTitle(title);
-
-            DialogPane dialogPane = dialog.getDialogPane();
-
-            dialogPane.getStylesheets().add(
-                    Objects.requireNonNull(
-                            FxApplication.class.getResource("/styles/app.css")
-                    ).toExternalForm()
-            );
-
-            // classe CSS corretta
-            dialogPane.getStyleClass().add("custom-dialog");
-
+            StackPane overlay = new StackPane();
+            overlay.getStyleClass().add("task-creation-overlay");
+            overlay.setPickOnBounds(true);
+            overlay.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (oldScene != null) {
+                    overlay.prefWidthProperty().unbind();
+                    overlay.prefHeightProperty().unbind();
+                }
+                if (newScene != null) {
+                    overlay.prefWidthProperty().bind(newScene.widthProperty());
+                    overlay.prefHeightProperty().bind(newScene.heightProperty());
+                }
+            });
 
             Label titleLbl = new Label(title);
-
-            if (title.toLowerCase().contains("success")) {
+            String normalizedTitle = title == null ? "" : title.toLowerCase(Locale.ROOT);
+            if (normalizedTitle.contains("success")) {
                 titleLbl.getStyleClass().add("dialog-title-success");
             } else {
                 titleLbl.getStyleClass().add("dialog-title-failure");
             }
 
-
             Label messageLbl = new Label(message);
             messageLbl.setWrapText(true);
             messageLbl.getStyleClass().add("dialog-message");
 
+            Button okBtn = new Button("OK");
+            okBtn.getStyleClass().add("styled-btn");
 
-            VBox content = new VBox(
-                    10,
-                    titleLbl,
-                    messageLbl
+            VBox dialogBox = new VBox(12, titleLbl, messageLbl, okBtn);
+            dialogBox.getStyleClass().add("semi-transparent-bg");
+            dialogBox.setAlignment(Pos.CENTER);
+            dialogBox.setMaxWidth(420);
+            dialogBox.setPadding(new Insets(22));
+            dialogBox.setOnMouseClicked(event -> event.consume());
+
+            okBtn.setOnAction(event ->
+                    ApplicationStateManager.getInstance().removeWindow(overlay)
             );
 
-            content.getStyleClass().add("dialog-content");
+            overlay.getChildren().add(dialogBox);
+            StackPane.setAlignment(dialogBox, Pos.CENTER);
 
-            dialogPane.setContent(content);
-
-
-            ButtonType okType =
-                    new ButtonType(
-                            "OK",
-                            ButtonBar.ButtonData.OK_DONE
-                    );
-
-            dialogPane.getButtonTypes().add(okType);
-
-
-            Button okBtn =
-                    (Button) dialogPane.lookupButton(okType);
-
-            if (okBtn != null) {
-                okBtn.getStyleClass().add("styled-btn");
-            }
-
-
-            dialog.showAndWait();
+            ApplicationStateManager.getInstance().addPopUp(overlay);
         };
-
 
         if (Platform.isFxApplicationThread()) {
             showDialog.run();
-        } else {
-            Platform.runLater(showDialog);
+            return;
         }
+        Platform.runLater(showDialog);
     }
 }
