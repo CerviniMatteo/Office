@@ -21,7 +21,7 @@
 
     <properties>
 
-        <java.version>22</java.version>
+        <java.version>24</java.version>
 
         <javafx.version>24.0.2</javafx.version>
 
@@ -103,6 +103,12 @@
             <groupId>one.jpro</groupId>
             <artifactId>jpro-webapi</artifactId>
             <version>${jpro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>one.jpro.platform</groupId>
+            <artifactId>jpro-file</artifactId>
+            <version>0.7.1</version>
         </dependency>
 
         <!-- Jackson -->

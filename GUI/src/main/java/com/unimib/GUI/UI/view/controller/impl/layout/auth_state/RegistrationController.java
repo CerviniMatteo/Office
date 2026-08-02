@@ -1,28 +1,21 @@
 package com.unimib.GUI.UI.view.controller.impl.layout.auth_state;
 
-import com.jpro.webapi.WebAPI;
 import com.unimib.GUI.UI.view.controller.abstr.AuthController;
 import com.unimib.GUI.UI.viewmodel.impl.AuthViewModel;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Window;
-
-import java.io.ByteArrayInputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.Base64;
-import java.util.ResourceBundle;
+import one.jpro.platform.file.ExtensionFilter;
+import one.jpro.platform.file.FileSource;
+import one.jpro.platform.file.picker.FileOpenPicker;
 
 import static com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils.setVisible;
+import static com.unimib.GUI.UI.view.utils.WorkerImageUtils.encodeFileAsBase64;
 
 public class RegistrationController extends AuthController {
 
@@ -99,110 +92,73 @@ public class RegistrationController extends AuthController {
     }
 
     private void setupImageUpload() {
-        waitForShowingWindow(chooseImageButton, this::initFileUploader);
-    }
 
-    private void waitForShowingWindow(Node node, Runnable onReady) {
+        ExtensionFilter imageFilter = ExtensionFilter.of(
+                "Images",
+                ".png",
+                ".jpg",
+                ".jpeg"
+        );
 
-        Scene scene = node.getScene();
+        FileOpenPicker picker = FileOpenPicker.create(chooseImageButton);
 
-        if (scene == null) {
-            node.sceneProperty().addListener(new ChangeListener<Scene>() {
-                @Override
-                public void changed(ObservableValue<? extends Scene> obs, Scene oldScene, Scene newScene) {
-                    if (newScene != null) {
-                        node.sceneProperty().removeListener(this);
-                        waitForShowingWindow(node, onReady);
-                    }
-                }
-            });
-            return;
-        }
+        picker.getExtensionFilters().add(imageFilter);
+        picker.setSelectedExtensionFilter(imageFilter);
+        picker.setSelectionMode(SelectionMode.SINGLE);
 
-        Window window = scene.getWindow();
+        picker.setOnFilesSelected(fileSources -> {
 
-        if (window == null) {
-            scene.windowProperty().addListener(new ChangeListener<Window>() {
-                @Override
-                public void changed(ObservableValue<? extends Window> obs, Window oldWindow, Window newWindow) {
-                    if (newWindow != null) {
-                        scene.windowProperty().removeListener(this);
-                        waitForShowingWindow(node, onReady);
-                    }
-                }
-            });
-            return;
-        }
-
-        if (window.isShowing()) {
-            onReady.run();
-        } else {
-            window.showingProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) {
-                    if (newVal) {
-                        window.showingProperty().removeListener(this);
-                        onReady.run();
-                    }
-                }
-            });
-        }
-    }
-
-    private void initFileUploader() {
-        WebAPI webAPI = WebAPI.getWebAPI(chooseImageButton.getScene().getWindow());
-        WebAPI.FileUploader uploader = webAPI.makeFileUploadNode(chooseImageButton);
-
-        uploader.selectFileOnClickProperty().set(true);
-
-        // 1. Log file selection step
-        uploader.selectedFileProperty().addListener((obs, oldVal, newVal) -> {
-            System.out.println("[upload] Selected: " + newVal);
-            if (newVal != null) {
-                Platform.runLater(() -> selectedImageLabel.setText("Uploading file..."));
-            }
-        });
-
-        uploader.progressProperty().addListener((obs, oldVal, newVal) -> {
-            System.out.println("[upload] Progress: " + newVal);
-        });
-
-        // 2. Main upload completion handler
-        uploader.uploadedFileProperty().addListener((obs, oldFile, newFile) -> {
-            System.out.println("[upload] Upload complete. Server file: " + newFile);
-
-            if (newFile == null || !newFile.exists()) {
+            if (fileSources == null || fileSources.isEmpty()) {
                 return;
             }
 
-            try {
-                // Read binary data directly from local server storage
-                byte[] data = Files.readAllBytes(newFile.toPath());
+            FileSource source = fileSources.getFirst();
 
-                // Convert to Base64 for submission
-                selectedImageBase64 = Base64.getEncoder().encodeToString(data);
+            source.uploadFileAsync().thenAccept(uploadedFile -> {
+                if (uploadedFile == null) {
+                    Platform.runLater(() -> showError("Failed to read image: no uploaded file available"));
+                    return;
+                }
 
-                // Create FX Image from stream
-                Image image = new Image(new ByteArrayInputStream(data));
+                try {
+                    selectedImageBase64 = encodeFileAsBase64(uploadedFile);
 
-                // Update UI components on JavaFX App Thread
-                Platform.runLater(() -> {
-                    profileImageView.setImage(image);
+                    Image image = new Image(uploadedFile.toURI().toString());
 
-                    // Explicitly reveal node
-                    profileImageView.setVisible(true);
-                    profileImageView.setManaged(true);
+                    Platform.runLater(() -> {
 
-                    if (selectedImageLabel != null) {
-                        selectedImageLabel.setText("Image uploaded successfully!");
-                    }
-                });
+                        profileImageView.setImage(image);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                selectedImageBase64 = null;
-                Platform.runLater(() -> showError("Failed to read uploaded file: " + e.getMessage()));
-            }
+                        profileImageView.setVisible(true);
+                        profileImageView.setManaged(true);
+
+                        selectedImageLabel.setText(
+                                source.getName()
+                        );
+
+                    });
+
+                } catch (Exception ex) {
+
+                    ex.printStackTrace();
+
+                    Platform.runLater(() ->
+                            showError(
+                                    "Failed to read image: "
+                                            + ex.getMessage()
+                            )
+                    );
+                }
+            }).exceptionally(ex -> {
+                Platform.runLater(() ->
+                        showError(
+                                "Failed to upload image: "
+                                        + ex.getMessage()
+                        )
+                );
+                return null;
+            });
+
         });
     }
 
