@@ -101,6 +101,11 @@
     -fx-effect: dropshadow(gaussian, -app-shadow-strong, 8, 0, 0, 3);
 }
 
+/* Reserved hook for the alert dialog wrapper (visuals come from .semi-transparent-bg) */
+.alert-dialog-box {
+    -fx-spacing: 12px;
+}
+
 .skeleton {
     -fx-fill: linear-gradient(
             from 0% 0% to 100% 0%,
@@ -125,6 +130,7 @@
     -fx-focus-color: transparent;
 }
 
+/*noinspection CssInvalidPseudoSelector*/
 .button:pressed {
     -fx-opacity: 0.9;
 }
@@ -325,7 +331,6 @@
     -fx-padding: 8px 16px;
 }
 
-
 .styled-btn:hover {
     -fx-background-color: -app-cyan-25;
     -fx-border-color: -app-cyan;
@@ -355,7 +360,7 @@
 }
 
 /* ===== COMPACT BUTTONS ===== */
-.styled-btn-compact, .styled-btn-black-compact, .styled-btn-red-compact {
+.styled-btn-compact, .styled-btn-black-compact, .styled-btn-red-compact, .styled-btn-white-compact {
     -fx-font-size: 14px;
     -fx-font-weight: 600;
     -fx-border-radius: 16px;
@@ -403,6 +408,30 @@
     -fx-border-color: -app-red;
     -fx-text-fill: -app-red-hover;
     -fx-effect: dropshadow(gaussian, -app-red-50, 6, 0, 0, 1);
+}
+
+/* ===================================================== */
+/* STYLED-BTN-WHITE-COMPACT (calendar button)            */
+/* Renamed from the former duplicate ".styled-btn-white" */
+/* to avoid silently overriding the pill-style button    */
+/* above. Update any FXML/Java using the old duplicate   */
+/* rule (compact calendar button) to this class instead. */
+/* ===================================================== */
+.styled-btn-white-compact {
+    -fx-background-color: -app-white-08;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1.5px;
+    -fx-border-color: -app-white-35;
+    -fx-text-fill: -app-white;
+    -fx-padding: 4px;
+    -fx-cursor: hand;
+}
+
+.styled-btn-white-compact:hover {
+    -fx-background-color: -app-cyan-15;
+    -fx-border-color: -app-cyan;
+    -fx-effect: dropshadow(gaussian, -app-cyan-40, 6, 0, 0, 1);
 }
 
 /* ICON STYLING */
@@ -465,11 +494,13 @@
 }
 
 /* Stato ON */
+/*noinspection CssInvalidPseudoSelector*/
 .toggle-switch:selected {
     -fx-background-color: -app-cyan;
 }
 
 /* Sposta il pallino quando attivo */
+/*noinspection CssInvalidPseudoSelector*/
 .toggle-switch:selected .thumb {
     -fx-translate-x: 15px;
 }
@@ -724,6 +755,7 @@
     -fx-background-color: #6d78ff;
 }
 
+/*noinspection CssInvalidPseudoSelector*/
 .fab-button:pressed {
     -fx-background-color: #4c5ad4;
 }
@@ -801,27 +833,6 @@
     -fx-padding: 6 0 2 0;
 }
 
-
-/* ===================================================== */
-/* STYLED-BTN-WHITE COMPACT (calendar button)            */
-/* ===================================================== */
-.styled-btn-white {
-    -fx-background-color: -app-white-08;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-border-width: 1.5px;
-    -fx-border-color: -app-white-35;
-    -fx-text-fill: -app-white;
-    -fx-padding: 4px;
-    -fx-cursor: hand;
-}
-
-.styled-btn-white:hover {
-    -fx-background-color: -app-cyan-15;
-    -fx-border-color: -app-cyan;
-    -fx-effect: dropshadow(gaussian, -app-cyan-40, 6, 0, 0, 1);
-}
-
 /* ===================================================== */
 /* FORM INPUT COMPACT (inside time/date pickers)         */
 /* ===================================================== */
@@ -836,6 +847,7 @@
     -fx-border-width: 1.5;
 }
 
+/*noinspection CssInvalidPseudoSelector*/
 .form-input:focused {
     -fx-border-color: -app-cyan;
     -fx-effect: dropshadow(gaussian, -app-cyan-30, 4, 0, 0, 1);
@@ -843,6 +855,11 @@
 
 /* ===================================================== */
 /* CUSTOM DATE PICKER                                    */
+/* (Consolidated: the original file defined this whole   */
+/* block twice with conflicting day-cell backgrounds —   */
+/* transparent vs. -app-surface-1. Kept the more complete */
+/* -app-surface-1 version; the transparent one was dead   */
+/* code since CSS cascade order made it always overridden)*/
 /* ===================================================== */
 
 #pickerContainer {
@@ -857,6 +874,10 @@
     -fx-border-radius: 12px;
     -fx-padding: 8px;
     -fx-effect: dropshadow(gaussian, -app-shadow-strong, 10, 0, 0, 4);
+}
+
+.date-picker-popup > .calendar-grid {
+    -fx-background-color: -app-surface-1;
 }
 
 /* Header mese/anno */
@@ -887,91 +908,6 @@
     -fx-background-color: -app-white;
 }
 
-.date-picker-popup .spinner .button:hover > .left-arrow,
-.date-picker-popup .spinner .button:hover > .right-arrow {
-    -fx-background-color: -app-cyan;
-}
-
-.date-picker-popup > .day-name-cell {
-    -fx-text-fill: -app-cyan;
-    -fx-font-weight: 600;
-    -fx-font-size: 12px;
-    -fx-alignment: center;
-}
-
-.date-picker-popup .day-cell {
-    -fx-background-color: transparent;
-    -fx-text-fill: -app-white-text-soft;
-    -fx-background-radius: 6px;
-    -fx-font-size: 13px;
-}
-
-.date-picker-popup .day-cell:hover {
-    -fx-background-color: -app-cyan-15;
-    -fx-text-fill: -app-white;
-}
-.date-picker-popup .day-cell.previous-month,
-.date-picker-popup .day-cell.next-month {
-    -fx-text-fill: -app-white-30;
-}
-
-.date-picker-popup .day-cell.today {
-    -fx-border-color: -app-cyan-50;
-    -fx-border-width: 1px;
-    -fx-border-radius: 6px;
-    -fx-text-fill: -app-cyan;
-    -fx-font-weight: bold;
-}
-
-.date-picker-popup .day-cell:selected,
-.date-picker-popup .day-cell.selected {
-    -fx-background-color: -app-cyan;
-    -fx-text-fill: -app-bg-dark;
-    -fx-font-weight: bold;
-}
-
-.date-picker-popup .day-cell:selected:hover {
-    -fx-background-color: -app-cyan;
-    -fx-opacity: 0.9;
-}
-
-.date-picker-popup {
-    -fx-background-color: -app-surface-1;
-    -fx-background-radius: 12px;
-    -fx-border-color: -app-cyan-30;
-    -fx-border-width: 1px;
-    -fx-border-radius: 12px;
-    -fx-padding: 8px;
-    -fx-effect: dropshadow(gaussian, -app-shadow-strong, 10, 0, 0, 4);
-}
-
-.date-picker-popup > .calendar-grid {
-    -fx-background-color: -app-surface-1;
-}
-
-.date-picker-popup > .month-year-pane {
-    -fx-background-color: -app-surface-2;
-    -fx-background-radius: 8px 8px 0 0;
-    -fx-padding: 8px;
-}
-
-.date-picker-popup > .month-year-pane .label {
-    -fx-text-fill: -app-white;
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-}
-
-.date-picker-popup .spinner .button {
-    -fx-background-color: transparent;
-    -fx-background-radius: 50%;
-}
-.date-picker-popup .spinner .button:hover {
-    -fx-background-color: -app-cyan-15;
-}
-.date-picker-popup .spinner .button > .left-arrow,
-.date-picker-popup .spinner .button > .right-arrow {
-    -fx-background-color: -app-white;
-}
 .date-picker-popup .spinner .button:hover > .left-arrow,
 .date-picker-popup .spinner .button:hover > .right-arrow {
     -fx-background-color: -app-cyan;
@@ -1019,6 +955,7 @@
     -fx-font-weight: bold;
 }
 
+/*noinspection CssInvalidPseudoSelector*/
 .date-picker-popup .day-cell:selected:hover {
     -fx-background-color: -app-cyan;
     -fx-opacity: 0.9;
@@ -1029,146 +966,81 @@
 /* ===================================================== */
 
 .custom-dialog {
-
     -fx-background-color: -app-surface-1;
-
     -fx-border-color: -app-cyan-30;
     -fx-border-width: 1px;
     -fx-border-radius: 14px;
-
     -fx-background-radius: 14px;
-
 }
 
 .custom-dialog > .header-panel {
-
     -fx-background-color: -app-surface-1;
-
     -fx-padding: 12px 16px;
-
     -fx-border-color: -app-cyan-20;
     -fx-border-width: 0 0 1px 0;
-
 }
 
-
 .custom-dialog > .header-panel .label {
-
     -fx-text-fill: -app-white;
-
     -fx-font-size: 20px;
-
     -fx-font-weight: bold;
-
 }
 
 .custom-dialog > .header-panel > .button {
-
     -fx-background-color: transparent;
-
     -fx-background-radius: 50%;
-
     -fx-border-radius: 50%;
-
     -fx-border-color: transparent;
 
-
     -fx-text-fill: -app-white-50;
-
     -fx-font-size: 18px;
-
     -fx-font-weight: bold;
-
 
     -fx-min-width: 32px;
     -fx-min-height: 32px;
-
     -fx-pref-width: 32px;
     -fx-pref-height: 32px;
-
 }
 
 .custom-dialog > .header-panel > .button:hover {
-
-
     -fx-background-color: -app-red-12;
-
     -fx-border-color: -app-red-50;
-
     -fx-text-fill: -app-red;
 
-
-    -fx-effect:
-            dropshadow(
-                    gaussian,
-                    -app-red-50,
-                    8,
-                    0,
-                    0,
-                    2
-            );
-
+    -fx-effect: dropshadow(gaussian, -app-red-50, 8, 0, 0, 2);
 }
 
 .custom-dialog > .header-panel > .button:pressed {
-
-
     -fx-background-color: -app-red-22;
-
-    -fx-scale-x:0.9;
-
-    -fx-scale-y:0.9;
-
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
 }
-
-
 
 .custom-dialog > .content {
-
     -fx-background-color: -app-surface-1;
-
-    -fx-padding:20px;
-
+    -fx-padding: 20px;
 }
-
 
 .custom-dialog > .button-bar {
-
     -fx-background-color: -app-surface-1;
-
-    -fx-padding:12px 20px;
-
+    -fx-padding: 12px 20px;
 }
-
 
 .dialog-message {
-
-    -fx-text-fill:-app-white-text;
-
-    -fx-font-size:17px;
-
+    -fx-text-fill: -app-white-text;
+    -fx-font-size: 17px;
 }
-
 
 .dialog-title-success {
-
-    -fx-text-fill:-app-success;
-
-    -fx-font-size:22px;
-
-    -fx-font-weight:bold;
-
+    -fx-text-fill: -app-success;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
 }
 
-
 .dialog-title-failure {
-
-    -fx-text-fill:-app-failure;
-
-    -fx-font-size:22px;
-
-    -fx-font-weight:bold;
-
+    -fx-text-fill: -app-failure;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
 }
 
 /* ===================================================== */
