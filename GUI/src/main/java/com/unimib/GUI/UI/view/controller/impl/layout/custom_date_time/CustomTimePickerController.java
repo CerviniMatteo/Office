@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import static com.unimib.GUI.model.enums.TimeFormat.AMPM;
 
-public class CustomTimePickerController implements DefaultController, Clearable {
+public class CustomTimePickerController extends DefaultController implements Clearable {
 
     private static final LocalTime MIN_TIME = LocalTime.of(7, 0);
     private static final LocalTime MAX_TIME = LocalTime.of(19, 0);
@@ -36,6 +36,10 @@ public class CustomTimePickerController implements DefaultController, Clearable 
 
         initDefaultDateTime();
         initListeners();
+    }
+
+    public CustomTimePickerController() {
+        super(null);
     }
 
     private void initDefaultDateTime() {

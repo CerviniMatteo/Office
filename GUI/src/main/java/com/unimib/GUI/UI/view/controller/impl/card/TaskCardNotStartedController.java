@@ -3,6 +3,7 @@ package com.unimib.GUI.UI.view.controller.impl.card;
 import com.unimib.GUI.model.dto.StartTaskRequestDTO;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.UI.view.controller.abstr.TaskCardBaseController;
+import com.unimib.GUI.utils.UserSession;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,8 +16,8 @@ public class TaskCardNotStartedController extends TaskCardBaseController {
     private Button changeStateButton;
 
 
-    public TaskCardNotStartedController(TaskDTO task) {
-        super(task);
+    public TaskCardNotStartedController(TaskDTO task, UserSession userSession) {
+        super(task, userSession);
     }
 
 

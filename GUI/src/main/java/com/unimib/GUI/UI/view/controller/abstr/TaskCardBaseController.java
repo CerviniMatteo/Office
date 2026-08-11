@@ -3,7 +3,7 @@ package com.unimib.GUI.UI.view.controller.abstr;
 import com.unimib.GUI.UI.view.components.impl.custom.HoldButton;
 import com.unimib.GUI.UI.viewmodel.impl.TaskViewModel;
 import com.unimib.GUI.model.dto.TaskDTO;
-import com.unimib.GUI.utils.SessionManagerSingleton;
+import com.unimib.GUI.utils.UserSession;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 
 import static com.unimib.GUI.utils.StringHelper.replaceUnderscores;
 
-public abstract class TaskCardBaseController implements DefaultController {
+public abstract class TaskCardBaseController extends DefaultController {
 
     private final TaskViewModel viewModel;
     private final TaskDTO currentTask;
@@ -28,11 +28,10 @@ public abstract class TaskCardBaseController implements DefaultController {
 
     private HoldButton deleteButton;
 
-    public TaskCardBaseController(TaskDTO task) {
+    public TaskCardBaseController(TaskDTO task, UserSession userSession) {
+        super(userSession);
         this.currentTask = task;
-        this.currentWorkerId = (Long) SessionManagerSingleton
-                .getInstance()
-                .getAttribute("employeeId");
+        this.currentWorkerId = userSession.getEmployeeId();
         this.viewModel = new TaskViewModel();
     }
 

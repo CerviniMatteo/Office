@@ -3,6 +3,7 @@ package com.unimib.GUI.UI.view.controller.impl.layout.auth_state;
 import com.unimib.GUI.UI.view.components.impl.layout.Login;
 import com.unimib.GUI.UI.view.components.impl.layout.Registration;
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
+import com.unimib.GUI.utils.UserSession;
 import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -10,7 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class AuthContainerController implements DefaultController {
+public class AuthContainerController extends DefaultController {
 
     @FXML
     private StackPane rootStack;
@@ -18,11 +19,15 @@ public class AuthContainerController implements DefaultController {
     private Login login;
     private Registration registration;
 
+    public AuthContainerController(UserSession userSession) {
+        super(userSession);
+    }
+
     @FXML
     public void initialize() {
 
-        login = new Login();
-        registration = new Registration();
+        login = new Login(userSession);
+        registration = new Registration(userSession);
 
         rootStack.getChildren().addAll(login, registration);
 

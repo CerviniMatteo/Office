@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
  * Controller class that contains the UI logic for the StyledButton FXML.
  * The controller is instantiated programmatically and attached to the StyledButton instance.
  */
-public class StyledButtonController implements DefaultController {
+public class StyledButtonController extends DefaultController {
 
     @FXML
     private HBox content;
@@ -31,6 +31,7 @@ public class StyledButtonController implements DefaultController {
     private static final double ICON_SCALE = 0.03;
 
     public StyledButtonController(StyledButton root) {
+        super(null);
         this.root = root;
     }
 

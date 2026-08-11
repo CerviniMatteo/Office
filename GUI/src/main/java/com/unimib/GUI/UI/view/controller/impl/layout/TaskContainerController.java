@@ -4,15 +4,13 @@ import com.unimib.GUI.UI.view.components.impl.task.TaskCardSkeleton;
 import com.unimib.GUI.UI.viewmodel.impl.TaskViewModel;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.model.enums.TaskState;
-import com.unimib.GUI.utils.SessionManagerSingleton;
+import com.unimib.GUI.utils.UserSession;
 import com.unimib.GUI.UI.view.components.abstr.TaskCardBase;
-import com.unimib.GUI.UI.view.components.impl.custom.AlertDialog;
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
 import com.unimib.GUI.UI.view.components.impl.layout.TaskCreationForm;
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.UI.view.factory.TaskCardFactory;
 import com.unimib.GUI.UI.state.ApplicationStateManager;
-import com.unimib.GUI.web_socket_client.ChatWebSocketClientApp;
 import com.unimib.GUI.web_socket_client.TaskWebSocketClientApp;
 
 import javafx.application.Platform;
@@ -27,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class TaskContainerController implements DefaultController {
+public class TaskContainerController extends DefaultController {
 
     @FXML private VBox notStartedTaskBox;
     @FXML private VBox startedTaskBox;
@@ -46,6 +44,10 @@ public class TaskContainerController implements DefaultController {
     private Chat chat;
     private TaskCreationForm form;
 
+    public TaskContainerController(UserSession userSession) {
+        super(userSession);
+    }
+
     @FXML
     public void initialize() {
         centerContainer.setFillHeight(true);
@@ -61,8 +63,7 @@ public class TaskContainerController implements DefaultController {
         try {
             webSocketClient.start();
         } catch (Exception e) {
-            AlertDialog.showAlert(
-                    "Error",
+            showError(
                     "Could not connect to TaskContainer: " + e.getMessage()
             );
         }
@@ -97,7 +98,7 @@ public class TaskContainerController implements DefaultController {
                 Collections.emptyMap()
         );
 
-        return new TaskCardSkeleton(placeholder);
+        return new TaskCardSkeleton(placeholder, userSession);
     }
 
     private void removeInitialSkeleton() {
@@ -145,7 +146,7 @@ public class TaskContainerController implements DefaultController {
                     tasks.clear();
 
                     for (TaskDTO taskDTO : fetchedTasks) {
-                        TaskCardBase card = TaskCardFactory.create(taskDTO);
+                        TaskCardBase card = TaskCardFactory.create(taskDTO, userSession);
 
                         if (card != null) {
                             tasks.put(taskDTO.taskId(), card);
@@ -179,7 +180,7 @@ public class TaskContainerController implements DefaultController {
                     removeSkeleton(updatedTask.taskId());
                     removeTask(updatedTask.taskId());
 
-                    TaskCardBase card = TaskCardFactory.create(updatedTask);
+                    TaskCardBase card = TaskCardFactory.create(updatedTask, userSession);
 
                     if (card != null) {
                         tasks.put(updatedTask.taskId(), card);
@@ -208,7 +209,7 @@ public class TaskContainerController implements DefaultController {
 
         chatButton.setOnAction(_ -> {
             if (chat == null) {
-                chat = new Chat();
+                chat = new Chat(userSession);
             }
 
             if (chatButton.getText().equals("CLOSE CHAT")) {
@@ -229,12 +230,10 @@ public class TaskContainerController implements DefaultController {
             }
 
             webSocketClient.stop();
-            ChatWebSocketClientApp.getInstance().stop();
+            userSession.clear();
 
-            SessionManagerSingleton session = SessionManagerSingleton.getInstance();
-            session.removeAttribute("employeeId");
-
-            ApplicationStateManager.getInstance().goBack();
+            ApplicationStateManager manager = userSession.applicationStateManager();
+            manager.goBack();
         });
     }
 

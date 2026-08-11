@@ -2,6 +2,7 @@ package com.unimib.GUI.UI.view.controller.impl.layout.auth_state;
 
 import com.unimib.GUI.UI.view.controller.abstr.AuthController;
 import com.unimib.GUI.UI.viewmodel.impl.AuthViewModel;
+import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,6 +26,10 @@ public class LoginController extends AuthController {
 
     private Runnable switchToRegistration;
 
+    public LoginController(UserSession userSession) {
+        super(userSession);
+    }
+
     public void setSwitchToRegistration(Runnable switchToRegistration) {
         this.switchToRegistration = switchToRegistration;
     }
@@ -38,9 +43,6 @@ public class LoginController extends AuthController {
                 employeeId -> {
 
                     saveEmployeeId(employeeId);
-
-                    showSuccess("Login successful");
-
                     goToTaskContainer();
                 },
                 this::showError

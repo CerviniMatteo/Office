@@ -3,6 +3,7 @@ package com.unimib.GUI.UI.view.controller.impl.layout.chat_state;
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
 import com.unimib.GUI.UI.view.controller.abstr.ChatController;
 import com.unimib.GUI.model.dto.MessageDTO;
+import com.unimib.GUI.utils.UserSession;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -16,9 +17,10 @@ public class OpenChatStateController extends ChatController {
 
     protected OpenChatStateController(
             Chat chat,
-            Map<Long, List<MessageDTO>> chatCache
+            Map<Long, List<MessageDTO>> chatCache,
+            UserSession userSession
     ) {
-        super(chat, chatCache);
+        super(chat, chatCache, userSession);
     }
 
     @FXML
@@ -108,7 +110,7 @@ public class OpenChatStateController extends ChatController {
         setChatVisible(false, true);
 
         ClosedChatStateController closed =
-                new ClosedChatStateController(chat, chatCache);
+                new ClosedChatStateController(chat, userSession);
 
         closed.adoptStateFrom(this);
 

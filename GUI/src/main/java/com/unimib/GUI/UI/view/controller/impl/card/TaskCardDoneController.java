@@ -4,10 +4,9 @@ import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.UI.view.controller.abstr.TaskCardBaseWithWorkersImgController;
 import com.unimib.GUI.UI.view.utils.StringHelper;
 import com.unimib.GUI.UI.view.utils.WorkerImageUtils;
+import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-
-import static com.unimib.GUI.UI.view.components.impl.custom.AlertDialog.showAlert;
 
 public class TaskCardDoneController extends TaskCardBaseWithWorkersImgController {
     @FXML
@@ -45,15 +44,15 @@ public class TaskCardDoneController extends TaskCardBaseWithWorkersImgController
         resetButton.setOnAction(_ -> resetTask());
     }
 
-    public TaskCardDoneController(TaskDTO task) {
-        super(task);
+    public TaskCardDoneController(TaskDTO task, UserSession userSession) {
+        super(task, userSession);
     }
 
     private void resetTask() {
         try {
             getViewModel().resetTaskState(getCurrentTask().taskId());
         } catch (Exception ex) {
-            showAlert("Error", "Failed to create request payload");
+            showError("Failed to create request payload");
         }
     }
 }

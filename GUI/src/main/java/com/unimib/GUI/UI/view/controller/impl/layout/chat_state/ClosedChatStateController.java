@@ -7,6 +7,7 @@ import com.unimib.GUI.model.dto.WorkerInfoDTO;
 import com.unimib.GUI.UI.view.components.impl.custom.StyledButton;
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
 import com.unimib.GUI.UI.view.controller.abstr.ChatController;
+import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 
 import java.util.HashMap;
@@ -17,12 +18,8 @@ import static com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils.setVisible;
 
 public class ClosedChatStateController extends ChatController {
 
-    public ClosedChatStateController(Chat chat) {
-        super(chat, new HashMap<>());
-    }
-
-    protected ClosedChatStateController(Chat chat, Map<Long, List<MessageDTO>> chatCache) {
-        super(chat, chatCache);
+    public ClosedChatStateController(Chat chat, UserSession userSession) {
+        super(chat, new HashMap<>(), userSession);
     }
 
     @FXML
@@ -99,7 +96,7 @@ public class ClosedChatStateController extends ChatController {
     private void openChat(Long chatId) {
         viewModel.openChat(chatId);
 
-        OpenChatStateController open = new OpenChatStateController(this.chat, this.chatCache);
+        OpenChatStateController open = new OpenChatStateController(this.chat, this.chatCache, userSession);
         open.adoptStateFrom(this);
         chat.setController(open);
         open.displayChat(chatId);

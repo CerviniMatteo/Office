@@ -8,6 +8,7 @@ import com.unimib.GUI.UI.viewmodel.impl.TaskViewModel;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.model.enums.TaskState;
 import com.unimib.GUI.model.enums.TimeFormat;
+import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -18,15 +19,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
-
 import java.time.LocalDateTime;
 
-import static com.unimib.GUI.UI.view.components.impl.custom.AlertDialog.showAlert;
-
-public class TaskCreationFormController implements DefaultController {
-
-    // UI COMPONENTS
-
+public class TaskCreationFormController extends DefaultController {
     @FXML
     private TextField descriptionField;
 
@@ -67,11 +62,11 @@ public class TaskCreationFormController implements DefaultController {
     private Label ampmLabel;
     private Label h24Label;
 
-
-    // VIEW MODEL
-
     private TaskViewModel viewModel;
 
+    public TaskCreationFormController() {
+        super(null);
+    }
 
     @FXML
     public void initialize() {
@@ -150,8 +145,7 @@ public class TaskCreationFormController implements DefaultController {
                 Priority.ALWAYS
         );
 
-        header.getChildren().add(
-                0,
+        header.getChildren().addFirst(
                 switchContainer
         );
     }
@@ -255,9 +249,7 @@ public class TaskCreationFormController implements DefaultController {
             viewModel.createTask(taskDTO);
 
         } catch (IllegalArgumentException e) {
-
-            showAlert(
-                    "Error",
+            showError(
                     e.getMessage()
             );
         }

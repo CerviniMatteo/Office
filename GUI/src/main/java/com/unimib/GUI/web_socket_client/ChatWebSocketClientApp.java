@@ -14,25 +14,10 @@ import static com.unimib.GUI.constants.Rest.WS_ENDPOINT;
 
 public class ChatWebSocketClientApp {
 
-    private static volatile ChatWebSocketClientApp INSTANCE;
-
     private StompSession session;
     private WebSocketStompClient stompClient;
 
     private final List<Consumer<String>> listeners = new CopyOnWriteArrayList<>();
-
-    private ChatWebSocketClientApp() {}
-
-    public static ChatWebSocketClientApp getInstance() {
-        if (INSTANCE == null) {
-            synchronized (ChatWebSocketClientApp.class) {
-                if (INSTANCE == null)
-                    INSTANCE = new ChatWebSocketClientApp();
-            }
-        }
-        return INSTANCE;
-    }
-
 
     public synchronized void start() throws Exception {
         if (session != null && session.isConnected())

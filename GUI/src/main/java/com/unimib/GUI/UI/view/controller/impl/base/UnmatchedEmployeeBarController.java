@@ -2,13 +2,14 @@ package com.unimib.GUI.UI.view.controller.impl.base;
 
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.model.dto.WorkerInfoDTO;
+import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.util.function.Consumer;
 
-public class UnmatchedEmployeeBarController implements DefaultController {
+public class UnmatchedEmployeeBarController extends DefaultController {
 
     @FXML
     private Label employeeDetailsLabel;
@@ -18,6 +19,10 @@ public class UnmatchedEmployeeBarController implements DefaultController {
 
     private WorkerInfoDTO userInfo;
     private Consumer<Long> onCreateClickListener;
+
+    public UnmatchedEmployeeBarController() {
+        super(null);
+    }
 
     @FXML
     public void initialize() {

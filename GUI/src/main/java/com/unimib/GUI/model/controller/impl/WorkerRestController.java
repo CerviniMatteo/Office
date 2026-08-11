@@ -13,13 +13,8 @@ public class WorkerRestController extends BaseRestController {
     public Task<WorkerDTO> fetchWorker(Long workerId) {
         return new Task<>() {
             @Override
-            protected WorkerDTO call() {
-                try {
-                    return getOne(BASE_EMPLOYEE_ENDPOINT + "/" + workerId, WorkerDTO.class);
-                } catch (Exception e) {
-                    com.unimib.GUI.UI.view.components.impl.custom.AlertDialog.showAlert("Error", e.getMessage());
-                    return null;
-                }
+            protected WorkerDTO call() throws Exception {
+                return getOne(BASE_EMPLOYEE_ENDPOINT + "/" + workerId, WorkerDTO.class);
             }
         };
     }

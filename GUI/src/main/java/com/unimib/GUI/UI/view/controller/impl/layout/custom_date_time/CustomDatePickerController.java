@@ -2,6 +2,7 @@ package com.unimib.GUI.UI.view.controller.impl.layout.custom_date_time;
 
 import com.unimib.GUI.UI.view.controller.abstr.Clearable;
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
+import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -13,7 +14,7 @@ import javafx.scene.layout.Pane;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class CustomDatePickerController implements DefaultController, Clearable {
+public class CustomDatePickerController extends DefaultController implements Clearable {
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -27,6 +28,10 @@ public class CustomDatePickerController implements DefaultController, Clearable 
 
     private DatePicker datePicker;
     private Node pickerNode;
+
+    public CustomDatePickerController() {
+        super(null);
+    }
 
 
     @FXML

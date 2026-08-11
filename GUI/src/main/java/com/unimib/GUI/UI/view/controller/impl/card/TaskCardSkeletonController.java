@@ -3,6 +3,7 @@ package com.unimib.GUI.UI.view.controller.impl.card;
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.UI.view.controller.abstr.TaskCardBaseController;
 import com.unimib.GUI.model.dto.TaskDTO;
+import com.unimib.GUI.utils.UserSession;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
@@ -26,8 +27,8 @@ public class TaskCardSkeletonController extends TaskCardBaseController{
     private BorderPane root;
 
 
-    public TaskCardSkeletonController(TaskDTO taskDTO) {
-        super(taskDTO);
+    public TaskCardSkeletonController(TaskDTO taskDTO, UserSession userSession) {
+        super(taskDTO, userSession);
     }
 
 

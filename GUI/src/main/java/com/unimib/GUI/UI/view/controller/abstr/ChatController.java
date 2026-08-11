@@ -1,13 +1,11 @@
 package com.unimib.GUI.UI.view.controller.abstr;
 
-import com.unimib.GUI.UI.state.UIState;
 import com.unimib.GUI.UI.viewmodel.impl.ChatViewModel;
 import com.unimib.GUI.model.dto.MessageDTO;
-import com.unimib.GUI.utils.SessionManagerSingleton;
 import com.unimib.GUI.UI.view.components.impl.custom.ChatEntry;
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
+import com.unimib.GUI.utils.UserSession;
 
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public abstract class ChatController implements DefaultController {
+public abstract class ChatController extends DefaultController {
 
     protected Chat chat;
 
@@ -68,10 +66,11 @@ public abstract class ChatController implements DefaultController {
     );
 
 
-    public ChatController(Chat chat, Map<Long, List<MessageDTO>> chatCache) {
+    public ChatController(Chat chat, Map<Long, List<MessageDTO>> chatCache, UserSession userSession) {
+        super(userSession);
         this.chat = chat;
         this.chatCache = chatCache;
-        employeeId = (long) SessionManagerSingleton.getInstance().getAttribute("employeeId");
+        employeeId = userSession.getEmployeeId();
         viewModel = new ChatViewModel(employeeId);
     }
 
@@ -128,5 +127,9 @@ public abstract class ChatController implements DefaultController {
     public void destroy() {
         disposeListeners();
         viewModel.destroy();
+    }
+
+    public void detach() {
+        disposeListeners();
     }
 }

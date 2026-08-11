@@ -6,6 +6,7 @@ import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.UI.view.controller.abstr.TaskCardBaseWithWorkersImgController;
 import com.unimib.GUI.UI.view.utils.StringHelper;
 import com.unimib.GUI.UI.view.utils.WorkerImageUtils;
+import com.unimib.GUI.utils.UserSession;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,8 +21,8 @@ public class TaskCardStartedController extends TaskCardBaseWithWorkersImgControl
     private Button changeStateButton;
 
 
-    public TaskCardStartedController(TaskDTO task) {
-        super(task);
+    public TaskCardStartedController(TaskDTO task, UserSession userSession) {
+        super(task, userSession);
     }
 
 

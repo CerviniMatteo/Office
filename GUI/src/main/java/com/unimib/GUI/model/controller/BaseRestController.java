@@ -1,6 +1,5 @@
 package com.unimib.GUI.model.controller;
 
-import com.unimib.GUI.UI.view.components.impl.custom.AlertDialog;
 import javafx.concurrent.Task;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -14,7 +13,7 @@ public abstract class BaseRestController {
         try {
             return rest.getForObject(url, responseType);
         } catch (Exception e) {
-            AlertDialog.showAlert("Error", e.getMessage());
+            ///AlertDialog.showAlert("Error", e.getMessage());
             throw new RuntimeException("GET request failed for " + url, e);
         }
     }
@@ -31,7 +30,7 @@ public abstract class BaseRestController {
             return response.getBody();
 
         } catch (Exception e) {
-            AlertDialog.showAlert("Error", e.getMessage());
+            //AlertDialog.showAlert("Error", e.getMessage());
             throw new RuntimeException("GET request failed for " + url, e);
         }
     }
@@ -55,7 +54,7 @@ public abstract class BaseRestController {
                     return response.getBody();
 
                 } catch (Exception e) {
-                    AlertDialog.showAlert("Error", e.getMessage());
+                    //AlertDialog.showAlert("Error", e.getMessage());
                     throw new RuntimeException("POST request failed for " + url, e);
                 }
             }

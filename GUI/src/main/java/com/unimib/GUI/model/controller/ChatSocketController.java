@@ -14,7 +14,7 @@ public class ChatSocketController {
 
 
     public ChatSocketController() {
-        client = ChatWebSocketClientApp.getInstance();
+        client = new ChatWebSocketClientApp();
         mapper = new ObjectMapper();
     }
 

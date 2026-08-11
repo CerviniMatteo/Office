@@ -15,33 +15,11 @@ public class ApplicationStateManager {
     private final StackPane contentRoot;
     private final StackPane overlayRoot;
 
-    private static volatile ApplicationStateManager INSTANCE;
-
-    private ApplicationStateManager(StackPane contentRoot, StackPane overlayRoot) {
+    public ApplicationStateManager(StackPane contentRoot, StackPane overlayRoot) {
         this.navigationHistory = new ArrayDeque<>();
         this.forwardHistory = new ArrayDeque<>();
         this.contentRoot = contentRoot;
         this.overlayRoot = overlayRoot;
-    }
-
-    public static ApplicationStateManager getInstance(StackPane contentRoot, StackPane overlayRoot) {
-        if (INSTANCE == null) {
-            synchronized (ApplicationStateManager.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new ApplicationStateManager(contentRoot, overlayRoot);
-                }
-            }
-        }
-        return INSTANCE;
-    }
-
-    public static ApplicationStateManager getInstance() {
-        if (INSTANCE == null) {
-            throw new IllegalStateException(
-                    "ApplicationStateManager non inizializzato. Chiamare prima getInstance(contentRoot, overlayRoot)."
-            );
-        }
-        return INSTANCE;
     }
 
     public void addWindow(Node newWindow) {

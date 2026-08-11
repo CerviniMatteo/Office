@@ -97,6 +97,12 @@
         <!-- JPro -->
 
         <dependency>
+            <groupId>one.jpro.platform</groupId>
+            <artifactId>jpro-session</artifactId>
+            <version>0.5.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>one.jpro</groupId>
             <artifactId>jpro-webapi</artifactId>
             <version>${jpro.version}</version>
@@ -107,6 +113,8 @@
             <artifactId>jpro-file</artifactId>
             <version>0.7.1</version>
         </dependency>
+
+
 
         <!-- Jackson -->
 

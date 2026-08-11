@@ -1,17 +1,22 @@
 package com.unimib.GUI.UI.view.controller.impl.base;
 
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
+import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 
-public class ChatEntryController implements DefaultController {
+public class ChatEntryController extends DefaultController {
 
     @FXML
     private Label senderLabel;
 
     @FXML
     private Label receiverLabel;
+
+    public ChatEntryController() {
+        super(null);
+    }
 
     public void setData(String sender, String receiver) {
         if (receiver != null && !receiver.isEmpty()) {

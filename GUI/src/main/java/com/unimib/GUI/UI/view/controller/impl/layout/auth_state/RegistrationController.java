@@ -2,6 +2,7 @@ package com.unimib.GUI.UI.view.controller.impl.layout.auth_state;
 
 import com.unimib.GUI.UI.view.controller.abstr.AuthController;
 import com.unimib.GUI.UI.viewmodel.impl.AuthViewModel;
+import com.unimib.GUI.utils.UserSession;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -46,6 +47,10 @@ public class RegistrationController extends AuthController {
     private AuthViewModel viewModel;
     private Runnable switchToLogin;
     private String selectedImageBase64;
+
+    public RegistrationController(UserSession userSession) {
+        super(userSession);
+    }
 
     public void setSwitchToLogin(Runnable switchToLogin) {
         this.switchToLogin = switchToLogin;
