@@ -1,6 +1,7 @@
 package com.unimib.GUI.UI.view.factory;
 
 
+import com.unimib.GUI.UI.view.components.impl.task.TaskCardSkeleton;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.model.enums.TaskState;
 import com.unimib.GUI.UI.view.components.abstr.TaskCardBase;
@@ -20,6 +21,7 @@ public final class TaskCardFactory {
         if (task == null) return null;
         TaskState state = task.taskState();
         return switch (state) {
+            case LOADING -> new TaskCardSkeleton(task, userSession);
             case TO_BE_STARTED -> new TaskCardNotStarted(task, userSession);
             case STARTED -> new TaskCardStarted(task, userSession);
             case DONE -> new TaskCardDone(task, userSession);

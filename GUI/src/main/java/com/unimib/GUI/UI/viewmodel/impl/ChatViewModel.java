@@ -5,7 +5,7 @@ import com.unimib.GUI.UI.viewmodel.BaseViewModel;
 import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.model.dto.WorkerInfoDTO;
-import com.unimib.GUI.UI.repository.ChatRepository;
+import com.unimib.GUI.model.repository.ChatRepository;
 import javafx.beans.property.*;
 
 import java.util.List;

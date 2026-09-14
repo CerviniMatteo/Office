@@ -88,17 +88,17 @@ public class TaskContainerController extends DefaultController {
         }
     }
 
-    private TaskCardSkeleton newSkeletonPlaceholder(Long taskId) {
+    private TaskCardBase newSkeletonPlaceholder(Long taskId) {
         TaskDTO placeholder = new TaskDTO(
                 taskId,
                 "",
-                TaskState.TO_BE_STARTED,
+                TaskState.LOADING,
                 null,
                 null,
                 Collections.emptyMap()
         );
 
-        return new TaskCardSkeleton(placeholder, userSession);
+        return TaskCardFactory.create(placeholder, userSession);
     }
 
     private void removeInitialSkeleton() {
@@ -110,7 +110,7 @@ public class TaskContainerController extends DefaultController {
     private void showTaskSkeleton(Long taskId) {
         removeSkeleton(taskId);
 
-        TaskCardSkeleton skeleton = newSkeletonPlaceholder(taskId);
+        TaskCardSkeleton skeleton =(TaskCardSkeleton) newSkeletonPlaceholder(taskId);
         skeleton.setId("skeleton-" + taskId);
 
         skeletonTasks.put(taskId, skeleton);

@@ -3,7 +3,7 @@ package com.unimib.GUI.UI.viewmodel.impl;
 import com.unimib.GUI.UI.state.UIState;
 import com.unimib.GUI.UI.viewmodel.BaseViewModel;
 import com.unimib.GUI.model.dto.WorkerDTO;
-import com.unimib.GUI.UI.repository.AuthRepository;
+import com.unimib.GUI.model.repository.AuthRepository;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

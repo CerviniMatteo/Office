@@ -1,4 +1,4 @@
-package com.unimib.GUI.UI.repository;
+package com.unimib.GUI.model.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unimib.GUI.UI.view.utils.FileUtils;

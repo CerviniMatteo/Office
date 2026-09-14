@@ -1,4 +1,4 @@
-package com.unimib.GUI.UI.repository;
+package com.unimib.GUI.model.repository;
 
 import com.unimib.GUI.model.controller.impl.AuthRestController;
 import com.unimib.GUI.model.dto.WorkerDTO;

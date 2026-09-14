@@ -11,7 +11,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +19,6 @@ import static com.unimib.backend.constants.CommonConstants.*;
 import static com.unimib.backend.constants.EmployeeConstants.*;
 import static com.unimib.backend.constants.TaskConstants.NULL_DATE;
 import static com.unimib.backend.constants.TaskConstants.NULL_TASK_STATE;
-import static com.unimib.backend.utils.StringHelper.hashString;
 
 /**
  * Service class for managing Dipendente (employee) entities.
