@@ -38,7 +38,7 @@ public class TaskContainerController extends DefaultController {
     @FXML private Button logOutButton;
 
     private final Map<Long, TaskCardBase> tasks = new HashMap<>();
-    private final Map<Long, TaskCardSkeleton> skeletonTasks = new HashMap<>();
+    private final Map<Long, TaskCardBase> skeletonTasks = new HashMap<>();
 
     private TaskViewModel viewModel;
     private Chat chat;
@@ -110,7 +110,7 @@ public class TaskContainerController extends DefaultController {
     private void showTaskSkeleton(Long taskId) {
         removeSkeleton(taskId);
 
-        TaskCardSkeleton skeleton =(TaskCardSkeleton) newSkeletonPlaceholder(taskId);
+        TaskCardBase skeleton =  newSkeletonPlaceholder(taskId);
         skeleton.setId("skeleton-" + taskId);
 
         skeletonTasks.put(taskId, skeleton);
@@ -118,7 +118,7 @@ public class TaskContainerController extends DefaultController {
     }
 
     private void removeSkeleton(Long taskId) {
-        TaskCardSkeleton skeleton = skeletonTasks.remove(taskId);
+        TaskCardBase skeleton = skeletonTasks.remove(taskId);
 
         if (skeleton == null) {
             return;
