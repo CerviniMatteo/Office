@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public class ChatViewModel extends BaseViewModel {
 
-    private final ChatRepository repository = new ChatRepository();
+    private final ChatRepository repository;
 
     private final ObjectProperty<UIState<List<ChatInfoDTO>>> chatsState =
             new SimpleObjectProperty<>();
@@ -44,6 +44,9 @@ public class ChatViewModel extends BaseViewModel {
 
         this.employeeId = employeeId;
 
+        // il repository dipende dall'utente (cartella di cache dedicata)
+        this.repository = new ChatRepository(employeeId);
+
         cacheListener = chatId -> {
 
             Long currentChat = selectedChat.get();
@@ -64,13 +67,13 @@ public class ChatViewModel extends BaseViewModel {
 
     public void loadChats() {
         execute(
-                ()->repository.getChats(employeeId),
+                () -> repository.getChats(employeeId),
                 chatsState);
     }
 
     public void getUnMatchedEmployeeInfos() {
         execute(
-                ()->repository.getUnMatchedEmployeeInfos(employeeId),
+                () -> repository.getUnMatchedEmployeeInfos(employeeId),
                 newChatsState);
     }
 

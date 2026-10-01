@@ -2,6 +2,7 @@ package com.unimib.GUI.UI.view.controller.impl.layout.chat_state;
 
 import com.unimib.GUI.UI.view.components.impl.layout.Chat;
 import com.unimib.GUI.UI.view.controller.abstr.ChatController;
+import com.unimib.GUI.UI.viewmodel.impl.ChatViewModel;
 import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.utils.UserSession;
 import javafx.application.Platform;
@@ -15,23 +16,22 @@ import static com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils.setVisible;
 
 public class OpenChatStateController extends ChatController {
 
-    protected OpenChatStateController(
+    public OpenChatStateController(
             Chat chat,
             Map<Long, List<MessageDTO>> chatCache,
-            UserSession userSession
+            UserSession userSession,
+            ChatViewModel viewModel
     ) {
-        super(chat, chatCache, userSession);
+        super(chat, chatCache, userSession, viewModel);
     }
 
     @FXML
     private void initialize() {
 
-        super.baseInitialize();
-
         observeState(
                 viewModel.getSendMessageStateProperty(),
                 () -> sendButton.setDisable(true),
-                unused -> {
+                _ -> {
                     sendButton.setDisable(false);
                     inputForm.clear();
                 },
@@ -52,7 +52,6 @@ public class OpenChatStateController extends ChatController {
                     chatContainer.getChildren().clear();
 
                     for (MessageDTO message : messages) {
-                        System.out.printf("Rendering message: %s%n", message);
                         renderMessage(message);
                     }
                 },
@@ -87,7 +86,7 @@ public class OpenChatStateController extends ChatController {
 
         selectedChatId = chatId;
 
-        setChatVisible(true,  false);
+        setChatVisible(true, false);
 
         chatContainer.getChildren().clear();
 
@@ -97,7 +96,6 @@ public class OpenChatStateController extends ChatController {
     private void setChatVisible(boolean chatsVisible, boolean areaVisible) {
         setVisible(chatsVisible, chatArea);
         setVisible(areaVisible, closedChatArea);
-
     }
 
     // =========================
@@ -110,9 +108,12 @@ public class OpenChatStateController extends ChatController {
         setChatVisible(false, true);
 
         ClosedChatStateController closed =
-                new ClosedChatStateController(chat, userSession);
+                new ClosedChatStateController(chat, chatCache, userSession, viewModel);
 
         closed.adoptStateFrom(this);
+
+        // remove this controller's listeners from the shared viewModel
+        this.detach();
 
         chat.setController(closed);
     }

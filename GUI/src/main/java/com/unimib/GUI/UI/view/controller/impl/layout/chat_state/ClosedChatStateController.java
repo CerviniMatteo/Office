@@ -1,6 +1,7 @@
 package com.unimib.GUI.UI.view.controller.impl.layout.chat_state;
 
 import com.unimib.GUI.UI.view.components.impl.custom.UnmatchedEmployeeBar;
+import com.unimib.GUI.UI.viewmodel.impl.ChatViewModel;
 import com.unimib.GUI.model.dto.ChatInfoDTO;
 import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.model.dto.WorkerInfoDTO;
@@ -10,7 +11,6 @@ import com.unimib.GUI.UI.view.controller.abstr.ChatController;
 import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,13 +18,17 @@ import static com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils.setVisible;
 
 public class ClosedChatStateController extends ChatController {
 
-    public ClosedChatStateController(Chat chat, UserSession userSession) {
-        super(chat, new HashMap<>(), userSession);
+    public ClosedChatStateController(
+            Chat chat,
+            Map<Long, List<MessageDTO>> chatCache,
+            UserSession userSession,
+            ChatViewModel viewModel
+    ) {
+        super(chat, chatCache, userSession, viewModel);
     }
 
     @FXML
     private void initialize() {
-        super.baseInitialize();
 
         setVisible(false, chatArea);
 
@@ -33,7 +37,6 @@ public class ClosedChatStateController extends ChatController {
                 this::showUnmatchedEmployees,
                 this::showError
         );
-
 
         observeState(
                 viewModel.getChatsStateProperty(),
@@ -69,8 +72,7 @@ public class ClosedChatStateController extends ChatController {
         for (WorkerInfoDTO employee : employees) {
             UnmatchedEmployeeBar bar = new UnmatchedEmployeeBar(employee);
 
-            bar.getController().setOnCreateClick(targetEmployeeId ->
-                    viewModel.createChat(targetEmployeeId)
+            bar.getController().setOnCreateClick(viewModel::createChat
             );
 
             unmatchedEmployeeContainer.getChildren().add(bar);
@@ -94,11 +96,17 @@ public class ClosedChatStateController extends ChatController {
     }
 
     private void openChat(Long chatId) {
-        viewModel.openChat(chatId);
+        OpenChatStateController open =
+                new OpenChatStateController(chat, chatCache, userSession, viewModel);
 
-        OpenChatStateController open = new OpenChatStateController(this.chat, this.chatCache, userSession);
         open.adoptStateFrom(this);
+
+        // remove this controller's listeners from the shared viewModel
+        this.detach();
+
         chat.setController(open);
+
+        // displayChat already calls viewModel.openChat(chatId)
         open.displayChat(chatId);
     }
 }

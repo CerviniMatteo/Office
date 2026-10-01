@@ -55,7 +55,7 @@ public abstract class ChatController extends DefaultController {
 
     protected Long selectedChatId = null;
 
-    protected ChatViewModel viewModel;
+    protected final ChatViewModel viewModel;
 
     protected final Map<Long, List<MessageDTO>> chatCache;
 
@@ -66,29 +66,29 @@ public abstract class ChatController extends DefaultController {
     );
 
 
-    public ChatController(Chat chat, Map<Long, List<MessageDTO>> chatCache, UserSession userSession) {
+    /**
+     * Neither the viewModel nor the cache is created here: both are created
+     * once (in Chat) and passed to every state controller. Creating a
+     * ChatViewModel per controller opens one STOMP connection each,
+     * which duplicates every incoming message.
+     */
+    public ChatController(
+            Chat chat,
+            Map<Long, List<MessageDTO>> chatCache,
+            UserSession userSession,
+            ChatViewModel viewModel
+    ) {
         super(userSession);
         this.chat = chat;
         this.chatCache = chatCache;
-        employeeId = userSession.getEmployeeId();
-        viewModel = new ChatViewModel(employeeId);
-    }
-
-
-    @FXML
-    private void initialize() {
-    }
-
-
-    protected void baseInitialize() {
-        initialize();
+        this.employeeId = userSession.getEmployeeId();
+        this.viewModel = viewModel;
     }
 
 
     public void adoptStateFrom(ChatController other) {
         this.selectedChatId = other.selectedChatId;
         this.employeeId = other.employeeId;
-        this.viewModel = other.viewModel;
     }
 
     protected void renderMessage(MessageDTO msg) {
@@ -121,14 +121,17 @@ public abstract class ChatController extends DefaultController {
 
     /**
      * Called only when leaving the chat feature entirely (e.g. logout),
-     * NOT on Open<->Closed state switches, since the viewModel is shared
-     * and reused by the next controller via adoptStateFrom().
+     * NOT on Open<->Closed state switches, since the viewModel is shared.
      */
     public void destroy() {
         disposeListeners();
         viewModel.destroy();
     }
 
+    /**
+     * Called on Open<->Closed state switches: removes this controller's
+     * listeners from the shared viewModel without destroying it.
+     */
     public void detach() {
         disposeListeners();
     }

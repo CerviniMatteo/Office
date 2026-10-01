@@ -1,5 +1,6 @@
 package com.unimib.GUI.model.repository;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unimib.GUI.UI.view.utils.FileUtils;
 import com.unimib.GUI.model.controller.ChatSocketController;
@@ -9,6 +10,8 @@ import com.unimib.GUI.model.dto.MessageDTO;
 import com.unimib.GUI.model.dto.WorkerInfoDTO;
 import javafx.concurrent.Task;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
@@ -23,14 +26,28 @@ public class ChatRepository {
 
     private final List<Consumer<Long>> cacheListeners = new ArrayList<>();
 
-    private final Path baseDir =
-            Path.of(System.getProperty("user.home"), ".chat-cache");
+    // una cartella per utente: due utenti sulla stessa macchina
+    // non condividono più i file di cache
+    private final Path baseDir;
 
-    public ChatRepository() {
+    public ChatRepository(Long employeeId) {
+
+        baseDir = Path.of(
+                System.getProperty("user.home"),
+                ".chat-cache",
+                String.valueOf(employeeId)
+        );
+
+        try {
+            Files.createDirectories(baseDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         restDataSource = new ChatRestController();
         socketDataSource = new ChatSocketController();
-        mapper = new ObjectMapper();
+        mapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         socketDataSource.addReceiveListener(json -> {
             try {
@@ -70,8 +87,18 @@ public class ChatRepository {
     public void cacheMessage(MessageDTO message) {
 
         synchronized (this) {
-            cache.computeIfAbsent(message.chatId(), this::loadMessagesFromDisk)
-                    .add(message);
+
+            List<MessageDTO> messages =
+                    cache.computeIfAbsent(message.chatId(), this::loadMessagesFromDisk);
+
+            // deduplica: se l'id è già presente non scrivo e non notifico
+            boolean alreadyPresent = messages.stream()
+                    .anyMatch(m -> m.id().equals(message.id()));
+
+            if (alreadyPresent)
+                return;
+
+            messages.add(message);
 
             FileUtils.appendObject(
                     baseDir.resolve(message.chatId() + ".txt"),
