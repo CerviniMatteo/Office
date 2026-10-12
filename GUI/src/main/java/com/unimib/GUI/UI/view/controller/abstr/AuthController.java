@@ -16,7 +16,7 @@ public abstract class AuthController extends DefaultController {
 
     protected void goToTaskContainer() {
         ApplicationStateManager manager = userSession.applicationStateManager();
-        showSuccess("Login successful, Welcome back!");
         manager.replaceWindow(new TaskContainer(userSession));
+        showSuccess("Login successful, Welcome back!");
     }
 }

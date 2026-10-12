@@ -1,12 +1,12 @@
 package com.unimib.GUI.utils;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class SessionManager {
 
-    private final ConcurrentMap<String, Object> sessionAttributes =
-            new ConcurrentHashMap<>();
+    private final Map<String, Object> sessionAttributes =
+            new HashMap<>();
 
     public void setAttribute(String key, Object value) {
         sessionAttributes.put(key, value);

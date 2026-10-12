@@ -16,6 +16,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.lang.reflect.Type;
+import java.util.concurrent.CompletableFuture;
 
 import static com.unimib.GUI.constants.Rest.WS_ENDPOINT;
 
@@ -27,13 +28,18 @@ public class TaskWebSocketClientApp {
     private final StringProperty property = new SimpleStringProperty();
     private final WebSocketStompClient stompClient = new WebSocketStompClient(new StandardWebSocketClient());
     private StompSession session;
+    private CompletableFuture<StompSession> connectionFuture;
 
     /**
      * Start the WebSocket STOMP client and subscribe to task updates.
-     * @throws Exception if the connection fails
+     * Connection is asynchronous to avoid blocking the JavaFX thread.
      */
-    public synchronized void start() throws Exception {
+    public synchronized void start() {
         if (session != null && session.isConnected()) {
+            return;
+        }
+
+        if (connectionFuture != null && !connectionFuture.isDone()) {
             return;
         }
 
@@ -78,10 +84,25 @@ public class TaskWebSocketClientApp {
             }
         };
 
-        session = stompClient.connectAsync(WS_ENDPOINT, sessionHandler).get();
+        connectionFuture = stompClient.connectAsync(WS_ENDPOINT, sessionHandler);
+        connectionFuture.whenComplete((connectedSession, throwable) -> {
+            if (throwable != null) {
+                System.err.println("Could not connect to TaskContainer WebSocket: " + throwable.getMessage());
+                return;
+            }
+
+            synchronized (TaskWebSocketClientApp.this) {
+                session = connectedSession;
+            }
+        });
     }
 
     public synchronized void stop() {
+        if (connectionFuture != null && !connectionFuture.isDone()) {
+            connectionFuture.cancel(true);
+        }
+        connectionFuture = null;
+
         if (session != null) {
             try {
                 if (session.isConnected()) {

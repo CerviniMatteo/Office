@@ -14,7 +14,13 @@ public class TaskContainer extends BorderPane {
     public TaskContainer(UserSession userSession) {
         super();
         controller = new TaskContainerController(userSession);
+        Sidebar sidebar = new Sidebar(userSession);
+        controller.setSidebar(sidebar);
+
         FXMLUtilLoader.load(this, controller, "/components/TaskContainer.fxml", null);
+        controller.setRoot(this);
+        setRight(sidebar);
+
         getStylesheets().add(
                 Objects.requireNonNull(getClass().getResource("/styles/app.css")).toExternalForm()
         );
