@@ -36,13 +36,13 @@ public class LoginController extends AuthController {
 
     @FXML
     private void initialize() {
-        viewModel = new AuthViewModel();
+        viewModel = new AuthViewModel(userSession);
 
         observeState(
-                viewModel.getLoginState(),
-                employeeId -> {
+                viewModel.getUserState(),
+                workerDTO -> {
 
-                    saveEmployeeId(employeeId);
+                    saveEmployeeId(workerDTO.workerId());
                     goToTaskContainer();
                 },
                 this::showError

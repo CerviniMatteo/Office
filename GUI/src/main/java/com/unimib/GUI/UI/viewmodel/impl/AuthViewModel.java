@@ -4,6 +4,7 @@ import com.unimib.GUI.UI.state.UIState;
 import com.unimib.GUI.UI.viewmodel.BaseViewModel;
 import com.unimib.GUI.model.dto.WorkerDTO;
 import com.unimib.GUI.model.repository.AuthRepository;
+import com.unimib.GUI.utils.UserSession;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,20 +13,17 @@ public class AuthViewModel extends BaseViewModel {
 
     private final AuthRepository repository;
 
-    private final ObjectProperty<UIState<Long>> loginState =
+    private final ObjectProperty<UIState<WorkerDTO>> userState =
             new SimpleObjectProperty<>();
 
-    private final ObjectProperty<UIState<WorkerDTO>> registrationState =
-            new SimpleObjectProperty<>();
-
-    public AuthViewModel() {
-        repository = new AuthRepository();
+    public AuthViewModel(UserSession userSession) {
+        repository = new AuthRepository(userSession);
     }
 
     public void login(String email) {
         execute(
                 () -> repository.login(email),
-                loginState
+                userState
         );
     }
 
@@ -40,15 +38,11 @@ public class AuthViewModel extends BaseViewModel {
                                 encodeImage
                         )
                 ),
-                registrationState
+                userState
         );
     }
 
-    public ReadOnlyObjectProperty<UIState<Long>> getLoginState() {
-        return loginState;
-    }
-
-    public ReadOnlyObjectProperty<UIState<WorkerDTO>> getRegistrationState() {
-        return registrationState;
+    public ReadOnlyObjectProperty<UIState<WorkerDTO>> getUserState() {
+        return userState;
     }
 }

@@ -65,10 +65,10 @@ public class RegistrationController extends AuthController {
 
         setVisible(false, profileImageView);
 
-        viewModel = new AuthViewModel();
+        viewModel = new AuthViewModel(userSession);
 
         observeState(
-                viewModel.getRegistrationState(),
+                viewModel.getUserState(),
                 workerDTO -> {
                     if (workerDTO != null) {
                         showSuccess(

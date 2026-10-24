@@ -141,7 +141,7 @@
 .design-rectangle {
     -fx-background-color: -app-surface-4;
     -fx-background-radius: 20;
-    -fx-border-color: -app-white-50;
+    -fx-border-color: -app-cyan-30;
     -fx-border-width: 2;
     -fx-border-radius: 20;
     -fx-padding: 20;
@@ -537,6 +537,19 @@
     -fx-padding: 2px 0;
 }
 
+.white-separator {
+    -fx-pref-width: 4px;
+    -fx-min-width: 4px;
+    -fx-max-width: 4px;
+    -fx-pref-height: 20px;
+    -fx-padding: 0 8px;
+}
+
+.white-separator .line {
+    -fx-border-color: white;
+    -fx-border-width: 0 0 0 3px;
+}
+
 /* ===================================================== */
 /* ACTIVE TASKS CONTAINER                                */
 /* ===================================================== */
@@ -786,7 +799,16 @@
 }
 
 /* ===================================================== */
-/* TASK CREATION FORM SPECIFIC                           */
+/* DASHBOARD USER INFO PANEL                             */
+/* ===================================================== */
+/* Label inside the HBox */
+.dashboard-user-info-label {
+    -fx-text-fill: -app-white;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+/* ===================================================== /*
+/* DASHBOARD CONTAINER                                   /*
 /* ===================================================== */
 .form-label {
     -fx-background-color: transparent;

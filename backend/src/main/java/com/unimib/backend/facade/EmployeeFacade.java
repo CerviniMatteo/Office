@@ -1,5 +1,6 @@
 package com.unimib.backend.facade;
 
+import com.unimib.backend.DTO.EmployeeDTO;
 import com.unimib.backend.POJO.Employee;
 import com.unimib.backend.POJO.Task;
 import com.unimib.backend.enums.TaskState;
@@ -56,7 +57,7 @@ public class EmployeeFacade {
         return employeeService.findEmployeeById(employeeId);
     }
 
-    public Optional<Long> findEmployeeIdByEmail(@NonNull String email) {
+    public Optional<Employee> findEmployeeIdByEmail(@NonNull String email) {
         return employeeService.findEmployeeIdByEmail(email);
     }
 

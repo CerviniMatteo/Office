@@ -7,9 +7,13 @@ import com.unimib.GUI.UI.view.components.impl.layout.Sidebar;
 import com.unimib.GUI.UI.view.components.impl.layout.TaskContainer;
 import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
 import com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils;
+import com.unimib.GUI.UI.viewmodel.impl.DashboardViewModel;
+import com.unimib.GUI.model.dto.WorkerDTO;
+import com.unimib.GUI.utils.ImageHelper;
 import com.unimib.GUI.utils.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -21,12 +25,21 @@ public class DashboardContainerController extends DefaultController {
     @FXML private Button chatButton;
     @FXML private Button logOutButton;
 
+    @FXML private BorderPane workerAvatarContainer;
+    @FXML private Label workerNameLabel;
+    @FXML private Label workerSurnameLabel;
+    @FXML private Label workerEmailLabel;
+
+
     private Sidebar sidebar;
     private BorderPane root;
     private Chat chat;
 
+    private DashboardViewModel viewModel;
+
     public DashboardContainerController(UserSession userSession) {
         super(userSession);
+        viewModel = new DashboardViewModel(userSession);
     }
 
     public void setSidebar(Sidebar sidebar) {
@@ -38,6 +51,17 @@ public class DashboardContainerController extends DefaultController {
         this.logOutButton = sidebar.getLogOutButton();
 
         configureSidebarActions();
+    }
+
+    private void showUserInfo() {
+        WorkerDTO worker = viewModel.getWorker();
+        if (worker != null) {
+            ImageHelper imageHelper = new ImageHelper();
+            workerAvatarContainer.setCenter(imageHelper.createCircularImageViewWithGoldStroke(imageHelper.createImageFromBase64(worker.encodedImage()), 100, 7));
+            workerNameLabel.setText(worker.name());
+            workerSurnameLabel.setText(worker.surname());
+            workerEmailLabel.setText(worker.email());
+        }
     }
 
     public void setRoot(BorderPane root) {
@@ -75,5 +99,6 @@ public class DashboardContainerController extends DefaultController {
     @FXML
     public void initialize() {
         configureSidebarActions();
+        showUserInfo();
     }
 }

@@ -17,18 +17,19 @@ public class AuthenticationController {
     @Autowired
     EmployeeFacade facade;
 
+    EmployeeDtoMapper mapper = new EmployeeDtoMapper();
+
     @GetMapping("/login/{email}")
-    public ResponseEntity<Long> getEmployeeId(@PathVariable  String email) {
+    public ResponseEntity<EmployeeDTO> getEmployeeId(@PathVariable  String email) {
         System.out.println("login by email: " + email);
-        Optional<Long> employeeId = facade.findEmployeeIdByEmail(email);
-        return employeeId.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Employee> employee = facade.findEmployeeIdByEmail(email);
+        return employee.map(mapper::mapToDto).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
     @PostMapping("/register")
     public ResponseEntity<EmployeeDTO> registerEmployeeId(@RequestBody EmployeeRegistrationDTO request) {
         Employee employee = facade.registerEmployee(request.name(), request.surname(), request.encodedImage());
-        EmployeeDtoMapper mapper = new EmployeeDtoMapper();
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToDto(employee));
     }
 }

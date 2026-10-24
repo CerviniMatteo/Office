@@ -8,8 +8,8 @@ import static com.unimib.GUI.constants.Rest.*;
 
 public class AuthRestController extends BaseRestController {
 
-    public Long login(String email) {
-        return getOne(BASE_LOGIN_ENDPOINT + "/" + email, Long.class);
+    public WorkerDTO login(String email) {
+        return getOne(BASE_LOGIN_ENDPOINT + "/" + email, WorkerDTO.class);
     }
 
     public Task<WorkerDTO> signup(WorkerDTO worker) {

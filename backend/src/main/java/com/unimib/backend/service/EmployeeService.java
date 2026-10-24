@@ -129,7 +129,7 @@ public class EmployeeService {
      * @throws IllegalArgumentException if the email is null
      * @return Optional containing the employee if found
      */
-    public Optional<Long> findEmployeeIdByEmail(String email) {
+    public Optional<Employee> findEmployeeIdByEmail(String email) {
         assertNotNull(email, NULL_EMPLOYEE_ID);
         return Optional.of(workerRepository.findWorkerIdByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(EMPLOYEE_NOT_FOUND)));

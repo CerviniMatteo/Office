@@ -1,5 +1,6 @@
 package com.unimib.backend.repository;
 
+import com.unimib.backend.POJO.Employee;
 import com.unimib.backend.POJO.Worker;
 import com.unimib.backend.enums.WorkerRole;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,8 +18,8 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
      * @param email the email address of the worker.
      * @return an Optional containing the employee ID if found, otherwise empty.
      */
-    @Query("SELECT w.workerId FROM worker w WHERE w.email = :email")
-    Optional<Long> findWorkerIdByEmail(String email);
+    @Query("SELECT e FROM employee e WHERE e.email = :email")
+    Optional<Employee> findWorkerIdByEmail(String email);
 
     /**
      * Retrieves all workers with a specific monthly salary.
