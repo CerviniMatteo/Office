@@ -1,6 +1,7 @@
 package com.unimib.backend.facade;
 
 import com.unimib.backend.DTO.TaskDTO;
+import com.unimib.backend.DTO.TaskStatsDTO;
 import com.unimib.backend.POJO.Employee;
 import com.unimib.backend.POJO.Task;
 import com.unimib.backend.enums.TaskState;
@@ -117,5 +118,9 @@ public class TaskFacade {
 
     public Task setTaskEndDate(Long taskId, LocalDateTime endDate) {
         return taskService.setTaskEndDate(taskId, endDate);
+    }
+
+    public TaskStatsDTO getTaskStats(Long taskId) {
+        return taskService.getTaskStats(taskId);
     }
 }

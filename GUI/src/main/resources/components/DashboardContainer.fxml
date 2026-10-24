@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.shape.Arc?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.Separator?>
 <fx:root type="javafx.scene.layout.BorderPane"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml">
@@ -17,20 +18,130 @@
     </padding>
 
     <center>
-        <VBox>
-            <HBox alignment="CENTER_LEFT"  styleClass="semi-transparent-bg" maxWidth="-Infinity">
-                <BorderPane  fx:id="workerAvatarContainer"/>
-                <Region minWidth="30"/>
-                <Label  fx:id="workerNameLabel" styleClass="dashboard-user-info-label"/>
-                <Region minWidth="10"/>
-                <Label   fx:id="workerSurnameLabel" styleClass="dashboard-user-info-label"/>
-                <Region minWidth="5"/>
-                <Separator orientation="VERTICAL" styleClass="white-separator"/>
-                <Region minWidth="5"/>
-                <Label fx:id="workerEmailLabel" styleClass="dashboard-user-info-label"/>
+        <VBox spacing="12">
+
+            <!-- Worker information -->
+            <HBox alignment="CENTER_LEFT"
+                  spacing="15"
+                  styleClass="semi-transparent-bg"
+                  maxWidth="-Infinity">
+
+                <BorderPane fx:id="workerAvatarContainer"/>
+
+                <Label fx:id="workerGenerabilityLabel"
+                       styleClass="dashboard-user-info-label"/>
+
+                <Region minWidth="5"
+                        prefWidth="5"
+                        maxWidth="5"
+                        styleClass="dashboard-separator"/>
+
+                <Label fx:id="workerEmailLabel"
+                       styleClass="dashboard-user-info-label"/>
             </HBox>
+
+            <!-- Task progress section -->
+            <VBox spacing="8"
+                  alignment="TOP_CENTER"
+                  maxWidth="-Infinity"
+                  styleClass="semi-transparent-bg">
+
+                <Label text="TASK PROGRESS"
+                       maxWidth="Infinity"
+                       alignment="CENTER"
+                       styleClass="task-progress-label"/>
+
+                <HBox alignment="TOP_CENTER" spacing="20">
+
+                    <!-- Started tasks -->
+                    <VBox alignment="TOP_CENTER" spacing="4">
+
+                        <Label text="Started tasks"
+                               maxWidth="Infinity"
+                               alignment="CENTER"
+                               styleClass="task-progress-label"/>
+
+                        <Pane minWidth="150" prefWidth="150" maxWidth="150"
+                              minHeight="150" prefHeight="150" maxHeight="150">
+
+                            <Arc centerX="75" centerY="75"
+                                 radiusX="60" radiusY="60"
+                                 startAngle="90" length="360"
+                                 type="OPEN"
+                                 fill="TRANSPARENT"
+                                 styleClass="task-progress-track"/>
+
+                            <Arc fx:id="progressStartedTaskArc"
+                                 centerX="75" centerY="75"
+                                 radiusX="60" radiusY="60"
+                                 startAngle="90" length="0"
+                                 type="OPEN"
+                                 fill="TRANSPARENT"
+                                 styleClass="task-progress-started"/>
+
+                            <VBox layoutX="0" layoutY="0"
+                                  minWidth="150" prefWidth="150" maxWidth="150"
+                                  minHeight="150" prefHeight="150" maxHeight="150"
+                                  alignment="CENTER"
+                                  spacing="2"
+                                  mouseTransparent="true">
+
+                                <Label fx:id="progressStartedTaskLabel"
+                                       styleClass="task-progress-label"/>
+
+                                <Label fx:id="progressStartedTaskFractionLabel"
+                                       styleClass="task-progress-label"
+                                       style="-fx-font-size: 10px;"/>
+                            </VBox>
+                        </Pane>
+                    </VBox>
+
+                    <!-- Done tasks -->
+                    <VBox alignment="TOP_CENTER" spacing="4">
+
+                        <Label text="Done tasks"
+                               maxWidth="Infinity"
+                               alignment="CENTER"
+                               styleClass="task-progress-label"/>
+
+                        <Pane minWidth="150" prefWidth="150" maxWidth="150"
+                              minHeight="150" prefHeight="150" maxHeight="150">
+
+                            <Arc centerX="75" centerY="75"
+                                 radiusX="60" radiusY="60"
+                                 startAngle="90" length="360"
+                                 type="OPEN"
+                                 fill="TRANSPARENT"
+                                 styleClass="task-progress-track"/>
+
+                            <Arc fx:id="progressCompletedTaskArc"
+                                 centerX="75" centerY="75"
+                                 radiusX="60" radiusY="60"
+                                 startAngle="90" length="0"
+                                 type="OPEN"
+                                 fill="TRANSPARENT"
+                                 styleClass="task-progress-completed"/>
+
+                            <VBox layoutX="0" layoutY="0"
+                                  minWidth="150" prefWidth="150" maxWidth="150"
+                                  minHeight="150" prefHeight="150" maxHeight="150"
+                                  alignment="CENTER"
+                                  spacing="2"
+                                  mouseTransparent="true">
+
+                                <Label fx:id="progressCompletedTaskLabel"
+                                       styleClass="task-progress-label"/>
+
+                                <Label fx:id="progressCompletedTaskFractionLabel"
+                                       styleClass="task-progress-label"
+                                       style="-fx-font-size: 10px;"/>
+                            </VBox>
+                        </Pane>
+                    </VBox>
+
+                </HBox>
+            </VBox>
         </VBox>
     </center>
-
 
 </fx:root>

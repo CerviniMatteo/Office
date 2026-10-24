@@ -2,6 +2,7 @@ package com.unimib.GUI.UI.view.controller.abstr;
 
 import com.unimib.GUI.UI.state.ApplicationStateManager;
 import com.unimib.GUI.UI.view.components.impl.layout.DashboardContainer;
+import com.unimib.GUI.UI.view.components.impl.layout.TaskContainer;
 import com.unimib.GUI.utils.UserSession;
 
 public abstract class AuthController extends DefaultController {
@@ -16,7 +17,7 @@ public abstract class AuthController extends DefaultController {
 
     protected void goToTaskContainer() {
         ApplicationStateManager manager = userSession.applicationStateManager();
-        manager.replaceWindow(new DashboardContainer(userSession));
+        manager.replaceWindow(new TaskContainer(userSession));
         showSuccess("Login successful, Welcome back!");
     }
 }

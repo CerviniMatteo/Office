@@ -26,8 +26,6 @@ public class ChatRepository {
 
     private final List<Consumer<Long>> cacheListeners = new ArrayList<>();
 
-    // una cartella per utente: due utenti sulla stessa macchina
-    // non condividono più i file di cache
     private final Path baseDir;
 
     public ChatRepository(Long employeeId) {

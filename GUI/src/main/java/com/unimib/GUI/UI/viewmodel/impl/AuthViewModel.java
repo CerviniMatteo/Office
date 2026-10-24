@@ -35,7 +35,8 @@ public class AuthViewModel extends BaseViewModel {
                                 name,
                                 surname,
                                 null,
-                                encodeImage
+                                encodeImage,
+                                null
                         )
                 ),
                 userState

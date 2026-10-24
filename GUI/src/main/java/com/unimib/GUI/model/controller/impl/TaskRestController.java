@@ -1,10 +1,7 @@
 package com.unimib.GUI.model.controller.impl;
 
 import com.unimib.GUI.model.controller.BaseRestController;
-import com.unimib.GUI.model.dto.AcceptTaskRequestDTO;
-import com.unimib.GUI.model.dto.ChangeTaskStateRequestDTO;
-import com.unimib.GUI.model.dto.StartTaskRequestDTO;
-import com.unimib.GUI.model.dto.TaskDTO;
+import com.unimib.GUI.model.dto.*;
 import javafx.concurrent.Task;
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -13,6 +10,10 @@ import java.util.List;
 import static com.unimib.GUI.constants.Rest.BASE_TASK_ENDPOINT;
 
 public class TaskRestController extends BaseRestController {
+
+    public TaskStatsDTO getTaskStats(Long workerId) {
+        return getOne(BASE_TASK_ENDPOINT + "/taskStats/" + workerId, TaskStatsDTO.class);
+    }
 
     public List<TaskDTO> fetchTasks() {
         return getMany(BASE_TASK_ENDPOINT + "/all", new ParameterizedTypeReference<>() {});

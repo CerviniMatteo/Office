@@ -1,6 +1,7 @@
 package com.unimib.backend.service;
 
 import com.unimib.backend.DTO.TaskDTO;
+import com.unimib.backend.DTO.TaskStatsDTO;
 import com.unimib.backend.POJO.Employee;
 import com.unimib.backend.POJO.Task;
 import com.unimib.backend.constants.EmployeeConstants;
@@ -275,5 +276,17 @@ public class TaskService {
         if (taskId == null) throw new IllegalArgumentException(TaskConstants.NULL_TASK_ID);
         return taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException(TASK_NOT_FOUND));
+    }
+
+    public TaskStatsDTO getTaskStats(Long workerId) {
+        int totalTasks = Math.toIntExact(taskRepository.count());
+        List<Task> inProgressTasks = taskRepository.findTasksByStateWithEmployees(STARTED).stream().filter(task -> task.getAllEmployeesId().contains(workerId)).toList();
+        List<Task> doneTasks = taskRepository.findTasksByStateWithEmployees(DONE).stream().filter(task -> task.getAllEmployeesId().contains(workerId)).toList();
+        return new TaskStatsDTO(
+                workerId,
+                totalTasks,
+                doneTasks.size(),
+                inProgressTasks.size()
+        );
     }
 }

@@ -1,13 +1,10 @@
 package com.unimib.backend.controller;
 
-import com.unimib.backend.DTO.TaskDTO;
+import com.unimib.backend.DTO.*;
 import com.unimib.backend.POJO.Task;
 import com.unimib.backend.enums.TaskState;
 import com.unimib.backend.facade.TaskFacade;
 import com.unimib.backend.mappers.TaskDtoMapper;
-import com.unimib.backend.DTO.AcceptTaskRequestDTO;
-import com.unimib.backend.DTO.StartTaskRequestDTO;
-import com.unimib.backend.DTO.ChangeTaskStateRequestDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/task")
-public class TaskController {
 
+public class    TaskController {
     @Autowired
     TaskFacade facade;
     @Autowired
@@ -66,7 +63,7 @@ public class TaskController {
         }
         Long taskId = request.taskId();
         TaskState taskState = request.taskState();
-        System.out.println("Called tasks/changeState for taskId: " + taskId + " to state: " + taskState);
+        System.out.println("Called tasks/changeState for workerId: " + taskId + " to state: " + taskState);
         try {
             facade.changeTaskState(taskId, taskState);
             httpServletRequest.setAttribute("taskId", taskId);
@@ -86,7 +83,7 @@ public class TaskController {
             }
             Long taskId = request.taskId();
             Long employeeId = request.employeeId();
-            System.out.println("Called tasks/startTask for taskId: " + taskId + " and employeeId: " + employeeId);
+            System.out.println("Called tasks/startTask for workerId: " + taskId + " and employeeId: " + employeeId);
             try {
                 facade.changeTaskState(taskId, TaskState.TO_BE_STARTED);
                 facade.assignEmployeeToTask(taskId, employeeId);
@@ -102,7 +99,7 @@ public class TaskController {
         if(taskId == null) {
             return ResponseEntity.badRequest().body("Task ID cannot be null");
         }
-        System.out.println("Called tasks/resetState for taskId: " + taskId);
+        System.out.println("Called tasks/resetState for workerId: " + taskId);
         try {
             facade.resetTask(taskId);
             httpServletRequest.setAttribute("taskId", taskId);
@@ -121,7 +118,7 @@ public class TaskController {
             }
             Long taskId = request.taskId();
             Long employeeId = request.employeeId();
-            System.out.println("Called tasks/acceptTask for taskId: " + taskId + " and employeeId: " + employeeId);
+            System.out.println("Called tasks/acceptTask for workerId: " + taskId + " and employeeId: " + employeeId);
             try {
                 facade.assignEmployeeToTask(taskId, employeeId);
                 httpServletRequest.setAttribute("taskId", taskId);
@@ -133,13 +130,26 @@ public class TaskController {
 
     @PostMapping("/deleteTask")
     public ResponseEntity<String> deleteTask(@RequestBody Long taskId, HttpServletRequest httpServletRequest) {
-        System.out.println("Called tasks/deleteTask for taskId: " + taskId );
+        System.out.println("Called tasks/deleteTask for workerId: " + taskId );
         try {
             facade.deleteTask(taskId);
             httpServletRequest.setAttribute("taskId", taskId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/taskStats/{workerId}")
+    public ResponseEntity<TaskStatsDTO> getTaskStats(@PathVariable Long workerId) {
+        if(workerId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        try {
+            TaskStatsDTO stats = facade.getTaskStats(workerId);
+            return ResponseEntity.ok().body(stats);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

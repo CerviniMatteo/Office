@@ -58,7 +58,7 @@ public class Task implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "assignedEmployees",
-            joinColumns = @JoinColumn(name = "taskId"),
+            joinColumns = @JoinColumn(name = "workerId"),
             inverseJoinColumns = @JoinColumn(name = "personId")
     )
     private List<Employee> assignedEmployees = new ArrayList<>();

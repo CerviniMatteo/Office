@@ -537,17 +537,21 @@
     -fx-padding: 2px 0;
 }
 
+
 .white-separator {
-    -fx-pref-width: 4px;
-    -fx-min-width: 4px;
-    -fx-max-width: 4px;
+    -fx-padding: 0;
+    -fx-pref-width: 3px;
+    -fx-min-width: 3px;
+    -fx-max-width: 3px;
     -fx-pref-height: 20px;
-    -fx-padding: 0 8px;
+    -fx-min-height: 20px;
+    -fx-max-height: 20px;
 }
 
 .white-separator .line {
     -fx-border-color: white;
     -fx-border-width: 0 0 0 3px;
+    -fx-border-insets: 0;
 }
 
 /* ===================================================== */
@@ -807,6 +811,56 @@
     -fx-font-size: 32px;
     -fx-font-weight: bold;
 }
+
+.dashboard-separator {
+    -fx-background-color: -app-white-50;
+    -fx-padding: 2px 0;
+}
+
+/* ===================================================== */
+/* DASHBOARD TASK PROGRESS                               */
+/* ===================================================== */
+
+.task-progress {
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+    -fx-max-width: 50px;
+    -fx-max-height: 50px;
+    -fx-alignment: center;
+}
+
+/* Percentuale al centro della corona */
+.task-progress-label {
+    -fx-text-fill: -app-white;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+/* Traccia circolare di sfondo */
+.task-progress-track {
+    -fx-fill: transparent;
+    -fx-stroke: -app-white-50;
+    -fx-stroke-width: 5px;
+}
+
+/* Attività completate */
+.task-progress-completed {
+    -fx-fill: transparent;
+    -fx-stroke: -app-purple;
+    -fx-stroke-width: 5px;
+}
+
+/* Attività iniziate */
+.task-progress-started {
+    -fx-fill: transparent;
+    -fx-stroke: -app-teal;
+    -fx-stroke-width: 5px;
+}
+
 /* ===================================================== /*
 /* DASHBOARD CONTAINER                                   /*
 /* ===================================================== */

@@ -5,5 +5,6 @@ public record EmployeeDTO(
         String name,
         String surname,
         String email,
-        String encodedImage
+        String encodedImage,
+        String role
 ) {}

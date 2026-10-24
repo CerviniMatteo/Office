@@ -1,18 +1,17 @@
+
 package com.unimib.GUI.UI.view.controller.impl.layout;
 
+import com.unimib.GUI.UI.state.ApplicationStateManager;
+import com.unimib.GUI.UI.view.components.abstr.TaskCardBase;
 import com.unimib.GUI.UI.view.components.impl.layout.*;
 import com.unimib.GUI.UI.view.components.impl.task.TaskCardSkeleton;
-import com.unimib.GUI.UI.view.utils.ComponentVisibilityUtils;
+import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
+import com.unimib.GUI.UI.view.factory.TaskCardFactory;
 import com.unimib.GUI.UI.viewmodel.impl.TaskViewModel;
 import com.unimib.GUI.model.dto.TaskDTO;
 import com.unimib.GUI.model.enums.TaskState;
 import com.unimib.GUI.utils.UserSession;
-import com.unimib.GUI.UI.view.components.abstr.TaskCardBase;
-import com.unimib.GUI.UI.view.controller.abstr.DefaultController;
-import com.unimib.GUI.UI.view.factory.TaskCardFactory;
-import com.unimib.GUI.UI.state.ApplicationStateManager;
 import com.unimib.GUI.web_socket_client.TaskWebSocketClientApp;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,15 +37,15 @@ public class TaskContainerController extends DefaultController {
     @FXML private Button logOutButton;
     @FXML private Button toggleMainWindowButton;
 
-    private TaskWebSocketClientApp webSocketClient;
     private final Map<Long, TaskCardBase> tasks = new HashMap<>();
     private final Map<Long, TaskCardBase> skeletonTasks = new HashMap<>();
+
     private Sidebar sidebar;
     private BorderPane root;
     private Chat chat;
-
     private TaskViewModel viewModel;
     private TaskCreationForm form;
+    private TaskWebSocketClientApp webSocketClient;
 
     public TaskContainerController(UserSession userSession) {
         super(userSession);
@@ -54,12 +53,13 @@ public class TaskContainerController extends DefaultController {
 
     public void setSidebar(Sidebar sidebar) {
         this.sidebar = sidebar;
-        this.activeTaskContainer = sidebar.getActiveTaskContainer();
-        this.createTaskButton = sidebar.getCreateTaskButton();
-        this.chatButton = sidebar.getChatButton();
-        this.logOutButton = sidebar.getLogOutButton();
-        this.toggleMainWindowButton = sidebar.getToggleMainWindowButton();
+        activeTaskContainer = sidebar.getActiveTaskContainer();
+        createTaskButton = sidebar.getCreateTaskButton();
+        chatButton = sidebar.getChatButton();
+        logOutButton = sidebar.getLogOutButton();
+        toggleMainWindowButton = sidebar.getToggleMainWindowButton();
 
+        toggleMainWindowButton.setText("OPEN DASHBOARD");
         sidebar.setChatActionsVisible(true);
 
         configureSidebarActions();
@@ -69,71 +69,110 @@ public class TaskContainerController extends DefaultController {
         this.root = root;
     }
 
-    private void configureSidebarActions() {
-        if (createTaskButton != null) {
-            createTaskButton.setVisible(true);
-            createTaskButton.setManaged(true);
-            createTaskButton.setOnAction(_ -> {
-                closeChat();
-
-                if (centerContainer.getChildren().contains(form)) {
-                    centerContainer.getChildren().remove(form);
-                } else {
-                    centerContainer.getChildren().add(form);
-                    form.clear();
-                }
-            });
-        }
-
-        if (toggleMainWindowButton != null) {
-            toggleMainWindowButton.setOnAction(_ -> {
-                wipeChat();
-                toggleMainWindowButton.setText("OPEN TASKS");
-                ApplicationStateManager manager = userSession.applicationStateManager();
-                manager.replaceWindow(new DashboardContainer(userSession));
-            });
-        }
-
-        if (chatButton != null) {
-            chatButton.setOnAction(_ -> toggleChat());
-        }
-    }
-
-    private void closeChat() {
-        if (chatButton != null) {
-            chatButton.setText("OPEN CHAT");
-        }
-
-        if (root != null && chat != null && root.getCenter() == chat) {
-            root.setCenter(null);
-        }
-    }
-
-    private void toggleChat() {
-        if (chat == null) {
-            chat = new Chat(userSession);
-        }
-
-        if (chatButton.getText().equals("CLOSE CHAT")) {
-            chatButton.setText("OPEN CHAT");
-            centerContainer.getChildren().remove(chat);
-        } else {
-            chatButton.setText("CLOSE CHAT");
-            centerContainer.getChildren().remove(form);
-            centerContainer.getChildren().add(chat);
-        }
-    }
-
     @FXML
     public void initialize() {
         centerContainer.setFillHeight(true);
+
+        setupCenterComponents();
         configureSidebarActions();
+        setupButtons();
 
         viewModel = new TaskViewModel();
         observeTasks();
         observeTask();
         viewModel.fetchTasks();
 
+        startWebSocketClient();
+    }
+
+    private void setupCenterComponents() {
+        form = new TaskCreationForm();
+        centerContainer.getChildren().add(form);
+    }
+
+    private void configureSidebarActions() {
+        if (createTaskButton != null) {
+            createTaskButton.setVisible(true);
+            createTaskButton.setManaged(true);
+            createTaskButton.setOnAction(_ -> toggleTaskForm());
+        }
+
+        if (chatButton != null) {
+            chatButton.setOnAction(_ -> toggleChat());
+        }
+
+        if (toggleMainWindowButton != null) {
+            toggleMainWindowButton.setOnAction(_ -> openDashboard());
+        }
+    }
+
+    private void toggleTaskForm() {
+        boolean isFormVisible = centerContainer.getChildren().contains(form);
+
+        closeChat();
+
+        if (isFormVisible) {
+            centerContainer.getChildren().remove(form);
+        } else {
+            form.clear();
+            centerContainer.getChildren().remove(form);
+            centerContainer.getChildren().add(form);
+        }
+    }
+
+    private void toggleChat() {
+        boolean isChatVisible = chat != null
+                && centerContainer.getChildren().contains(chat);
+
+        if (isChatVisible) {
+            closeChat();
+            return;
+        }
+
+        if (chat == null) {
+            chat = new Chat(userSession);
+        }
+
+        centerContainer.getChildren().remove(form);
+        centerContainer.getChildren().remove(chat);
+        centerContainer.getChildren().add(chat);
+
+        chatButton.setText("CLOSE CHAT");
+    }
+
+    private void closeChat() {
+        if (chat != null) {
+            centerContainer.getChildren().remove(chat);
+        }
+
+        if (chatButton != null) {
+            chatButton.setText("OPEN CHAT");
+        }
+    }
+
+    private void openDashboard() {
+        stopResources();
+
+        ApplicationStateManager manager =
+                userSession.applicationStateManager();
+
+        manager.replaceWindow(new DashboardContainer(userSession));
+    }
+
+    private void setupButtons() {
+        if (logOutButton != null) {
+            logOutButton.setOnAction(_ -> {
+                stopResources();
+
+                ApplicationStateManager manager =
+                        userSession.applicationStateManager();
+
+                manager.replaceWindow(new Login(userSession));
+            });
+        }
+    }
+
+    private void startWebSocketClient() {
         webSocketClient = new TaskWebSocketClientApp();
         webSocketClient.start();
 
@@ -142,23 +181,88 @@ public class TaskContainerController extends DefaultController {
                 handleTaskChange(message);
             }
         });
-
-        setupCenterComponents();
-        setupButtons();
     }
 
-    private void setupCenterComponents() {
-        form = new TaskCreationForm();
-        centerContainer.getChildren().add(form);
+    private void stopResources() {
+        if (chat != null) {
+            chat.destroy();
+            chat = null;
+        }
+
+        if (webSocketClient != null) {
+            webSocketClient.stop();
+            webSocketClient = null;
+        }
+    }
+
+    private void observeTasks() {
+        showInitialSkeleton();
+
+        observeState(
+                viewModel.getTasksStateProperty(),
+                () -> {},
+                fetchedTasks -> {
+                    removeInitialSkeleton();
+
+                    if (fetchedTasks == null) {
+                        return;
+                    }
+
+                    clearContainers();
+                    tasks.clear();
+                    skeletonTasks.clear();
+
+                    for (TaskDTO taskDTO : fetchedTasks) {
+                        TaskCardBase card =
+                                TaskCardFactory.create(taskDTO, userSession);
+
+                        if (card != null) {
+                            tasks.put(taskDTO.taskId(), card);
+                            addTask(taskDTO, card);
+                        }
+                    }
+                },
+                error -> {
+                    removeInitialSkeleton();
+                    showError(error);
+                }
+        );
+    }
+
+    private void observeTask() {
+        observeState(
+                viewModel.getTaskStateProperty(),
+                () -> {},
+                updatedTask -> {
+                    if (updatedTask == null) {
+                        return;
+                    }
+
+                    removeSkeleton(updatedTask.taskId());
+                    removeTask(updatedTask.taskId());
+
+                    TaskCardBase card =
+                            TaskCardFactory.create(updatedTask, userSession);
+
+                    if (card != null) {
+                        tasks.put(updatedTask.taskId(), card);
+                        addTask(updatedTask, card);
+                    }
+                },
+                this::showError
+        );
     }
 
     private void showInitialSkeleton() {
         clearContainers();
 
         for (int i = 0; i < 3; i++) {
-            notStartedTaskBox.getChildren().add(newSkeletonPlaceholder(-1L));
-            startedTaskBox.getChildren().add(newSkeletonPlaceholder(-1L));
-            doneTaskBox.getChildren().add(newSkeletonPlaceholder(-1L));
+            notStartedTaskBox.getChildren()
+                    .add(newSkeletonPlaceholder(-1L));
+            startedTaskBox.getChildren()
+                    .add(newSkeletonPlaceholder(-1L));
+            doneTaskBox.getChildren()
+                    .add(newSkeletonPlaceholder(-1L));
         }
     }
 
@@ -176,9 +280,15 @@ public class TaskContainerController extends DefaultController {
     }
 
     private void removeInitialSkeleton() {
-        notStartedTaskBox.getChildren().removeIf(node -> node instanceof TaskCardSkeleton);
-        startedTaskBox.getChildren().removeIf(node -> node instanceof TaskCardSkeleton);
-        doneTaskBox.getChildren().removeIf(node -> node instanceof TaskCardSkeleton);
+        notStartedTaskBox.getChildren().removeIf(
+                node -> node instanceof TaskCardSkeleton
+        );
+        startedTaskBox.getChildren().removeIf(
+                node -> node instanceof TaskCardSkeleton
+        );
+        doneTaskBox.getChildren().removeIf(
+                node -> node instanceof TaskCardSkeleton
+        );
     }
 
     private void showTaskSkeleton(Long taskId) {
@@ -203,97 +313,29 @@ public class TaskContainerController extends DefaultController {
         doneTaskBox.getChildren().remove(skeleton);
     }
 
-    private void observeTasks() {
-        showInitialSkeleton();
-
-        observeState(
-                viewModel.getTasksStateProperty(),
-                () -> {},
-                fetchedTasks -> {
-                    removeInitialSkeleton();
-
-                    if (fetchedTasks == null) {
-                        return;
-                    }
-
-                    clearContainers();
-                    tasks.clear();
-
-                    for (TaskDTO taskDTO : fetchedTasks) {
-                        TaskCardBase card = TaskCardFactory.create(taskDTO, userSession);
-
-                        if (card != null) {
-                            tasks.put(taskDTO.taskId(), card);
-                            addTask(taskDTO, card);
-                        }
-                    }
-                },
-                error -> {
-                    removeInitialSkeleton();
-                    showError(error);
-                }
-        );
-    }
-
     private void clearContainers() {
         notStartedTaskBox.getChildren().clear();
         startedTaskBox.getChildren().clear();
         doneTaskBox.getChildren().clear();
-        activeTaskContainer.getChildren().clear();
-    }
 
-    private void observeTask() {
-        observeState(
-                viewModel.getTaskStateProperty(),
-                () -> {},
-                updatedTask -> {
-                    if (updatedTask == null) {
-                        return;
-                    }
-
-                    removeSkeleton(updatedTask.taskId());
-                    removeTask(updatedTask.taskId());
-
-                    TaskCardBase card = TaskCardFactory.create(updatedTask, userSession);
-
-                    if (card != null) {
-                        tasks.put(updatedTask.taskId(), card);
-                        addTask(updatedTask, card);
-                    }
-                },
-                this::showError
-        );
-    }
-
-    private void setupButtons() {
-        if (logOutButton == null) {
-            return;
+        if (activeTaskContainer != null) {
+            activeTaskContainer.getChildren().clear();
         }
-
-        logOutButton.setOnAction(_ -> {
-
-            wipeChat();
-
-            ApplicationStateManager manager = userSession.applicationStateManager();
-            manager.replaceWindow(new Login(userSession));
-        });
-    }
-
-    private void wipeChat(){
-        if (chat != null) {
-            chat.destroy();
-        }
-
-        webSocketClient.stop();
     }
 
     private void handleTaskChange(String message) {
         if (message.startsWith("FETCH_TASK:")) {
-            Long taskId = Long.valueOf(message.substring("FETCH_TASK:".length()));
+            Long taskId = Long.valueOf(
+                    message.substring("FETCH_TASK:".length())
+            );
+
             Platform.runLater(() -> updateTaskCard(taskId));
 
         } else if (message.startsWith("DELETE_TASK:")) {
-            Long taskId = Long.valueOf(message.substring("DELETE_TASK:".length()));
+            Long taskId = Long.valueOf(
+                    message.substring("DELETE_TASK:".length())
+            );
+
             Platform.runLater(() -> deleteEntry(taskId));
         }
     }
@@ -304,20 +346,29 @@ public class TaskContainerController extends DefaultController {
     }
 
     private void deleteEntry(Long taskId) {
-        TaskCardBase card = tasks.remove(taskId);
-
-        if (card == null) {
-            return;
-        }
-
+        tasks.remove(taskId);
+        removeSkeleton(taskId);
         removeTask(taskId);
     }
 
     private void removeTask(Long taskId) {
-        notStartedTaskBox.getChildren().removeIf(node -> taskId.toString().equals(node.getId()));
-        startedTaskBox.getChildren().removeIf(node -> taskId.toString().equals(node.getId()));
-        doneTaskBox.getChildren().removeIf(node -> taskId.toString().equals(node.getId()));
-        activeTaskContainer.getChildren().removeIf(node -> taskId.toString().equals(node.getId()));
+        String id = taskId.toString();
+
+        notStartedTaskBox.getChildren().removeIf(
+                node -> id.equals(node.getId())
+        );
+        startedTaskBox.getChildren().removeIf(
+                node -> id.equals(node.getId())
+        );
+        doneTaskBox.getChildren().removeIf(
+                node -> id.equals(node.getId())
+        );
+
+        if (activeTaskContainer != null) {
+            activeTaskContainer.getChildren().removeIf(
+                    node -> id.equals(node.getId())
+            );
+        }
     }
 
     private void addTask(TaskDTO taskDTO, TaskCardBase taskCard) {
@@ -325,7 +376,9 @@ public class TaskContainerController extends DefaultController {
         taskCard.getStyleClass().add("task-card-compact");
 
         switch (taskDTO.taskState()) {
-            case TO_BE_STARTED -> notStartedTaskBox.getChildren().add(taskCard);
+            case TO_BE_STARTED ->
+                    notStartedTaskBox.getChildren().add(taskCard);
+
             case STARTED -> {
                 startedTaskBox.getChildren().add(taskCard);
 
@@ -338,7 +391,8 @@ public class TaskContainerController extends DefaultController {
                 activeTaskContainer.getChildren().add(label);
             }
 
-            case DONE -> doneTaskBox.getChildren().add(taskCard);
+            case DONE ->
+                    doneTaskBox.getChildren().add(taskCard);
         }
     }
 }

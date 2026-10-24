@@ -15,8 +15,7 @@
 
     <Region minWidth="14" prefWidth="14" maxWidth="14"/>
 
-    <VBox spacing="20" minWidth="240" prefWidth="240" maxWidth="240"
-          styleClass="semi-transparent-bg">
+    <VBox spacing="20" minWidth="-Infinity" maxWidth="-Infinity" styleClass="semi-transparent-bg">
 
         <Label text="COLORS LEGEND"
                maxWidth="Infinity"
