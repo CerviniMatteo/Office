@@ -44,8 +44,8 @@ public abstract class Worker {
     private String email;
 
     /** Encoded image of the worker in Base64 format. */
-    @Column(name = "encoded_image", columnDefinition = "CLOB")
-    private String encodedImage;
+	@Column(name = "encoded_image", columnDefinition = "TEXT")
+    private String encodedImage;   
 
 
     /** Monthly salary of the employee. */
