@@ -3,9 +3,7 @@ spring:
     active: test
 
 ---
-
 # Production profile
-
 spring:
   config:
     activate:
@@ -20,26 +18,26 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    open-in-view: false
+    open-in-view: true
 
 server:
   port: 8081
   ssl:
     enabled: false
 
-
 ---
-
 # Test profile
 spring:
   config:
     activate:
       on-profile: test
+
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
   jpa:
     hibernate:
       ddl-auto: create-drop
