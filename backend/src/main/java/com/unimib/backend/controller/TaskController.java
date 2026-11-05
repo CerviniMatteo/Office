@@ -30,6 +30,14 @@ public class    TaskController {
                 .toList());
     }
 
+    @GetMapping("/all/{workerId}")
+    public ResponseEntity<List<TaskDTO>> getTasksByWorkerId(@PathVariable Long workerId) {
+        System.out.println("Called taks/getTasksByWorkerId:" + workerId);
+        return ResponseEntity.ok(facade.getTasksByWorkerId(workerId).stream()
+                .map(taskDtoMapper::mapToDto)
+                .toList());
+    }
+
     @GetMapping("/{taskId}")
     public ResponseEntity<TaskDTO> getTask(@PathVariable Long taskId) {
         if(taskId == null) {

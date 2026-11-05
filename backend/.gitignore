@@ -3,6 +3,7 @@ target/
 !backend/src/main/**/target/
 !backend/src/test/**/target/
 .kotlin
+.env
 
 ### IntelliJ IDEA ###
 .idea/*

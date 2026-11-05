@@ -35,11 +35,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     /**
      * Retrieves all tasks assigned to a specific employee.
      *
-     * @param employee the employee entity to search for
+     * @param workerId the id employee entity to search for
      * @return a list of tasks assigned to the employee
      */
-    @Query("SELECT t FROM task t JOIN t.assignedEmployees d WHERE d = :employee")
-    List<Task> findTasksByEmployee(@Param("employee") Employee employee);
+    @Query("SELECT t FROM task t JOIN t.assignedEmployees d WHERE d.workerId = :workerId")
+    List<Task> findTasksByWorkerId(@Param("workerId") Long workerId);
 
     /**
      * Retrieves all tasks that do not have any employees assigned.

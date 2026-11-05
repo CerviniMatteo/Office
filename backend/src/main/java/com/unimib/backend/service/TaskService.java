@@ -164,14 +164,13 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<Task> getTasksByEmployee(Employee employee) {
-        if (employee == null) throw new IllegalArgumentException(TaskConstants.NULL_EMPLOYEE);
-        if (employee.getWorkerId() == null) throw new IllegalArgumentException(EmployeeConstants.NULL_EMPLOYEE_ID);
+    public List<Task> getTasksByWorkerId(Long workerId) {
+        if (workerId == null) throw new IllegalArgumentException(EmployeeConstants.NULL_EMPLOYEE_ID);
 
-        employeeService.findEmployeeById(employee.getWorkerId())
+        employeeService.findEmployeeById(workerId)
                 .orElseThrow(() -> new IllegalArgumentException(EMPLOYEE_NOT_FOUND));
 
-        return taskRepository.findTasksByEmployee(employee);
+        return taskRepository.findTasksByWorkerId(workerId);
     }
 
     @Transactional(readOnly = true)

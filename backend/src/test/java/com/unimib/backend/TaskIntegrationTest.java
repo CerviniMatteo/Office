@@ -327,7 +327,7 @@ public class TaskIntegrationTest {
             Task t = taskFacade.saveTask(taskFacade.createTask(TaskState.STARTED));
             taskFacade.assignEmployeeToTask(t.getTaskId(), employee.getWorkerId());
 
-            List<Task> tasksAnna = taskFacade.getTasksByEmployee(employee);
+            List<Task> tasksAnna = taskFacade.getTasksByWorkerId(employee.getWorkerId());
             assertEquals(1, tasksAnna.size());
             assertEquals(t.getTaskId(), tasksAnna.getFirst().getTaskId());
         }

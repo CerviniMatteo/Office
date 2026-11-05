@@ -26,6 +26,10 @@ public class DashboardRepository {
         };
     }
 
+    public TaskStatsDTO getTask(Long workerId) {
+        return taskRestController.getTaskStats(workerId);
+    }
+
     public TaskStatsDTO getTaskStats(Long workerId) {
         return taskRestController.getTaskStats(workerId);
     }

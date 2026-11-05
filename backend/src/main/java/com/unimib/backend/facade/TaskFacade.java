@@ -51,8 +51,8 @@ public class TaskFacade {
         return taskService.getTasksByState(taskState);
     }
 
-    public List<Task> getTasksByEmployee(Employee employee) {
-        return taskService.getTasksByEmployee(employee);
+    public List<Task> getTasksByWorkerId(Long workerId) {
+        return taskService.getTasksByWorkerId(workerId);
     }
 
     public List<Task> getUnsignedTasks() {

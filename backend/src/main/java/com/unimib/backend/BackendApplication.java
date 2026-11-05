@@ -32,7 +32,7 @@ public class BackendApplication {
     }
 
     @Bean
-    @Profile("prod")
+    @Profile("test")
     CommandLineRunner loadFakeData(
             TaskFacade taskFacade,
             EmployeeFacade employeeFacade,
